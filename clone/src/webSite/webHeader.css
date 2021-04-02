@@ -1,0 +1,39 @@
+head, body, #root, #root > div {
+    height: 100%;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+#header {
+    background-color: #566270;
+}
+
+#header-area {
+    width: 75%;
+    height: 100%;
+    margin : 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#header-area > #header-area-start {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#header-area > #header-area-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#header-area-start > img {
+    width: 180px;
+}
+
+#header-area-end > img {
+    margin-left: 8px;
+}
+
