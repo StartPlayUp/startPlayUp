@@ -51,6 +51,7 @@ head, body, #root {
 
 }
 .list > span {
+    margin : 0 auto;
     font-size: 18px;
 }
 
