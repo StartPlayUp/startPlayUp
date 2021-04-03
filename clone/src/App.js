@@ -1,15 +1,17 @@
-import './webSite/webHeader.css'
-import './webSite/webBody.css'
-import './webSite/webList'
+import './mainPage/webHeader.css'
+import './mainPage/webBody.css'
+import './mainPage/webList'
 import './App.css'
-import WebHeader from './webSite/webHeader'
-import WebBody from './webSite/webBody'
+import './waitingRoom/waitingRoom.css'
+
+import WebHeader from './mainPage/webHeader'
+import WebBody from './mainPage/webBody'
+import WaitingRoom from './waitingRoom/waitingRoom'
+
 function App() {
   return (
     <div className="App">
-        <WebHeader/>
-        <WebBody/>
-
+        <WaitingRoom/>
     </div>
   );
 }

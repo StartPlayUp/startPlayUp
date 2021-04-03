@@ -1,6 +1,7 @@
-import webList from "./webList";
+import React from 'react';
 
 function webBody() {
+
     return (
         <div id="body">
             <div id={"body-center"}>

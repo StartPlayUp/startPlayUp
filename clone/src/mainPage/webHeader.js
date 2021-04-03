@@ -7,12 +7,12 @@ function head() {
                     <img src="images/startplayup.png" alt="logo"/>
                 </div>
                 <div id="header-area-end">
-                    <img src="images/realmenu.png" alt="user"/>
+                    <img src="images/white-message.png" alt="message"/>
+                    <img src="images/white-menu.png" alt="message"/>
                 </div>
             </div>
         </div>
     );
-
 }
 
 export default head;

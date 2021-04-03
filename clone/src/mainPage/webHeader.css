@@ -2,6 +2,10 @@ head, body, #root, #root > div {
     height: 100%;
 }
 
+body{
+    background-color: #E0E3DA;
+}
+
 * {
     margin: 0px;
     padding: 0px;
