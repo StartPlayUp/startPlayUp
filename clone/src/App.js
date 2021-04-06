@@ -11,7 +11,8 @@ import WaitingRoom from './waitingRoom/waitingRoom'
 function App() {
   return (
     <div className="App">
-        <WaitingRoom/>
+        <WebHeader/>
+        <WebBody/>
     </div>
   );
 }
