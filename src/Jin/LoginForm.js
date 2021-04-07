@@ -1,5 +1,7 @@
 import React,{useState} from 'react';
 import styled from 'styled-components';
+import {Route} from 'react-router-dom';
+import { Main } from './Auth';
 const Button = styled.button`
     display:flex;
     background:#566270;
@@ -44,7 +46,9 @@ function LoginForm(){
           <p></p>
           <Input name="password" placeholder="Password" onChange={onChange} value={password}/>
           <p></p>
-          <Button onClick={onReset}>로그인</Button>
+          <Button onClick={
+              <Route expact path ="/Main" component ={Main}/>
+          }>로그인</Button>
           <div>
               <b>값: </b>
               {email}({password})

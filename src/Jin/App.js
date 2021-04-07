@@ -3,6 +3,7 @@ import LoginWrapper from './LoginWrapper';
 import styled, { createGlobalStyle} from 'styled-components';
 import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
+import {Main} from './Auth';
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
