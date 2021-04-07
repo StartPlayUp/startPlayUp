@@ -1,5 +1,12 @@
-head, body, #root, #root > div {
+#root{
     width: 100%;
     height: 100%;
     position: absolute;
+}
+#root{
+    background-color: #E0E3DA;
+}
+*{
+    padding: 0;
+    margin: 0;
 }
