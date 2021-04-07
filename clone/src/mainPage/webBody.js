@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-
+import FOOTER from "./webFooter";
 const BodyFrame = styled.div`
     width: 100%;
-    height: 100%;
+    height: 90%;
     position : absolute;
 `;
 const BodyCenter = styled.div`
     width: 75%;
-    height: 90%;
+    height: 100%;
     margin: 0 auto;
     flex: 1 1 auto;
     flex-direction: column;
@@ -72,6 +72,7 @@ const BODY = ({children}, ...rest) => {
                         </UserList>
                     </RoomList>
                 </BodyCenter>
+                <FOOTER/>
             </BodyFrame>
         </div>
     )
