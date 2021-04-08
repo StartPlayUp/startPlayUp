@@ -2,6 +2,8 @@ import React,{useState} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router-dom';
 import { Main } from './Auth';
+import {AuthContext} from './Auth/AuthContext';
+
 const Button = styled.button`
     display:flex;
     background:#566270;
@@ -22,6 +24,7 @@ const Input = styled.input`
     
 `
 function LoginForm(){
+    const Auth = React.createContext(AuthContext);
     const [inputs, setInputs] = useState({
         email: '',
         password: ''
@@ -33,15 +36,24 @@ function LoginForm(){
             ...inputs,
             [name]:value
         });
+
     };
+    const logOn=(e)=>{
+        Auth.onLogin(e);
+        
+    }
+    /*
     const onReset=()=>{
         setInputs({
             email: '',
             password: ''
         })
     };
+    */
+   /*
     return(
-      <p>
+        
+        <p>
           <Input name="email" placeholder="Email" onChange={onChange} value={email}/>
           <p></p>
           <Input name="password" placeholder="Password" onChange={onChange} value={password}/>
@@ -53,8 +65,19 @@ function LoginForm(){
               <b>값: </b>
               {email}({password})
           </div>
-      </p>  
+        </p> 
     );
+     */
+    return(
+                <form >
+                    <Input name="email" onChange={onChange} value = {email}/>
+                    <p/>
+                    <Input name="password" onChange={onChange} valie = {password}/>
+                    <Button onClick={logOn}>Login</Button>
+                </form>
+    );
+    
+    
 }
 
 export default LoginForm;

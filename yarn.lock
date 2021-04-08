@@ -5099,6 +5099,11 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+formit@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/formit/-/formit-0.0.2.tgz#0d2ef0f19c25d5df9f7418df71131386f4e1f4d1"
+  integrity sha512-IPU4mN/XmOl5v+zTQ74VFJ+cuqvVWKy6sUtpBhGUx6v6sEipsm91uH52mec5zLqjfRXeNfmXU6+FMpRk7NfnNw==
+
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/forwarded/-/forwarded-0.1.2.tgz"
