@@ -39,8 +39,14 @@ function LoginForm(){
 
     };
     const logOn=(e)=>{
-        Auth.onLogin(e);
-        
+        e.preventDefault()
+        Auth.onLogin=inputs;
+        if (Auth.checkAuth){
+            console.log("로그인 성공")
+        }
+        else{
+            console.log("로그인 실패")
+        }
     }
     /*
     const onReset=()=>{
@@ -72,8 +78,8 @@ function LoginForm(){
                 <form >
                     <Input name="email" onChange={onChange} value = {email}/>
                     <p/>
-                    <Input name="password" onChange={onChange} valie = {password}/>
-                    <Button onClick={logOn}>Login</Button>
+                    <Input name="password" onChange={onChange} value = {password}/>
+                    <Button onClick={logOn} >Login</Button>
                 </form>
     );
     

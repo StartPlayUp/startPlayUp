@@ -11,13 +11,14 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         error:false
     });
     const {children} = props; //children에게 값을 전달합니다.
-    const testDB = [{email:'test@gmail',password:'test'}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
+    const testDB = [{email:"test@gmail",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
 
-    const onLogin = model=>{
+    const onLogin = (model)=>{
         setContextState({
-            ...contextState, // 불변성을 지키기 위한 요소입니다.
+            ...contextState, //
         });
-        if(model.email===testDB.email && model.password===testDB.password){
+        const res = testDB.filter((i)=>i.email===model.email&&i.password===model.password);
+        if(res.length>0){
             localStorage.setItem('email',model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
             localStorage.setItem('password',model.password); //마찬가지로 비밀번호도 저장합니다.
             setContextState({
