@@ -1,6 +1,6 @@
 import React,{useState,useRef,useEffect} from "react";
 import styled from "styled-components";
-import {AuthProvider} from "./Auth/AuthContext";
+
 /*
 const Background = styled.div`
     display:flex;
@@ -27,11 +27,10 @@ const Box = styled.div`
 
 function LoginWrapper({children}){
     return(
-        <AuthProvider>
+        
             <Box>
                 {children}
             </Box>
-        </AuthProvider>
     )
 }
 export default LoginWrapper;

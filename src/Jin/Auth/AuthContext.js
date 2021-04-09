@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from "styled-components";
 import {Route} from 'react-router-dom';
 
-const AuthContext=React.createContext(); //context 객체 생성
+const AuthStore=React.createContext(); //context 객체 생성
 
 const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
     const [contextState, setContextState] = useState({ //useState를 사용해 Context값을 변경하려고 합니다.
@@ -17,21 +17,37 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         setContextState({
             ...contextState, //
         });
+        console.log(model)
+        console.log("테스트")
+        
         const res = testDB.filter((i)=>i.email===model.email&&i.password===model.password);
+        console.log(contextState.checkAuth)
         if(res.length>0){
             localStorage.setItem('email',model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
             localStorage.setItem('password',model.password); //마찬가지로 비밀번호도 저장합니다.
             setContextState({
-                checkAuth:ture,
+                ...contextState,
+                checkAuth:true,
                 error:false
             });
+        console.log(contextState)
         }else{
             setContextState({
                 checkAuth:false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
-                error:ture//에러를 트루로 변경합니다.
+                error:true//에러를 트루로 변경합니다.
             });
         }
     };
+
+    return(
+        <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
+            onLogin
+        }}>
+            {children}
+        </AuthStore.Provider>
+    );
+}
+    /*
     const onLogout = () =>{ //로그아웃을 하는 컴포넌트 입니다.
         localStorage.removeItem('email');//로그아웃을 했기 때문에 이메일, 비밀번호를 지웁니다.
         localStorage.removeItem('password');
@@ -40,7 +56,7 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
             checkAuth:false,
             error:false
         });
-    };
+    };*/
     /*
     const signIn =model=>{ //회원가입 하는 컴포넌트 입니다. 향후에 구현할 예정입니다.
         setContextState({
@@ -49,14 +65,6 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         
     }
     */
-    return(
-        <AuthContext.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
-            onLogin,onLogout,error:contextState.error
-        }}>
-            {children}
-        </AuthContext.Provider>
-    );
-}
 /*
 const AuthRoute=({ component: Component, ...rest})=>(//다른 페이지를 띄워주기 위한 컴포넌트 입니다.
     <AuthContext.Consumer>
@@ -80,4 +88,4 @@ const AuthRoute=({ component: Component, ...rest})=>(//다른 페이지를 띄�
 
 export { AuthContext,AuthProvider,AuthRoute };
 */
-export {AuthContext,AuthProvider};
+export {AuthStore,AuthProvider};

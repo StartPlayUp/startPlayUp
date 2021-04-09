@@ -1,8 +1,8 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router-dom';
 import { Main } from './Auth';
-import {AuthContext} from './Auth/AuthContext';
+import { AuthStore, AuthProvider} from './Auth/AuthContext';
 
 const Button = styled.button`
     display:flex;
@@ -24,7 +24,7 @@ const Input = styled.input`
     
 `
 function LoginForm(){
-    const Auth = React.createContext(AuthContext);
+    const Auth = useContext(AuthStore);
     const [inputs, setInputs] = useState({
         email: '',
         password: ''
@@ -36,19 +36,29 @@ function LoginForm(){
             ...inputs,
             [name]:value
         });
-
     };
     const logOn=(e)=>{
         e.preventDefault()
-        Auth.onLogin=inputs;
+        Auth.onLogin(inputs)
+        console.log(Auth.checkAuth)
         if (Auth.checkAuth){
             console.log("로그인 성공")
         }
         else{
             console.log("로그인 실패")
         }
-    }
-    /*
+        
+       //console.log(Auth)
+    };
+    return(
+            <form >
+                <Input name="email" onChange={onChange} value = {email}/>
+                <p/>
+                <Input name="password" onChange={onChange} value = {password}/>
+                <Button onClick={logOn} >Login</Button>
+            </form>
+    );
+        /*
     const onReset=()=>{
         setInputs({
             email: '',
@@ -74,16 +84,6 @@ function LoginForm(){
         </p> 
     );
      */
-    return(
-                <form >
-                    <Input name="email" onChange={onChange} value = {email}/>
-                    <p/>
-                    <Input name="password" onChange={onChange} value = {password}/>
-                    <Button onClick={logOn} >Login</Button>
-                </form>
-    );
-    
-    
 }
 
 export default LoginForm;

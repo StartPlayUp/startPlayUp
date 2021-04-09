@@ -4,6 +4,7 @@ import styled, { createGlobalStyle} from 'styled-components';
 import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
 import {Main} from './Auth';
+import {AuthProvider} from './Auth/AuthContext'
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
@@ -28,10 +29,12 @@ function App(){
         <Fragment>
             <GlobalStyle />
                 <Container>
-                    <LoginWrapper>
-                        <LogoWrapper>StartPlayUp</LogoWrapper>
-                        <LoginForm/>
+                    <AuthProvider>
+                        <LoginWrapper>
+                            <LogoWrapper>StartPlayUp</LogoWrapper>
+                            <LoginForm/>
                     </LoginWrapper>
+                </AuthProvider>
             </Container>
         </Fragment>
     )
