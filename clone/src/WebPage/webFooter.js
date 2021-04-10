@@ -19,9 +19,9 @@ const FOOTER = ({children}, ...rest) =>{
     return(
         <div>
             <FooterArea>
-                FooterArea
+                <h3>FooterArea</h3>
                 <FooterCenter>
-                    footerCenter
+                    <h3>footerCenter</h3>
                 </FooterCenter>
             </FooterArea>
         </div>

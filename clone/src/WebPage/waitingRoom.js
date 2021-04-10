@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from "styled-components";
-import WebHeader from '../mainPage/webHeader'
+import WebHeader from './webHeader';
+import FOOTER from "./webFooter";
+import Users from "./Users";
 
 const BodyFrame = styled.div`
     width: 100%;
@@ -10,7 +12,9 @@ const BodyFrame = styled.div`
 
 const Room = styled.div`
     width: 75%;
-    margin : 50px auto;
+    height :90%;
+    margin : auto;
+    margin-top : 50px;
 `
 
 const Title = styled.div`
@@ -45,7 +49,6 @@ const Button = styled.button`
     margin-right : 15px;
 `
 
-
 const MainList = styled.div`
     display: flex;
     flex-wrap: nowrap;
@@ -65,9 +68,8 @@ const ChattingList = styled.div`
     background-color: #FFFFF3;
 `
 
-const WaitingRoom = ({children}, ...rest) =>{
-    return(
-
+const WaitingRoom = () => {
+    return (
         <div>
             <BodyFrame>
                 <WebHeader/>
@@ -89,50 +91,23 @@ const WaitingRoom = ({children}, ...rest) =>{
                     </ButtonArea>
                     <MainList>
                         <UserList>
-
+                            <h1>대기 목록</h1>
+                            <hr/>
+                            <div>
+                                <Users id='1' name='Jang' />
+                                <Users id='2' name='Chan'/>
+                                <Users id='3' name='Jin'/>
+                            </div>
                         </UserList>
                         <ChattingList>
-
+                            <h1>채팅 방</h1>
+                            <hr/>
                         </ChattingList>
                     </MainList>
                 </Room>
+                <FOOTER/>
             </BodyFrame>
-
         </div>
-        // <div id="gamePage">
-        //     <WebHeader/>
-        //     <div id="waitingRoom">
-        //         <div id="title">
-        //             <span className="gameTitle">Mafia</span>
-        //             <span> 선착순 8명 빠르게 구해요 ~~~ !!</span>
-        //         </div>
-        //         <hr/>
-        //         <div id="options">
-        //             <div className="optionsLeft">
-        //                 <button>시작</button>
-        //                 <button>준비</button>
-        //                 <button>관전</button>
-        //             </div>
-        //             <div className="optionsRight">
-        //                 <button>나가기</button>
-        //             </div>
-        //         </div>
-        //         <hr/>
-        //         <div id="list">
-        //             <div className="users-list">
-        //                 <h3>userName / ready-state / kickout</h3>
-        //                 <h3>userName / ready-state / kickout</h3>
-        //                 <h3>userName / ready-state / kickout</h3>
-        //                 <h3>userName / ready-state / kickout</h3>
-        //             </div>
-        //             <div className="chatting-list">
-        //                 <h1>chatting list</h1>
-        //                 <h1>chatting list</h1>
-        //                 <h1>chatting list</h1>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
     )
 }
 

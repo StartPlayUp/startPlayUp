@@ -1,9 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import FOOTER from "./webFooter";
+import HEADER from "./webHeader";
+
 const BodyFrame = styled.div`
     width: 100%;
     height: 90%;
+    padding : 0;
+    margin : 0 auto;
     position : absolute;
 `;
 const BodyCenter = styled.div`
@@ -30,11 +34,6 @@ const UserList = styled.div`
 const Users = styled.span`
     margin: 0 auto;
     font-size: 18px;
-    
-
-    &.title{
-        font-size : 24px;
-    }
 `;
 
 const ButtonArea = styled.div`
@@ -50,11 +49,14 @@ const Button = styled.button`
     border-radius: 2px;
     border: 0;
     padding: 10px;
+    text-decoration : none
 `;
+
 
 const BODY = ({children}, ...rest) => {
     return (
         <div>
+            <HEADER/>
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
@@ -75,6 +77,8 @@ const BODY = ({children}, ...rest) => {
                 <FOOTER/>
             </BodyFrame>
         </div>
+
+
     )
 }
 

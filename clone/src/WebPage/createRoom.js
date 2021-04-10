@@ -1,5 +1,5 @@
 import Router from "next/router";
-import WebHeader from '../mainPage/webHeader.css'
+import WebHeader from '../styledsheets/webHeader.css'
 function createRoom(){
     const moveMain = () =>{
 

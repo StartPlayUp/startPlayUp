@@ -26,8 +26,12 @@ const HeadLeft = styled.div`
 const HeadRight = styled.div`
     display: flex;
     justify-content: flex-end;
-    font-size : ${(props) => props.fontSize};
 `
+// const BodyFrame = styled.div`
+//     width: 100%;
+//     height: 90%;
+//     position : absolute;
+// `;
 
 const HEADER = ({children, ...rest}) => {
     return (
@@ -37,8 +41,8 @@ const HEADER = ({children, ...rest}) => {
                     <HeadLeft fontSize={"32px"}>
                         StartPlayUp
                     </HeadLeft>
-                    <HeadRight fontSize = {"14px"}>
-                        icons
+                    <HeadRight>
+                        <img src="../../public/images/white-menu.png" alt=""/>
                     </HeadRight>
                 </HeadStyle>
             </HeadColor>

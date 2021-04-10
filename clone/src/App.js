@@ -1,20 +1,25 @@
-import './mainPage/webList'
 import './App.css'
-import {Switch, Route, useHistory} from "react-router-dom"
+import {
+    Home,
+    waitingRoom,
+    Mafia,
+    YachtDice,
+    Yutnori
+} from './pages'
+import React, {useState} from 'react'
+import {Route} from 'react-router-dom'
 
-import WebHeader from './mainPage/webHeader'
-import WebBody from './mainPage/webBody'
-
-import React from 'react'
-
-function App() {
+const App = () => {
     return (
-        <div>
-            <WebHeader/>
-            <WebBody/>
-        </div>
+        <>
+            <Route exact path={"/"} component={Home}/>
+            <Route path={"/waitingRoom"} component={waitingRoom}/>
+            <Route path={"/Mafia"} component={Mafia}/>
+            <Route path={"/YachtDice"} component={YachtDice}/>
+            <Route path={"/Yutnori"} component = {Yutnori}/>
+        </>
     );
-}
+};
 
 
-export default App
+export default App;
