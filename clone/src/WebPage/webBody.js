@@ -1,20 +1,23 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
+import createRoom from '../styledsheets/createRoom.scss'
+import CreateRoom from './createRoom';
 
 const BodyFrame = styled.div`
     width: 100%;
-    height: 90%;
-    padding : 0;
+    height: 100%;
+    background-color : #E0E3DA;
     margin : 0 auto;
     position : absolute;
 `;
 const BodyCenter = styled.div`
     width: 75%;
-    height: 100%;
+    height: 90%;
     margin: 0 auto;
     flex: 1 1 auto;
+    background-color = gray;
     flex-direction: column;
 `;
 
@@ -53,14 +56,18 @@ const Button = styled.button`
 `;
 
 
-const BODY = ({children}, ...rest) => {
+const BODY = ({location, history}) => {
+
+    console.log(location);
+    console.log(history);
+
     return (
-        <div>
+        <>
             <HEADER/>
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <Button>Create Room</Button>
+                        <Button onClick={() => history.push('./createRoom')}>Create Room</Button>
                     </ButtonArea>
                     <RoomList>
                         <UserList>
@@ -76,7 +83,7 @@ const BODY = ({children}, ...rest) => {
                 </BodyCenter>
                 <FOOTER/>
             </BodyFrame>
-        </div>
+        </>
 
 
     )
