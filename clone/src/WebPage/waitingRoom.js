@@ -6,13 +6,14 @@ import Users from "./Users";
 
 const BodyFrame = styled.div`
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position : absolute;
+    background-color : #E0E3DA;
 `;
 
 const Room = styled.div`
     width: 75%;
-    height :90%;
+    height :80vh;
     margin : auto;
     margin-top : 50px;
 `
@@ -68,7 +69,7 @@ const ChattingList = styled.div`
     background-color: #FFFFF3;
 `
 
-const WaitingRoom = () => {
+const WaitingRoom = ({location,history}) => {
     return (
         <div>
             <BodyFrame>
@@ -86,7 +87,7 @@ const WaitingRoom = () => {
                             <Button>관전</Button>
                         </LeftButtonsArea>
                         <RightButtonsArea>
-                            <Button>나가기</Button>
+                            <Button onClick={() => history.push('/')}>나가기</Button>
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>
