@@ -9,14 +9,14 @@ const Button = styled.button`
     border-radius: 2px;
     border: 0;
     padding: 10px;
-    text-decoration : none
+    text-decoration : none;
 `;
 
 class CreateButton extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalOpen: false,
+            isModalOpen: false
         };
     }
 
