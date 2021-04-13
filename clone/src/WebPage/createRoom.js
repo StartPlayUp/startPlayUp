@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import styled from 'styled-components';
 import CreateButton from "./CreateButton";
+import {useHistory, Link} from 'react-router-dom';
+import {withRouter} from "next/router";
 
 const Modal = styled.div`
     position: fixed;
@@ -106,16 +108,29 @@ const ResultButton = styled.button`
 `
 
 
+
+function Click() {
+    let history = useHistory();
+
+    function handleClick() {
+        history.push("/WaitingRoom");
+    }
+}
+
 class CreateRoom extends Component {
+
+    MovePage() {
+        // window.history.pushState('data', '', './waitingRoom');
+        this.props.history.push('./waitingRoom');
+    }
+
+
     componentDidMount() {
         window.onpopstate = function (event) {
             console.log(`location : ${document.location}, state : ${event.state}`)
         }
     }
 
-    Move() {
-        window.history.pushState('data', '', './waitingRoom');
-    }
 
     render() {
         const {isOpen, close} = this.props;   //아까 버튼에서 props로 가져온것
@@ -164,9 +179,9 @@ class CreateRoom extends Component {
                                 </ModalContents>
                                 <Footer>
                                     {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
-                                    <ResultButton onClick={(props) => {
-                                        this.Move();
-                                    }} color='#A593E0'>확인 </ResultButton>
+                                    <ResultButton color='#A593E0'>
+                                        <Link to={`/waitingRoom`}>Create Room</Link><br/>
+                                    </ResultButton>
                                 </Footer>
                             </LoginModal>
                         </LoginMid>
@@ -177,4 +192,4 @@ class CreateRoom extends Component {
     }
 }
 
-export default CreateRoom;
+export default withRouter(CreateRoom);

@@ -44,9 +44,6 @@ const ButtonArea = styled.div`
     margin-top: 30px;
 `;
 
-
-
-
 const BODY = ({location, history}) => {
 
     console.log(location);
@@ -58,7 +55,7 @@ const BODY = ({location, history}) => {
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <CreateButton>CreateRoom</CreateButton>
+                        <CreateButton/>
                     </ButtonArea>
                     <RoomList>
                         <UserList>
