@@ -1,4 +1,5 @@
 import React, { Component, useLayoutEffect, useState } from 'react';
+import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
 import {Route} from 'react-router-dom';
@@ -12,16 +13,15 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
     });
     const {children} = props; //children에게 값을 전달합니다.
     const testDB = [{email:"test@gmail",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
-
+    
     const onLogin = (model)=>{
         setContextState({
             ...contextState, //
         });
-        console.log(model)
-        console.log("테스트")
+        console.log("이메일"+model.email)
+        console.log("비밀번호"+model.password)
         
         const res = testDB.filter((i)=>i.email===model.email&&i.password===model.password);
-        console.log(contextState.checkAuth)
         if(res.length>0){
             localStorage.setItem('email',model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
             localStorage.setItem('password',model.password); //마찬가지로 비밀번호도 저장합니다.
@@ -30,18 +30,19 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
                 checkAuth:true,
                 error:false
             });
-        console.log(contextState)
         }else{
             setContextState({
                 checkAuth:false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
                 error:true//에러를 트루로 변경합니다.
             });
         }
+        console.log(contextState.checkAuth)
     };
 
     return(
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
-            onLogin
+            onLogin,
+            checkAuth: contextState.checkAuth
         }}>
             {children}
         </AuthStore.Provider>
