@@ -42,7 +42,8 @@ const HEADER = ({children, ...rest}) => {
                         StartPlayUp
                     </HeadLeft>
                     <HeadRight>
-                        <img src="../../public/images/white-menu.png" alt=""/>
+                        <img src="../images/white-message.png" alt="message"/>
+                        <img src="../images/white-menu.png" alt="menu"/>
                     </HeadRight>
                 </HeadStyle>
             </HeadColor>
