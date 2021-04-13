@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import styled from 'styled-components';
+import CreateButton from "./CreateButton";
 
 const Modal = styled.div`
     position: fixed;
@@ -104,15 +105,21 @@ const ResultButton = styled.button`
     color : white;
 `
 
-class CreateRoom extends Component {
 
-    state = {
-        email: "",
-        password: "",
-    };
+class CreateRoom extends Component {
+    componentDidMount() {
+        window.onpopstate = function (event) {
+            console.log(`location : ${document.location}, state : ${event.state}`)
+        }
+    }
+
+    Move() {
+        window.history.pushState('data', '', './waitingRoom');
+    }
 
     render() {
         const {isOpen, close} = this.props;   //아까 버튼에서 props로 가져온것
+
         return (
             <>
                 {isOpen ? (
@@ -123,12 +130,13 @@ class CreateRoom extends Component {
                     ////<div className="modalContents" onClick={isOpen}> 로그인 화면은 버튼 클릭해서 들어오면
                     /// true인 상태로 있어서 화면이 안꺼진다.
 
+
                     <Modal>
                         <LoginMid>
                             <LoginModal>
-                                <Close className="close" onClick={close}>
+                                <Close onClick={close}>
                                     &times;
-                                <               /Close>
+                                </Close>
                                 <ModalContents onClick={isOpen}>
                                     <Title>
                                         StartPlayUp
@@ -156,7 +164,9 @@ class CreateRoom extends Component {
                                 </ModalContents>
                                 <Footer>
                                     {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
-                                    <ResultButton color='#A593E0'>확인</ResultButton>
+                                    <ResultButton onClick={(props) => {
+                                        this.Move();
+                                    }} color='#A593E0'>확인 </ResultButton>
                                 </Footer>
                             </LoginModal>
                         </LoginMid>
