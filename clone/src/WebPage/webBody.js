@@ -2,9 +2,8 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
-import createRoom from '../styledsheets/createRoom.scss'
-import CreateRoom from './createRoom';
-
+import CreateRoom from "./createRoom";
+import CreateButton from "./CreateButton";
 const BodyFrame = styled.div`
     width: 100%;
     height: 100%;
@@ -45,15 +44,7 @@ const ButtonArea = styled.div`
     margin-top: 30px;
 `;
 
-const Button = styled.button`
-    font-size: 14px;
-    color: #FFFFFF;
-    background-color: #A593E0;
-    border-radius: 2px;
-    border: 0;
-    padding: 10px;
-    text-decoration : none
-`;
+
 
 
 const BODY = ({location, history}) => {
@@ -67,7 +58,7 @@ const BODY = ({location, history}) => {
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <Button onClick={() => history.push('./createRoom')}>Create Room</Button>
+                        <CreateButton>CreateRoom</CreateButton>
                     </ButtonArea>
                     <RoomList>
                         <UserList>

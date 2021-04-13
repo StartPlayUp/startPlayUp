@@ -4,12 +4,12 @@ import {
     waitingRoom,
     Mafia,
     YachtDice,
-    Yutnori
-} from './pages'
-import React, {useState} from 'react'
+    Yutnori, CreateRoom,
+} from './WebPage'
 import {Route} from 'react-router-dom'
 
 const App = () => {
+
     return (
         <>
             <Route exact path={"/"} component={Home}/>
@@ -17,6 +17,7 @@ const App = () => {
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
             <Route path={"/Yutnori"} component = {Yutnori}/>
+            {/*<CreateRoom/>*/}
         </>
     );
 };
