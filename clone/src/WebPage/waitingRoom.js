@@ -69,7 +69,7 @@ const ChattingList = styled.div`
     background-color: #FFFFF3;
 `
 
-const WaitingRoom = ({location,history}) => {
+const WaitingRoom = ({location, history}) => {
     return (
         <div>
             <BodyFrame>
@@ -95,7 +95,7 @@ const WaitingRoom = ({location,history}) => {
                             <h1>대기 목록</h1>
                             <hr/>
                             <div>
-                                <Users id='1' name='Jang' />
+                                <Users id='1' name='Jang'/>
                                 <Users id='2' name='Chan'/>
                                 <Users id='3' name='Jin'/>
                             </div>

@@ -14,23 +14,22 @@ const Button = styled.button`
 
 function CreateButton() {
 
-    const [open,setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    const openState = () =>{
+    const openState = () => {
         setOpen(true);
     }
 
-    const closeState = () =>{
+    const closeState = () => {
         setOpen(false);
     }
 
     return (
         <>
             <Button onClick={openState}>Create Room</Button>
-            <CreateRoom isOpen={openState} close={closeState}/>
+            {open && <CreateRoom isOpen={openState} close={closeState}/>}
         </>
     );
-
 }
 
 //

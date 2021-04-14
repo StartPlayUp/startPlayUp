@@ -14,7 +14,7 @@ const App = () => {
     return (
         <>
             <Route exact path={"/"} component={Home}/>
-            <Route path={"/waitingRoom"} component={waitingRoom}/>
+            <Route exact path={"/waitingRoom"} component={waitingRoom}/>
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
             <Route path={"/Yutnori"} component={Yutnori}/>

@@ -20,18 +20,23 @@ import {
 } from './CreateRoomStyle'
 
 
-const CreateRoom = ({location, history, props}) => {
+const CreateRoom = ({isOpen,close}) => {
 
+    let history = useHistory();
+
+    function handClick() {
+        history.push('./waitingRoom');
+    }
     return (
         <>
-            {props.isOpen ? (
+            {isOpen ? (
                 <Modal>
                     <LoginMid>
                         <LoginModal>
-                            <Close onClick={props.close}>
+                            <Close onClick={close}>
                                 &times;
                             </Close>
-                            <ModalContents onClick={props.isOpen}>
+                            <ModalContents onClick={isOpen}>
                                 <Title>
                                     StartPlayUp
                                 </Title>
@@ -59,8 +64,7 @@ const CreateRoom = ({location, history, props}) => {
                             <Footer>
                                 {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
                                 <ResultButton color='#A593E0'
-                                onClick={() =>
-                                history.push('./waitingRoom')}>
+                                onClick={handClick}>
                                     Create Room
                                 </ResultButton>
                             </Footer>
