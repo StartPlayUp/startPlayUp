@@ -76,8 +76,8 @@ const WaitingRoom = ({location,history}) => {
                 <WebHeader/>
                 <Room>
                     <Title>
-                        <TitleSpan fontSize={"18px"} color={"red"}>Mafia</TitleSpan>
-                        <TitleSpan fontSize={"22px"} color={"black"}>선착순 8명 빠르게 구해요 ~~~!!</TitleSpan>
+                        <TitleSpan fontSize={"18px"} color={"red"}>Game</TitleSpan>
+                        <TitleSpan fontSize={"22px"} color={"black"}>Title</TitleSpan>
                     </Title>
                     <hr/>
                     <ButtonArea>

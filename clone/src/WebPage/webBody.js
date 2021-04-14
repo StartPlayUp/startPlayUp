@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
-import CreateRoom from "./createRoom";
 import CreateButton from "./CreateButton";
+
 const BodyFrame = styled.div`
     width: 100%;
     height: 100%;

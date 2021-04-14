@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {useState, Component} from "react";
 import CreateRoom from "./createRoom";
 import styled from 'styled-components';
 
@@ -12,30 +12,52 @@ const Button = styled.button`
     text-decoration : none;
 `;
 
-class CreateButton extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isModalOpen: false
-        };
+function CreateButton() {
+
+    const [open,setOpen] = useState(false);
+
+    const openState = () =>{
+        setOpen(true);
     }
 
-    openModal = () => {
-        this.setState({ isModalOpen: true });
-    };
-
-    closeModal = () => {
-        this.setState({ isModalOpen: false });
-    };
-
-    render() {
-        return (
-            <>
-                <Button onClick={this.openModal}>Create Room</Button>
-                <CreateRoom isOpen={this.state.isModalOpen} close={this.closeModal} />
-            </>
-        );
+    const closeState = () =>{
+        setOpen(false);
     }
+
+    return (
+        <>
+            <Button onClick={openState}>Create Room</Button>
+            <CreateRoom isOpen={openState} close={closeState}/>
+        </>
+    );
+
 }
+
+//
+// class CreateButton extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             isModalOpen: false
+//         };
+//     }
+//
+//     openModal = () => {
+//         this.setState({isModalOpen: true});
+//     };
+//
+//     closeModal = () => {
+//         this.setState({isModalOpen: false});
+//     };
+//
+//     render() {
+//         return (
+//             <>
+//                 <Button onClick={this.openModal}>Create Room</Button>
+//                 <CreateRoom isOpen={this.state.isModalOpen} close={this.closeModal}/>
+//             </>
+//         );
+//     }
+// }
 
 export default CreateButton;

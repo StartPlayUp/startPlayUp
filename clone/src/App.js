@@ -4,23 +4,23 @@ import {
     waitingRoom,
     Mafia,
     YachtDice,
-    Yutnori, CreateRoom,
+    Yutnori,
+    CreateRoom,
+    CreateButton
 } from './WebPage'
-import {Route} from 'react-router-dom'
+import {BrowserRouter, Route, Router} from 'react-router-dom';
 
 const App = () => {
-
     return (
         <>
             <Route exact path={"/"} component={Home}/>
             <Route path={"/waitingRoom"} component={waitingRoom}/>
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
-            <Route path={"/Yutnori"} component = {Yutnori}/>
-            {/*<CreateRoom/>*/}
+            <Route path={"/Yutnori"} component={Yutnori}/>
+            {/*<Route path={"/CreateRoom"} component={CreateRoom}/>*/}
         </>
     );
 };
-
 
 export default App;
