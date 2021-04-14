@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {Link} from 'react-router-dom';
 import styled from "styled-components";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
@@ -20,7 +21,7 @@ const BodyCenter = styled.div`
     flex-direction: column;
 `;
 
-const RoomList = styled.div`
+const RoomFrame = styled.div`
     height: 90%;
     background-color: #FFFFF3;
     flex: 1 1 auto;
@@ -31,12 +32,21 @@ const UserList = styled.div`
     display: flex;
     justify-content: space-evenly;
     padding: 5px;
+    color : ${props => props.color};
+    background-color : ${props => props.background};
 `;
 
 const Users = styled.span`
     margin: 0 auto;
     font-size: 18px;
+    display : flex;
+    justify-content : center;
+    align-item : center;
 `;
+
+const RoomList = styled.div`
+    align-content : center;
+`
 
 const ButtonArea = styled.div`
     display: flex;
@@ -44,12 +54,18 @@ const ButtonArea = styled.div`
     margin-top: 30px;
 `;
 
-const BODY = ({location, history}) => {
+const BODY = ({location, history,match}) => {
 
     console.log(location);
     console.log(history);
 
-    return (
+    const[text,setText] = useState('');
+
+    const TextChange = e => {
+        setText(e.target.value);
+    };
+
+        return (
         <>
             <HEADER/>
             <BodyFrame>
@@ -57,24 +73,30 @@ const BODY = ({location, history}) => {
                     <ButtonArea>
                         <CreateButton/>
                     </ButtonArea>
-                    <RoomList>
-                        <UserList>
-                            <Users>방 번호</Users>
-                            <Users>방 제목</Users>
-                            <Users>방 사용자</Users>
-                            <Users>인원</Users>
-                        </UserList>
-                        <UserList>
-                            {/*    map 사용하여 정렬하기 추후에 선도 그러놓고 할 거임 일단 틀만 잡아놈*/}
-                        </UserList>
-                    </RoomList>
+                    <RoomFrame>
+                        <RoomList>
+                            <UserList color={'#566270'} background={'white'}>
+                                <Users>방 번호</Users>
+                                <Users>게임 이름</Users>
+                                <Users>방 제목</Users>
+                                <Users>방 사용자</Users>
+                                <Users>인원</Users>
+                            </UserList>
+                            <UserList onClick={() => history.push('./waitingRoom')}>
+                                <Users><Link to={`${match.url}`}>1</Link></Users>
+                                <Users>Mafia</Users>
+                                <Users>윷놀이 한판  ㄱ ㄱ</Users>
+                                <Users>Jang</Users>
+                                <Users>3</Users>
+                            </UserList>
+                            <hr/>
+                        </RoomList>
+                    </RoomFrame>
                 </BodyCenter>
                 <FOOTER/>
             </BodyFrame>
         </>
-
-
-    )
+    );
 }
 
 export default BODY;

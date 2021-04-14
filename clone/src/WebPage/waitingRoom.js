@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import styled from "styled-components";
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import Users from "./Users";
+import webBody from "./webBody";
 
 const BodyFrame = styled.div`
     width: 100%;
@@ -13,7 +14,7 @@ const BodyFrame = styled.div`
 
 const Room = styled.div`
     width: 75%;
-    height :80vh;
+    height :90vh;
     margin : auto;
     margin-top : 50px;
 `
@@ -69,15 +70,16 @@ const ChattingList = styled.div`
     background-color: #FFFFF3;
 `
 
-const WaitingRoom = ({location, history}) => {
+const WaitingRoom = ({location, history, props, match}) => {
+
     return (
         <div>
             <BodyFrame>
                 <WebHeader/>
                 <Room>
                     <Title>
-                        <TitleSpan fontSize={"18px"} color={"red"}>Game</TitleSpan>
-                        <TitleSpan fontSize={"22px"} color={"black"}>Title</TitleSpan>
+                        <TitleSpan fontSize={"18px"} color={"red"}>{match.params.game}</TitleSpan>
+                        <TitleSpan fontSize={"22px"} color={"black"}>{match.params.title}</TitleSpan>
                     </Title>
                     <hr/>
                     <ButtonArea>

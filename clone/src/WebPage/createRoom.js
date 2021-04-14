@@ -1,7 +1,6 @@
 import React, {Component, useState} from "react";
-import {useHistory, Link} from 'react-router-dom';
-import CreateButton from "./CreateButton";
-import {withRouter} from "next/router";
+import { useHistory } from 'react-router-dom';
+
 import {
     Modal,
     LoginMid,
@@ -16,7 +15,7 @@ import {
     SelectPrivate,
     Select,
     Footer,
-    ResultButton
+    ResultButton,
 } from './CreateRoomStyle'
 
 
