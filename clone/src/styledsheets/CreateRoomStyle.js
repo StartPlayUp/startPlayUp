@@ -14,7 +14,7 @@ export const LoginModal = styled.div`
     background-color: white;
     position: relative;
     box-sizing: border-box;
-    margin: 56px auto;
+    margin: 128px auto;
 `
 
 export const LoginMid = styled.div`
