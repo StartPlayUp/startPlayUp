@@ -4,71 +4,19 @@ import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import Users from "./Users";
 import webBody from "./webBody";
-
-const BodyFrame = styled.div`
-    width: 100%;
-    height: 100vh;
-    position : absolute;
-    background-color : #E0E3DA;
-`;
-
-const Room = styled.div`
-    width: 75%;
-    height :90vh;
-    margin : auto;
-    margin-top : 50px;
-`
-
-const Title = styled.div`
-    display: flex;
-    align-items: center;
-`
-
-const TitleSpan = styled.span`
-    margin-right : 30px;
-    font-size : ${(props) => props.fontSize};
-    color : ${(props) => props.color};
-`
-const ButtonArea = styled.div`
-    margin-top: 30px;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-between;
-`
-
-const LeftButtonsArea = styled.div`
-    justify-content: flex-start;
-`
-
-const RightButtonsArea = styled.div`
-    justify-content: flex-end;
-`
-
-const Button = styled.button`
-    font-size: 14px;
-    padding: 7px;
-    margin-right : 15px;
-`
-
-const MainList = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    margin-top: 30px;
-`
-
-const UserList = styled.div`
-    flex-basis: 50%;
-    flex-direction: column;
-`
-
-const ChattingList = styled.div`
-    flex-basis: 50%;
-    flex-direction: column;
-    height: 400px;
-    background-color: #FFFFF3;
-`
+import {
+    BodyFrame,
+    Button,
+    ButtonArea,
+    ChattingList,
+    MainList,
+    Room,
+    Title,
+    TitleSpan,
+    UserList,
+    LeftButtonsArea,
+    RightButtonsArea
+} from "./WaitingRoomStyle";
 
 const WaitingRoom = ({location, history, props, match}) => {
 
@@ -78,8 +26,8 @@ const WaitingRoom = ({location, history, props, match}) => {
                 <WebHeader/>
                 <Room>
                     <Title>
-                        <TitleSpan fontSize={"18px"} color={"red"}>{match.params.game}</TitleSpan>
-                        <TitleSpan fontSize={"22px"} color={"black"}>{match.params.title}</TitleSpan>
+                        <TitleSpan fontSize={"18px"} color={"red"}>Mafia</TitleSpan>
+                        <TitleSpan fontSize={"22px"} color={"black"}>마피아 게임 한판 ㄱ</TitleSpan>
                     </Title>
                     <hr/>
                     <ButtonArea>
@@ -89,7 +37,7 @@ const WaitingRoom = ({location, history, props, match}) => {
                             <Button>관전</Button>
                         </LeftButtonsArea>
                         <RightButtonsArea>
-                            <Button onClick={() => history.push('/')}>나가기</Button>
+                            <Button margin={'0'} onClick={() => history.push('/')}>나가기</Button>
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>

@@ -1,5 +1,5 @@
 import React, {Component, useState} from "react";
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 import {
     Modal,
@@ -19,13 +19,19 @@ import {
 } from './CreateRoomStyle'
 
 
-const CreateRoom = ({isOpen,close}) => {
+const CreateRoom = ({isOpen, close}) => {
 
     let history = useHistory();
 
     function handClick() {
         history.push('./waitingRoom');
     }
+
+    const [text, setText] = useState('');
+    const Change = (e) => {
+        setText(e.target.value);
+    }
+
     return (
         <>
             {isOpen ? (
@@ -46,7 +52,7 @@ const CreateRoom = ({isOpen,close}) => {
                                 <RoomTitle>
                                     <span>암호 : &nbsp; </span>
                                     <input type="checkbox"/>
-                                    <Input type="password" maxLength='10' width='180px'/>
+                                    <Input type="password" maxLength='10' width='180px' value={text}/>
                                 </RoomTitle>
                                 <SelectGame>
                                     <Select>
@@ -63,7 +69,7 @@ const CreateRoom = ({isOpen,close}) => {
                             <Footer>
                                 {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
                                 <ResultButton color='#A593E0'
-                                onClick={handClick}>
+                                              onClick={handClick}>
                                     Create Room
                                 </ResultButton>
                             </Footer>
