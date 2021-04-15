@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const HeadStyle = styled.div`
+export const HeadStyle = styled.div`
     width: 75%;
     height: 100%;
     margin : 0 auto;
@@ -9,11 +9,11 @@ const HeadStyle = styled.div`
     align-items: center;
 `;
 
-const HeadColor = styled.div`
+export const HeadColor = styled.div`
     background : #566270;
 `;
 
-const HeadLeft = styled.div`
+export const HeadLeft = styled.div`
     display: flex;
     justify-content: flex-start;
     color : white;
@@ -21,18 +21,18 @@ const HeadLeft = styled.div`
     font-size : ${(props) => props.fontSize};
 `;
 
-const HeadRight = styled.div`
+export const HeadRight = styled.div`
     display: flex;
     justify-content: flex-end;
 `
-const BodyFrame = styled.div`
+export const BodyFrame = styled.div`
     width: 100%;
     height: 100%;
     background-color : #E0E3DA;
     margin : 0 auto;
     position : absolute;
 `;
-const BodyCenter = styled.div`
+export const BodyCenter = styled.div`
     width: 75%;
     height: 90%;
     margin: 0 auto;
@@ -41,28 +41,28 @@ const BodyCenter = styled.div`
     flex-direction: column;
 `;
 
-const RoomFrame = styled.div`
+export const RoomFrame = styled.div`
     height: 90%;
     background-color: #FFFFF3;
     flex: 1 1 auto;
     flex-direction: column;
 `;
 
-const UserList = styled.div`
+export const UserList = styled.div`
     display :fix;
     padding: 5px;
     color : ${props => props.color};
     background-color : ${props => props.background};
 `;
 
-const Users = styled.span`
+export const Users = styled.span`
     font-size : 14px;
     width : ${props => props.width};
     float : left;
     
 `;
 
-const ButtonArea = styled.div`
+export const ButtonArea = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top: 30px;
