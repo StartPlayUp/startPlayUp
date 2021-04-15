@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+nodejsexample/app.js
+functions/ui-debug.log
+functions/package.json
+functions/package-lock.json
+functions/index.js
+functions/firebase-debug.log
+functions/.eslintrc.js
+firebase.json
+.firebaserc
+src/Jin/Auth/KakaoSDK.js
