@@ -11,7 +11,7 @@ export const Room = styled.div`
     width: 75%;
     height :90vh;
     margin : auto;
-    margin-top : 50px;
+    margin-top : 50px;    
 `
 
 export const Title = styled.div`
@@ -61,6 +61,9 @@ export const MainList = styled.div`
 export const UserList = styled.div`
     flex-basis: 50%;
     flex-direction: column;
+    border : 2px solid gray;
+    padding-left : 2px;
+
 `
 
 export const ChattingList = styled.div`
