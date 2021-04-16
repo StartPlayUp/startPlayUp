@@ -1,9 +1,8 @@
 import React, {Component, useState} from 'react';
-import styled from "styled-components";
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
-import Users from "./Users";
-import webBody from "./webBody";
+import {useLocation} from 'react-router-dom';
+
 import {
     BodyFrame,
     Button,
@@ -18,7 +17,10 @@ import {
     RightButtonsArea
 } from "./WaitingRoomStyle";
 
-const WaitingRoom = ({location, history, props, match}) => {
+const WaitingRoom = ({ history}) => {
+    const location = useLocation();
+    const input = location.state.input;
+    const game = location.state.game;
 
     return (
         <div>
@@ -26,8 +28,8 @@ const WaitingRoom = ({location, history, props, match}) => {
                 <WebHeader/>
                 <Room>
                     <Title>
-                        <TitleSpan fontSize={"18px"} color={"red"}>Mafia</TitleSpan>
-                        <TitleSpan fontSize={"22px"} color={"black"}>마피아 게임 한판 ㄱ</TitleSpan>
+                        <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
+                        <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
                     </Title>
                     <hr/>
                     <ButtonArea>
@@ -42,12 +44,8 @@ const WaitingRoom = ({location, history, props, match}) => {
                     </ButtonArea>
                     <MainList>
                         <UserList>
-                            <h1>대기 목록</h1>
-                            <hr/>
                             <div>
-                                <Users id='1' name='Jang'/>
-                                <Users id='2' name='Chan'/>
-                                <Users id='3' name='Jin'/>
+                                dff
                             </div>
                         </UserList>
                         <ChattingList>
