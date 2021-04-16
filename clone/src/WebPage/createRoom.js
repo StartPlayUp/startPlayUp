@@ -16,21 +16,26 @@ import {
     Select,
     Footer,
     ResultButton,
-} from './CreateRoomStyle'
+} from './CreateRoomStyle';
+import WaitingRoom from "./waitingRoom";
+import {TitleSpan} from "./WaitingRoomStyle";
 
 
 const CreateRoom = ({isOpen, close}) => {
 
     let history = useHistory();
 
-    function handClick() {
-        history.push('./waitingRoom');
+    const [input, setInput] = useState('');
+    const [game, setGame] = useState('');
+
+    const onChange = e => {
+        setInput(e.target.value);
     }
 
-    const [text, setText] = useState('');
-    const Change = (e) => {
-        setText(e.target.value);
+    const onGameChange = e => {
+        setGame(e.target.value);
     }
+
 
     return (
         <>
@@ -47,18 +52,23 @@ const CreateRoom = ({isOpen, close}) => {
                                 </Title>
                                 <RoomTitle>
                                     <span>제목 : &nbsp; </span>
-                                    <Input type="text" maxLength="20" width='200px'/>
+                                    <Input
+                                        type="text"
+                                        maxLength="20"
+                                        width='200px'
+                                        value={input}
+                                        onChange={onChange}/>
                                 </RoomTitle>
                                 <RoomTitle>
                                     <span>암호 : &nbsp; </span>
                                     <input type="checkbox"/>
-                                    <Input type="password" maxLength='10' width='180px' value={text}/>
+                                    <Input type="password" maxLength='10' width='180px'/>
                                 </RoomTitle>
                                 <SelectGame>
-                                    <Select>
-                                        <Games>윷놀이</Games>
-                                        <Games>요트 다이스</Games>
-                                        <Games>마피아</Games>
+                                    <Select value={game} onChange={onGameChange}>
+                                        <Games value={'Yutnori'}>윷놀이</Games>
+                                        <Games value={'YachtDice'}>요트 다이스</Games>
+                                        <Games value={'Mafia'}>마피아</Games>
                                     </Select>
                                 </SelectGame>
                                 <SelectPrivate>
@@ -69,8 +79,16 @@ const CreateRoom = ({isOpen, close}) => {
                             <Footer>
                                 {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
                                 <ResultButton color='#A593E0'
-                                              onClick={handClick}>
-                                    Create Room
+                                              onClick={() => {
+                                                  history.push({
+                                                      pathname: "/waitingRoom",
+                                                      state: {
+                                                          input: input,
+                                                          game: game
+                                                      }
+                                                  })
+                                              }}>
+                                    확인
                                 </ResultButton>
                             </Footer>
                         </LoginModal>
