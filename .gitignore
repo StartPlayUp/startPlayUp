@@ -31,6 +31,3 @@ functions/.eslintrc.js
 firebase.json
 .firebaserc
 src/Jin/Auth/KakaoSDK.js
-src/Jin/Naver.js
-src/util/firebase_config.js
-src/util/firebase_config.js

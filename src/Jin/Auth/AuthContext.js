@@ -9,9 +9,9 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         error:false
     });
     const {children} = props; //children에게 값을 전달합니다.
-    const testDB = [{email:"test@gmail",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
-    
-    const onLogin = (model,history)=>{
+    const testDB = [{email:"test",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
+    let history=useHistory();
+    const onLogin = (model)=>{
         setContextState({
             ...contextState, //
         });
