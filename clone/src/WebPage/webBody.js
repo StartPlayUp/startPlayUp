@@ -10,15 +10,12 @@ import {
     UserList,
     Users,
     ButtonArea
-} from './WebFrameStyle'
+} from './WebFrameStyle';
 
-
-const BODY = ({location, history, match}) => {
+const BODY = ({location, history, match, props}) => {
 
     console.log(location);
     console.log(history);
-
-    const [text, setText] = useState('');
 
     return (
         <>
@@ -26,7 +23,7 @@ const BODY = ({location, history, match}) => {
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <CreateButton/>
+                        <CreateButton type={'submit'}/>
                     </ButtonArea>
                     <RoomFrame>
                         <UserList color={'#566270'} background={'white'}>
@@ -39,8 +36,8 @@ const BODY = ({location, history, match}) => {
                         <hr/>
                         <UserList onClick={() => history.push('./waitingRoom')}>
                             <Users width={'5vw'}>1</Users>
-                            <Users width={'15vw'}>Mafia</Users>
-                            <Users width={'30vw'}>윷놀이 한판 ㄱ ㄱ</Users>
+                            <Users width={'15vw'}>Yutnori</Users>
+                            <Users width={'30vw'}>윷놀이 ㄱ ㄱ</Users>
                             <Users width={'15vw'}>Jang</Users>
                             <Users width={'5vw'}>3</Users>
                         </UserList>
@@ -48,7 +45,7 @@ const BODY = ({location, history, match}) => {
                         <UserList onClick={() => history.push('./waitingRoom')}>
                             <Users width={'5vw'}>1</Users>
                             <Users width={'15vw'}>Mafia</Users>
-                            <Users width={'30vw'}>윷놀이 asdfadsfds asdfㅁㄴㅇㄹㅁㄹ한판 ㄱ ㄱ</Users>
+                            <Users width={'30vw'}>마피아  asdfadsfds asdfㅁㄴㅇㄹㅁㄹ한판 ㄱ ㄱ</Users>
                             <Users width={'15vw'}>Jang</Users>
                             <Users width={'5vw'}>3</Users>
                         </UserList>

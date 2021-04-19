@@ -1,4 +1,4 @@
-import Users from "./Users";
+import Players from "./Players";
 import styled from "styled-components";
 
 const Frame = styled.div`
@@ -11,9 +11,9 @@ const Yutnori = () => {
     let str = "님이 입장하셨습니다."
     return(
         <Frame>
-            <Users id={"1"} name={'Jang'} log={str}/>
-            <Users id={"2"} name={'Chan'} log={str}/>
-            <Users id={"3"} name={'JIN'} log={str}/>
+            <Players id={"1"} name={'Jang'} log={str}/>
+            <Players id={"2"} name={'Chan'} log={str}/>
+            <Players id={"3"} name={'JIN'} log={str}/>
         </Frame>
     )
 }
