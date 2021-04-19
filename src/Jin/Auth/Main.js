@@ -1,22 +1,13 @@
-import React from 'react';
+import React,{useContext,useState} from 'react';
 import {Route} from 'react-router-dom';
-
+import { AuthStore, AuthProvider } from './AuthContext';
 const Main = () =>{
-    const naver = new naver.LoginWithNaverId({
-        clientId: 'ZLFAGtItFGDqMKyhBgU9',
-        access_token: naver.oauthParams.access_token
-    })
-    console.log(naver.oauthParams.access_token)
-    naver.get_naver_userprofile("naverSignInCallback()");
-    // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-    const naverSignInCallback =() =>{
-        console.log(naver_id_login.getProfileData('email'));
-        console.log(naver_id_login.getProfileData('nickname'));
-    }
-    
+    const test = useContext(AuthStore)
     return(
         <div>
-            
+        <p>test</p>
+        <p>{email,console.log(AuthStore),console.log(test)}</p>
+        <p>{password, console.log(email,password)}</p>
         </div>
     );
 };

@@ -2,7 +2,7 @@ import React, { Component, useLayoutEffect, useState } from 'react';
 import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import {Route} from 'react-router-dom';
+import {Route,useHistory} from 'react-router-dom';
 
 const AuthStore=React.createContext(); //context 객체 생성
 
@@ -12,8 +12,8 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         error:false
     });
     const {children} = props; //children에게 값을 전달합니다.
-    const testDB = [{email:"test@gmail",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
-    
+    const testDB = [{email:"test",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
+    let history=useHistory();
     const onLogin = (model)=>{
         setContextState({
             ...contextState, //
@@ -29,7 +29,9 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
                 ...contextState,
                 checkAuth:true,
                 error:false
-            });
+            }
+            );
+            history.push('/Main');
         }else{
             setContextState({
                 checkAuth:false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
