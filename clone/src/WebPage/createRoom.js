@@ -26,7 +26,7 @@ const CreateRoom = ({isOpen, close}) => {
     let history = useHistory();
 
     const [input, setInput] = useState('');
-    const [game, setGame] = useState('');
+    const [game, setGame] = useState('Yutnori');
 
     const onChange = e => {
         setInput(e.target.value);
