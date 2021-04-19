@@ -5,9 +5,11 @@ const Main = () =>{
     const test = useContext(AuthStore)
     return(
         <div>
-        <p>test</p>
-        <p>{email,console.log(AuthStore),console.log(test)}</p>
-        <p>{password, console.log(email,password)}</p>
+        <p>사용자 이메일</p>
+        <p>{console.log(AuthStore),console.log(test)}</p>
+        <p>{localStorage.getItem('email')}</p>
+        <p>사용자 비밀번호</p>
+        <p>{localStorage.getItem('password')}</p>
         </div>
     );
 };
