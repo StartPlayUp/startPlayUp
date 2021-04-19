@@ -1,8 +1,7 @@
-import React,{useContext,useState} from 'react';
+import React from 'react';
 import {Route} from 'react-router-dom';
-import { AuthStore, AuthProvider } from './AuthContext';
+
 const Main = () =>{
-    const test = useContext(AuthStore)
     return(
         <div>
         <p>사용자 이메일</p>

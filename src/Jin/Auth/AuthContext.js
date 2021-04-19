@@ -1,8 +1,5 @@
 import React, { Component, useLayoutEffect, useState } from 'react';
 import firebase from 'firebase';
-import PropTypes from 'prop-types';
-import styled from "styled-components";
-import {Route,useHistory} from 'react-router-dom';
 
 const AuthStore=React.createContext(); //context 객체 생성
 

@@ -5,7 +5,6 @@ import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
 import {Main} from './Auth';
 import {AuthProvider} from './Auth/AuthContext'
-import { Route, useHistory, useLocation } from 'react-router-dom';
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
@@ -29,15 +28,14 @@ function App(){
     return (
         <Fragment>
             <GlobalStyle />
-                <Container> 
+                <Container>
+                    <AuthProvider>
                         <LoginWrapper>
                             <LogoWrapper>StartPlayUp</LogoWrapper>
-                                <Route path="/" component={LoginForm} />
-                                <Route path="/Main" component={Main} />
+                            <LoginForm/>
                     </LoginWrapper>
+                </AuthProvider>
             </Container>
-            
-            
         </Fragment>
     )
 }

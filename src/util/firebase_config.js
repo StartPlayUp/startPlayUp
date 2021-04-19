@@ -22,5 +22,3 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider);
 //다만 여기서는 구글로 로그인할 것이므로 파라미터로 위에서 정의한 provider를 사용
 
 export default firebase;
-
-
