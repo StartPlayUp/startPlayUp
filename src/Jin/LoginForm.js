@@ -61,14 +61,14 @@ function LoginForm(){
                 <Input name="password" onChange={onChange} value = {password}/>
                 <Button onClick={logOn}>Login</Button>
                 <NaverLogin //네이버 로그인 모듈 사용
-                    clientId="" //발급 받은 클라이언트 ID
+                    clientId="ZLFAGtItFGDqMKyhBgU9" //발급 받은 클라이언트 ID
                     callbackUrl="http://localhost:3000/Main"    //콜백 URL
                     render={(props) => <div onClick={props.onClick}>Naver로 로그인</div>}  //로그인 버튼 생성
                     onSuccess={(naverUser) => console.log(naverUser)}   //성공시
                     onFailure={() => console.error(result)} //실패한 경우
                 ></NaverLogin>
                 <KakaoLogin
-                    jsKey={""}
+                    jsKey={"3eba9d0656f87b8cb00ae9e1e9f6ca31"}
                     onSuccess={(res) => console.log(res)}
                     onFailure={(res) => console.log(res)}
                     getProfile={true}
