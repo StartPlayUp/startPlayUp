@@ -10,7 +10,7 @@ import {
     UserList,
     Users,
     ButtonArea
-} from './WebFrameStyle';
+} from '../Style/WebFrameStyle';
 
 const BODY = ({location, history, match, props}) => {
 

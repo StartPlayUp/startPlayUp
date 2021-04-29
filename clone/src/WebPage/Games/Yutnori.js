@@ -1,15 +1,14 @@
-import Players from "./Players";
+import Players from "../Players";
 import styled from "styled-components";
 
 const Frame = styled.div`
     height : 100%;
-    background-color : orange;
-    color : black;
+    background-color : lightgreen;
+    color : white;
 `
 
-const YachtDice = () => {
+const Yutnori = () => {
     let str = "님이 입장하셨습니다."
-
     return(
         <Frame>
             <Players id={"1"} name={'Jang'} log={str}/>
@@ -19,4 +18,4 @@ const YachtDice = () => {
     )
 }
 
-export default YachtDice;
+export default Yutnori;

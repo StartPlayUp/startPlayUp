@@ -15,7 +15,7 @@ import {
     UserList,
     LeftButtonsArea,
     RightButtonsArea
-} from "./WaitingRoomStyle";
+} from "../Style/WaitingRoomStyle";
 
 const WaitingRoom = ({ history}) => {
     const location = useLocation();

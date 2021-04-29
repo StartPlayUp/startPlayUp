@@ -4,7 +4,7 @@ import {
     waitingRoom,
     Mafia,
     YachtDice,
-    Yutnori
+    Yutnori,
 } from './WebPage'
 import {BrowserRouter, Route, Router} from 'react-router-dom';
 
@@ -16,7 +16,6 @@ const App = () => {
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
             <Route path={"/Yutnori"} component={Yutnori}/>
-            {/*<Route path={"/CreateRoom"} component={CreateRoom}/>*/}
         </>
     );
 };
