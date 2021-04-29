@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Jin from './Jin/App';
+import LoginApp from './LoginFrame/LoginApp'
 import { BrowserRouter} from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Jin />
+      <LoginApp />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

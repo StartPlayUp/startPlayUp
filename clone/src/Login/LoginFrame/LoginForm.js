@@ -56,13 +56,13 @@ function LoginForm() {
             {({checkAuth}) => (
                 (checkAuth ? <div/> :
                         <form>
-                            <Input name="email" onChange={onChange} value={email}/>
+                            <Input type={'text'} name="email" onChange={onChange} value={email}/>
                             <p/>
-                            <Input name="password" onChange={onChange} value={password}/>
+                            <Input type={'password'} name="password" onChange={onChange} value={password}/>
                             <Button onClick={logOn}>Login</Button>
                             <NaverLogin //네이버 로그인 모듈 사용
                                 clientId="" //발급 받은 클라이언트 ID
-                                callbackUrl="http://localhost:3000/Main"    //콜백 URL
+                                callbackUrl="http://localhost:3000/Home"    //콜백 URL
                                 render={(props) => <div onClick={props.onClick}>Naver로 로그인</div>}  //로그인 버튼 생성
                                 onSuccess={(naverUser) => console.log(naverUser)}   //성공시
                                 onFailure={() => console.error(true)} //실패한 경우
@@ -72,7 +72,8 @@ function LoginForm() {
                                 onSuccess={(res) => console.log(res)}
                                 onFailure={(res) => console.log(res)}
                                 getProfile={true}
-                            ><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"/>
+                                onFail={false}><img
+                                src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"/>
                             </KakaoLogin>
                         </form>
                 )

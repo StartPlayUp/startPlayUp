@@ -5,13 +5,15 @@ import {
     Mafia,
     YachtDice,
     Yutnori,
+    LoginApp
 } from './WebPage'
 import {BrowserRouter, Route, Router} from 'react-router-dom';
 
 const App = () => {
     return (
         <>
-            <Route exact path={"/"} component={Home}/>
+            <Route exact path={"/"} component={LoginApp}/>
+            <Route exact path={'/Home'} component={Home}/>
             <Route exact path={"/waitingRoom"} component={waitingRoom}/>
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
