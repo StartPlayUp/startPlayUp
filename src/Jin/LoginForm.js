@@ -5,10 +5,10 @@ import { Main } from './Auth';
 import { AuthStore, AuthProvider} from './Auth/AuthContext';
 import { signInWithGoogle} from '../util/firebase_config';
 import { getSuggestedQuery } from '@testing-library/dom';
-import {firebase} from 'firebase';
+import firebase from 'firebase';
 import KakaoLogin from "react-kakao-login";
 import NaverLogin from "react-login-by-naver";
-import { firestore } from 'firebase-admin';
+import 'firebase/firestore';
 
 
 const Button = styled.button`
@@ -50,16 +50,33 @@ function LoginForm(){
         AuthCon.onLogin(inputs,history)
         
     };
-
+    const DBConnect=(e)=>{  //파이어 스토어가 잘 연동 되었는지 테스트 하는 용도입니다.
+        e.preventDefault();
+        const db = firebase.firestore();
+        db
+            .collection("User").doc("sTu4bsMTdK633pMGcFu9").get()
+            .then((doc)=>{
+                if(doc.exists){
+                    console.log("Document data:",doc.data());
+                }
+                else{
+                    HTMLFormControlsCollection.log("No such document!");
+                }
+            }).catch((error)=>{
+                console.log("Eorror getting document:", error);
+            })
+        
+    }
     return(
         <AuthStore.Consumer>
         {({checkAuth})=>(
                 (checkAuth ? <div/>  :
             <form>
                 <Input name="email" onChange={onChange} value = {email}/>
-                <p/>
+                <p />
                 <Input name="password" onChange={onChange} value = {password}/>
                 <Button onClick={logOn}>Login</Button>
+                <button onClick={DBConnect}>firestore테스트용</button>
                 <NaverLogin //네이버 로그인 모듈 사용
                     clientId="ZLFAGtItFGDqMKyhBgU9" //발급 받은 클라이언트 ID
                     callbackUrl="http://localhost:3000/Main"    //콜백 URL
@@ -69,7 +86,7 @@ function LoginForm(){
                 ></NaverLogin>
                 <KakaoLogin
                     jsKey={"3eba9d0656f87b8cb00ae9e1e9f6ca31"}
-                    onSuccess={(res) => console.log(res)}
+                    onSuccess={(res) => AuthCon.onKakao(res,history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
                     onFailure={(res) => console.log(res)}
                     getProfile={true}
                 ><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" /></KakaoLogin>
