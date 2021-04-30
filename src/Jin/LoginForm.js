@@ -86,7 +86,7 @@ function LoginForm(){
                 ></NaverLogin>
                 <KakaoLogin
                     jsKey={"3eba9d0656f87b8cb00ae9e1e9f6ca31"}
-                    onSuccess={(res) => AuthCon.onKakao(res,history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
+                    onSuccess={(res) => AuthCon.onKakaoLogin(res,history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
                     onFailure={(res) => console.log(res)}
                     getProfile={true}
                 ><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" /></KakaoLogin>
