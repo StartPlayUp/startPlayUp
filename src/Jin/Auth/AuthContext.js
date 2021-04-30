@@ -38,6 +38,51 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         }
         console.log(contextState.checkAuth)
     };
+    const onNaverLogin=(naverUser,history)=>{
+        setContextState({
+            ...contextState
+        });
+        const NaverID=naverUser.id
+        const db=firebase.firestore();
+        var data = db.collection("User").where("user_id", "==", NaverID);   //네이버 ID가 파이어스토어에 존재 하는지 조건을 걸어 검색합니다.
+        data.get()  //검색된 데이터를 얻어옵니다.
+            .then((querySnapshot) => {
+                console.log(querySnapshot)
+                if (querySnapshot.empty == true) {//조건에 맞는 네이버 ID가 없는 경우
+                    console.log("데이터 없음")
+                    db.collection("User").add({ //네이버 ID를 추가하도록 합니다.
+                        user_id: NaverID
+                    })
+                        .then(() => {
+                            console.log("성공적으로 회원가입!") //데이터 베이스에 사용자 정보가 추가 되었으므로 회원가입이 되었다고 알려줍니다.
+                            setContextState({
+                                ...contextState,//로그인이 성공 했음을 알립니다.
+                                checkAuth: true,
+                                error: false
+                            });
+                            history.push('/Main');//메인 페이지로 넘어가게 됩니다.
+                        })
+                        .catch((error) => {
+                            console.error("Error", error);
+                        });
+                }
+                else {
+                    querySnapshot.forEach((doc) => {//조건에 맞는 카카오ID가 있는 경우
+                        console.log(NaverID);
+                        console.log(doc.id, "=>", doc.data());
+                        setContextState({
+                            ...contextState,//로그인이 성공 했음을 알립니다.
+                            checkAuth: true,
+                            error: false
+                        });
+                        history.push('/Main');//메인 페이지로 넘어가게 됩니다.
+                        localStorage.setItem('email', NaverID)
+                        console.log("네이버 아이디를 찾았다.");
+                    });
+                }
+
+            });
+    }
     const onKakaoLogin=(res,history)=>{  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
         setContextState({
             ...contextState,
@@ -45,7 +90,6 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         const KakaoID = res.profile.id  //res 객체 중 id 배열에 접근합니다.
         const db = firebase.firestore();    //파이어스토어를 실행합니다.
         var data = db.collection("User").where("user_id", "==", KakaoID);   //카카오 ID가 파이어스토어에 존재 하는지 조건을 걸어 검색합니다.
-        console.log(data);
         data.get()  //검색된 데이터를 얻어옵니다.
             .then((querySnapshot) => {
                 console.log(querySnapshot)
@@ -63,9 +107,6 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
                 }
                 else{
                     querySnapshot.forEach((doc) => {//조건에 맞는 카카오ID가 있는 경우
-                        console.log(doc)
-                        console.log(querySnapshot)
-
                         console.log(KakaoID);
                         console.log(doc.id, "=>", doc.data());
                         setContextState({
@@ -87,6 +128,7 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
             onKakaoLogin,
+            onNaverLogin,
             checkAuth: contextState.checkAuth
         }}>
             {children}

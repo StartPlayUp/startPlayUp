@@ -81,7 +81,7 @@ function LoginForm(){
                     clientId="ZLFAGtItFGDqMKyhBgU9" //발급 받은 클라이언트 ID
                     callbackUrl="http://localhost:3000/Main"    //콜백 URL
                     render={(props) => <div onClick={props.onClick}>Naver로 로그인</div>}  //로그인 버튼 생성
-                    onSuccess={(naverUser) => console.log(naverUser)}   //성공시
+                    onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser,history)}   //성공시
                     onFailure={() => console.error(result)} //실패한 경우
                 ></NaverLogin>
                 <KakaoLogin
