@@ -1,7 +1,7 @@
 import React, { Component, useLayoutEffect, useState } from 'react';
 import firebase from 'firebase';
 
-const AuthStore=React.createContext(); //context 객체 생성
+const AuthStore=React.createContext(''); //context 객체 생성
 
 const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
     const [contextState, setContextState] = useState({ //useState를 사용해 Context값을 변경하려고 합니다.
@@ -18,7 +18,8 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         console.log("이메일"+model.email);
         console.log("비밀번호"+model.password);
         
-        const res = testDB.filter((i)=>i.email===model.email&&i.password===model.password);
+        const res = testDB.filter((i)=>
+            i.email===model.email&&i.password===model.password);
         if(res.length>0){
             localStorage.setItem('email',model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
             localStorage.setItem('password',model.password); //마찬가지로 비밀번호도 저장합니다.

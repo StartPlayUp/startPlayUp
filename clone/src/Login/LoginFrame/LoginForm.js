@@ -32,24 +32,24 @@ const Input = styled.input`
 `
 
 function LoginForm() {
-    const AuthCon = useContext(AuthStore);
-    let history = useHistory();
+    const AuthCon = useContext(AuthStore); //useContext 사용
+    let history = useHistory(); // useHistory사용
     const [inputs, setInputs] = useState({
         email: '',
         password: ''
-    });
+    });//email,password useState 사용 기본 값  -> ''
     const {email, password} = inputs;
     const onChange = (e) => {
         const {value, name} = e.target;
         setInputs({
-            ...inputs,
+            ...inputs, // ...이 무슨 의미이지??
             [name]: value
-        });
+        }); // 이 부분 정확하게 해석
     };
     const logOn = (e) => {
         e.preventDefault();
         AuthCon.onLogin(inputs, history)
-    };
+    }; // 이 부분 정확하게 해석
 
     return (
         <AuthStore.Consumer>

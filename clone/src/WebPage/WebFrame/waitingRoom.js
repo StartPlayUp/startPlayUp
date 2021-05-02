@@ -17,7 +17,7 @@ import {
     RightButtonsArea
 } from "../Style/WaitingRoomStyle";
 
-const WaitingRoom = ({ history}) => {
+const WaitingRoom = ({history}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
@@ -39,7 +39,7 @@ const WaitingRoom = ({ history}) => {
                             <Button>관전</Button>
                         </LeftButtonsArea>
                         <RightButtonsArea>
-                            <Button margin={'0'} onClick={() => history.push('/')}>나가기</Button>
+                            <Button margin={'0'} onClick={() => history.push('/Home')}>나가기</Button>
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>
@@ -59,6 +59,4 @@ const WaitingRoom = ({ history}) => {
         </div>
     )
 }
-
-
 export default WaitingRoom;
