@@ -45,13 +45,19 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         const NaverID=naverUser.id
         const db=firebase.firestore();
         var data = db.collection("User").where("user_id", "==", NaverID);   //네이버 ID가 파이어스토어에 존재 하는지 조건을 걸어 검색합니다.
+        console.log(naverUser);
         data.get()  //검색된 데이터를 얻어옵니다.
             .then((querySnapshot) => {
                 console.log(querySnapshot)
+                const NaverEmail = naverUser.email
+                const NaverNickname = naverUser.nickname
                 if (querySnapshot.empty == true) {//조건에 맞는 네이버 ID가 없는 경우
                     console.log("데이터 없음")
                     db.collection("User").add({ //네이버 ID를 추가하도록 합니다.
-                        user_id: NaverID
+                        user_id: NaverID,
+                        user_email: NaverEmail,
+                        user_nickName: NaverNickname
+
                     })
                         .then(() => {
                             console.log("성공적으로 회원가입!") //데이터 베이스에 사용자 정보가 추가 되었으므로 회원가입이 되었다고 알려줍니다.
@@ -75,8 +81,12 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
                             checkAuth: true,
                             error: false
                         });
+                        localStorage.setItem('email',NaverEmail)
+                        localStorage.setItem('nick',NaverNickname)
+                        localStorage.setItem('id', NaverID)
                         history.push('/Main');//메인 페이지로 넘어가게 됩니다.
-                        localStorage.setItem('email', NaverID)
+
+                        
                         console.log("네이버 아이디를 찾았다.");
                     });
                 }
@@ -88,6 +98,7 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
             ...contextState,
         });
         const KakaoID = res.profile.id  //res 객체 중 id 배열에 접근합니다.
+        console.log(res)
         const db = firebase.firestore();    //파이어스토어를 실행합니다.
         var data = db.collection("User").where("user_id", "==", KakaoID);   //카카오 ID가 파이어스토어에 존재 하는지 조건을 걸어 검색합니다.
         data.get()  //검색된 데이터를 얻어옵니다.

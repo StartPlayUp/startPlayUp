@@ -8,6 +8,10 @@ const Main = () =>{
         <p>{localStorage.getItem('email')}</p>
         <p>사용자 비밀번호</p>
         <p>{localStorage.getItem('password')}</p>
+        <p>사용자 id 번호</p>
+        <p>{localStorage.getItem('id')}</p>
+        <p>사용자 닉네임</p>
+        <p>{localStorage.getItem('nick')}</p>
         </div>
     );
 };
