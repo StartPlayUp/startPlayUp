@@ -1,45 +1,44 @@
-import React, { Component, useLayoutEffect, useState } from 'react';
-import firebase from 'firebase';
+import React, {useState} from 'react';
 
-const AuthStore=React.createContext(''); //context 객체 생성
+const AuthStore = React.createContext(''); //context 객체 생성
 
-const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
+const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
     const [contextState, setContextState] = useState({ //useState를 사용해 Context값을 변경하려고 합니다.
-        checkAuth:false, //로그인 상태를 기록합니다. false는 로그아웃 되어있는 상태입니다.
-        error:false
+        checkAuth: false, //로그인 상태를 기록합니다. false는 로그아웃 되어있는 상태입니다.
+        error: false
     });
     const {children} = props; //children에게 값을 전달합니다.
-    const testDB = [{email:"test",password:"test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
-    const onLogin = (model,history)=>{
+    const testDB = [{email: "test", password: "test"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
+    const onLogin = (model, history) => {
         setContextState({
             ...contextState, //
         });
 
-        console.log("이메일"+model.email);
-        console.log("비밀번호"+model.password);
-        
-        const res = testDB.filter((i)=>
-            i.email===model.email&&i.password===model.password);
-        if(res.length>0){
-            localStorage.setItem('email',model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
-            localStorage.setItem('password',model.password); //마찬가지로 비밀번호도 저장합니다.
+        console.log("이메일" + model.email);
+        console.log("비밀번호" + model.password);
+
+        const res = testDB.filter((i) =>
+            i.email === model.email && i.password === model.password);
+        if (res.length > 0) {
+            localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
+            localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
             setContextState({
-                ...contextState,
-                checkAuth:true,
-                error:false
-            }
+                    ...contextState,
+                    checkAuth: true,
+                    error: false
+                }
             );
             history.push('/Home');
-        }else{
+        } else {
             setContextState({
-                checkAuth:false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
-                error:true//에러를 트루로 변경합니다.
+                checkAuth: false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
+                error: true//에러를 트루로 변경합니다.
             });
         }
         console.log(contextState.checkAuth)
     };
 
-    return(
+    return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
             checkAuth: contextState.checkAuth
@@ -48,24 +47,24 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
         </AuthStore.Provider>
     );
 }
-    /*
-    const onLogout = () =>{ //로그아웃을 하는 컴포넌트 입니다.
-        localStorage.removeItem('email');//로그아웃을 했기 때문에 이메일, 비밀번호를 지웁니다.
-        localStorage.removeItem('password');
-        setContextState({ //로그인 상태를 변경합니다. checkAuth의 상태를 변경해 로그아웃 상태임을 알려줍니다.
-            ...contextState,
-            checkAuth:false,
-            error:false
-        });
-    };*/
-    /*
-    const signIn =model=>{ //회원가입 하는 컴포넌트 입니다. 향후에 구현할 예정입니다.
-        setContextState({
-            ...contextState,
-        });
-        
-    }
-    */
+/*
+const onLogout = () =>{ //로그아웃을 하는 컴포넌트 입니다.
+    localStorage.removeItem('email');//로그아웃을 했기 때문에 이메일, 비밀번호를 지웁니다.
+    localStorage.removeItem('password');
+    setContextState({ //로그인 상태를 변경합니다. checkAuth의 상태를 변경해 로그아웃 상태임을 알려줍니다.
+        ...contextState,
+        checkAuth:false,
+        error:false
+    });
+};*/
+/*
+const signIn =model=>{ //회원가입 하는 컴포넌트 입니다. 향후에 구현할 예정입니다.
+    setContextState({
+        ...contextState,
+    });
+
+}
+*/
 /*
 const AuthRoute=({ component: Component, ...rest})=>(//다른 페이지를 띄워주기 위한 컴포넌트 입니다.
     <AuthContext.Consumer>
@@ -89,4 +88,4 @@ const AuthRoute=({ component: Component, ...rest})=>(//다른 페이지를 띄�
 
 export { AuthContext,AuthProvider,AuthRoute };
 */
-export {AuthStore,AuthProvider};
+export {AuthStore, AuthProvider};

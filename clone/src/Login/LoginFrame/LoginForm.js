@@ -1,14 +1,10 @@
-import React, {useState, useContext, Fragment, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import styled from 'styled-components';
 import {Route, useHistory} from 'react-router-dom';
-import {Main} from './Auth';
-import {AuthStore, AuthProvider} from './Auth/AuthContext';
-import {signInWithGoogle} from '../util/firebase_config';
-import {getSuggestedQuery} from '@testing-library/dom';
+import {AuthStore} from './Auth/AuthContext';
 import {firebase} from 'firebase';
 import KakaoLogin from "react-kakao-login";
 import NaverLogin from "react-login-by-naver";
-import {firestore} from 'firebase-admin';
 
 
 const Button = styled.button`

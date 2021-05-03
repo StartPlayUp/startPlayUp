@@ -4,9 +4,6 @@ import styled, {createGlobalStyle} from 'styled-components';
 import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
 import {AuthProvider} from './Auth/AuthContext'
-import {Route} from 'react-router-dom';
-import Main from "./LoginForm"
-import {Home} from "../../WebPage";
 
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
