@@ -29,5 +29,8 @@ functions/index.js
 functions/firebase-debug.log
 functions/.eslintrc.js
 firebase.json
+firebase_config.js
 .firebaserc
 src/Jin/Auth/KakaoSDK.js
+.env
+index.html
