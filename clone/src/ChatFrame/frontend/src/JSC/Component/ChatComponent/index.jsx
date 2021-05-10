@@ -136,7 +136,6 @@ function Index({ backgroundColor, height, width, ...props }) {
             </TextFieldWithVoiceUsers>
             <MyTextInput peers={peers} myNickname={myNickName} chatList={chatList} setChatList={setChatList}
                 socketRef={socketRef} />
-
         </Chat>
     );
 }

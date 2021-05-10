@@ -23,6 +23,10 @@ const WaitingRoom = ({history}) => {
     const input = location.state.input;
     const game = location.state.game;
 
+    require('react-dom');
+    window.React2 = require('react');
+    console.log(window.React1 === window.React2)
+
     return (
         <div>
             <BodyFrame>
