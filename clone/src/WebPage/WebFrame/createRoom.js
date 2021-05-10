@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {useState} from "react";
 import {useHistory} from 'react-router-dom';
 
 import {
@@ -17,9 +17,6 @@ import {
     Footer,
     ResultButton,
 } from '../Style/CreateRoomStyle';
-import WaitingRoom from "./waitingRoom";
-import {TitleSpan} from "../Style/WaitingRoomStyle";
-
 
 const CreateRoom = ({isOpen, close}) => {
 
@@ -36,7 +33,7 @@ const CreateRoom = ({isOpen, close}) => {
         setGame(e.target.value);
     }
 
-    const onCheckChange = ({target}) => {
+    const onCheckChange = () => {
         setChecked(!checked);
     }
 
@@ -57,7 +54,7 @@ const CreateRoom = ({isOpen, close}) => {
                                     <span>제목 : &nbsp; </span>
                                     <Input
                                         type="text"
-                                        maxLength="20"
+                                        maxLength="25"
                                         width='200px'
                                         value={input}
                                         onChange={onChange}/>

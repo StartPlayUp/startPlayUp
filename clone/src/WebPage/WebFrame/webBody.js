@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
 import CreateButton from "./CreateButton";
@@ -12,7 +12,7 @@ import {
     ButtonArea
 } from '../Style/WebFrameStyle';
 
-const BODY = ({location, history, match, props}) => {
+const BODY = ({location, history}) => {
 
     console.log(location);
     console.log(history);
@@ -45,7 +45,7 @@ const BODY = ({location, history, match, props}) => {
                         <UserList onClick={() => history.push('./waitingRoom')}>
                             <Users width={'5vw'}>1</Users>
                             <Users width={'15vw'}>Mafia</Users>
-                            <Users width={'30vw'}>마피아  asdfadsfds asdfㅁㄴㅇㄹㅁㄹ한판 ㄱ ㄱ</Users>
+                            <Users width={'30vw'}>마피아 빠르게 한판 ㄱ ㄱ</Users>
                             <Users width={'15vw'}>Jang</Users>
                             <Users width={'5vw'}>3</Users>
                         </UserList>

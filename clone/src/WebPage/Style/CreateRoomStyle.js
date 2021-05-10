@@ -102,20 +102,3 @@ export const ResultButton = styled.button`
     background-color : ${props => props.color};
     color : white;
 `
-
-export default {
-    Modal,
-    LoginMid,
-    LoginModal,
-    Close,
-    ModalContents,
-    Title,
-    Games,
-    SelectGame,
-    RoomTitle,
-    Input,
-    SelectPrivate,
-    Select,
-    Footer,
-    ResultButton
-};

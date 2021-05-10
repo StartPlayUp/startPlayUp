@@ -1,39 +1,38 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import LoginWrapper from './LoginWrapper';
 import styled, {createGlobalStyle} from 'styled-components';
 import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
-import {AuthProvider} from './Auth/AuthContext'
+import {AuthProvider} from './Auth/AuthContext';
 
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
         width:100%;
         height:100%;
-        display: flex;
-        justify-content: center;
+        margin : 0;
+        padding : 0;
     }
 `
-const Container = styled.div`
-        width:100%;
-        height:100%;
-        display: flex;
-        justify-content: center;
+
+const Frame = styled.div`
+    display : flex;
+    justify-content: center;
+    align-items: center;   
 `
+
 
 function LoginApp() {
     return (
-        <Fragment>
+        <Frame>
             <GlobalStyle/>
-            <Container>
-                <AuthProvider>
-                    <LoginWrapper>
-                        <LogoWrapper>StartPlayUp</LogoWrapper>
-                        <LoginForm/>
-                    </LoginWrapper>
-                </AuthProvider>
-            </Container>
-        </Fragment>
+            <AuthProvider>
+                <LoginWrapper>
+                    <LogoWrapper>BOTAKU</LogoWrapper>
+                    <LoginForm/>
+                </LoginWrapper>
+            </AuthProvider>
+        </Frame>
     )
 }
 

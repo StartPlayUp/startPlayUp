@@ -2,12 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 const LogoWrapper = styled.div`
-    margin:0 auto;
+    margin: 0 auto;
     font-family: Roboto;
-    font-size: 3em;
-    line-height: 2em;
+    font-size: 40px;
+    line-height: 3em;
     text-align: center;
-    color: #000000;
+    font-weight : lighter;
+    letter-spacing : 20px;
+    text-decoration : none;
 `
 function Logo({ children }){
     return (

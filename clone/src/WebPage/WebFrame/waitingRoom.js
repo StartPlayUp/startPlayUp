@@ -1,8 +1,9 @@
-import React, {Component, useState} from 'react';
+import React from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
-
+import ChatComponent from '../../ChatFrame/frontend/src/JSC/Component/ChatComponent'
+import {Store} from '../../ChatFrame/frontend/src/JSC/store'
 import {
     BodyFrame,
     Button,
@@ -45,12 +46,13 @@ const WaitingRoom = ({history}) => {
                     <MainList>
                         <UserList>
                             <div>
-                                dff
+                                <h1>유저</h1>
                             </div>
                         </UserList>
                         <ChattingList>
-                            <h1>채팅 방</h1>
-                            <hr/>
+                            <Store>
+                                <ChatComponent/>
+                            </Store>
                         </ChattingList>
                     </MainList>
                 </Room>

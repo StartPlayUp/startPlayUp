@@ -67,16 +67,3 @@ export const ButtonArea = styled.div`
     justify-content: flex-end;
     margin-top: 30px;
 `;
-
-export default {
-    HeadColor,
-    HeadStyle,
-    HeadLeft,
-    HeadRight,
-    BodyFrame,
-    BodyCenter,
-    RoomFrame,
-    UserList,
-    Users,
-    ButtonArea
-}

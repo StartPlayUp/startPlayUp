@@ -72,17 +72,3 @@ export const ChattingList = styled.div`
     height: 500px;
     background-color: #FFFFF3;
 `
-
-export default {
-    BodyFrame,
-    Room,
-    ChattingList,
-    Title,
-    TitleSpan,
-    Button,
-    ButtonArea,
-    MainList,
-    UserList,
-    LeftButtonsArea,
-    RightButtonsArea
-}

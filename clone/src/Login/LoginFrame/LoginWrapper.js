@@ -1,36 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 
-/*
-const Background = styled.div`
-    display:flex;
-    flex-direction: column;
-    width:100%;
-    heigt:100%;
-    justify-content: center;
-    
-`*/
-const Box = styled.div`
-    display:flex;
-    top: 50%;
-    left: 50%;
-    width: 40%;
-    height: 60%;
-    margin: 0 auto;
-    margin: auto 0;
-    background: #FFFFF3;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
+const Frame = styled.div`
+    margin : 20vh auto;
+    background-color : #FFFFF3;
     flex-direction : column;
-    justify-content: center;
-    aligh-items:center;
+    justify-content : center;
+    align-items : center;
+    height : 40%;
+    width : 30%;
 `
 
-function LoginWrapper({children}){
-    return(
-        
-            <Box>
-                {children}
-            </Box>
+function LoginWrapper({children}) {
+    return (
+
+        <Frame>
+            {children}
+        </Frame>
     )
 }
+
 export default LoginWrapper;

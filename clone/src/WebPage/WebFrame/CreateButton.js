@@ -1,4 +1,4 @@
-import React, {useState, Component} from "react";
+import React, {useState} from "react";
 import CreateRoom from "./createRoom";
 import styled from 'styled-components';
 
