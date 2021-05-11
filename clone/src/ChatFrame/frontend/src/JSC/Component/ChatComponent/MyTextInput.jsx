@@ -101,9 +101,9 @@ const MyTextInput = ({ chatList, setChatList, myNickname, socketRef, peers }) =>
                     <FieldSetBtn disabled={!inputMessage} onClick={fieldSetButtonHandler} type='submit'
                         className="fieldSetBtn">전송</FieldSetBtn>
                 </FieldSet>
-                <div>
-                    {makeSendMediaButton([voicetalk])}
-                </div>
+                {/*<div>*/}
+                {/*    {makeSendMediaButton([voicetalk])}*/}
+                {/*</div>*/}
             </form>
         </SendChat>
     );

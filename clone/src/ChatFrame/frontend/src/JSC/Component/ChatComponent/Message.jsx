@@ -22,6 +22,7 @@ const Messages = styled.div`
   align-self:${props => props.who !== 'me' ? "flex-start" : "flex-end"};
   color:${props => props.who === 'me' && "white"};
   margin:10px 40px 10px 40px;
+  font-size: 8px;
   ${(props) =>
     props.who === "another" &&
     css`
@@ -66,6 +67,7 @@ const Message = styled.span`
     margin: 10px;
     padding: 10px;
     border-radius: 8px;
+    font-size : 12px;
 `;
 
 

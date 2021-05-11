@@ -18,7 +18,7 @@ const TextField = styled.div`
   border: rgb(0, 0, 0);
   flex-direction: column;
   overflow-y: scroll;
-  height:${props => props.width || 600}px;
+  height:${props => props.width || 400}px;
   width:inherit;
   border-right:3px solid #ececec;
   background-color: white;
@@ -31,11 +31,11 @@ const TextField = styled.div`
 `;
 
 const Chat = styled.div`
-
     display:flex;
     flex-direction: column;
-    height:${props => props.width || 600}px;
-    width:${props => props.width || 600}px;
+    flex-basis : 50%;
+    // height:${props => props.height || 600}px;
+    // width:${props => props.width || 600}px;
     border-radius: 10%;
 `;
 
@@ -124,8 +124,8 @@ function Index({ backgroundColor, height, width, ...props }) {
 
 
     return (
-        <Chat width={height} height={width}>
-            <Nav />
+        <Chat>
+            {/*<Nav />*/}
             <TextFieldWithVoiceUsers>
                 <TextField className="textField" ref={scrollRef}>
                     {chatList.map((i, index) => <Message key={"chat" + index}
