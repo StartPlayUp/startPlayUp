@@ -8,8 +8,8 @@ import {AuthProvider} from './Auth/AuthContext';
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
-        width:100%;
-        height:100%;
+        width:100vw;
+        height:100vh;
         margin : 0;
         padding : 0;
     }
@@ -28,7 +28,6 @@ function LoginApp() {
             <GlobalStyle/>
             <AuthProvider>
                 <LoginWrapper>
-                    <LogoWrapper>BOTAKU</LogoWrapper>
                     <LoginForm/>
                 </LoginWrapper>
             </AuthProvider>

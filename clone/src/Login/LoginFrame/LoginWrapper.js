@@ -7,13 +7,13 @@ const Frame = styled.div`
     flex-direction : column;
     justify-content : center;
     align-items : center;
-    height : 40%;
-    width : 30%;
+    flex-basis : 400px;
+    height : 50vh;
+    width : 30vw;
 `
 
 function LoginWrapper({children}) {
     return (
-
         <Frame>
             {children}
         </Frame>
