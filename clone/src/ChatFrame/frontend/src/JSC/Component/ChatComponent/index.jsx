@@ -18,7 +18,8 @@ const TextField = styled.div`
   border: rgb(0, 0, 0);
   flex-direction: column;
   overflow-y: scroll;
-  height:${props => props.width || 400}px;
+  height : 55vh;
+  // height:${props => props.width || 500}px;
   width:inherit;
   border-right:3px solid #ececec;
   background-color: white;
@@ -33,6 +34,7 @@ const TextField = styled.div`
 const Chat = styled.div`
     display:flex;
     flex-direction: column;
+    justify-content : flex-end;
     flex-basis : 50%;
     // height:${props => props.height || 600}px;
     // width:${props => props.width || 600}px;

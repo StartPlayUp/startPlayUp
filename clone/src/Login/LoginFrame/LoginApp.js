@@ -21,7 +21,6 @@ const Frame = styled.div`
     align-items: center;   
 `
 
-
 function LoginApp() {
     return (
         <Frame>

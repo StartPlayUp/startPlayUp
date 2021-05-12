@@ -4,8 +4,8 @@ import {useHistory} from 'react-router-dom';
 import {AuthStore} from './Auth/AuthContext';
 import KakaoLogin from "react-kakao-login";
 import NaverLogin from "react-login-by-naver";
-import NaverImage from '../../images/naverLogin.PNG'
-
+import NaverImage from '../../images/naverGreenLogin.PNG'
+import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
 const Frame = styled.div`
     display : flex;
     justify-contents : center;
@@ -26,8 +26,9 @@ const Title = styled.div`
 `
 
 const LoginConnectArea = styled.div`
-    margin-top : 50px;
+    margin : 50px auto;
     display : inherit;
+    justify-content : center;
     align-items : center;
     flex-direction : column;
 `
@@ -43,15 +44,6 @@ const Button = styled.button`
     border:none;
     text-align: center;
     justify-content: center;
-`
-const NaverConnectButton = styled.button`
-    padding : 12px 58px 12px 58px;
-    background : #3DDB16;
-    color : white;
-    font-size : 16px;
-    border-radius: 2px;
-    margin-bottom : 20px;
-    border-style:none;
 `
 
 const Input = styled.input`
@@ -79,11 +71,15 @@ const InputInfo = styled.div`
 `
 const LoginButtonArea = styled.div`
     width : 30vw;
+    margin : 0 atuo;
+    justify-content: center;
+    align-item : center;
 `
 
 const Image = styled.img`
     width : auto;
-    height : 5vh;
+    height : 6vh;
+    margin-bottom : 20px;
 `
 
 function LoginForm() {
@@ -135,7 +131,11 @@ function LoginForm() {
                                     clientId={'HI9KL4ilNF_j6vWKWQ8P'} //발급 받은 클라이언트 ID
                                     callbackUrl="http://localhost:3000"    //콜백 URL
                                     render={(props) =>
-                                        <NaverConnectButton onClick={props.onClick}>네이버로 로그인</NaverConnectButton>
+                                        // <NaverConnectButton onClick={props.onClick}>네이버로 로그인</NaverConnectButton>
+                                        <Image
+                                            src={NaverImage}
+                                            onClick={props.onClick}
+                                        />
                                     }  //로그인 버튼 생성
 
                                     onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}   //성공시
@@ -146,8 +146,8 @@ function LoginForm() {
                                     onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
                                     onFailure={(res) => console.log(res)}
                                     getProfile={true}
-                                    onFail={'실패'}><Image
-                                    src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"/>
+                                    onFail={'실패'}>
+                                    <Image src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"/>
                                 </KakaoLogin>
                             </LoginConnectArea>
                         </Frame>

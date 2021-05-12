@@ -23,10 +23,6 @@ const WaitingRoom = ({history}) => {
     const input = location.state.input;
     const game = location.state.game;
 
-    require('react-dom');
-    window.React2 = require('react');
-    console.log(window.React1 === window.React2)
-
     return (
         <div>
             <BodyFrame>
@@ -49,9 +45,7 @@ const WaitingRoom = ({history}) => {
                     </ButtonArea>
                     <MainList>
                         <UserList>
-                            <div>
-                                <h1>유저</h1>
-                            </div>
+                           <h3>유저 목록 입니다.</h3>
                         </UserList>
                         <ChattingList>
                             <Store>

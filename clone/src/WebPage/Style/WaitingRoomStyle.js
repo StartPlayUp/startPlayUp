@@ -61,14 +61,15 @@ export const MainList = styled.div`
 export const UserList = styled.div`
     flex-basis: 50%;
     flex-direction: column;
-    border : 2px solid gray;
+    border : 3px solid lightgray;
     padding-left : 2px;
-
+    background : #FFFFF3;
 `
 
 export const ChattingList = styled.div`
     flex-basis: 50%;
     flex-direction: column;
-    height: 500px;
-    background-color: #FFFFF3;
+    background-color: white;
+    border : 3px solid lightgray;
+
 `

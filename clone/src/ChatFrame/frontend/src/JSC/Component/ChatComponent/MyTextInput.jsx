@@ -1,17 +1,18 @@
-import React, { memo, useState } from 'react';
+import React, {memo, useState} from 'react';
 import styled from "styled-components";
 import voicetalk from "../../icon/voicetalk.svg";
-import { sendDataToPeers } from '../../Common/peerModule/sendToPeers'
-import { chatAddMessage } from "../../Common/ChatModule/addMessage"
-import { PEER_CHAT } from "../../Constants/peerDataTypes";
+import {sendDataToPeers} from '../../Common/peerModule/sendToPeers'
+import {chatAddMessage} from "../../Common/ChatModule/addMessage"
+import {PEER_CHAT} from "../../Constants/peerDataTypes";
 
 // import { SEND_MESSAGE, socketApi } from "../../Common/socketModule";
 
 const SendChat = styled.div`
    border-top: 3px solid #ececec;
-   height:75px;
+   height : inherit;
    width:inherit;
-   background-color: rgb(255, 255, 255);
+   background-color : white;
+   // background-color: rgb(255, 255, 255);
 `;
 
 const FieldSet = styled.div`
@@ -22,8 +23,8 @@ const FieldSet = styled.div`
 const FieldInput = styled.input`
     width:100%;
     height:30px;
-    border:3px solid #ececec; /* <input> 태그 테두리 삭제*/
-    border-radius:30px;
+    border:2px solid #ececec; 
+    border-radius : 30px;
     margin:5px 10px 5px 10px;
 `;
 
@@ -65,7 +66,7 @@ const makeSendMediaButton = (mediaBtn) => {
         <SendMenuButtons className="sendMenuBtn">
             {
                 mediaBtn.map((i, index) =>
-                    <SendMenuButton key={mediaBtn[index]}><img src={i} /></SendMenuButton>
+                    <SendMenuButton key={mediaBtn[index]}><img src={i}/></SendMenuButton>
                 )
             }
         </SendMenuButtons>
@@ -73,7 +74,7 @@ const makeSendMediaButton = (mediaBtn) => {
 };
 
 
-const MyTextInput = ({ chatList, setChatList, myNickname, socketRef, peers }) => {
+const MyTextInput = ({chatList, setChatList, myNickname, socketRef, peers}) => {
     const [inputMessage, setInputMessage] = useState("");
     const InputMessageChangeHandler = (e) => {
         e.preventDefault();
@@ -83,12 +84,11 @@ const MyTextInput = ({ chatList, setChatList, myNickname, socketRef, peers }) =>
     const fieldSetButtonHandler = (e) => { // 텍스트가 들어있으면 버튼이 활성화 핸들러
         e.preventDefault();
         let success = undefined;
-        success = sendDataToPeers(PEER_CHAT, { nickname: myNickname, data: inputMessage, peers });
+        success = sendDataToPeers(PEER_CHAT, {nickname: myNickname, data: inputMessage, peers});
         if (success) {
-            chatAddMessage({ nickname: myNickname, inputMessage, chatList, setChatList });
+            chatAddMessage({nickname: myNickname, inputMessage, chatList, setChatList});
             setInputMessage("");
-        }
-        else {
+        } else {
             console.log("채팅 전송 실패");
         }
     };
@@ -97,9 +97,15 @@ const MyTextInput = ({ chatList, setChatList, myNickname, socketRef, peers }) =>
         <SendChat className="sendChat">
             <form className="sendForm" name="chat">
                 <FieldSet className="fieldSet">
-                    <FieldInput value={inputMessage} onChange={InputMessageChangeHandler} className="fieldInput" />
+                    <div> </div>
+                    <FieldInput
+                        value={inputMessage}
+                        onChange={InputMessageChangeHandler}
+                        className="fieldInput"
+                        placeholder={' 메세지를 입력하세요.'}
+                    />
                     <FieldSetBtn disabled={!inputMessage} onClick={fieldSetButtonHandler} type='submit'
-                        className="fieldSetBtn">전송</FieldSetBtn>
+                                 className="fieldSetBtn">전송</FieldSetBtn>
                 </FieldSet>
                 {/*<div>*/}
                 {/*    {makeSendMediaButton([voicetalk])}*/}
