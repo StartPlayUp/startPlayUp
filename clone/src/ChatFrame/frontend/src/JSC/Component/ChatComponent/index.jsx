@@ -136,8 +136,15 @@ function Index({ backgroundColor, height, width, ...props }) {
                 </TextField>
                 <SideVoiceUser peersRef={peersRef} peers={peers} chatList={chatList} setChatList={setChatList} />
             </TextFieldWithVoiceUsers>
-            <MyTextInput peers={peers} myNickname={myNickName} chatList={chatList} setChatList={setChatList}
-                socketRef={socketRef} />
+            <MyTextInput
+                peers={peers}
+                myNickname={myNickName}
+                chatList={chatList}
+                setChatList={setChatList}
+                socketRef={socketRef}
+                // onfocus={this.placeholder=''}
+                // onblur={this.placeholder='메세지를 입력하세요.'}
+            />
         </Chat>
     );
 }

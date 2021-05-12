@@ -18,14 +18,16 @@ const SendChat = styled.div`
 const FieldSet = styled.div`
     display:flex;
     flex-direction: row;
+    justify-content : space-between;
 `;
 
 const FieldInput = styled.input`
     width:100%;
     height:30px;
     border:2px solid #ececec; 
-    border-radius : 30px;
+    border-radius : 12px;
     margin:5px 10px 5px 10px;
+    outline-style: none;
 `;
 
 const FieldSetBtn = styled.button`
@@ -97,7 +99,6 @@ const MyTextInput = ({chatList, setChatList, myNickname, socketRef, peers}) => {
         <SendChat className="sendChat">
             <form className="sendForm" name="chat">
                 <FieldSet className="fieldSet">
-                    <div> </div>
                     <FieldInput
                         value={inputMessage}
                         onChange={InputMessageChangeHandler}
