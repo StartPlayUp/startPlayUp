@@ -51,7 +51,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                 console.log(querySnapshot)
                 const NaverEmail = naverUser.email
                 const NaverNickname = naverUser.nickname
-                if (querySnapshot.empty === true) {//조건에 맞는 네이버 ID가 없는 경우
+                if (querySnapshot.empty == true) {//조건에 맞는 네이버 ID가 없는 경우
                     console.log("데이터 없음")
                     db.collection("User").add({ //네이버 ID를 추가하도록 합니다.
                         user_id: NaverID,
@@ -102,7 +102,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         data.get()  //검색된 데이터를 얻어옵니다.
             .then((querySnapshot) => {
                 console.log(querySnapshot)
-                if (querySnapshot.empty == true) {//조건에 맞는 카카오 ID가 없는 경우
+                if (querySnapshot.empty === true) {//조건에 맞는 카카오 ID가 없는 경우
                     console.log("데이터 없음")
                     db.collection("User").add({ //카카오 ID를 추가하도록 합니다.
                         user_id: KakaoID
@@ -127,8 +127,9 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                         console.log("카카오 아이디를 찾았다.");
                     });
                 }
-
             });
+
+
     }
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.

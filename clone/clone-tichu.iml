@@ -6,5 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="kakao" level="application" />
+    <orderEntry type="library" name="naveridlogin_js_sdk_2.0.0" level="application" />
   </component>
 </module>

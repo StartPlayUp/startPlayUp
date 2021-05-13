@@ -1,5 +1,5 @@
+
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { chatAddMessage, chatAddMessageRef } from "../../Common/ChatModule/addMessage"
 import styled from 'styled-components'
 
 const ConnectUsers = styled.div`
