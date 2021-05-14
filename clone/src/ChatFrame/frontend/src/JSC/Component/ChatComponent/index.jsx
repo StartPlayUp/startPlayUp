@@ -72,7 +72,8 @@ function Index({backgroundColor, height, width, ...props}) {
     const socketRef = useRef();
 
 
-    const {user} = useContext(UserContext);
+    // const {user} = useContext(UserContext);
+    const user = localStorage.getItem('email');
     const {peerData, setPeerData} = useContext(PeerDataContext);
     const {peers, setPeers} = useContext(PeersContext);
     const {voicePeers, setVoicePeers} = useContext(VoicePeersContext);

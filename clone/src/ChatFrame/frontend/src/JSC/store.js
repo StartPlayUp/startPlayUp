@@ -44,48 +44,6 @@ export const PeerDataContext = createContext({
 export const PeersContext = createContext([]);
 export const VoicePeersContext = createContext([]);
 
-//// 하드코딩 하니 된다??? public html 파일에 <audio></audio> 태그 추가 후 사용함.
-// const UserAudio = ({ voicePeers, peer }) => {
-//     const voiceRef = useRef();
-//     const streamRef = useRef(undefined);
-//     useEffect(() => {
-//         peer.on("stream", stream => {
-//             // voiceRef.current.srcObject = stream;
-//             // streamRef.current = stream;
-//             var audio = document.querySelector('audio')
-//             if ('srcObject' in audio) {
-//                 audio.srcObject = stream
-//             } else {
-//                 audio.src = window.URL.createObjectURL(stream) // for older browsers
-//             }
-//             audio.play();
-//         })
-//     }, []);
-//     // useEffect(() => {
-//     //     voiceRef.current.srcObject = streamRef.current;
-//     // }, [voicePeers]);
-
-//     return (<></>
-//         // <StyledAudio playsInline autoPlay ref={voiceRef} />
-//     )
-// }
-
-
-// const UserAudio = ({ voicePeers, peer }) => {
-//     const voiceRef = useRef();
-//     const streamRef = useRef(undefined);
-//     useEffect(() => {
-//         peer.on("stream", stream => {
-//             voiceRef.current.srcObject = stream;
-//             streamRef.current = stream;
-//         })
-//     }, []);
-//     return (
-//         <StyledAudio playsInline autoPlay ref={voiceRef} />
-//     )
-// }
-
-
 const StyledAudio = styled.audio`
     display:none;
 `;

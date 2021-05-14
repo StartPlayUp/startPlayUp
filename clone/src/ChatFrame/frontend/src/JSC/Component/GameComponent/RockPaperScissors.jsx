@@ -32,7 +32,8 @@ const App = () => {
         'paper': [-1, paper],
     };
     const { peerData, setpeerData } = useContext(PeerDataContext);
-    const { user } = useContext(UserContext);
+    // const { user } = useContext(UserContext);
+    const user = localStorage.getItem('email');
     const [selectData, setSelectData] = useState("");
     const { peers } = useContext(PeersContext);
 

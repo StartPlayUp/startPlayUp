@@ -16,7 +16,8 @@ const LoginPageContainer = () => {
     // const [data, setData] = useState("");
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
-    const { user, isAuthenticated, dispatch } = useContext(UserContext);
+    // const { user, isAuthenticated, dispatch } = useContext(UserContext);
+    const { user, isAuthenticated, dispatch } = localStorage.getItem('email');
     console.log("(debug store.js) : ", user, isAuthenticated);
 
     const onChangeIdHandler = (e) => {
