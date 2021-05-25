@@ -6,6 +6,7 @@ import LoginForm from './LoginForm';
 import {Main} from './Auth';
 import {AuthProvider} from './Auth/AuthContext'
 import { Route } from 'react-router';
+import { GameMain } from './Game/Yachu';
 const GlobalStyle = createGlobalStyle`
     #root,html,body{
         background: #E0E3DA;
@@ -27,18 +28,20 @@ const Container=styled.div`
 
 function App(){
     return (
-        <Fragment>
-            <GlobalStyle />
-                <Container>
-                    <AuthProvider>
+        <AuthProvider>
+            <Fragment>
+                <GlobalStyle />
+                    <Container>
                         <LoginWrapper>
                             <LogoWrapper>StartPlayUp</LogoWrapper>
-                        <Route path="/" component={LoginForm}></Route>
-                        <Route path= "/Main" component={Main}></Route>
-                    </LoginWrapper>
-                </AuthProvider>
-            </Container>
-        </Fragment>
+                                <Route path="/" component={LoginForm}></Route>
+                                <Route path= "/Main" component={Main}></Route>
+                        <Route path="/GameMain" component={GameMain}></Route>
+                        </LoginWrapper>
+                </Container> 
+            </Fragment>
+            
+        </AuthProvider>
     )
 }
 

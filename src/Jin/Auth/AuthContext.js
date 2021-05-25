@@ -29,7 +29,7 @@ const AuthProvider =(props)=>{ //AuthProvider 컴포넌트를 생성
                 error:false
             }
             );
-            history.push('/Main');
+            history.push('/GameMain');
         }else{
             setContextState({
                 checkAuth:false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
