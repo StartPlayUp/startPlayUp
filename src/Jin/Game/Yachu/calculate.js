@@ -1,6 +1,4 @@
-import React,{useState} from "react";
-
-function Calculate(diceArray,counter){
+function Calculate(diceArray, counter) {
     let upperPoint = {
         ace: 0,
         two: 0,
@@ -16,8 +14,7 @@ function Calculate(diceArray,counter){
         choice: 0,
         yahtzee: 0
     };
-    var n = 0;
-    for (n = 0; n < 5; n++) {
+    for (var n = 0; n < 5; n++) {
         if (diceArray[n] === 1) {
             upperPoint["ace"] += 1;
         } else if (diceArray[n] === 2) {

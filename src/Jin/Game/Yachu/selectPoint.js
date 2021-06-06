@@ -1,69 +1,64 @@
-import React,{useState} from "react";
+import React, { useEffect, useState } from "react";
 import Calculate from "./calculate";
-import GetBonus from "./Bonus";
-function SelectPoint(props){
-    console.log(props.value);
+function SelectPoint(props) {
     const [state, setState] = useState({
-        selectPoint: {
-            ace: [ 0, false],
-            two: [0, false],
-            three: [0, false],
-            four: [0, false],
-            five: [0, false],
-            six: [0, false],
-            threeOfaKind: [0, false],
-            fourOfaKind: [0, false],
-            fullHouse: [0, false],
-            smallStraight: [0, false],
-            largeStraight: [0, false],
-            choice: [0, false],
-            yahtzee: [0, false]
-        },
-        bonus:0,
-        result:0
+        ace: [0, false],
+        two: [0, false],
+        three: [0, false],
+        four: [0, false],
+        five: [0, false],
+        six: [0, false],
+        threeOfaKind: [0, false],
+        fourOfaKind: [0, false],
+        fullHouse: [0, false],
+        smallStraight: [0, false],
+        largeStraight: [0, false],
+        choice: [0, false],
+        yahtzee: [0, false]
     });
-    let pointCalculate = Calculate(props.value.dice,props.value.count);
+    const [bonus, setBonus] = useState([0, false]);
+    let diceArray = props.value.dice;
+    let counter = props.value.count;
+    let pointCalculate = Calculate(diceArray, counter);
     function select(e) {
-        const resultPoint = state.result
-        let sel = state.selectPoint;
         const { value, name } = e.target;
         const number = parseInt(value, 10);
         setState({
             ...state,
-            selectPoint: {
-                ...sel,
-                [name]: [value, true]
-            },
+            [name]: [value, true]
         });
-        bonus= GetBonus(state.selectPoint)
-        console.log("보너스?",bonus);
-        if(bonus[1]){
-            console.log("보너스 획득!")
-            setState({
-                ...state,
-                result : resultPoint+number+parseInt("35",10)
-            })
+        console.log("보너스", bonus);
+        if (bonus[0] < 63 && !bonus[1]) {
+            props.RollReset(number);
+        } else {
+            props.RollReset(number + parseInt(35, 10));
+            console.log("보나리");
         }
-        else{
-            console.log("보너스 획득 실패")
-            setState({
-                ...state,
-                result: resultPoint + number
-            })
-        }
-        
-        props.RollReset(3);
     }
+    useEffect(() => {
+        let sel = Object.keys(state).map((i) => {
+            return state[i][0];
+        });
+        let test = sel.slice(0, 6).reduce((total, num) => {
+            return parseInt(total, 10) + parseInt(num, 10);
+        });
+        let complete = Object.keys(state).map((i) => {
+            return state[i][1];
+        });
+        let completeTest = !complete.slice(0, 6).includes(false);
+        setBonus([test, completeTest]);
+    }, [state]);
+    console.log(bonus);
     return (
         <div>
-            {Object.keys(state.selectPoint).map((i) => (
-                <div>
-                    {i}: {pointCalculate[i]} 획득한 점수 {state.selectPoint[i][0]}
-                    {props.value === 3 ? (
+            {Object.keys(state).map((i, index) => (
+                <div key={index}>
+                    {i}: {pointCalculate[i]} 획득한 점수 {state[i][0]}
+                    {props.value.roll === 3 ? (
                         ""
                     ) : (
                         <button
-                            disabled={state.selectPoint[i][1] && "true"}
+                            disabled={state[i][1] ? 1 : 0}
                             name={i}
                             onClick={select}
                             value={pointCalculate[i]}
@@ -73,8 +68,7 @@ function SelectPoint(props){
                     )}
                 </div>
             ))}
-            <div>보너스 점수 : {bonus[0]} </div>
-            <div>점수 총 합계: {state.result}</div>
+            <div>보너스: {bonus[0]}</div>
         </div>
     );
 }
