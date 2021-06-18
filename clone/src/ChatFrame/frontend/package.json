@@ -1,0 +1,73 @@
+{
+  "name": "start_play_up",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@fortawesome/free-regular-svg-icons": "^5.15.3",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.6",
+    "dotenv": "^9.0.0",
+    "firebase": "^8.4.2",
+    "formit": "^0.0.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hot-loader": "^4.13.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "simple-peer": "^9.11.0",
+    "socket.io": "^4.0.1",
+    "socket.io-client": "^4.0.1",
+    "styled-components": "^5.2.3",
+    "styled-reset": "^4.3.4",
+    "uuid": "^8.3.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "prettier"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+      "react/jsx-filename-extension": 0,
+      "import/no-named-as-default": 0,
+      "import/no-named-as-default-member": 0,
+      "import/no-unresolved": 0,
+      "import/prefer-default-export": 0,
+      "no-underscore-dangle": 0,
+      "no-console": 0,
+      "react/forbid-prop-types": 0
+    },
+    "env": {
+      "browser": true
+    }
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:4444",
+  "devDependencies": {
+    "@types/react": "^17.0.5",
+    "@types/styled-components": "^5.1.9",
+    "eslint-config-prettier": "^8.3.0"
+  }
+}
