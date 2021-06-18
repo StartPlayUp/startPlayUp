@@ -5,37 +5,27 @@ import {
     Mafia,
     YachtDice,
     Yutnori,
-    LoginApp
+    LoginApp,
+    Avalon,
 } from './WebPage'
-import {Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import firebase_config from "./Login/util/firebase_config";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {PlayState, UserState} from "./AVALON/gameSetting";
 
 const App = () => {
-    const [isLogin, setIsLogin] = useState(false);
-
-
+    // const [isLogin, setIsLogin] = useState(false);
     console.log(firebase_config)
     return (
-        <>
-            {/*{isLogin ? (*/}
-            {/*    <Route exact path={'/'}>*/}
-            {/*        <Home/>*/}
-            {/*    </Route>*/}
-            {/*) : (*/}
-            {/*    <Route exact path={'/'}>*/}
-            {/*        <LoginApp/>*/}
-            {/*    </Route>*/}
-            {/*)*/}
-
-            {/*}*/}
+        <Switch>
             <Route exact path={"/"} component={LoginApp}/>
             <Route exact path={'/Home'} component={Home}/>
             <Route exact path={"/waitingRoom"} component={waitingRoom}/>
             <Route path={"/Mafia"} component={Mafia}/>
             <Route path={"/YachtDice"} component={YachtDice}/>
             <Route path={"/Yutnori"} component={Yutnori}/>
-        </>
+            <Route path={'/avalon'} component={Avalon}/>
+        </Switch>
     );
 };
 

@@ -8,8 +8,8 @@ const Frame = styled.div`
     justify-content : center;
     align-items : center;
     flex-basis : 400px;
-    height : 50vh;
-    width : 30vw;
+    height : 50%;
+    width : 30%;
 `
 
 function LoginWrapper({children}) {

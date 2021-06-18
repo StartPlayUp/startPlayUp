@@ -4,3 +4,4 @@ export {default as Mafia} from './Games/Mafia.js';
 export {default as YachtDice} from './Games/YachtDice.js';
 export {default as Yutnori} from './Games/Yutnori.js';
 export {default as LoginApp} from '../Login/LoginFrame/LoginApp';
+export {default as Avalon} from '../AVALON/Avalon'

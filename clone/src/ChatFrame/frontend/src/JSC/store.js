@@ -48,7 +48,6 @@ const StyledAudio = styled.audio`
     display:none;
 `;
 
-
 const Audio = (props) => {
     const ref = useRef();
     useEffect(() => {

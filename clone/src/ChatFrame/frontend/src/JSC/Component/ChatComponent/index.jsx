@@ -156,5 +156,3 @@ function Index({backgroundColor, height, width, ...props}) {
 }
 
 export default memo(Index);
-
-

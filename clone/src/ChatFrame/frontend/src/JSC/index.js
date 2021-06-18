@@ -15,8 +15,7 @@ const GamePage = styled.div`
 `;
 
 function app() {
-    // const { isAuthenticated } = useContext(UserContext);
-    const { isAuthenticated } = localStorage.getItem('email');
+    const { isAuthenticated } = useContext(UserContext);
     return (
         <BrowserRouter>
             {/* <Route path="/" component={ChatContainer} /> */}
