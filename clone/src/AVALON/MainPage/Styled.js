@@ -58,3 +58,11 @@ export const VoteStageFrame = styled.div`
     display : flex;
     justify-content : flex-end;
 `
+export const User = styled.div`
+    display : flex;
+    flex-direction : column;
+    flex-wrap : wrap;
+    margin : 0 auto;
+    border 3px solid black;
+    padding : 5px;
+`

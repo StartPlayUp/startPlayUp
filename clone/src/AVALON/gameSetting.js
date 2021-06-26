@@ -35,8 +35,8 @@ const Players = [
     // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
 ]
 
-const mustHaveRoles = ['Merlin', 'Percival', 'Citizen', 'Morgana', 'Assassin'];
-const expandRoles = ['Citizen', 'Heresy', 'Citizen', 'Modred', 'Citizen'];
+export const mustHaveRoles = ['Merlin', 'Percival', 'Citizen', 'Morgana', 'Assassin'];
+export const expandRoles = ['Citizen', 'Heresy', 'Citizen', 'Modred', 'Citizen'];
 export const PlayState = createContext(Background);
 export const UserState = createContext(Players);
 
