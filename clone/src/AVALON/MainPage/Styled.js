@@ -12,7 +12,7 @@ export const Title = styled.div`
 `
 export const Frame = styled.div`
     display : flex;
-    flex-direction : column;
+    flex-direction : row;
     flex-wrap : wrap;
     border : 5px solid ${props => props.color};
     margin : 15px auto;

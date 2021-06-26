@@ -133,7 +133,6 @@ function AVALON_TEST() {
         )
     }
 
-
     if (page === MAIN_FRAME) {
         const colors = voteStageColor.slice(game.voteStage, 5);
         const clicked = () => {
