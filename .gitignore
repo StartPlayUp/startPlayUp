@@ -1,36 +1,33 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+frontend/.idea
 
 # testing
-/coverage
+frontend/coverage
 
 # production
-/build
+frontend/build
 
 # misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-nodejsexample/app.js
-functions/ui-debug.log
-functions/package.json
-functions/package-lock.json
-functions/index.js
-functions/firebase-debug.log
-functions/.eslintrc.js
-firebase.json
-firebase_config.js
-.firebaserc
-src/Jin/Auth/KakaoSDK.js
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+frontend/src/JSC/Common/firebase/config.js
+frontend/backup
+
+backend/node_modules
+backend/testf
+backend/testServerFile
 .env
-index.html
+node_modules
