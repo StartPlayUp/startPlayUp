@@ -1,4 +1,11 @@
-import { CODE } from './YutStore'
+const YUT_RESULT_TYPE = {
+    BACK_DO: 0,
+    DO: 1,
+    GAE: 2,
+    GIRL: 3,
+    YUT: 4,
+    MO: 5,
+}
 
 const table = {
     5: [[5], 21, 22, 23, 24, 25, 15, 16, 17, 18, 19],
@@ -38,7 +45,7 @@ const findPlace = (index, add) => {
 const findBackdoPlace = (placeList, index) => {
     let result = [];
     if ([23, 15, 20].includes(index)) {
-        console.log("placeList : ", placeList)
+        // console.log("placeList : ", placeList)
         // const lastPlace = placeList[placeList.length - 1];
         // const lastPlace = placeList.filter((i) => ![15, 23, 24, 25, 28, 29, 20].includes(i)).pop();
         // switch (index) {
@@ -78,8 +85,8 @@ const findBackdoPlace = (placeList, index) => {
 }
 
 export const checkPlace = (placeList, index, add) => {
-    console.log("checkPlace");
-    if (add !== CODE.BACK_DO) {
+    // console.log("checkPlace");
+    if (add !== YUT_RESULT_TYPE.BACK_DO) {
         return findPlace(index, add);
     }
     else {
@@ -89,7 +96,7 @@ export const checkPlace = (placeList, index, add) => {
 
 export const checkSelectState = (selectHorse, placeToMove, index) => {
     if (selectHorse === undefined || !placeToMove.hasOwnProperty(String(index))) {
-        console.log("out of MOVE_HORSE");
+        // console.log("out of MOVE_HORSE");
         return true;
     }
     return false;
@@ -118,3 +125,4 @@ export const checkMyTurn = (player, turn) => {
     }
     return false;
 }
+
