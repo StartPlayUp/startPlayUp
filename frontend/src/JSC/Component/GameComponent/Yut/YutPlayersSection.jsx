@@ -1,9 +1,10 @@
-import { THROW_YUT, START_GAME, MOVE_HORSE_USE_YUTDATA, boardContext } from 'JSC/Container/GameContainer/Yut/YutStore';
+import { THROW_YUT, START_GAME, boardContext } from 'JSC/Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
 import Horses from 'JSC/Component/GameComponent/Yut/Horses'
 import { NEXT_TURN } from 'JSC/Container/GameContainer/Yut/YutStore';
 import HaltButton from './HaltButton';
+import { PeersContext } from 'JSC/store';
 
 
 const StyleDiv = styled.div`
@@ -29,22 +30,27 @@ const Player = styled.div`
 
 const App = () => {
     const { myThrowCount, yutData, playerData, halted, dispatch } = useContext(boardContext);
+    const { peers } = useContext(PeersContext);
     // const halted = false;
-
+    const dispatchHandler = () => {
+        dispatch({ type: START_GAME, peers })
+    }
     return (
         <div>
-            <button onClick={() => dispatch({ type: START_GAME })}>게임 시작</button>
+            <button onClick={dispatchHandler}>게임 시작</button>
             <HaltButton dispatch={dispatch} type={THROW_YUT} halted={halted} name={'윷 굴리기'} />
-            <button onClick={() => dispatch({ type: NEXT_TURN })}>다음 턴</button>
+            <HaltButton dispatch={dispatch} type={NEXT_TURN} halted={halted} name={'다음 턴'} />
             <StyleDiv>말이 갈 수 있는 수 :
                 {
-                    yutData.map((i, index) => <button key={index} onClick={() => dispatch({ type: MOVE_HORSE_USE_YUTDATA })}> {i} </button>)
+                    yutData.map((i, index) => <button key={index}>{i} </button>)
                 }
             </StyleDiv>
             <div>윷 던질 수 있는 횟수 : {myThrowCount}</div>
             <PlayerSection>
                 {playerData.map((i, index) => <Player key={index}>
-                    <div>닉네임 : {i.nickname}</div>
+                    <div>닉네임 : {
+                        <div>{i.nickname}</div>
+                    }</div>
                     <div style={{ "height": "60px" }} >
                         말의 갯수 :
                         <Horses player={i} index={0} horses={i.horses} />

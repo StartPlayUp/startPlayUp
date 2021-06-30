@@ -7,26 +7,20 @@ import { GAME, YUT } from 'JSC/Constants/peerDataTypes.js';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const START_GAME = 'START_GAME';
-export const RESUME_GAME = 'RESUME_GAME';
-export const MY_TURN = 'MY_TURN';
 export const THROW_YUT = 'THROW_YUT';
 export const SELECT_HORSE = 'SELECT_HORSE';
 export const MOVE_FIRST_HORSE = 'MOVE_FIRST_HORSE';
-export const MOVE_HORSE_USE_PLACE = 'MOVE_HORSE_USE_PLACE';
-export const MOVE_HORSE_USE_YUTDATA = 'MOVE_HORSE_USE_YUTDATA';
 export const MOVE_HORSE = 'MOVE_HORSE';
 export const UPDATE_GOAL = 'UPDATE_GOAL'
 export const TIME_OUT = 'TIME_OUT';
 export const NEXT_TURN = 'NEXT_TURN';
 export const DESELECT_HORSE = 'DESELECT_HORSE';
 export const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
-
-// export const SEND_GAME_DATA = 'SEND_GAME_DATA';
-
+export const UPDATE_PEERS = 'UPDATE_PEERS';
 
 export const boardContext = createContext(null);
 
-export const CODE = {
+export const YUT_RESULT_TYPE = {
     BACK_DO: 0,
     DO: 1,
     GAE: 2,
@@ -37,11 +31,14 @@ export const CODE = {
 
 const initialState = {
     playerData: [
+        //      (예시)
         //     { nickname: '장석찬', color: 'red', horses: 4, goal: 0 },
         //     { nickname: '정진', color: 'orange', horses: 4, goal: 0 },
         //     { nickname: '이종찬', color: 'blue', horses: 4, goal: 0 },
         //     { nickname: '조석영', color: 'green', horses: 4, goal: 0 },
     ], // 몇번 칸에 누구 말이 몇개 있는지 알 수 있음.
+    nowTurnIndex: 0,
+    nowTurnNickname: '',
     // horsePosition: { 2: { player: 0, horses: 2, placeList: [] } },
     horsePosition: {},
     halted: false, // 내 순서 일때 false 그 외에는 true (정지)
@@ -51,16 +48,19 @@ const initialState = {
     timer: 0, // 1초에 +1 씩 더해준다.
     myThrowCount: 1, // 윷을 던질 수 있는 횟수를 나타냄. // halted 와 useEffect 사용해서 대체할 수 있는지 테스트 // 
     winner: [], // 이긴사람을 순서대로 추가함.
-    nowTurn: 0,
-    myTurn: 0,
 };
+const init = ({ initialState, peers }) => {
+    console.log("in init : ", peers)
+    return { ...initialState, peers }
+}
+
 const randomYut = () => {
     const yutMatchTable = {
-        0: CODE.MO, // 모
-        1: CODE.DO, // 도
-        2: CODE.GAE, // 개
-        3: CODE.GIRL, // 걸
-        4: CODE.YUT  // 윷
+        0: YUT_RESULT_TYPE.MO, // 모
+        1: YUT_RESULT_TYPE.DO, // 도
+        2: YUT_RESULT_TYPE.GAE, // 개
+        3: YUT_RESULT_TYPE.GIRL, // 걸
+        4: YUT_RESULT_TYPE.YUT  // 윷
         // 0 : 백도
     }
     const arr = [];
@@ -69,7 +69,7 @@ const randomYut = () => {
     }
     let result = yutMatchTable[arr.reduce((a, b) => a + b)];
     // 백도가 있으면 1 말고 0 출력
-    return result === 1 && arr[0] === 1 ? CODE.BACK_DO : result;
+    return result === 1 && arr[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : result;
 }
 
 
@@ -88,76 +88,64 @@ const shuffle = (array) => {
     return array;
 }
 
-const findMyTurn = (array, value) => {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i].nickname === value) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-const reducer = (state, action) => {
-    action.type !== UPDATE_TIMER && console.log("action start : ", action.type)
-    // let horsePosition;
-    const { peers } = useContext(PeersContext);
+const reducer = ({ peers, ...sendState }, { type, ...action }) => {
+    const state = { ...sendState, peers };
     const nickname = localStorage.getItem('nickname');
-    console.log(peers)
-
-
-    switch (action.type) {
+    switch (type) {
+        case UPDATE_PEERS: {
+            return { ...state, peers: action.peers }
+        };
         case GET_DATA_FROM_PEER: {
-            const myTurn = findMyTurn(action.data.playerData, nickname);
-            return { ...state, ...action.data, myTurn };
+            const halted = !(nickname === action.data.nowTurnNickname)
+            return { ...state, ...action.data, halted };
         }
         case UPDATE_TIMER:
             return { ...state, timer: state.timer + 1 };
         case START_GAME: {
+            const peers = action.peers;
             const colorList = ['orange', 'blue', 'green']
             const playerData = [{ nickname, color: 'red', horses: 4, goal: 0 }];
-            peers.forEach((i, index) => {
+            peers.slice(0, 3).forEach((i, index) => {
                 playerData.push({ nickname: i.nickname, color: colorList[index], horses: 4, goal: 0 });
             });
-            console.log(playerData);
             shuffle(playerData);
 
-            const myTurn = findMyTurn(playerData, nickname);
-            const result = { ...initialState, playerData, myTurn, myThrowCount: 1, halted: false };
+            const nowTurnNickname = playerData[0].nickname; // playerData의 첫번째 닉네임
+            const halted = !(nickname === playerData[0].nickname);
+            const result = { ...initialState, nowTurnNickname, playerData, myThrowCount: 1 };
 
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: result })
-
-            return result;
-        }
-        case RESUME_GAME:
-            return { ...state, halted: true };
-        case MY_TURN: {
-            return { ...state, halted: false };
+            sendDataToPeers(GAME, { game: YUT, nickname, peers, data: result });
+            return { ...result, peers, halted };
         }
 
         case THROW_YUT: {
             // 윷 배열에 던져 나온 수를 추가해줌.
-            const result = { ...state };
-            if (state.myThrowCount > 0) {
-                const randomYutResult = randomYut();
-                let myThrowCount = state.myThrowCount;
-                const yutData = [...state.yutData, randomYutResult];
-                if (!(randomYutResult === CODE.YUT || randomYutResult === CODE.MO)) {
-                    myThrowCount = myThrowCount - 1;
-                }
-                // return { ...state, myThrowCount, yutData };
-                result.myThrowCount = myThrowCount;
-                result.yutData = yutData;
+            if (state.myThrowCount <= 0) {
+                return { ...state }
             }
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: result })
-            return result;
+            const result = { ...state };
+            const randomYutResult = randomYut();
+            let myThrowCount = state.myThrowCount;
+            const yutData = [...state.yutData, randomYutResult];
+            if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
+                myThrowCount = myThrowCount - 1;
+            }
+            // return { ...state, myThrowCount, yutData };
+            // result.myThrowCount = myThrowCount;
+            // result.yutData = yutData;
+
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, myThrowCount, yutData } })
+            return { ...state, myThrowCount, yutData };
         }
         case SELECT_HORSE:
             console.log("말 선택 : ", action.index)
             if (state.yutData.length === 0 ||
-                (state.horsePosition.hasOwnProperty(String(action.index)) && state.nowTurn !== state.horsePosition[action.index].player)
+                (state.horsePosition.hasOwnProperty(String(action.index)) && state.nowTurnIndex !== state.horsePosition[action.index].player) ||
+                state.halted
             ) {
                 // 윷 던진 것이 아무것도 없으면 선택 안함.
                 // 본인 차례에 상대망 말 클릭하면 선택 안함.
+                // halted 가 true 이면( 즉 내 차례가 아님 멈춘 상태일 경우)
                 return { ...state }
             }
             let arr = [...new Set(state.yutData)].sort().reverse();
@@ -175,7 +163,7 @@ const reducer = (state, action) => {
             });
             console.log("말이 갈 수 있는 위치 : ", placeToMove);
 
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, selectHorse: action.index, placeToMove } });
+            //sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, selectHorse: action.index, placeToMove } });
 
             return { ...state, selectHorse: action.index, placeToMove };
 
@@ -193,14 +181,14 @@ const reducer = (state, action) => {
             // 만약에 selectHorse 가 0 이라면 (윷 판에 말이 없는 경우)
             const horsePosition = { ...state.horsePosition };
             // let nowTurn = horsePosition[action.index]['player']
-            const nowTurn = state.nowTurn;
+            const nowTurnIndex = state.nowTurnIndex;
             const playerData = [...state.playerData]
             let myThrowCount = state.myThrowCount;
 
             // 내가 가지고 있는 horses -1 해주기.
-            playerData[nowTurn] = { ...playerData[nowTurn], horses: playerData[nowTurn].horses - 1 }
+            playerData[nowTurnIndex] = { ...playerData[nowTurnIndex], horses: playerData[nowTurnIndex].horses - 1 }
             if (state.horsePosition.hasOwnProperty(String(action.index))) {
-                if (nowTurn === state.horsePosition[action.index].player)
+                if (nowTurnIndex === state.horsePosition[action.index].player)
                     // 내 말이 있을 때
                     horsePosition[action.index] = {
                         ...state.horsePosition[action.index],
@@ -213,18 +201,18 @@ const reducer = (state, action) => {
 
                     myThrowCount += 1;
 
-                    horsePosition[action.index] = { player: nowTurn, horses: 1, placeList: [0] }
+                    horsePosition[action.index] = { player: nowTurnIndex, horses: 1, placeList: [0] }
                 }
             }
             else {
                 // 아무것도 없었을 때
-                horsePosition[action.index] = { player: nowTurn, horses: 1, placeList: [0] }
+                horsePosition[action.index] = { player: nowTurnIndex, horses: 1, placeList: [0] }
             }
 
             // 만약에 먹으면 먹힌 사람 말 갯수 올려주고 
             // 내거라면 위치에 + 1 해주고
 
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, yutData, playerData, myThrowCount, horsePosition, selectHorse: undefined, placeToMove: {} } });
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, yutData, playerData, myThrowCount, horsePosition, selectHorse: undefined, placeToMove: {} } });
 
             return { ...state, yutData, playerData, myThrowCount, horsePosition, selectHorse: undefined, placeToMove: {} };
         }
@@ -245,12 +233,12 @@ const reducer = (state, action) => {
 
             // 말 이동 관련 코드
             const horsePosition = { ...state.horsePosition };
-            const nowTurn = state.nowTurn;
+            const nowTurnIndex = state.nowTurnIndex;
             let myThrowCount = state.myThrowCount;
             const playerData = [...state.playerData]
 
             const placeList = [...state.horsePosition[state.selectHorse].placeList];
-            if (state.placeToMove[action.index] !== CODE.BACK_DO) {
+            if (state.placeToMove[action.index] !== YUT_RESULT_TYPE.BACK_DO) {
                 // 백도일 때 추가 하지 않음.
                 placeList.push(state.selectHorse);
                 console.log('placeList 추가');
@@ -279,7 +267,7 @@ const reducer = (state, action) => {
             }
             delete horsePosition[state.selectHorse]
 
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, yutData, playerData, horsePosition, myThrowCount, selectHorse: undefined, placeToMove: {} } });
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, yutData, playerData, horsePosition, myThrowCount, selectHorse: undefined, placeToMove: {} } });
 
             return { ...state, yutData, playerData, horsePosition, myThrowCount, selectHorse: undefined, placeToMove: {} };
         }
@@ -298,24 +286,36 @@ const reducer = (state, action) => {
                 winner.push(playerData[player].nickname);
             }
 
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, horsePosition, playerData, winner } });
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, horsePosition, playerData, winner } });
 
             return { ...state, horsePosition, playerData, winner };
 
         }
         case DESELECT_HORSE: {
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, selectHorse: undefined, placeToMove: {} } });
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, selectHorse: undefined, placeToMove: {} } });
             return { ...state, selectHorse: undefined, placeToMove: {} };
         }
-        case NEXT_TURN:
+        case TIME_OUT:
+        case NEXT_TURN: {
+            const peers = state.peers;
             // send next user
-            if (state.nowTurn !== state.myTurn) {
-                const nowTurn = state.nowTurn === state.playerData.length - 1 ? 0 : state.nowTurn + 1;
+            console.log("NEXT_TURN START ----------------------")
+            console.log(nickname)
+            console.log(state.nowTurnNickname)
+            console.log(state.nowTurnNickname === nickname)
 
-                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurn, timer: 0 } });
-
-                return { ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurn, timer: 0 };
+            if (state.nowTurnNickname === nickname) {
+                console.log("들어옴")
+                const nowTurnIndex = state.nowTurnIndex === state.playerData.length - 1 ? 0 : state.nowTurnIndex + 1;
+                const nowTurnNickname = state.playerData[nowTurnIndex].nickname;
+                console.log("nowTurn", nowTurnIndex, nowTurnNickname);
+                console.log("peers :", peers)
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurnIndex, nowTurnNickname, timer: 0 } });
+                console.log("NEXT_TURN END ----------------------")
+                return { ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurnIndex, timer: 0, nowTurnNickname, halted: true };
             }
+            console.log("NEXT_TURN END ----------------------")
+        }
         default:
             return state;
     }
@@ -323,36 +323,55 @@ const reducer = (state, action) => {
 
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
-    const [state, dispatch] = useReducer(reducer, initialState);
+    // const [state, dispatch] = useReducer(reducer, initialState);
+    const { peers } = useContext(PeersContext);
+    const [state, dispatch] = useReducer(reducer, { initialState, peers }, init);
     const { peerData } = useContext(PeerDataContext);
-    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, timer, nowTurn, myTurn, horsePosition } = state;
+    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, timer, nowTurnIndex, nowTurnNickname, horsePosition } = state;
 
-    // 타이머 돌리기
-    // useEffect(() => {
-    //     let timer;
-    //     if (halted === false) {
-    //         timer = setInterval(() => {
-    //             dispatch({ type: UPDATE_TIMER })
-    //         }, 1000);
-    //     }
-    //     return () => {
-    //         clearInterval(timer);
-    //     }
-    // }, [halted])
 
-    // // 타이머가 30 초가 넘었을 때 순서 넘기기
-    // useEffect(() => {
-    //     if (timer > 30) {
-    //         dispatch({ type: NEXT_TURN })
-    //     }
-    // }, [timer])
-
-    // 순서 넘기기
     useEffect(() => {
-        if (yutData.length === 0 && myThrowCount === 0) {
+        console.log("[debug] update_peers : ", peers);
+        dispatch({ type: UPDATE_PEERS, peers })
+    }, [peers])
+
+    // // 타이머 돌리기
+    useEffect(() => {
+        let timer;
+        if (halted === false) {
+            timer = setInterval(() => {
+                dispatch({ type: UPDATE_TIMER })
+            }, 1000);
+        }
+        return () => {
+            clearInterval(timer);
+        }
+    }, [halted])
+
+    // 타이머가 30 초가 넘었을 때 순서 넘기기
+    useEffect(() => {
+        if (timer > 10) {
             dispatch({ type: NEXT_TURN })
         }
-    }, [yutData, myThrowCount])
+    }, [timer])
+
+    useEffect(() => {
+        if (peerData.type === GAME && peerData.game === YUT) {
+            const data = peerData.data;
+            dispatch({ type: GET_DATA_FROM_PEER, data })
+        }
+    }, [peerData])
+
+
+
+    // 순서 넘기기
+    // useEffect(() => {
+    //     if (yutData.length === 0 && myThrowCount === 0) {
+    //         dispatch({ type: NEXT_TURN })
+    //     }
+    // }, [yutData, myThrowCount])
+
+
 
     useEffect(() => {
         // 말 위치 데이터가 변경이 되었다면 골인지점 에 있는 상태인지 확인,
@@ -362,24 +381,7 @@ const YutStore = ({ children }) => {
         }
     }, [horsePosition]);
 
-    useEffect(() => {
-        if (nowTurn === myTurn) {
-            dispatch({ type: MY_TURN })
-        }
-    }, [nowTurn])
-
-    useEffect(() => {
-        console.log("hp : ", horsePosition);
-    }, [horsePosition])
-
-    useEffect(() => {
-        if (peerData.type === GAME && peerData.game === YUT) {
-            const data = peerData.data;
-            dispatch({ type: GET_DATA_FROM_PEER, data })
-        }
-    }, [peerData])  //peerData에 변경이 생기면 dispatch로 함수 실행
-
-    const value = useMemo(() => ({ playerData, yutData, placeToMove, selectHorse, halted, horsePosition, myThrowCount, nowTurn, myTurn, dispatch }), [selectHorse, myThrowCount, placeToMove, horsePosition, playerData, yutData, nowTurn, halted]);
+    const value = useMemo(() => ({ playerData, yutData, placeToMove, selectHorse, halted, horsePosition, myThrowCount, dispatch }), [selectHorse, myThrowCount, placeToMove, horsePosition, playerData, yutData, nowTurnIndex, halted]);
     // playerData 플레이어 데이터
     // yutData yut을 던져 나온 결과 리스트
     // placeToMove 움직일 수 있는 위치
@@ -389,9 +391,8 @@ const YutStore = ({ children }) => {
     return (
         <div>
             <div>{timer}</div>
-            <div>nowTurn : {nowTurn}</div>
-            <div>{console.log("asdasdffasdafsdfdsa : ", playerData)}</div>
-            <div>{playerData.length > 0 && playerData[nowTurn].nickname}</div>
+            <div>nowTurnIndex : {nowTurnIndex}</div>
+            <div>nowTurnNickname : {nowTurnNickname}</div>
             {winner.map((i) => <div>1등 : {i}</div>)}
             <boardContext.Provider value={value}>
                 {children}
