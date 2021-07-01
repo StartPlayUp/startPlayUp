@@ -6,6 +6,7 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';
+export const STOP_TIMER = 'STOP_TIMER';
 export const START_GAME = 'START_GAME';
 export const THROW_YUT = 'THROW_YUT';
 export const SELECT_HORSE = 'SELECT_HORSE';
@@ -92,16 +93,43 @@ const shuffle = (array) => {
 const reducer = ({ peers, ...sendState }, { type, ...action }) => {
     const state = { ...sendState, peers };
     const nickname = localStorage.getItem('nickname');
+
+    const throwYutFunction = (myThrowCount, yutData) => {
+        if (myThrowCount <= 0) {
+            return { myThrowCount, yutData }
+        }
+        const randomYutResult = randomYut();
+        yutData = [...yutData, randomYutResult];
+        if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
+            myThrowCount = myThrowCount - 1;
+        }
+        return { myThrowCount, yutData }
+    }
+
+
     switch (type) {
+        case PLAY_COMPUTER: {
+            let myThrowCount = state.myThrowCount;
+            let yutData = state.yutData;
+            while (myThrowCount > 0) {
+                const temp = throwYutFunction(myThrowCount, yutData)
+                myThrowCount = temp.myThrowCount;
+                yutData = temp.yutData;
+            }
+            console.log("PLAYER_COMPUTER");
+            return { ...state, myThrowCount, yutData }
+        };
         case UPDATE_PEERS: {
             return { ...state, peers: action.peers }
         };
         case GET_DATA_FROM_PEER: {
             const halted = !(nickname === action.data.nowTurnNickname)
             return { ...state, ...action.data, halted };
-        }
+        };
         case UPDATE_TIMER:
             return { ...state, timer: state.timer + 1 };
+        case STOP_TIMER:
+            return { ...state, halted: true };
         case START_GAME: {
             const peers = action.peers;
             const colorList = ['orange', 'blue', 'green']
@@ -117,27 +145,17 @@ const reducer = ({ peers, ...sendState }, { type, ...action }) => {
 
             sendDataToPeers(GAME, { game: YUT, nickname, peers, data: result });
             return { ...result, peers, halted };
-        }
+        };
 
         case THROW_YUT: {
             // 윷 배열에 던져 나온 수를 추가해줌.
             if (state.myThrowCount <= 0) {
                 return { ...state }
             }
-            const result = { ...state };
-            const randomYutResult = randomYut();
-            let myThrowCount = state.myThrowCount;
-            const yutData = [...state.yutData, randomYutResult];
-            if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
-                myThrowCount = myThrowCount - 1;
-            }
-            // return { ...state, myThrowCount, yutData };
-            // result.myThrowCount = myThrowCount;
-            // result.yutData = yutData;
-
-            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, myThrowCount, yutData } })
-            return { ...state, myThrowCount, yutData };
-        }
+            const throwYut = throwYutFunction(state.myThrowCount, state.yutData);
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, ...throwYut } })
+            return { ...state, ...throwYut };
+        };
         case SELECT_HORSE:
             console.log("말 선택 : ", action.index)
             if (state.yutData.length === 0 ||
@@ -351,9 +369,13 @@ const YutStore = ({ children }) => {
 
     // 타이머가 30 초가 넘었을 때 순서 넘기기
     useEffect(() => {
-        if (timer > 10) {
-            dispatch({ type: PLAY_COMPUTER })
-            dispatch({ type: NEXT_TURN })
+        if (timer > 2) {
+            // 시간 멈춰놓고
+            dispatch({ type: STOP_TIMER });
+            // 컴퓨터 행동 하고
+            dispatch({ type: PLAY_COMPUTER, dispatch });
+            // 턴 넘겨주고
+            // dispatch({ type: NEXT_TURN });
         }
     }, [timer])
 
