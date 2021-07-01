@@ -1,13 +1,13 @@
 import React, { Fragment, useState, useEffect, useContext,useReducer } from "react";
 import Calculate from "./calculate";
-import { sendDataToPeers } from 'JSC/Common/peerModule/sendToPeers/index.js';
-import { PeerDataContext, PeersContext, UserContext } from 'JSC/store';
-import { GAME, YACHT } from 'JSC/Constants/peerDataTypes.js';
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
+import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { GAME, YACHT } from 'Constants/peerDataTypes.js';
 import dice1 from './dice/dice1.png';
 import styled from 'styled-components';
-import { UPDATE_PEERS } from "JSC/Container/GameContainer/Yut/YutStore";
+import { UPDATE_PEERS } from "Container/GameContainer/Yut/YutStore";
 
-
+const nickname = localStorage.getItem('nickname');
 const ROLLDICE="RollDice";
 const SelectPoint="SelectPoint";
 const StartGame="StartGame";
@@ -18,7 +18,26 @@ const initialState={
     count:[0,0,0,0,0,0],
     hold:[false,false,false,false,false],
     rollCount:3,
-    playerData:[],
+    playerData: [{
+        nickname,
+        selectPoint: {
+            ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+            two: [0, false],
+            three: [0, false],
+            four: [0, false],
+            five: [0, false],
+            six: [0, false],
+            threeOfaKind: [0, false],
+            fourOfaKind: [0, false],
+            fullHouse: [0, false],
+            smallStraight: [0, false],
+            largeStraight: [0, false],
+            choice: [0, false],
+            yahtzee: [0, false]
+        },
+        result: 0,
+        bonus: [0, false]
+            }],
     nowTurn:0
 }
 const reducer=(state,action)=>{
@@ -33,26 +52,9 @@ const reducer=(state,action)=>{
         case StartGame:{
             const peers = action.peers
             const nickname=localStorage.getItem('nickname');
-            const player = [{
-                nickname,
-                selectPoint: {
-                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
-                    two: [0, false],
-                    three: [0, false],
-                    four: [0, false],
-                    five: [0, false],
-                    six: [0, false],
-                    threeOfaKind: [0, false],
-                    fourOfaKind: [0, false],
-                    fullHouse: [0, false],
-                    smallStraight: [0, false],
-                    largeStraight: [0, false],
-                    choice: [0, false],
-                    yahtzee: [0, false]
-                }
-            }];
+            const playerData = [...state.playerData];
             peers.forEach((i)=>{
-                player.push({
+                playerData.push({
                     nickname: i.nickname,
                     selectPoint: {
                         ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -68,13 +70,16 @@ const reducer=(state,action)=>{
                         largeStraight: [0, false],
                         choice: [0, false],
                         yahtzee: [0, false]
-                    }
+                    },
+                    result: 0,
+                    bonus: [0, false]
                 });
             })
-            const nowTurnNickname = player[0].nickname;
-            const result = { ...state, nowTurnNickname, player };
+            
+            const nowTurnNickname = playerData[0].nickname;
+            const result = { ...state, nowTurnNickname, playerData };
             sendDataToPeers(GAME,{game:YACHT,nickname,peers,data:result});
-            return {...result,peers};
+            return { ...state, nowTurnNickname, playerData ,peers};
         }
         case ROLLDICE:
             const peers = action.peers
@@ -143,9 +148,16 @@ function YachtReduce(){
             dispatch({type:GET_DATA_FROM_PEER,data})
         }
     }, [peerData])
-
     return (
         <Fragment>
+            <div>
+                {Object.keys(state.playerData[0].selectPoint).map((i,index)=>(
+                    <div keys={index}>
+                        {state.playerData[0].selectPoint[i][0]}
+                    </div>
+                ))}
+                
+            </div>
             <div>
             <div>
             <button onClick={dispatchHandler}>게임 시작</button>

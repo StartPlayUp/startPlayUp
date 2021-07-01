@@ -1,6 +1,6 @@
 import React, { useState, useContext, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
-import YachtMain from '../../../Component/GameComponent/Yachu/yachtMain'
+import YachtReduce from '../../../Component/GameComponent/Yachu/yachtReduce'
 const Yacht=(props)=>{
 
     const YachtMan=styled.div`
@@ -24,8 +24,7 @@ const Yacht=(props)=>{
     `
     return(
         <YachtMan>
-                <Header />
-                <YachtMain />
+                <YachtReduce />
         </YachtMan>
     );
 }
