@@ -1,4 +1,4 @@
-import { boardContext } from 'JSC/Container/GameContainer/Yut/YutStore';
+import { boardContext } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
 
 const App = ({ dispatch, halted, name, type }) => {

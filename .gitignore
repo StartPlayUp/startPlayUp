@@ -23,7 +23,7 @@ frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
-frontend/src/JSC/Common/firebase/config.js
+frontend/src/Common/firebase/config.js
 frontend/backup
 
 backend/node_modules

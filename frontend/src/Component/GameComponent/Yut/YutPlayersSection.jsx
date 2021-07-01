@@ -1,10 +1,10 @@
-import { THROW_YUT, START_GAME, boardContext } from 'JSC/Container/GameContainer/Yut/YutStore';
+import { THROW_YUT, START_GAME, boardContext } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
-import Horses from 'JSC/Component/GameComponent/Yut/Horses'
-import { NEXT_TURN } from 'JSC/Container/GameContainer/Yut/YutStore';
+import Horses from 'Component/GameComponent/Yut/Horses'
+import { NEXT_TURN } from 'Container/GameContainer/Yut/YutStore';
 import HaltButton from './HaltButton';
-import { PeersContext } from 'JSC/store';
+import { PeersContext } from 'store';
 
 
 const StyleDiv = styled.div`

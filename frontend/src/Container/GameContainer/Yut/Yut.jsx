@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Yutfield from 'JSC/Component/GameComponent/Yut/Yutfield'
-import YutPlayersSection from 'JSC/Component/GameComponent/Yut/YutPlayersSection';
+import Yutfield from 'Component/GameComponent/Yut/Yutfield'
+import YutPlayersSection from 'Component/GameComponent/Yut/YutPlayersSection';
 import YutStore from './YutStore';
-import YutAnimation from 'JSC/Component/GameComponent/Yut/YutAnimation'
+import YutAnimation from 'Component/GameComponent/Yut/YutAnimation'
 
 const Yut = (props) => {
     const StyleDiv = styled.div`

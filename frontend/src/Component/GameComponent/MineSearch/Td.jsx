@@ -1,5 +1,5 @@
 import React, { useContext, memo, useCallback } from 'react';
-import { CODE, TableContext, OPEN_CELL, CLICK_MINE, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL, SEND_GAME_DATA } from 'JSC/Container/GameContainer/MineSearch';
+import { CODE, TableContext, OPEN_CELL, CLICK_MINE, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL, SEND_GAME_DATA } from 'Container/GameContainer/MineSearch';
 import styled from "styled-components";
 
 const getTdStyle = (code) => {

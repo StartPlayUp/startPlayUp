@@ -1,6 +1,6 @@
 import React, { createContext, useMemo, useReducer, useState, useRef, useEffect, memo, Children } from "react";
 import { LOGIN, GET_CHATLIST, SET_CHATLIST } from './Constants/actionTypes';
-import { PEER_CHAT } from "JSC/Constants/peerDataTypes"
+import { PEER_CHAT } from "Constants/peerDataTypes"
 import { testDB } from "./Common/TestDB";
 import styled from 'styled-components'
 
