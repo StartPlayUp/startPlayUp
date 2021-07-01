@@ -26,6 +26,7 @@ function AVALON_TEST() {
     const [winner, setWinner] = useState('')
     const [page, setPage] = useState(START);
     const [kill, setKill] = useState('')
+
     useEffect(() => {
 
     })
@@ -77,6 +78,7 @@ function AVALON_TEST() {
         setExpedition(false)
         game.vote = []
     }
+
     const expeditionClick = () => {
         setExpedition(true)
         if (game.expeditionStage === 4 && user.length >= 7) {
@@ -92,6 +94,7 @@ function AVALON_TEST() {
         }
         game.expeditionStage += 1;
     }
+
     if (page === START) {
         switch (user.length) {
             case 5 :
@@ -271,6 +274,7 @@ function AVALON_TEST() {
             </>
         )
     }
+
     if (page === ASSASSIN) {
         const onChange = e => {
             setKill(e.target.value)
@@ -298,6 +302,7 @@ function AVALON_TEST() {
             </>
         )
     }
+
     if (page === END_GAME) {
         return (
             <>
