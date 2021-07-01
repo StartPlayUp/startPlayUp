@@ -1,11 +1,11 @@
 import React, { useContext, useState, memo, useEffect } from 'react';
-import { PeerDataContext, PeersContext, UserContext } from 'JSC/store';
-import scissors from "JSC/image/가위.jpg"
-import rock from 'JSC/image/바위.jpg'
-import paper from 'JSC/image/보.jpg'
+import { PeerDataContext, PeersContext, UserContext } from 'store';
+import scissors from "image/가위.jpg"
+import rock from 'image/바위.jpg'
+import paper from 'image/보.jpg'
 import styled from "styled-components"
-import { GAME, ROCK_PAPER_SCISSORS } from "JSC/Constants/peerDataTypes";
-import { sendDataToPeers } from 'JSC/Common/peerModule/sendToPeers'
+import { GAME, ROCK_PAPER_SCISSORS } from "Constants/peerDataTypes";
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers'
 
 const ImageButton = styled.button`
     width: 100px;

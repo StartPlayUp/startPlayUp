@@ -1,4 +1,4 @@
-import { THROW_YUT, boardContext, SELECT_HORSE } from 'JSC/Container/GameContainer/Yut/YutStore';
+import { THROW_YUT, boardContext, SELECT_HORSE } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
 

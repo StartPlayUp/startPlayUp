@@ -1,10 +1,10 @@
 import React, { useReducer, useEffect, createContext, useMemo, memo, useContext } from 'react';
-import Table from 'JSC/Component/GameComponent/MineSearch/Table';
-import Form from 'JSC/Component/GameComponent/MineSearch/Form';
+import Table from 'Component/GameComponent/MineSearch/Table';
+import Form from 'Component/GameComponent/MineSearch/Form';
 import styled from 'styled-components';
-import { GAME, MINE_SEARCH } from 'JSC/Constants/peerDataTypes';
-import { PeerDataContext, PeersContext, UserContext } from 'JSC/store';
-import { sendDataToPeers } from 'JSC/Common/peerModule/sendToPeers';
+import { GAME, MINE_SEARCH } from 'Constants/peerDataTypes';
+import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const START_GAME = 'START_GAME';

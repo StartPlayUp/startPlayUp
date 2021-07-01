@@ -3,17 +3,17 @@ import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
 import Nav from "./Nav";
-import { PeerDataContext, UserContext, PeersContext, VoicePeersContext } from "JSC/store";
+import { PeerDataContext, UserContext, PeersContext, VoicePeersContext } from "store";
 import io from "socket.io-client";
-import { PEER_CHAT } from "JSC/Constants/peerDataTypes"
-import { chatAddMessage } from "JSC/Common/ChatModule/addMessage"
-import { connectDataPeer } from "JSC/Common/peerModule/CreatePeer/createDataPeers"
-import { connectVoicePeer } from "JSC/Common/peerModule/CreatePeer/createVoicePeers"
+import { PEER_CHAT } from "Constants/peerDataTypes"
+import { chatAddMessage } from "Common/ChatModule/addMessage"
+import { connectDataPeer } from "Common/peerModule/CreatePeer/createDataPeers"
+import { connectVoicePeer } from "Common/peerModule/CreatePeer/createVoicePeers"
 import Peer from 'simple-peer';
 
 // import { RECEIVE_MESSAGE, socketApi } from "../../Common/socketModule";
 import SideVoiceUser from "./SideVoiceUser";
-import { getDataFromPeerOn } from 'JSC/Common/peerModule/receiveFromPeers';
+import { getDataFromPeerOn } from 'Common/peerModule/receiveFromPeers';
 
 const TextField = styled.div`
   display:flex;
