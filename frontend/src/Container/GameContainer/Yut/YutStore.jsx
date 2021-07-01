@@ -17,6 +17,7 @@ export const NEXT_TURN = 'NEXT_TURN';
 export const DESELECT_HORSE = 'DESELECT_HORSE';
 export const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
 export const UPDATE_PEERS = 'UPDATE_PEERS';
+export const PLAY_COMPUTER = 'PLAY_COMPUTER';
 
 export const boardContext = createContext(null);
 
@@ -351,6 +352,7 @@ const YutStore = ({ children }) => {
     // 타이머가 30 초가 넘었을 때 순서 넘기기
     useEffect(() => {
         if (timer > 10) {
+            dispatch({ type: PLAY_COMPUTER })
             dispatch({ type: NEXT_TURN })
         }
     }, [timer])
