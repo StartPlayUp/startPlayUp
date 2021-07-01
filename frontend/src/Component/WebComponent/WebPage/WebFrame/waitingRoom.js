@@ -2,7 +2,7 @@ import React from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
-import ChatComponent from '../../ChatFrame/frontend/src/JSC/Component/ChatComponent'
+import Index from '../../ChatFrame/frontend/src/JSC/Component/ChatComponent'
 import {Store} from '../../ChatFrame/frontend/src/JSC/store'
 import {
     BodyFrame,
@@ -17,12 +17,17 @@ import {
     LeftButtonsArea,
     RightButtonsArea
 } from "../Style/WaitingRoomStyle";
+import App from "../../App";
 
 const WaitingRoom = ({history}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
-
+    const onClick = () =>{
+        history.push({
+            pathname : '/Avalon'
+        })
+    }
     return (
         <div>
             <BodyFrame>
@@ -35,7 +40,7 @@ const WaitingRoom = ({history}) => {
                     <hr/>
                     <ButtonArea>
                         <LeftButtonsArea>
-                            <Button>시작</Button>
+                            <Button onClick={onClick}>시작</Button>
                             <Button>준비</Button>
                             <Button>관전</Button>
                         </LeftButtonsArea>
@@ -49,7 +54,7 @@ const WaitingRoom = ({history}) => {
                         </UserList>
                         <ChattingList>
                             <Store>
-                                <ChatComponent/>
+                                <Index/>
                             </Store>
                         </ChattingList>
                     </MainList>

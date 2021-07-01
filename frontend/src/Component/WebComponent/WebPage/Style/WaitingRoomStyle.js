@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 export const BodyFrame = styled.div`
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position : absolute;
     background-color : #E0E3DA;
 `;
 
 export const Room = styled.div`
     width: 75%;
-    height :90vh;
+    height :90%;
     margin : auto;
     margin-top : 50px;    
 `
