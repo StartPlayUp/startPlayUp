@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
-import {UserState,merlinSight} from "../gameSetting";
+import {GameContext,PlayerContext,merlinSight} from "../gameSetting";
 
 function MerlinPlayer() {
-    const userState = useContext(UserState)
+    const userState = useContext(PlayerContext)
     return(
         <div>
             {
