@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext,useReducer } from "react";
+import React, { Fragment, useState, useEffect, useContext,useReducer,memo } from "react";
 import Calculate from "./calculate";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { PeerDataContext, PeersContext, UserContext } from 'store';
@@ -44,12 +44,13 @@ const init = ({ initialState, peers }) => {
     console.log("in init : ", peers)
     return { ...initialState, peers }
 }
-const reducer=({peers,...sendstate},action)=>{
+const reducer=({peers,...sendstate},{type,...action})=>{
     const state={...sendstate,peers}
+    console.log(type)
     const nickname = localStorage.getItem('nickname');
-    switch(action.type){
+    switch(type){
         case UPDATE_PEERS:{
-            return {...state,...action.peers}
+            return {...state,peers:action.peers}
         }
         case GET_DATA_FROM_PEER:{
             return {...state,...action.data}
@@ -82,11 +83,11 @@ const reducer=({peers,...sendstate},action)=>{
             })
             
             const nowTurnNickname = playerData[0].nickname;
-            const result = { ...state, nowTurnNickname, playerData };
+            const result = { ...initialState, nowTurnNickname, playerData };
             sendDataToPeers(GAME,{game:YACHT,nickname,peers,data:result});
-            return { ...state, nowTurnNickname, playerData ,peers};
+            return { ...result ,peers};
         }
-        case ROLLDICE:
+        case ROLLDICE:{
             let diceArray=[...state.dice];
             diceArray=Rolldice(state);
             let counter=Count(diceArray);
@@ -99,25 +100,46 @@ const reducer=({peers,...sendstate},action)=>{
                 }
             })
             state.playerData[nowTurn].selectPoint=selectPoint
-            console.log(state.playerData[nowTurn])
-            const result = { ...state, dice:diceArray, count:counter };
+            const result = { ...sendstate, dice:diceArray, count:counter };
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
             return { ...state, dice: diceArray, count: counter }
-        case DICEHOLD:
+        }
+        case DICEHOLD:{
             const value= action.value;
             let holding= [...state.hold]
             holding[value] = !holding[value];
-            console.log("holdTest",holding);
             return {...state,hold:holding}
-        case SELECT:
+        }
+        case SELECT:{
             const selectName= action.name;
             const selectValue = action.value;
-            const playerData = state.playerData[state.nowTurn]
-            playerData.selectPoint[selectName]=[selectValue,true];
-            state.playerData[state.nowTurn]=playerData
-            const selectResult={...state}
-            sendDataToPeers(GAME,{game:YACHT,nickname,peers,data:selectResult})
-            return {...state}
+            const player = [...state.playerData]
+            player[state.nowTurn].selectPoint[selectName]=[selectValue,true];
+            let sel = Object.keys(player[state.nowTurn].selectPoint).map((i) => {
+                if (player[state.nowTurn].selectPoint[i][1]) {
+                    return player[state.nowTurn].selectPoint[i][0];
+                } else {
+                    return 0;
+                }
+            });
+            var test = sel.reduce((total, num) => {
+                return parseInt(total, 10) + parseInt(num, 10);
+            });
+            player[state.nowTurn].result = test;
+            console.log("--------NEXT_TURN-----------")
+            console.log(nickname);
+            console.log(state.nowTurnNickname);
+            console.log(state.nowTurnNickname === nickname)
+            if (state.nowTurnNickname === nickname){
+                console.log("턴 확인 결과 True");
+                const nowTurn=state.nowTurn===state.playerData.length -1 ? 0:state.nowTurn+1;
+                //현재 턴이 마지막 사람이면 1p의 턴으로 만들고 아니라면 다음 사람으로 만든다
+                const nowTurnNickname=state.playerData[nowTurn].nickname
+                const selectResult = { ...sendstate, playerData: player }
+                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { ...selectResult, nowTurn, nowTurnNickname } })
+                return { ...state, playerData: player,nowTurn,nowTurnNickname }
+            }
+        }
         default:{
             return {...state}
         }
@@ -125,14 +147,12 @@ const reducer=({peers,...sendstate},action)=>{
 }
 const Rolldice=(state)=>{
     let diceArray=[...state.dice];
-    console.log(state.hold);
     for(var i=0;i<5;i++){
         if(!state.hold[i]){
             const num = Math.floor(Math.random() * 6 + 1);
             diceArray[i] = num;
         }
     }
-    console.log(diceArray);
     return diceArray;
 }
 function Count(diceArray) {
@@ -186,9 +206,24 @@ function YachtReduce(){
                             onClick={select}
                             value={i.selectPoint['ace'][0]}>ace</button>
                         </div>
-                        <div>two{i.selectPoint['two'][0]}</div>
-                        <div>three{i.selectPoint['three'][0]}</div>
-                        <div>four{i.selectPoint['four'][0]}</div>
+                        <div>two{i.selectPoint['two'][0]}
+                        <button disabled={i.selectPoint['two'][1] ? 1 : 0}
+                            name={'two'}
+                            onClick={select}
+                            value={i.selectPoint['two'][0]}>ace</button>
+                        </div>
+                        <div>three{i.selectPoint['three'][0]}
+                            <button disabled={i.selectPoint['three'][1] ? 1 : 0}
+                                name={'three'}
+                                onClick={select}
+                                value={i.selectPoint['three'][0]}>three</button>
+                        </div>
+                        <div>four{i.selectPoint['four'][0]}
+                            <button disabled={i.selectPoint['four'][1] ? 1 : 0}
+                                name={'four'}
+                                onClick={select}
+                                value={i.selectPoint['four'][0]}>four</button>
+                        </div>
                         <div>five{i.selectPoint['five'][0]}</div>
                         <div>six{i.selectPoint['six'][0]}</div>
                         <div>bonus{i.bonus[0]}</div>
