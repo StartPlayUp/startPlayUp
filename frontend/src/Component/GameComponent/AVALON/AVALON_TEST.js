@@ -16,6 +16,7 @@ import AngelsVote from "./ExpeditionVote/AngelsVote";
 import EvilsVote from "./ExpeditionVote/EvilsVote";
 import TakeStage from "./gamePage/mainView/TakeStage";
 import VoteStage from "./MainPage/VoteStage";
+import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
 
 const START = 0;
 const MAIN_FRAME = 1;
