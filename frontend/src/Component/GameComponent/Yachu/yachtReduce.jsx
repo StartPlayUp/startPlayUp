@@ -9,7 +9,7 @@ import { UPDATE_PEERS } from "Container/GameContainer/Yut/YutStore";
 
 const nickname = localStorage.getItem('nickname');
 const ROLLDICE="RollDice";
-const SelectPoint="SelectPoint";
+const SELECT="SELECT";
 const StartGame="StartGame";
 const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
 const DICEHOLD='DICEHOLD';
@@ -40,7 +40,12 @@ const initialState={
             }],
     nowTurn:0
 }
-const reducer=(state,action)=>{
+const init = ({ initialState, peers }) => {
+    console.log("in init : ", peers)
+    return { ...initialState, peers }
+}
+const reducer=({peers,...sendstate},action)=>{
+    const state={...sendstate,peers}
     const nickname = localStorage.getItem('nickname');
     switch(action.type){
         case UPDATE_PEERS:{
@@ -82,10 +87,19 @@ const reducer=(state,action)=>{
             return { ...state, nowTurnNickname, playerData ,peers};
         }
         case ROLLDICE:
-            const peers = action.peers
             let diceArray=[...state.dice];
             diceArray=Rolldice(state);
             let counter=Count(diceArray);
+            let pointCalculate = Calculate(diceArray, counter);
+            const nowTurn=state.nowTurn;
+            const selectPoint=state.playerData[nowTurn].selectPoint
+            Object.keys(selectPoint).map((i)=>{
+                if (!selectPoint[i][1]) {
+                    selectPoint[i][0] = pointCalculate[i];
+                }
+            })
+            state.playerData[nowTurn].selectPoint=selectPoint
+            console.log(state.playerData[nowTurn])
             const result = { ...state, dice:diceArray, count:counter };
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
             return { ...state, dice: diceArray, count: counter }
@@ -95,6 +109,15 @@ const reducer=(state,action)=>{
             holding[value] = !holding[value];
             console.log("holdTest",holding);
             return {...state,hold:holding}
+        case SELECT:
+            const selectName= action.name;
+            const selectValue = action.value;
+            const playerData = state.playerData[state.nowTurn]
+            playerData.selectPoint[selectName]=[selectValue,true];
+            state.playerData[state.nowTurn]=playerData
+            const selectResult={...state}
+            sendDataToPeers(GAME,{game:YACHT,nickname,peers,data:selectResult})
+            return {...state}
         default:{
             return {...state}
         }
@@ -133,9 +156,13 @@ function Count(diceArray) {
     return counter;
 }
 function YachtReduce(){
-    const [state,dispatch]=useReducer(reducer,initialState);
-    const {peers} =useContext(PeersContext);
+    const { peers } = useContext(PeersContext);
+    const [state,dispatch]=useReducer(reducer,{initialState,peers},init);
     const { peerData } = useContext(PeerDataContext);
+    function select(e){
+        const {name,value}=e.target;
+        dispatch({type:SELECT,name,value})
+    }
     function dispatchHandler(){
         dispatch({ type: StartGame, peers })
     }
@@ -151,9 +178,29 @@ function YachtReduce(){
     return (
         <Fragment>
             <div>
-                {Object.keys(state.playerData[0].selectPoint).map((i,index)=>(
+                {state.playerData.map((i,index)=>(
                     <div keys={index}>
-                        {state.playerData[0].selectPoint[i][0]}
+                        <div>ace{i.selectPoint['ace'][0]}
+                        <button disabled={i.selectPoint['ace'][1] ? 1 : 0}
+                            name={'ace'}
+                            onClick={select}
+                            value={i.selectPoint['ace'][0]}>ace</button>
+                        </div>
+                        <div>two{i.selectPoint['two'][0]}</div>
+                        <div>three{i.selectPoint['three'][0]}</div>
+                        <div>four{i.selectPoint['four'][0]}</div>
+                        <div>five{i.selectPoint['five'][0]}</div>
+                        <div>six{i.selectPoint['six'][0]}</div>
+                        <div>bonus{i.bonus[0]}</div>
+                        <div>아래는 특수 족보입니다.</div>
+                        <div>choice{i.selectPoint['choice'][0]}</div>
+                        <div>threeOfaKind{i.selectPoint['threeOfaKind'][0]}</div>
+                        <div>fourOfaKind{i.selectPoint['fourOfaKind'][0]}</div>
+                        <div>fullHouse{i.selectPoint['fullHouse'][0]}</div>
+                        <div>smallStraight{i.selectPoint['smallStraight'][0]}</div>
+                        <div>largeStraight{i.selectPoint['largeStraight'][0]}</div>
+                        <div>yahtzee{i.selectPoint['yahtzee'][0]}</div>
+                        <div>result{i.result}</div>
                     </div>
                 ))}
                 
