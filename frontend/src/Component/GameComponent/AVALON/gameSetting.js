@@ -1,10 +1,6 @@
-import React, {createContext, useContext, useReducer, useState} from "react";
+import React, {createContext, useContext, useReducer} from "react";
 import shuffle from 'lodash.shuffle';
-import {Circle, Frame, Title, User} from "./MainPage/Styled";
-import MerlinPlayer from "./Ability/MerlinPlayer";
-import PercivalPlayer from "./Ability/PercivalPlayer";
-import Vote from './RepresentVote/Vote'
-import {createStore} from "redux";
+
 
 export const angels = ['Merlin', 'Percival', 'Citizen'];
 export const evils = ['Morgana', 'Assassin', 'Heresy', 'Modred'];
@@ -41,89 +37,87 @@ const Players = [
     // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
 ]
 
-export const GameContext = createContext(Games);
-export const PlayerContext = createContext(Players);
-
-const START = 0;
+const START_FRAME = 0;
 const MAIN_FRAME = 1;
-const VOTE = 2;
-const EXPEDITION = 3;
-const ASSASSIN = 4;
-const END_GAME = 5;
+const VOTE_FRAME = 2;
+const EXPEDITION_FRAME = 3;
+const ASSASSIN_FRAME = 4;
+const END_GAME_FRAME = 5;
 
 const initialState = {
     mainFrameClick: false,
-    playCount: 0,
+    playerCheckedNumber: 0,
     voteCount: 0,
     voteResult: false,
     expedition: false,
     winner: '',
-    page: START,
+    page: START_FRAME,
     kill: '',
 }
-const reducer = (state = initialState, action) => {
+export const GameContext = createContext(Games);
+export const PlayerContext = createContext(Players);
+export const InitState = createContext(initialState)
+
+const reducer = (state, action) => {
+    console.log(state)
     switch (action.type) {
         case "mainFrameClick":
-            return {
-                mainFrameClick: true
-            }
-        case "playCount" :
+            return {...state, mainFrameClick: action.mainFrameClick}
+        case "playerCheckedNumber" :
+            return {...state, playerCheckedNumber: state.playerCheckedNumber + action.playerCheckedNumber}
+        case "checkedReset":
+            return {...state, playerCheckedNumber: 0}
         case "voteCount":
+            return {...state, voteCount: action.voteCount}
         case "voteResult":
+            return {...state, voteResult: action.voteResult}
         case "expedition":
+            return {...state, expedition: action.expedition}
         case "winner":
+            return {...state, winner: action.winner}
         case "page":
+            return {...state, page: action.page}
         case "kill":
+            return {...state, kill: action.killedPlayer}
         default :
             return state
     }
 }
-
-// const reducerView = ()
-
-export function Store() {
-    const user = useContext(PlayerContext)
+const Store = () => {
+    const [state, dispatch] = useReducer(reducer, initialState)
     const game = useContext(GameContext)
-    const [mainFrameClick, setMainFrameClick] = useState(false)
-    const [playerCount, setPlayerCount] = useState(0);
-    const [voteCount, setVoteCount] = useState(0);
-    const [voteResult, setVoteResult] = useState(false)
-    const [expedition, setExpedition] = useState(false);
-    const [winner, setWinner] = useState('')
-    const [page, setPage] = useState(START);
-    const [kill, setKill] = useState('')
-
+    const user = useContext(PlayerContext)
     const voteOnChange = e => {
         user[e.target.value].selected = e.target.checked;
-        e.target.checked ? setPlayerCount(playerCount + 1) : setPlayerCount(playerCount - 1);
+        const playerCheckedNumber = e.target.checked ? 1 : -1
+        dispatch({type: "playerCheckedNumber", playerCheckedNumber})
     }
     const voteOnClick = () => {
-        if (playerCount === game.takeStage[game.expeditionStage]) {
-            setVoteCount(voteCount + 1);
-            setMainFrameClick(false);
-            setPlayerCount(0)
-            setPage(VOTE)
+        if (state.playerCheckedNumber === game.takeStage[game.expeditionStage]) {
+            const voteCount = state.voteCount + 1
+            const page = VOTE_FRAME
+            dispatch({type: "voteCount", voteCount})
+            dispatch({type: "mainFrameClick"})
+            dispatch({type: "checkedReset"})
+            dispatch({type: "page", page})
         } else {
-            alert(`${game.takeStage[game.expeditionStage]}명을 선택해야합니다.`);
+            alert(`${Games.takeStage[Games.expeditionStage]}명을 선택해야합니다.`);
         }
     }
     const mainFrameClicked = () => {
-        setMainFrameClick(true)
-    }
-    const setVoteTrue = () => {
-        setVoteResult(true)
-    }
-    const setVoteFalse = () => {
-        setVoteResult(false)
+        const mainFrameClick = true
+        dispatch({type: "mainFrameClick", mainFrameClick})
     }
     const votePage = () => {
         let agree = 0;
         let oppose = 0;
         user.map(e => e.toGo === 'agree' ? ++agree : ++oppose)
         if (agree >= oppose) {
+            const page = EXPEDITION_FRAME
             game.voteStage = 0;
-            setPage(EXPEDITION)
+            dispatch({type: "page", page})
         } else {
+            const page = MAIN_FRAME
             if (game.voteStage === 4) {
                 game.takeStage[game.expeditionStage] = 'fail';
                 game.expeditionStage += 1;
@@ -131,27 +125,32 @@ export function Store() {
             } else {
                 game.voteStage += 1;
             }
-            setPage(MAIN_FRAME)
+            dispatch({type: "page", page})
         }
         game.represent += 1;
         game.represent %= user.length;
         nextPage()
     }
     const nextPage = () => {
+        const expedition = false
         const angelCount = game.takeStage.filter(element => 'success' === element).length;
         const evilCount = game.takeStage.filter(element => 'fail' === element).length;
         if (angelCount === 3) {
-            setPage(ASSASSIN)
+            const page = ASSASSIN_FRAME
+            dispatch({type: "page", page})
         }
         if (evilCount === 3) {
-            setWinner('EVILS_WIN')
-            setPage(END_GAME)
+            const page = END_GAME_FRAME
+            const winner = 'EVILS_WIN'
+            dispatch({type: "winner", winner})
+            dispatch({type: "page", page})
         }
-        setExpedition(false)
+        dispatch({type: "expedition", expedition})
         game.vote = []
     }
     const expeditionClick = () => {
-        setExpedition(true)
+        const expedition = true
+        dispatch({type: "expedition", expedition})
         if (game.expeditionStage === 4 && user.length >= 7) {
             if (game.vote.filter(element => 'fail' === element).length >= 2) {
                 game.takeStage[game.expeditionStage] = 'fail';
@@ -166,11 +165,52 @@ export function Store() {
         game.expeditionStage += 1;
     }
     const assassinOnChange = e => {
-        setKill(e.target.value)
+        const killedPlayer = e.target.value
+        dispatch({type: "kill", killedPlayer})
     }
     const killPlayer = () => {
-        const win = kill === 'merlin' ? '악의 승리' : '선의 승리'
-        setWinner(win)
-        setPage(END_GAME)
+        const page = END_GAME_FRAME
+        const winner = state.killedPlayer === 'merlin' ? '악의 승리' : '선의 승리'
+        dispatch({type: "winner", winner})
+        dispatch({type: "page", page})
     }
-}//리듀서 사용 , 스토어 써서
+
+    const gameStart = () => {
+        const PlayersNumber = user.length;
+        const page = MAIN_FRAME
+        switch (user.length) {
+            case 5 :
+                game.takeStage = needPlayers._5P;
+                break;
+            case 6:
+                game.takeStage = needPlayers._6P;
+                break;
+            case 7:
+                game.takeStage = needPlayers._7P;
+                break;
+            case 8:
+            case 9:
+            case 10:
+                game.takeStage = needPlayers._8to10P;
+                break;
+            default:
+                alert('error');
+        }
+        if (PlayersNumber >= 5) {
+            const temp = [
+                ...mustHaveRoles,
+                ...expandRoles.slice(0, PlayersNumber - 5),
+            ];
+            const roles = shuffle(temp);
+            // eslint-disable-next-line array-callback-return
+            user.map((Player, index) => {
+                Player.role = roles[index];
+            });
+            dispatch({type: "page", page})
+            console.log(state.page)
+        } else {
+            alert('error')
+        }
+    };
+}
+export default Store
