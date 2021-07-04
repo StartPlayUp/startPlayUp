@@ -1,4 +1,4 @@
-import React, {useContext , useReducer} from "react";
+import React, {useContext, useReducer} from "react";
 import {
     needPlayers,
     mustHaveRoles,
@@ -15,6 +15,9 @@ import AngelsVote from "./ExpeditionVote/AngelsVote";
 import EvilsVote from "./ExpeditionVote/EvilsVote";
 import TakeStage from "./gamePage/mainView/TakeStage";
 import VoteStage from "./MainPage/VoteStage";
+import {GET_DATA_FROM_PEER, START_GAME, UPDATE_PEERS} from "../../../Container/GameContainer/Yut/YutStore";
+import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
+import {AVALON, GAME, YACHT, YUT} from "../../../Constants/peerDataTypes";
 
 const START_FRAME = 0;
 const MAIN_FRAME = 1;
@@ -34,9 +37,30 @@ const initialState = {
     kill: '',
 }
 
-export const reducer = (state, action) => {
+const reducer = ({peers, ...sendState}, {type, ...action}) => {
+    const state = {...sendState, peers};
+    const nickname = localStorage.getItem('nickname');
     console.log(state)
-    switch (action.type) {
+    switch (type) {
+        case UPDATE_PEERS: {
+            return {...state, peers: action.peers}
+        }
+        case GET_DATA_FROM_PEER: {
+            const halted = !(nickname === action.data.nowTurnNickname)
+            return {...state, ...action.data, halted};
+        }
+        case START_GAME: {
+            const peers = action.peers;
+            const colorList = ['orange', 'blue', 'green']
+            const playerData = [{nickname, color: 'red', horses: 4, goal: 0}];
+            peers.slice(0, 3).forEach((i, index) => {
+                playerData.push({nickname: i.nickname, color: colorList[index], horses: 4, goal: 0});
+            });
+            const nowTurnNickname = playerData[0].nickname;
+            const result = {...initialState, nowTurnNickname, playerData};
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: result});
+            return {...result, peers};
+        }
         case "mainFrameClick":
             return {...state, mainFrameClick: action.mainFrameClick}
         case "playerCheckedNumber" :
@@ -345,6 +369,11 @@ function AVALON_TEST() {
             </>
         )
     }
+    return (
+        <div>
+            <h1>error</h1>
+        </div>
+    )
 }
 
 export default AVALON_TEST
