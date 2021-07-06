@@ -88,21 +88,21 @@ const reducer=({peers,...sendstate},{type,...action})=>{
             return { ...result ,peers};
         }
         case ROLLDICE:{
-            let diceArray=[...state.dice];
+            let diceArray=[0,0,0,0,0];
             diceArray=Rolldice(state);
+            console.assert(!diceArray===[0,0,0,0,0],"주사위가 굴려지지 않았습니다.");
             let counter=Count(diceArray);
             let pointCalculate = Calculate(diceArray, counter);
             const nowTurn=state.nowTurn;
-            const selectPoint=state.playerData[nowTurn].selectPoint
-            Object.keys(selectPoint).map((i)=>{
-                if (!selectPoint[i][1]) {
-                    selectPoint[i][0] = pointCalculate[i];
+            const player = [...state.playerData]
+            Object.keys(player[nowTurn].selectPoint).map((i)=>{
+                if (!player[nowTurn].selectPoint[i][1]) {
+                    player[nowTurn].selectPoint[i][0] = pointCalculate[i];
                 }
             })
-            state.playerData[nowTurn].selectPoint=selectPoint
-            const result = { ...sendstate, dice:diceArray, count:counter };
+            const result = { ...sendstate,playerData:player, dice:diceArray, count:counter };
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
-            return { ...state, dice: diceArray, count: counter }
+            return { ...state,playerData:player,dice: diceArray, count: counter }
         }
         case DICEHOLD:{
             const value= action.value;
@@ -195,6 +195,7 @@ function YachtReduce(){
             dispatch({type:GET_DATA_FROM_PEER,data})
         }
     }, [peerData])
+
     return (
         <Fragment>
             <div>
