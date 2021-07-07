@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Horses from 'Component/GameComponent/Yut/Horses'
 import { NEXT_TURN } from 'Container/GameContainer/Yut/YutStore';
 import HaltButton from './HaltButton';
-import { PeersContext } from 'store';
+import { PeersContext } from 'Routes/peerStore';
 
 
 const StyleDiv = styled.div`

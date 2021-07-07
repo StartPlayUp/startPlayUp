@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components'
-import { UserContext } from '../store'
+import { UserContext } from '../LoginStore'
 import { LOGIN } from '../Constants/actionTypes'
 // import firebase, {signInWithGoogle} from '../Common/firebase/config';
 

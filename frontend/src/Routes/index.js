@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Store, UserContext } from "../store"
+import { UserContext } from "../LoginStore"
 import { Route, Switch, useHistory } from 'react-router-dom';
 import LoginPageContainer from "Container/LoginPageContainer";
 import GlobalContainer from "Container/GlobalContainer";
@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import MineSearch from "Container/GameContainer/MineSearch";
 import Yut from 'Container/GameContainer/Yut/Yut';
 import Yacht from 'Container/GameContainer/Yacht/Yacht';
+import { PeerStore } from './peerStore';
 
 const GamePage = styled.div`
     display:flex;
@@ -45,37 +46,30 @@ function app() {
             <Route exact path="/" component={LoginPageContainer} />
             {isAuthenticated && <Route exact path="/main" component={TemporaryMain} />}
             {isAuthenticated && <Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <RockPaperScissors />
-                <ChatComponent />
+                <PeerStore>
+                    <RockPaperScissors />
+                    <ChatComponent />
+                </PeerStore>
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/MineSearch" render={() => <GamePage>
-                <MineSearch />
+                <PeerStore>
+                    <MineSearch />
+                </PeerStore>
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
-                <Yut />
-                <ChatComponent />
+                <PeerStore>
+                    <Yut />
+                    <ChatComponent />
+                </PeerStore>
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/Yacht" render={() => <GamePage>
-                <StyleDiv>
-                    <Yacht />
-                </StyleDiv>
-                <ChatComponent />
+                <PeerStore>
+                    <StyleDiv>
+                        <Yacht />
+                    </StyleDiv>
+                    <ChatComponent />
+                </PeerStore>
             </GamePage>} />}
-
-
-
-            {/* {<Route path="/" component={TemporaryMain} />}
-            {<Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <RockPaperScissors />
-                <ChatComponent />
-            </GamePage>} />}
-            {<Route exact path="/MineSearch" render={() => <GamePage>
-                <MineSearch />
-            </GamePage>} />}
-            {<Route exact path="/Yut" render={() => <GamePage>
-                <Yut />
-                <ChatComponent />
-            </GamePage>} />} */}
         </BrowserRouter>
     );
 }

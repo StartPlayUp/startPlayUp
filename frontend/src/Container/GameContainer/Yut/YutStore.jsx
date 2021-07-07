@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, createContext, useMemo, memo, useContext } from 'react';
 import styled from 'styled-components';
-import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { checkPlace, checkSelectState, checkEmptySelectHorse, checkHavePlaceToMove } from './YutFunctionModule.js'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
@@ -18,7 +18,7 @@ export const NEXT_TURN = 'NEXT_TURN';
 export const DESELECT_HORSE = 'DESELECT_HORSE';
 export const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
 export const UPDATE_PEERS = 'UPDATE_PEERS';
-export const PLAY_COMPUTER = 'PLAY_COMPUTER';
+export const PLAY_AI = 'PLAY_AI';
 
 export const boardContext = createContext(null);
 
@@ -41,9 +41,10 @@ const initialState = {
     ], // 몇번 칸에 누구 말이 몇개 있는지 알 수 있음.
     nowTurnIndex: 0,
     nowTurnNickname: '',
-    // horsePosition: { 2: { player: 0, horses: 2, placeList: [] } },
+    // horsePosition: { 2: { player: 0, horses: 2 } },
     horsePosition: {},
-    halted: false, // 내 순서 일때 false 그 외에는 true (정지)
+    playerHorsePosition: [], // 4명일 때 [{2:2},{},{},{}]
+    halted: true, // 내 순서 일때 false 그 외에는 true (정지)
     yutData: [], // 윷을 던졌을때 윷 또는 모가 나오거나, 상대 말을 잡을 때 추가
     selectHorse: undefined, // 현재 선택한 말.
     placeToMove: {},
@@ -103,20 +104,70 @@ const reducer = ({ peers, ...sendState }, { type, ...action }) => {
         if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
             myThrowCount = myThrowCount - 1;
         }
+
         return { myThrowCount, yutData }
+    }
+
+    const addPlaceToMove = (index, yutData, horsePosition) => {
+        const placeToMove = {}
+        if (yutData.length === 0) {
+            return placeToMove;
+        }
+        const sortedYutData = [...new Set(yutData)].sort().reverse();
+        sortedYutData.forEach((i) => {
+            if (index === 0) {
+                placeToMove[checkPlace([], index, i)] = i
+            }
+            else {
+                checkPlace(horsePosition[index].placeList, index, i).forEach((p) => {
+                    placeToMove[p] = i;
+                })
+            }
+        });
+        return placeToMove;
     }
 
 
     switch (type) {
-        case PLAY_COMPUTER: {
+        case PLAY_AI: {
             let myThrowCount = state.myThrowCount;
             let yutData = state.yutData;
+
             while (myThrowCount > 0) {
                 const temp = throwYutFunction(myThrowCount, yutData)
                 myThrowCount = temp.myThrowCount;
                 yutData = temp.yutData;
             }
             console.log("PLAYER_COMPUTER");
+            console.log(state.yutData);
+            const placeToMoveObj = {};
+            const placeToMoveObjIndex = [];
+            const shortRootIndex = [];
+            const shortCut = [5, 10, 23, 15, 20, 30];
+            if (state.playerData[state.nowTurnIndex].horses > 0) {
+                placeToMoveObjIndex.push(0);
+                placeToMoveObj[0] = addPlaceToMove(0, yutData, state.horsePosition);
+            }
+            const list = []
+            Object.entries(state.horsePosition).forEach(([key, value]) => {
+                if (value.player === nowTurnIndex) {
+                    placeToMoveObjIndex.push(key);
+                    placeToMoveObj[key] = addPlaceToMove(key, yutData, state.horsePosition);
+                    console.log("placeToMoveObj[key]", placeToMoveObj[key])
+                    Object.entries(placeToMoveObj[key]).forEach(([k, v]) => {
+                        print("key : ", key, "index", k, "destination", v);
+                        // if (shortCut.some((i) => i === k)) {
+                        //     list.push({ "place": key, "add": v, "destination": k })
+                        // }
+                        list.push({ "place": key, "add": v, "destination": k })
+                    })
+                }
+            });
+
+            console.log("list", list);
+            console.log(placeToMoveObj);
+            console.log(placeToMoveObjIndex);
+            console.log("placeToMoveObj : ", placeToMoveObj);
             return { ...state, myThrowCount, yutData }
         };
         case UPDATE_PEERS: {
@@ -156,7 +207,7 @@ const reducer = ({ peers, ...sendState }, { type, ...action }) => {
             sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...sendState, ...throwYut } })
             return { ...state, ...throwYut };
         };
-        case SELECT_HORSE:
+        case SELECT_HORSE: {
             console.log("말 선택 : ", action.index)
             if (state.yutData.length === 0 ||
                 (state.horsePosition.hasOwnProperty(String(action.index)) && state.nowTurnIndex !== state.horsePosition[action.index].player) ||
@@ -167,25 +218,14 @@ const reducer = ({ peers, ...sendState }, { type, ...action }) => {
                 // halted 가 true 이면( 즉 내 차례가 아님 멈춘 상태일 경우)
                 return { ...state }
             }
-            let arr = [...new Set(state.yutData)].sort().reverse();
-            let placeToMove = {};
-            arr.forEach((i) => {
-                if (action.index === 0) {
-                    placeToMove[checkPlace([], action.index, i)] = i
-                }
-                else {
-                    // placeToMove[checkPlace(state.horsePosition[action.index].placeList, action.index, i)] = i;
-                    checkPlace(state.horsePosition[action.index].placeList, action.index, i).forEach((p) => {
-                        placeToMove[p] = i;
-                    })
-                }
-            });
+            // 선택한 말 기준으로 
+            const placeToMove = addPlaceToMove(action.index, state.yutData, state.horsePosition);
             console.log("말이 갈 수 있는 위치 : ", placeToMove);
 
             //sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { ...state, selectHorse: action.index, placeToMove } });
 
             return { ...state, selectHorse: action.index, placeToMove };
-
+        }
         case MOVE_FIRST_HORSE: {
             // 선택한 말이 없는 상태에서 눌렸거나 해당 값이 없으면 말을 이동하지 않음.
             if (checkEmptySelectHorse(state.selectHorse) ||
@@ -369,7 +409,7 @@ const YutStore = ({ children }) => {
 
     // 타이머가 30 초가 넘었을 때 순서 넘기기
     useEffect(() => {
-        if (timer > 2) {
+        if (timer > 3) {
             // 시간 멈춰놓고
             dispatch({ type: STOP_TIMER });
             // 컴퓨터 행동 하고
@@ -392,7 +432,7 @@ const YutStore = ({ children }) => {
     // useEffect(() => {
     //     if (yutData.length === 0 && myThrowCount === 0) {
     //         dispatch({ type: NEXT_TURN })
-    //     }
+    //     }    
     // }, [yutData, myThrowCount])
 
 

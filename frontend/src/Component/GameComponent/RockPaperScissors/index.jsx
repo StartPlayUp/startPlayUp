@@ -1,5 +1,5 @@
 import React, { useContext, useState, memo, useEffect } from 'react';
-import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { PeerDataContext, PeersContext } from 'Routes/peerStore';
 import scissors from "image/가위.jpg"
 import rock from 'image/바위.jpg'
 import paper from 'image/보.jpg'

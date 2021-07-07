@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './Css/index.css';
 import Routes from './Routes';
-import { Store } from './store'
+import { LoginStore } from './LoginStore'
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Store>
+    <>
+        <LoginStore>
             <Routes />
-        </Store>
-    </React.StrictMode>,
+        </LoginStore>
+    </>,
     document.getElementById('root')
 );
