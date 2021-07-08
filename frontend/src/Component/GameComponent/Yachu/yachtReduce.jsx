@@ -13,6 +13,7 @@ const SELECT="SELECT";
 const StartGame="StartGame";
 const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
 const DICEHOLD='DICEHOLD';
+const IS_LOADING='IS_LOADING';
 const initialState={
     dice:[0,0,0,0,0],
     count:[0,0,0,0,0,0],
@@ -38,17 +39,15 @@ const initialState={
         result: 0,
         bonus: [0, false]
             }],
-    nowTurn:0
+    nowTurn:0,
 }
 const init = ({ initialState, peers }) => {
     console.log("in init : ", peers)
     return { ...initialState, peers }
 }
-const reducer=({peers,...sendstate},{type,...action})=>{
-    const state={...sendstate,peers}
-    console.log(type)
+const reducer=(state,action)=>{
     const nickname = localStorage.getItem('nickname');
-    switch(type){
+    switch(action.type){
         case UPDATE_PEERS:{
             return {...state,peers:action.peers}
         }
@@ -56,53 +55,10 @@ const reducer=({peers,...sendstate},{type,...action})=>{
             return {...state,...action.data}
         }
         case StartGame:{
-            const peers = action.peers
-            const nickname=localStorage.getItem('nickname');
-            const playerData = [...state.playerData];
-            peers.forEach((i)=>{
-                playerData.push({
-                    nickname: i.nickname,
-                    selectPoint: {
-                        ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
-                        two: [0, false],
-                        three: [0, false],
-                        four: [0, false],
-                        five: [0, false],
-                        six: [0, false],
-                        threeOfaKind: [0, false],
-                        fourOfaKind: [0, false],
-                        fullHouse: [0, false],
-                        smallStraight: [0, false],
-                        largeStraight: [0, false],
-                        choice: [0, false],
-                        yahtzee: [0, false]
-                    },
-                    result: 0,
-                    bonus: [0, false]
-                });
-            })
-            
-            const nowTurnNickname = playerData[0].nickname;
-            const result = { ...initialState, nowTurnNickname, playerData };
-            sendDataToPeers(GAME,{game:YACHT,nickname,peers,data:result});
-            return { ...result ,peers};
+            return { ...state, playerData: action.playerData, nowTurnNickname: action.nowTurnNickname};
         }
         case ROLLDICE:{
-            let diceArray=[0,0,0,0,0];
-            diceArray=Rolldice(state);
-            console.assert(!diceArray===[0,0,0,0,0],"주사위가 굴려지지 않았습니다.");
-            let counter=Count(diceArray);
-            let pointCalculate = Calculate(diceArray, counter);
-            const nowTurn=state.nowTurn;
-            const player = [...state.playerData]
-            Object.keys(player[nowTurn].selectPoint).map((i)=>{
-                if (!player[nowTurn].selectPoint[i][1]) {
-                    player[nowTurn].selectPoint[i][0] = pointCalculate[i];
-                }
-            })
-            const result = { ...sendstate,playerData:player, dice:diceArray, count:counter };
-            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
-            return { ...state,playerData:player,dice: diceArray, count: counter }
+            return { ...state, dice: action.diceArray, count: action.counter, playerData: action.player}
         }
         case DICEHOLD:{
             const value= action.value;
@@ -111,34 +67,7 @@ const reducer=({peers,...sendstate},{type,...action})=>{
             return {...state,hold:holding}
         }
         case SELECT:{
-            const selectName= action.name;
-            const selectValue = action.value;
-            const player = [...state.playerData]
-            player[state.nowTurn].selectPoint[selectName]=[selectValue,true];
-            let sel = Object.keys(player[state.nowTurn].selectPoint).map((i) => {
-                if (player[state.nowTurn].selectPoint[i][1]) {
-                    return player[state.nowTurn].selectPoint[i][0];
-                } else {
-                    return 0;
-                }
-            });
-            var test = sel.reduce((total, num) => {
-                return parseInt(total, 10) + parseInt(num, 10);
-            });
-            player[state.nowTurn].result = test;
-            console.log("--------NEXT_TURN-----------")
-            console.log(nickname);
-            console.log(state.nowTurnNickname);
-            console.log(state.nowTurnNickname === nickname)
-            if (state.nowTurnNickname === nickname){
-                console.log("턴 확인 결과 True");
-                const nowTurn=state.nowTurn===state.playerData.length -1 ? 0:state.nowTurn+1;
-                //현재 턴이 마지막 사람이면 1p의 턴으로 만들고 아니라면 다음 사람으로 만든다
-                const nowTurnNickname=state.playerData[nowTurn].nickname
-                const selectResult = { ...sendstate, playerData: player }
-                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { ...selectResult, nowTurn, nowTurnNickname } })
-                return { ...state, playerData: player,nowTurn,nowTurnNickname }
-            }
+            return { ...state, playerData: action.player, nowTurn: action.nowTurn, nowTurnNickname: action.nowTurnNickname }
         }
         default:{
             return {...state}
@@ -173,18 +102,108 @@ function Count(diceArray) {
             counter[5] += 1;
         }
     }
+    console.assert(!(counter===[0,0,0,0,0,0]),"count 계산 되지 않음");
     return counter;
 }
 function YachtReduce(){
     const { peers } = useContext(PeersContext);
-    const [state,dispatch]=useReducer(reducer,{initialState,peers},init);
+    const [state,dispatch]=useReducer(reducer,initialState);
     const { peerData } = useContext(PeerDataContext);
+
+    function RollDice(){
+        let diceArray = [0, 0, 0, 0, 0];
+        let counter = [...state.count]
+        let pointCalculate = []
+        diceArray = Rolldice(state);
+        let test = diceArray.filter((i) => { if (typeof (i) === "number" && (i > 0 && i < 7)) { return i } })
+        if (test.length === 5 && diceArray.length === 5) {
+            counter = Count(diceArray);
+            let test = counter.map((j) => { if (typeof (j) === "number" && (j >= 0 && j < 6)) { return j } })
+            if (test.length === 6 && counter.length === 6) {
+                pointCalculate = Calculate(diceArray, counter);
+                const nowTurn = state.nowTurn;
+                const player = [...state.playerData]
+                Object.keys(player[nowTurn].selectPoint).map((i) => {
+                    if (!player[nowTurn].selectPoint[i][1]) {
+                        player[nowTurn].selectPoint[i][0] = pointCalculate[i];
+                    }
+                })
+                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { playerData: player, dice: diceArray, count: counter } });
+                dispatch({ type: ROLLDICE, player, diceArray, counter })
+                
+            }
+            else {
+                console.assert(test.length === 6 && counter.length === 6, "주사위 개수가 범위를 벗어났습니다.")
+                alert("주사위 계산 오류")
+            }
+        }
+        else {
+            console.assert(test === 5 && diceArray.length === 5, "주사위가 돌지 않았습니다.")
+            alert("주사위 던지기 오류")
+        }
+    }
     function select(e){
         const {name,value}=e.target;
-        dispatch({type:SELECT,name,value})
+        const player = [...state.playerData]
+        player[state.nowTurn].selectPoint[name] = [value, true];
+        let sel = Object.keys(player[state.nowTurn].selectPoint).map((i) => {
+            if (player[state.nowTurn].selectPoint[i][1]) {
+                return player[state.nowTurn].selectPoint[i][0];
+            } else {
+                return 0;
+            }
+        });
+        var test = sel.reduce((total, num) => {
+            return parseInt(total, 10) + parseInt(num, 10);
+        });
+        player[state.nowTurn].result = test;
+        console.log("--------NEXT_TURN-----------")
+        console.log(nickname);
+        console.log(state.nowTurnNickname);
+        console.log(state.nowTurnNickname === nickname)
+        if (state.nowTurnNickname === nickname) {
+            console.log("턴 확인 결과 True");
+            const nowTurn = state.nowTurn === state.playerData.length - 1 ? 0 : state.nowTurn + 1;
+            //현재 턴이 마지막 사람이면 1p의 턴으로 만들고 아니라면 다음 사람으로 만든다
+            const nowTurnNickname = state.playerData[nowTurn].nickname
+            //const selectResult = { ...sendstate, playerData: player }
+            //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { ...selectResult, nowTurn, nowTurnNickname } })
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { playerData: player, nowTurn: nowTurn, nowTurnNickname: nowTurnNickname } })
+            dispatch({ type: SELECT,player, nowTurn, nowTurnNickname})
+        }
     }
     function dispatchHandler(){
-        dispatch({ type: StartGame, peers })
+        //const peers = action.peers
+        const nickname = localStorage.getItem('nickname');
+        const playerData = [...state.playerData];
+        peers.forEach((i) => {
+            playerData.push({
+                nickname: i.nickname,
+                selectPoint: {
+                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                    two: [0, false],
+                    three: [0, false],
+                    four: [0, false],
+                    five: [0, false],
+                    six: [0, false],
+                    threeOfaKind: [0, false],
+                    fourOfaKind: [0, false],
+                    fullHouse: [0, false],
+                    smallStraight: [0, false],
+                    largeStraight: [0, false],
+                    choice: [0, false],
+                    yahtzee: [0, false]
+                },
+                result: 0,
+                bonus: [0, false]
+            });
+        })
+
+        const nowTurnNickname = playerData[0].nickname;
+        const result = { ...initialState, nowTurnNickname, playerData };
+        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
+        dispatch({ type: StartGame, playerData, nowTurnNickname })
+        //dispatch({ type: StartGame, peers })
     }
     useEffect(()=>{
         dispatch({type:UPDATE_PEERS,peers})
@@ -195,7 +214,7 @@ function YachtReduce(){
             dispatch({type:GET_DATA_FROM_PEER,data})
         }
     }, [peerData])
-
+    console.log(state)
     return (
         <Fragment>
             <div>
@@ -242,18 +261,18 @@ function YachtReduce(){
                 
             </div>
             <div>
-            <div>
-            <button onClick={dispatchHandler}>게임 시작</button>
-            <button onClick={()=>dispatch({type:ROLLDICE,peers})}>ROLLDICE!</button>
-            </div>
-            <div>
-            <button onClick={() => dispatch({ type: DICEHOLD, value: 0})}>1</button>
-            <button onClick={() => dispatch({ type: DICEHOLD, value: 1 })}>2</button>
-            <button onClick={() => dispatch({ type: DICEHOLD, value: 2 })}>3</button>
-            <button onClick={() => dispatch({ type: DICEHOLD, value: 3 })}>4</button>
-            <button onClick={() => dispatch({ type: DICEHOLD, value: 4 })}>5</button>
-            </div>
-            <div>주사위테스트 {state.dice}</div>
+                <div>
+                    <button onClick={dispatchHandler}>게임 시작</button>
+                    <button onClick={RollDice}>ROLLDICE!</button>
+                </div>
+                <div>
+                    <button onClick={() => dispatch({ type: DICEHOLD, value: 0})}>1</button>
+                    <button onClick={() => dispatch({ type: DICEHOLD, value: 1 })}>2</button>
+                    <button onClick={() => dispatch({ type: DICEHOLD, value: 2 })}>3</button>
+                    <button onClick={() => dispatch({ type: DICEHOLD, value: 3 })}>4</button>
+                    <button onClick={() => dispatch({ type: DICEHOLD, value: 4 })}>5</button>
+                </div>
+                    <div>주사위테스트 {state.dice}</div>
             </div>
         </Fragment>
     );
