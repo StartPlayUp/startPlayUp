@@ -40,6 +40,7 @@ const initialState={
         bonus: [0, false]
             }],
     nowTurn:0,
+    halt:false
 }
 const init = ({ initialState, peers }) => {
     console.log("in init : ", peers)
@@ -128,7 +129,8 @@ function YachtReduce(){
                         player[nowTurn].selectPoint[i][0] = pointCalculate[i];
                     }
                 })
-                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { playerData: player, dice: diceArray, count: counter } });
+                const verification= ROLLDICE;
+                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: {verification, playerData: player, dice: diceArray, count: counter } });
                 dispatch({ type: ROLLDICE, player, diceArray, counter })
                 
             }
@@ -168,8 +170,13 @@ function YachtReduce(){
             const nowTurnNickname = state.playerData[nowTurn].nickname
             //const selectResult = { ...sendstate, playerData: player }
             //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { ...selectResult, nowTurn, nowTurnNickname } })
-            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { playerData: player, nowTurn: nowTurn, nowTurnNickname: nowTurnNickname } })
+            const verification=SELECT;
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: {verification, playerData: player, nowTurn: nowTurn, nowTurnNickname: nowTurnNickname } })
             dispatch({ type: SELECT,player, nowTurn, nowTurnNickname})
+        }
+        else{
+            console.log("턴 확인 결과 false");
+            alert("당신의 턴이 아닙니다?");
         }
     }
     function dispatchHandler(){
@@ -211,10 +218,43 @@ function YachtReduce(){
     useEffect(() => {
         if (peerData.type === GAME && peerData.game === YACHT) {
             const data = peerData.data;
-            dispatch({type:GET_DATA_FROM_PEER,data})
+            if(data.verification===ROLLDICE){
+                console.log("ROLLDICE!")
+                if(data.dice){
+                    let test = data.dice.filter((i) => { if (typeof (i) === "number" && (i > 0 && i < 7)) { return i } })
+                    if (test.length === 5) {
+                        let test = Object.keys(data.count).map((j) => { if (typeof (data.count[j]) === "number" && (data.count[j] >= 0 && data.count[j] < 6)) { return data.count[j] } })
+                        if (test.length === 6) {
+                            dispatch({ type: GET_DATA_FROM_PEER, data })
+                        }
+                        else{
+                            alert("데이터 수신 실패")
+                        }
+                    }
+                    else{
+                        alert("데이터 수신 실패")
+                    }
+                }
+            }
+            else if(data.verification===SELECT){
+                if(Object.keys(data.playerData).map((i)=>{
+                    if(typeof(data.playerData[i][0])==="number"){
+                        return true
+                    }
+                })){
+                    dispatch({ type: GET_DATA_FROM_PEER, data })
+                }
+                else{
+                    alert("데이터 수신 실패?")
+                }
+                console.log("SELECT!!")
+            }
+            else {
+                dispatch({ type: GET_DATA_FROM_PEER, data })
+            }
         }
+        
     }, [peerData])
-    console.log(state)
     return (
         <Fragment>
             <div>
