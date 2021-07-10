@@ -4,6 +4,7 @@ export const sendDataToPeers = (type, { game, nickname, data, peers }) => {
     try { // 
         peers === undefined || peers.forEach(p => {
             console.log("[debug] sendDataToPeers ")
+            console.log("data : ", data)
             p.peer.write(js);
         });
         success = true;
