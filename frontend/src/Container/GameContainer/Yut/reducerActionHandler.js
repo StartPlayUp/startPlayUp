@@ -33,7 +33,6 @@ const updateGoalHandler = ({ dispatch, state, peers }) => {
 
 const selectHorseHandler = ({ dispatch, state, peers, index }) => {
     const nickname = localStorage.getItem('nickname');
-    console.log("selectHorseHandler : ", dispatch, state, peers, index);
     const newState = reducerAction.SELECT_HORSE(state, index);
     dispatch({ type: UPDATE_STATE, state: newState });
     sendDataToPeers(GAME, { nickname, peers, game: YUT, data: newState });
@@ -56,11 +55,3 @@ const moveHorseHandler = ({ dispatch, state, peers, index }) => {
 
 
 export default { nextTurnHandler, startGameHandler, throwYutHandler, updateGoalHandler, selectHorseHandler, moveFirstHorseHandler, moveHorseHandler }
-
-
-
-const a = () =>{
-    const nickname = localStorage.getItem('nickname');    
-    
-
-}
