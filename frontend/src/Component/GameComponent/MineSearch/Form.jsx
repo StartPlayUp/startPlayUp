@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useContext, memo } from 'react';
 import { START_GAME, TableContext } from 'Container/GameContainer/MineSearch';
-import { PeersContext, UserContext } from 'store';
+import { PeersContext, UserContext } from 'Routes/peerStore';
 const Form = memo(() => {
     const [row, setRow] = useState(10);
     const [cell, setCell] = useState(10);

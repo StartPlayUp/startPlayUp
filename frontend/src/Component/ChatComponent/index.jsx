@@ -3,13 +3,10 @@ import styled from 'styled-components'
 import Message from './Message'
 import MyTextInput from "./MyTextInput";
 import Nav from "./Nav";
-import { PeerDataContext, UserContext, PeersContext, VoicePeersContext } from "store";
-import io from "socket.io-client";
 import { PEER_CHAT } from "Constants/peerDataTypes"
 import { chatAddMessage } from "Common/ChatModule/addMessage"
-import { connectDataPeer } from "Common/peerModule/CreatePeer/createDataPeers"
-import { connectVoicePeer } from "Common/peerModule/CreatePeer/createVoicePeers"
-import Peer from 'simple-peer';
+
+import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 
 // import { RECEIVE_MESSAGE, socketApi } from "../../Common/socketModule";
 import SideVoiceUser from "./SideVoiceUser";
@@ -55,81 +52,76 @@ const StyledAudio = styled.audio`
     display:none;
 `;
 
-const UserAudio = ({ peers, peer }) => {
-    const voiceRef = useRef();
-    useEffect(() => {
-        peer.on("stream", stream => {
-            voiceRef.current.srcObject = stream;
-        })
-    }, []);
-
-    return (
-        <StyledAudio playsInline autoPlay ref={voiceRef} />
-    )
-
-}
 
 
-function Index({ backgroundColor, height, width, ...props }) {
+
+function Index({ backgroundColor, height, width, socketRef, peersRef, ...props }) {
     // socket io.connect
-    const socketRef = useRef();
-    // const { user } = useContext(UserContext);
+
+    // const socketRef = useRef();
+    // const myNickname = localStorage.getItem('nickname');
+    // const { peerData, setPeerData } = useContext(PeerDataContext);
+    // const { peers, setPeers } = useContext(PeersContext);
+    // const { voicePeers, setVoicePeers } = useContext(VoicePeersContext);
+
+    // let peersRef = useRef([]);
+    // let voicePeersRef = useRef([]);
+    // const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
+
+    // const peersDestory = (peers, voicePeers) => {
+    //     peers.forEach((peer) => {
+    //         console.log("return useEffect peer destroy")
+    //         // peer.peer.destroy()
+    //         peer.peer.on('close', () => console.log("delete"));
+    //     });
+    //     setPeerData([]);
+
+    //     voicePeers.forEach((voicePeer) => {
+    //         voicePeer.peer.destroy()
+    //     });
+    //     setVoicePeers([]);
+    // }
+    // useEffect(() => {
+    //     socketRef.current = io.connect("/");
+    //     if (Peer.WEBRTC_SUPPORT) {
+    //         connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
+    //         connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
+    //     } else {
+    //         console.log("webrtc not support!")
+    //     }
+
+    //     // 방법 1 테스트 해보기.
+    //     // return () => peersRef.current.forEach(i => {
+    //     //     console.log("destroy peer", i);
+    //     //     i.peer.removeAllListeners();
+    //     //     i.peer.destroy();
+    //     // })
+
+    //     // 방법 2 테스트 해보기.
+    //     // return () => {
+    //     //     setPeers({});
+    //     // }
+    //     return () => {
+    //         peersDestory(peers, voicePeers)
+    //     };
+    // }, []);
+
     const myNickname = localStorage.getItem('nickname');
+
     const { peerData, setPeerData } = useContext(PeerDataContext);
     const { peers, setPeers } = useContext(PeersContext);
-    const { voicePeers, setVoicePeers } = useContext(VoicePeersContext);
-    // chat state for rerendering
+
+
     const [chatList, setChatList] = useState([]);
     let chatListRef = useRef([...chatList]);
+
     // scroll ref;
     const scrollRef = useRef(null);
-
-    let peersRef = useRef([]);
-    let voicePeersRef = useRef([]);
-    const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
 
     const scrollToBottom = () => {
         const { scrollHeight, clientHeight } = scrollRef.current;
         scrollRef.current.scrollTop = scrollHeight - clientHeight;
     };
-
-    const peersDestory = (peers, voicePeers) => {
-        peers.forEach((peer) => {
-            console.log("return useEffect peer destroy")
-            // peer.peer.destroy()
-            peer.peer.on('close', () => console.log("delete"));
-        });
-        setPeerData([]);
-
-        voicePeers.forEach((voicePeer) => {
-            voicePeer.peer.destroy()
-        });
-        setVoicePeers([]);
-    }
-    useEffect(() => {
-        socketRef.current = io.connect("/");
-        if (Peer.WEBRTC_SUPPORT) {
-            connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
-            connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
-        } else {
-            console.log("webrtc not support!")
-        }
-
-        // 방법 1 테스트 해보기.
-        // return () => peersRef.current.forEach(i => {
-        //     console.log("destroy peer", i);
-        //     i.peer.removeAllListeners();
-        //     i.peer.destroy();
-        // })
-
-        // 방법 2 테스트 해보기.
-        // return () => {
-        //     setPeers({});
-        // }
-        return () => {
-            peersDestory(peers, voicePeers)
-        };
-    }, []);
 
 
     useEffect(() => {
@@ -153,10 +145,10 @@ function Index({ backgroundColor, height, width, ...props }) {
                         who={i.nickname === myNickname ? "me" : "another"}
                         chatObject={i} chatList={chatList} />)}
                 </TextField>
-                <SideVoiceUser peersRef={peersRef} peers={peers} chatList={chatList} setChatList={setChatList} />
+                <SideVoiceUser peers={peers} chatList={chatList} setChatList={setChatList} />
             </TextFieldWithVoiceUsers>
             <MyTextInput peers={peers} myNickname={myNickname} chatList={chatList} setChatList={setChatList}
-                socketRef={socketRef} />
+            />
         </Chat >
     );
 }

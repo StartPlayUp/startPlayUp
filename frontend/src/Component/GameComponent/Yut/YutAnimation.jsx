@@ -1,3 +1,4 @@
+import { GAME, YUT } from 'Constants/peerDataTypes';
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 
@@ -95,7 +96,7 @@ const YutAnimation = () => {
 		<Background>
 			<button onClick={() => setTest(!test)}></button>
 			{list.map((i, index) =>
-				<Container>
+				<Container key={index}>
 					<Dice stop={test}>
 						<Front>
 							<FaceText>X</FaceText>

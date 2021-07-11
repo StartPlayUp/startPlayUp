@@ -1,6 +1,12 @@
 import { THROW_YUT, boardContext, SELECT_HORSE } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
+import { GAME, YUT } from 'Constants/peerDataTypes';
+import { stateContext } from 'Container/GameContainer/Yut/YutStore';
+import { PeersContext } from 'Routes/peerStore';
+import reducerActionHandler from 'Container/GameContainer/Yut/reducerActionHandler'
+
 
 
 const Horse = styled.div`
@@ -25,11 +31,18 @@ const StyledButton = styled.button`
 `;
 
 
+
 const App = ({ horses, player, index }) => {
     const { dispatch } = useContext(boardContext);
-    const clickHorseHandler = (e, index) => {
+    const { peers } = useContext(PeersContext);
+    const state = useContext(stateContext);
+    const nickname = localStorage.getItem('nickname');
+
+    const clickHorseHandler = async (e, index) => {
         e.preventDefault();
-        dispatch({ type: SELECT_HORSE, index })
+        // await dispatch({ type: SELECT_HORSE, index })
+        // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
+        reducerActionHandler.selectHorseHandler({ dispatch, peers, state, index })
     }
     return (
         <div onClick={(e) => clickHorseHandler(e, index, player.nickname)} >
