@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.6",
+    "@types/lodash.shuffle": "^4.2.6",
     "dotenv": "^9.0.0",
     "firebase": "^8.4.2",
     "formit": "^0.0.2",
@@ -47,8 +48,8 @@
     }
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "NODE_PATH=src react-scripts start",
+    "build": "NODE_PATH=src react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

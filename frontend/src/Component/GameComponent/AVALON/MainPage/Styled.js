@@ -4,6 +4,7 @@ export const PageFrame = styled.div`
     display: flex;
     flex-direction : column;
     justify-content : flex-start;
+    background : ${props => props.color}
 `
 export const Title = styled.div`
     display : flex;
@@ -42,7 +43,6 @@ export const GameState = styled.div`
 export const PublicFrame = styled.div`
     display : flex;
     flex-direction : row;
-
     flex-wrap : wrap;
 `
 export const Circle = styled.div`

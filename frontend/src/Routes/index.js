@@ -1,21 +1,22 @@
-import React, { useContext } from "react";
-import { Store, UserContext } from "../store"
-import { Route, Switch, useHistory } from 'react-router-dom';
+import React, {useContext} from "react";
+import {Store, UserContext} from "../store"
+import {Route, Switch, useHistory} from 'react-router-dom';
 import LoginPageContainer from "Container/LoginPageContainer";
 import GlobalContainer from "Container/GlobalContainer";
 import ChatComponent from "Component/ChatComponent";
 import RockPaperScissors from "Component/GameComponent/RockPaperScissors";
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import styled from 'styled-components';
 import MineSearch from "Container/GameContainer/MineSearch";
 import Yut from 'Container/GameContainer/Yut/Yut';
 import Yacht from 'Container/GameContainer/Yacht/Yacht';
-
+import Avalon from 'Container/GameContainer/Avalon/Avalon'
+import {PageFrame, PublicFrame} from "../Component/GameComponent/AVALON/MainPage/Styled";
 const GamePage = styled.div`
     display:flex;
     flex-direction:row;
-
 `;
+
 const StyleDiv = styled.div`
         display: flex;
         background-color: #e0e3da;
@@ -31,37 +32,43 @@ const TemporaryMain = () => {
         <button onClick={() => history.push("/MineSearch")}>MineSearch</button>
         <button onClick={() => history.push("/Yut")}>Yut</button>
         <button onClick={() => history.push("/Yacht")}>Yacht</button>
+        <button onClick={() => history.push("/AVALON")}>AVALON</button>
     </div>)
 }
 
 function app() {
-    const { isAuthenticated } = useContext(UserContext);
+    const {isAuthenticated} = useContext(UserContext);
     console.log("asdf")
     return (
         <BrowserRouter>
 
             {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
-            <Route path="/" component={GlobalContainer} />
-            <Route exact path="/" component={LoginPageContainer} />
-            {isAuthenticated && <Route exact path="/main" component={TemporaryMain} />}
+            <Route path="/" component={GlobalContainer}/>
+            <Route exact path="/" component={LoginPageContainer}/>
+            {isAuthenticated && <Route exact path="/main" component={TemporaryMain}/>}
             {isAuthenticated && <Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <RockPaperScissors />
-                <ChatComponent />
-            </GamePage>} />}
+                <RockPaperScissors/>
+                <ChatComponent/>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/MineSearch" render={() => <GamePage>
-                <MineSearch />
-            </GamePage>} />}
+                <MineSearch/>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
-                <Yut />
-                <ChatComponent />
-            </GamePage>} />}
+                <Yut/>
+                <ChatComponent/>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/Yacht" render={() => <GamePage>
                 <StyleDiv>
-                    <Yacht />
+                    <Yacht/>
                 </StyleDiv>
-                <ChatComponent />
-            </GamePage>} />}
-
+                <ChatComponent/>
+            </GamePage>}/>}
+            {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
+                <PageFrame color={'white'}>
+                    <Avalon/>
+                </PageFrame>
+                <ChatComponent/>
+            </GamePage>}/>}
 
 
             {/* {<Route path="/" component={TemporaryMain} />}

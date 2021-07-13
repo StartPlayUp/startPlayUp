@@ -7,7 +7,7 @@
     <option name="excludeFilter" value="" />
   </component>
   <component name="JavaScriptSettings">
-    <option name="languageLevel" value="JSX" />
+    <option name="languageLevel" value="FLOW" />
   </component>
   <component name="PDMPlugin">
     <option name="skipTestSources" value="false" />
