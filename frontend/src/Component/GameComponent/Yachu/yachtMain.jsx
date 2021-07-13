@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import Calculate from "./calculate";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
-import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { PeerDataContext, PeersContext } from 'Routes/peerStore';
 import { GAME, YACHT } from 'Constants/peerDataTypes.js';
 import dice1 from './dice/dice1.png';
 import styled from 'styled-components';
-const Table=styled.table`
+const Table = styled.table`
     display:flex;
     width: fit-content;
     height: fit-content;
@@ -18,10 +18,10 @@ const Table=styled.table`
         text-align: center;
     }
 `
-const Button=styled.button`
+const Button = styled.button`
     width: 100%;
 `
-function YachtMain(){
+function YachtMain() {
     const [state, setState] = useState({
         dice: [0, 0, 0, 0, 0], //주사위
         hold: [false, false, false, false, false], //주사위 홀드
@@ -89,28 +89,28 @@ function YachtMain(){
         if (completeTest) {
             if (oneResult > twoResult) {
                 alert("1P의 승리입니다.");
-            }else if(oneResult===twoResult){
+            } else if (oneResult === twoResult) {
                 alert("무승부 입니다.")
             }
-             else {
+            else {
                 alert("2P의 승리입니다.");
             }
         }
     }
-    function startGame(){
+    function startGame() {
         const playerData = [{ nickname }]
         console.log("playerData", playerData);
         peers.forEach((i) => {
             playerData.push({ nickname: i.nickname })
         });
-        console.log("playerData",playerData);
-        const myTurn=findMyTurn(playerData,nickname);
-        console.log("마이턴",myTurn)
+        console.log("playerData", playerData);
+        const myTurn = findMyTurn(playerData, nickname);
+        console.log("마이턴", myTurn)
         setPlayer({
             ...playerData
         })
-        const peerTest="STARTGAME!"
-        sendDataToPeers(GAME, { nickname, peers, game: YACHT, data: {peerTest,myTurn,playerData}})
+        const peerTest = "STARTGAME!"
+        sendDataToPeers(GAME, { nickname, peers, game: YACHT, data: { peerTest, myTurn, playerData } })
     }
     function Count(diceArray) {
         //같은 눈의 주사위 계산하는 함수
@@ -132,7 +132,7 @@ function YachtMain(){
         }
         return counter;
     }
-    const RollReset = ( ) => {
+    const RollReset = () => {
         //점수를 선택했을 때 주사위 관련 변수 초기화
         setState({
             ...state,
@@ -153,11 +153,11 @@ function YachtMain(){
         });
     };
     function RollDice() {
-        const testArray=player
-        const isTurn=findMyTurn(testArray,nickname)
+        const testArray = player
+        const isTurn = findMyTurn(testArray, nickname)
         console.log(player)
-        if(isTurn === turn){
-            const rollCount=state.roll-1;
+        if (isTurn === turn) {
+            const rollCount = state.roll - 1;
             let diceArray = [...state.dice];
             var i = 0;
             for (i = 0; i < 5; i++) {
@@ -174,10 +174,10 @@ function YachtMain(){
                 count: counter,
                 roll: rollCount
             });
-            const peerTest= "ROLL!";
-            sendDataToPeers(GAME, { nickname, peers, game: YACHT, data: { peerTest,diceArray,counter,rollCount} })
+            const peerTest = "ROLL!";
+            sendDataToPeers(GAME, { nickname, peers, game: YACHT, data: { peerTest, diceArray, counter, rollCount } })
         }
-        else{
+        else {
             alert("당신의 턴이 아닙니다.");
         }
     }
@@ -211,7 +211,7 @@ function YachtMain(){
                 hold: holding
             });
         }
-        else{
+        else {
             alert("당신의 턴이 아닙니다.");
         }
     }
@@ -221,21 +221,21 @@ function YachtMain(){
         //버튼을 눌렀을 때 실제로 먹은 점수를 계산하도록 하는 함수
         const { value, name } = e.target;
         const number = parseInt(value, 10);
-        const peerTest="Select!";
-        var check=0;
+        const peerTest = "Select!";
+        var check = 0;
         if (turn === 0 && isTurn === turn) {
             //1P의 턴인 경우
             setSelectPoint({
                 ...selectPoint,
                 [name]: [value, true] //점수를 먹었으므로 false->true
             });
-            check=number
+            check = number
             RollReset();
             setOneResult(oneResult + check);
             sendDataToPeers(GAME, { nickname, peers, game: YACHT, data: { peerTest, name, value, check, turn } })
             //1P의 점수 + 선택한 점수
             setTurn(1); //2P의 턴으로 변경
-            
+
             console.log("2P의 턴입니다.");
         } else if (turn === 1 && isTurn === turn) {
             //2P인 경우
@@ -250,7 +250,7 @@ function YachtMain(){
             setTurn(0);
             console.log("1P의 턴입니다.");
         }
-        else{
+        else {
             alert("당신의 턴이 아닙니다.");
         }
     }
@@ -262,7 +262,7 @@ function YachtMain(){
         let test = sel.slice(0, 6).reduce((total, num) => {
             return parseInt(total, 10) + parseInt(num, 10);
         });
-        if(test< 63 && !bonus[1]){
+        if (test < 63 && !bonus[1]) {
             let complete = Object.keys(selectPoint).map((i) => {
                 return selectPoint[i][1];
             });
@@ -270,7 +270,7 @@ function YachtMain(){
             console.log("completeTest", completeTest);
             setBonus([test, completeTest]);
         }
-        else if (test>=63 && !bonus[1]){
+        else if (test >= 63 && !bonus[1]) {
             console.log("hihi");
             setBonus([test, true]);
             setOneResult(oneResult + parseInt(35, 10));
@@ -322,7 +322,7 @@ function YachtMain(){
                         [data.name]: [data.value, true]
                     });
                     RollReset();
-                    setOneResult(oneResult+data.check);
+                    setOneResult(oneResult + data.check);
                     setTurn(1);
                 }
                 else if (data[i] === "Select!" && data.turn === 1) {//2P가 보낸 경우
@@ -338,70 +338,70 @@ function YachtMain(){
         }
     }, [peerData]);
     GameOver();
-    return(
+    return (
         <Fragment>
             <Table>
                 <tbody>
-                <tr><th>점수표</th><th>1P 점수표</th><th>2P 점수표</th></tr>
-                {Object.keys(selectPoint).map((i, index) => (
-                    <tr key={index}>
-                        <td>
-                        {i}
-                        </td>
-                        <td>
-                            {state.roll === 3 ? (
-                                <div>
-                                {selectPoint[i][0]}
-                                </div>
-                            ) :   turn===0 ? (
-                            <Button
-                                disabled={selectPoint[i][1] ? 1 : 0}
-                                name={i}
-                                onClick={select}
-                                value={pointCalculate[i]}
-                            >
-                                {selectPoint[i][0]}
-                            </Button>) :
+                    <tr><th>점수표</th><th>1P 점수표</th><th>2P 점수표</th></tr>
+                    {Object.keys(selectPoint).map((i, index) => (
+                        <tr key={index}>
+                            <td>
+                                {i}
+                            </td>
+                            <td>
+                                {state.roll === 3 ? (
                                     <div>
                                         {selectPoint[i][0]}
                                     </div>
-                            }
-                            
-                        </td>
-                        <td>
-                            {state.roll === 3 ? (
-                                <div>
-                                    {selectPoint2[i][0]}
-                                </div>
-                            ) : turn===1?  (
-                            <Button
-                                disabled={selectPoint2[i][1] ? 1 : 0}
-                                name={i}
-                                onClick={select}
-                                value={pointCalculate[i]}
-                            >
-                                {selectPoint2[i][0]}
-                            </Button>)
+                                ) : turn === 0 ? (
+                                    <Button
+                                        disabled={selectPoint[i][1] ? 1 : 0}
+                                        name={i}
+                                        onClick={select}
+                                        value={pointCalculate[i]}
+                                    >
+                                        {selectPoint[i][0]}
+                                    </Button>) :
+                                    <div>
+                                        {selectPoint[i][0]}
+                                    </div>
+                                }
+
+                            </td>
+                            <td>
+                                {state.roll === 3 ? (
+                                    <div>
+                                        {selectPoint2[i][0]}
+                                    </div>
+                                ) : turn === 1 ? (
+                                    <Button
+                                        disabled={selectPoint2[i][1] ? 1 : 0}
+                                        name={i}
+                                        onClick={select}
+                                        value={pointCalculate[i]}
+                                    >
+                                        {selectPoint2[i][0]}
+                                    </Button>)
                                     : <div>{selectPoint2[i][0]}</div>
-                        }
-                        </td>
-                        
+                                }
+                            </td>
+
+                        </tr>
+                    ))}
+                    <tr>
+                        <td><div>보너스</div></td>
+                        <td><div>{bonus[0]}</div></td>
+                        <td><div>{bonus2[0]}</div></td>
                     </tr>
-                ))}
-                <tr>
-                <td><div>보너스</div></td>
-                <td><div>{bonus[0]}</div></td>
-                <td><div>{bonus2[0]}</div></td>
-                </tr>
-                <tr>
-                <td><div>총 합계</div></td>
-                <td><div>{oneResult}</div></td>
-                <td><div>{twoResult}</div></td>
-                </tr>
+                    <tr>
+                        <td><div>총 합계</div></td>
+                        <td><div>{oneResult}</div></td>
+                        <td><div>{twoResult}</div></td>
+                    </tr>
                 </tbody>
             </Table>
             <div>
-                <div>주사위 <img src={dice1}/></div>
+                <div>주사위 <img src={dice1} /></div>
                 {state.roll === 3 ? (
                     ""
                 ) : (

@@ -1,7 +1,14 @@
-import { DESELECT_HORSE, MOVE_HORSE, MOVE_FIRST_HORSE, UPDATE_GOAL, boardContext } from 'Container/GameContainer/Yut/YutStore';
+import { MOVE_HORSE, MOVE_FIRST_HORSE, UPDATE_GOAL, boardContext } from 'Container/GameContainer/Yut/YutStore';
+import { DESELECT_HORSE } from 'Container/GameContainer/Yut/yutReducerType'
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
 import Horses from 'Component/GameComponent/Yut/Horses'
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
+import { GAME, YUT } from 'Constants/peerDataTypes';
+import { stateContext } from 'Container/GameContainer/Yut/YutStore';
+import { PeersContext } from 'Routes/peerStore';
+import reducerActionHandler from 'Container/GameContainer/Yut/reducerActionHandler';
+
 
 const GridContainer = styled.div`
     /* width:300px;
@@ -44,6 +51,8 @@ const YutDiv = styled.div`
 
 
 const App = () => {
+    const nickname = localStorage.getItem('nickname');
+    const { peers } = useContext(PeersContext);
     const gridTable = [
         { index: 0, row: 20, column: 20 },
         { index: 1, row: 20, column: 16 },
@@ -85,16 +94,22 @@ const App = () => {
     const moveHorse = (e, index, player) => {
         e.preventDefault();
         if (selectHorse === 0) {
-            dispatch({ type: MOVE_FIRST_HORSE, index })
+            // dispatch({ type: MOVE_FIRST_HORSE, index })
+            reducerActionHandler.moveFirstHorseHandler({ dispatch, peers, state, index })
+            // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
         }
         else {
-            dispatch({ type: MOVE_HORSE, index });
+            // dispatch({ type: MOVE_HORSE, index });
+            reducerActionHandler.moveHorseHandler({ dispatch, peers, state, index })
+
+            // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
         }
     }
-
+    const state = useContext(stateContext);
     const OnContextMenu = (e) => {
         e.preventDefault();
         dispatch({ type: DESELECT_HORSE })
+        // await sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
     }
 
     return (

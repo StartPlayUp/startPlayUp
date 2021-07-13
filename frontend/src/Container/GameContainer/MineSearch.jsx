@@ -3,7 +3,7 @@ import Table from 'Component/GameComponent/MineSearch/Table';
 import Form from 'Component/GameComponent/MineSearch/Form';
 import styled from 'styled-components';
 import { GAME, MINE_SEARCH } from 'Constants/peerDataTypes';
-import { PeerDataContext, PeersContext, UserContext } from 'store';
+import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 export const UPDATE_TIMER = 'UPDATE_TIMER';

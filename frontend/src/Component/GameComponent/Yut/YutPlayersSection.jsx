@@ -4,7 +4,13 @@ import styled from 'styled-components';
 import Horses from 'Component/GameComponent/Yut/Horses'
 import { NEXT_TURN } from 'Container/GameContainer/Yut/YutStore';
 import HaltButton from './HaltButton';
-import { PeersContext } from 'store';
+import { PeersContext } from 'Routes/peerStore';
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
+import { GAME, YUT } from 'Constants/peerDataTypes';
+import { stateContext } from 'Container/GameContainer/Yut/YutStore';
+import reducerAction from 'Container/GameContainer/Yut/reducerAction';
+import reducerActionHandler from 'Container/GameContainer/Yut/reducerActionHandler';
+
 
 
 const StyleDiv = styled.div`
@@ -32,14 +38,37 @@ const App = () => {
     const { myThrowCount, yutData, playerData, halted, dispatch } = useContext(boardContext);
     const { peers } = useContext(PeersContext);
     // const halted = false;
-    const dispatchHandler = () => {
-        dispatch({ type: START_GAME, peers })
-    }
+    const nickname = localStorage.getItem('nickname');
+    // const [sendRequest, setSendRequest] = useState(false);
+    const state = useContext(stateContext);
+    // const dispatchHandler = async () => {
+    //     await Promise.all([
+    //         dispatch({ type: START_GAME, peers }),
+    //     ])
+    //     // await Promise.all([
+    //     sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state })
+    //     // ])
+    //     console.log("state3 : ", state)
+    // }
+
+    // useEffect(() => {
+    //     if (sendRequest) {
+    //         //send the request
+    //         dispatch({ type: START_GAME, peers })
+    //         console.log("after dispatch start Game : ", state)
+    //         const test = (state) => sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
+    //         test(state)
+    //         setSendRequest(false);
+    //     }
+    // },
+    //     [sendRequest]);
+
+
     return (
         <div>
-            <button onClick={dispatchHandler}>게임 시작</button>
-            <HaltButton dispatch={dispatch} type={THROW_YUT} halted={halted} name={'윷 굴리기'} />
-            <HaltButton dispatch={dispatch} type={NEXT_TURN} halted={halted} name={'다음 턴'} />
+            <button onClick={() => reducerActionHandler.startGameHandler({ dispatch, peers })}>게임 시작</button>
+            <HaltButton dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} name={'윷 굴리기'} />
+            <HaltButton dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} name={'다음 턴'} />
             <StyleDiv>말이 갈 수 있는 수 :
                 {
                     yutData.map((i, index) => <button key={index}>{i} </button>)

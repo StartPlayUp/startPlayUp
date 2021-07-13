@@ -1,4 +1,4 @@
-const YUT_RESULT_TYPE = {
+export const YUT_RESULT_TYPE = {
     BACK_DO: 0,
     DO: 1,
     GAE: 2,
@@ -36,33 +36,16 @@ const findPlace = (index, add) => {
     }
     else {
         const { key, indexOf } = findDataInObject(table, index);
+        console.log("table : ", table, key, add, indexOf, index)
         result = table[key][add + indexOf]
     }
     // return result;
     return [result];
 }
 
-const findBackdoPlace = (placeList, index) => {
+const findBackdoPlace = (index) => {
     let result = [];
     if ([23, 15, 20].includes(index)) {
-        // console.log("placeList : ", placeList)
-        // const lastPlace = placeList[placeList.length - 1];
-        // const lastPlace = placeList.filter((i) => ![15, 23, 24, 25, 28, 29, 20].includes(i)).pop();
-        // switch (index) {
-        //     case 23:
-        //         console.log(lastPlace)
-        //         result.push(table[index][0][lastPlace <= 5 || lastPlace === 21 || lastPlace === 22 ? 0 : 1]);
-        //         break;
-        //     case 15:
-        //         result.push(table[index][0][lastPlace < 15 ? 0 : 1]);
-        //         break;
-        //     case 20:
-        //         result.push(table[index][0][lastPlace < 20 ? 0 : 1]);
-        //         break;
-        //     default:
-        //         break;
-        // }
-
         // 양쪽 길 모두 갈 수 있는 경우
         result = table[index][0];
     }
@@ -81,16 +64,16 @@ const findBackdoPlace = (placeList, index) => {
             result.push(table[key][indexOf - 1]);
         }
     }
-    return result;
+    return [result];
 }
 
-export const checkPlace = (placeList, index, add) => {
+export const checkPlace = (index, add) => {
     // console.log("checkPlace");
     if (add !== YUT_RESULT_TYPE.BACK_DO) {
         return findPlace(index, add);
     }
     else {
-        return findBackdoPlace(placeList, index);
+        return findBackdoPlace(index);
     }
 }
 
@@ -125,4 +108,5 @@ export const checkMyTurn = (player, turn) => {
     }
     return false;
 }
+
 
