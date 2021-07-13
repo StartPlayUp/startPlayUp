@@ -40,7 +40,7 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
                             <div>{diceState.rollCount}</div>
                         </div>
                         <div>
-                            <button onClick={RollDice}>주사위 굴리기</button>
+                            <button disabled={diceState.rollCount? "":diceState.rollCount>=0} onClick={RollDice}>주사위 굴리기</button>
                         </div>
                     </div>
                 </Fragment>

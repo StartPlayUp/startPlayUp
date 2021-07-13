@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext,useReducer,memo } from "react";
-import Calculate from "./calculate";
+import Calculate from "../../../Container/GameContainer/Yacht/calculate";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YACHT } from 'Constants/peerDataTypes.js';

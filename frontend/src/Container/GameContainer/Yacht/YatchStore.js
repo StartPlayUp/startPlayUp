@@ -1,5 +1,5 @@
 import React, { useReducer, useState, useEffect, useContext } from "react";
-import Calculate from "Component/GameComponent/Yachu/calculate";
+import Calculate from "Container/GameContainer/Yacht/calculate";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YACHT } from 'Constants/peerDataTypes.js';
@@ -45,11 +45,20 @@ const YachuProvider=({children})=>{
             }
         }
         counter=Count(diceArray);
+        let pointCalculate = Calculate(diceArray, counter);
+        console.log(pointCalculate)
+        let playerCopy=[...playerData];
+        Object.keys(playerCopy[nowTurn].selectPoint).map((i) => {
+            if (!playerCopy[nowTurn].selectPoint[i][1]) {
+                playerCopy[nowTurn].selectPoint[i][0] = pointCalculate[i];
+            }
+        })
         setDiceState({
             ...diceState,
-            dice:diceArray,
-            rollCount:diceState.rollCount-1
+            dice: diceArray,
+            rollCount: diceState.rollCount - 1
         })
+        setPlayer(playerCopy);
     }
     const diceHold=(e)=>{ //e=사용자가 선택한 입력값
         const {value}=e.target;
@@ -94,20 +103,39 @@ const YachuProvider=({children})=>{
         }
         return counter;
     }
-    let pointCalculate=Calculate(diceState.dice,counter);
-    Object.keys(playerData[nowTurn].selectPoint).map((i)=>{
-        if(!playerData[nowTurn].selectPoint[i][1]){
-            playerData[nowTurn].selectPoint[i][0]=pointCalculate[i];
-        }
-    })
+
     function selectData(e){
         const { value, name } = e.target;
         const number = parseInt(value, 10);
         let playerArr=[...playerData]
-        playerArr[nowTurn].selectPoint[name][0]=number
-        playerArr[nowTurn].selectPoint[name][1] =true
-        setPlayer(playerArr)
+        playerArr[nowTurn].selectPoint[name]=[number,true]
+        playerArr[nowTurn].result+=number;
         rollReset();
+        if (!playerArr[nowTurn].bonus[1]) {
+            //보나리 구하기
+            let bonusTemp = Object.keys(playerArr[nowTurn].selectPoint).map((i) => {
+                return playerArr[nowTurn].selectPoint[i][0];
+            });
+            //1~6까지 쪼개기
+            var bonusTest = bonusTemp.slice(0, 6).reduce((total, num) => {
+                return parseInt(total, 10) + parseInt(num, 10);
+            });
+            if (bonusTest < 63) {
+                let complete = Object.keys(playerArr[nowTurn].selectPoint).map((i) => {
+                    return playerArr[nowTurn].selectPoint[i][1];
+                });
+                let completeTest = !complete.slice(0, 6).includes(false);
+                console.log("completeTest", completeTest);
+                playerArr[nowTurn].bonus = [bonusTest, completeTest];
+            }
+            else if (bonusTest >= 63) {
+                console.log("hihi");
+                playerArr[nowTurn].bonus = [bonusTest, true];
+                playerArr[nowTurn].result += 35;
+                alert("보너스 획득")
+            }
+        }
+        setPlayer(playerArr)
     }
     return (
         <PlayerData.Provider value={

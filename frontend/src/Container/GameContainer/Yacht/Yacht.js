@@ -1,6 +1,5 @@
 import React, { useState, useContext, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
-import YachtReduce from '../../../Component/GameComponent/Yachu/yachtReduce'
 import Dice from 'Component/GameComponent/Yachu/dice';
 import Player from 'Component/GameComponent/Yachu/Player';
 import {YachuProvider} from './YatchStore';
@@ -28,8 +27,8 @@ const Yacht=(props)=>{
     return(
         <YachuProvider>
             <YachtMan>
-                    <Player />
-                    <Dice />
+                <Player />
+                <Dice />
             </YachtMan>
         </YachuProvider>
     );

@@ -12,10 +12,10 @@ const Player=()=>{
             {({playerData})=>(
                 <Fragment>
                     {Object.keys(playerData).map((i,index)=>(
-                      <div keys={index}>
-                        {Object.keys(playerData[i].selectPoint).map((j, index) => (
-                            <div keys={index}>
-                                {index === 5 ?
+                      <div key={index}>
+                        {Object.keys(playerData[i].selectPoint).map((j, dex) => (
+                            <div key={dex}>
+                                {dex === 5 ?
                                  (<div>
                                     {j}:
                                         < button
