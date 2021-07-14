@@ -4,12 +4,14 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 
  const Dice=()=>{
     const diceState=useContext(DiceStore);
-    console.log(diceState)
     function RollDice(){
         diceState.RollDice()
     }
     const diceHold = (e)=>{
         diceState.diceHold(e)
+    }
+    const startGame=()=>{
+        diceState.startGame()
     }
     return (
         <DiceStore.Consumer>
@@ -41,6 +43,7 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
                         </div>
                         <div>
                             <button disabled={diceState.rollCount? "":diceState.rollCount>=0} onClick={RollDice}>주사위 굴리기</button>
+                            <button onClick={startGame}>게임 시작</button>
                         </div>
                     </div>
                 </Fragment>

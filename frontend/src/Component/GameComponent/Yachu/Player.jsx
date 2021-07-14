@@ -3,7 +3,6 @@ import { PlayerData } from "Container/GameContainer/Yacht/YatchStore";
 
 const Player=()=>{
     const playerData=useContext(PlayerData);
-    console.log(playerData);
     function select(e){
         playerData.selectData(e)
     }

@@ -8,6 +8,8 @@ import styled from 'styled-components';
 const DiceStore=React.createContext();
 const PlayerData=React.createContext();
 const YachuProvider=({children})=>{
+    const {peers} = useContext(PeersContext);
+    const {peerData}=useContext(PeerDataContext);
     const [diceState,setDiceState]=useState({
         dice:[0,0,0,0,0],
         hold:[false,false,false,false,false],
@@ -36,6 +38,37 @@ const YachuProvider=({children})=>{
         result: 0,
         bonus: [0, false]}
     ])
+    const startGame=()=>{
+        const nickname = localStorage.getItem('nickname');
+        const playerArr = [...playerData];
+        peers.forEach((i) => {
+            playerArr.push({
+                nickname: i.nickname,
+                selectPoint: {
+                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                    two: [0, false],
+                    three: [0, false],
+                    four: [0, false],
+                    five: [0, false],
+                    six: [0, false],
+                    threeOfaKind: [0, false],
+                    fourOfaKind: [0, false],
+                    fullHouse: [0, false],
+                    smallStraight: [0, false],
+                    largeStraight: [0, false],
+                    choice: [0, false],
+                    yahtzee: [0, false]
+                },
+                result: 0,
+                bonus: [0, false]
+            });
+        })
+        const halt = true;
+        //const nowTurnNickname = playerArr[0].nickname;
+        //const result = { playerData };
+        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { diceState,playerArr,nowTurn:0 } });
+        setPlayer(playerArr);
+    }
     const RollDice=()=>{
         let diceArray=[...diceState.dice];
         for (var i = 0; i < 5; i++) {
@@ -46,11 +79,10 @@ const YachuProvider=({children})=>{
         }
         counter=Count(diceArray);
         let pointCalculate = Calculate(diceArray, counter);
-        console.log(pointCalculate)
-        let playerCopy=[...playerData];
-        Object.keys(playerCopy[nowTurn].selectPoint).map((i) => {
-            if (!playerCopy[nowTurn].selectPoint[i][1]) {
-                playerCopy[nowTurn].selectPoint[i][0] = pointCalculate[i];
+        let playerArr=[...playerData];
+        Object.keys(playerArr[nowTurn].selectPoint).map((i) => {
+            if (!playerArr[nowTurn].selectPoint[i][1]) {
+                playerArr[nowTurn].selectPoint[i][0] = pointCalculate[i];
             }
         })
         setDiceState({
@@ -58,7 +90,9 @@ const YachuProvider=({children})=>{
             dice: diceArray,
             rollCount: diceState.rollCount - 1
         })
-        setPlayer(playerCopy);
+        const turn = nowTurn;
+        setPlayer(playerArr);
+        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { dice: diceArray, rollCount: diceState.rollCount- 1,playerArr,nowTurn:turn } });
     }
     const diceHold=(e)=>{ //e=사용자가 선택한 입력값
         const {value}=e.target;
@@ -135,8 +169,35 @@ const YachuProvider=({children})=>{
                 alert("보너스 획득")
             }
         }
-        setPlayer(playerArr)
+        console.log(playerData[nowTurn].nickname)
+        console.log("length",playerData.length-1)
+        if(nowTurn === playerData.length - 1){
+            setTurn(0)
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { dice: [0, 0, 0, 0, 0], rollCount: 3, playerArr, nowTurn: 0 } });
+        }
+        else{
+            setTurn(1)
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { dice: [0, 0, 0, 0, 0], rollCount: 3, playerArr, nowTurn: 1 } });
+        }
+            
+        
+        
     }
+    useEffect(()=>{
+        if (peerData.type === GAME && peerData.game === YACHT){
+            const data = peerData.data;
+            //const dice=data.diceState.dice
+            console.log(data)
+            setDiceState({
+                ...diceState,
+                dice:data.dice,
+                rollCount:data.rollCount
+            })
+            setTurn(data.nowTurn)
+            setPlayer([...data.playerArr])
+
+        }
+    },[peerData])
     return (
         <PlayerData.Provider value={
             {playerData:playerData,selectData}
@@ -144,7 +205,8 @@ const YachuProvider=({children})=>{
             <DiceStore.Provider value={
                 {   diceState:diceState,
                     RollDice,
-                    diceHold
+                    diceHold,
+                    startGame
                 }
             }>
                 {children}
