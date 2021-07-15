@@ -54,4 +54,8 @@ const moveHorseHandler = ({ dispatch, state, peers, index }) => {
 
 
 
-export default { nextTurnHandler, startGameHandler, throwYutHandler, updateGoalHandler, selectHorseHandler, moveFirstHorseHandler, moveHorseHandler }
+export default { nextTurnHandler, startGameHandler, throwYutHandler, updateGoalHandler, selectHorseHandler, moveFirstHorseHandler, moveHorseHandler,
+    playAiHandler(param) {
+
+    }
+}

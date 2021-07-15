@@ -66,3 +66,9 @@ export const User = styled.div`
     border 3px solid black;
     padding : 5px;
 `
+export const PlayerList = styled.div`
+        display : flex;
+        flex-direction : column;
+        justify-content : flex-end;
+        
+    `

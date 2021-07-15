@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import {withRouter} from "react-router-dom";
-import {GameContext,PlayerContext} from "../gameSetting";
+import {GameContext,PlayerContext} from "../Store";
 function EvilsVote() {
     const gameState = useContext(GameContext)
     const [isClick, setIsClick] = useState(false);

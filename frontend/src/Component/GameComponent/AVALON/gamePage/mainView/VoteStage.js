@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {Circle, VoteStageFrame} from "../../MainPage/Styled";
-import {GameContext, voteStageColor} from "../../gameSetting";
+import {GameContext, voteStageColor} from "../../Store";
 
 function VoteStage() {
     const game = useContext(GameContext)

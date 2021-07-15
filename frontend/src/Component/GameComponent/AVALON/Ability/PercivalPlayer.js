@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {GameContext,PlayerContext,percivalSight} from "../gameSetting";
+import {GameContext,PlayerContext,percivalSight} from "../Store";
 
 
 function PercivalPlayer() {

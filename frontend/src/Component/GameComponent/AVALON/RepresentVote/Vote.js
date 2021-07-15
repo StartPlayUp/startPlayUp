@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {GameContext,PlayerContext} from "../gameSetting";
+import {GameContext,PlayerContext} from "../Store";
 function Vote(props) {
     const userState = useContext(PlayerContext)
     const [vote, setVote] = useState('agree');

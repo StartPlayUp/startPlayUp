@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {Frame, PublicFrame} from "../../MainPage/Styled";
-import {GameContext} from "../../gameSetting";
+import {GameContext} from "../../Store";
 
 function TakeStage() {
     const game = useContext(GameContext)
