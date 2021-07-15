@@ -1,7 +1,6 @@
 import React, {createContext} from "react";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, AVALON } from 'Constants/peerDataTypes.js';
-import {UPDATE_PEERS,UPDATE_TIMER,GET_DATA_FROM_PEER} from "../../../Container/GameContainer/Yut/YutStore";
 
 export const Pages = {
     START_FRAME: 'START_FRAME',

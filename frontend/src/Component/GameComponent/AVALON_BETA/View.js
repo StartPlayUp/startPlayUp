@@ -2,11 +2,8 @@ import React, {useContext} from "react";
 import {Pages} from "./MVC/AVALON_Reducer";
 import {angels, GameContext, PlayerContext, voteStageColor,} from "./Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "./Styled";
-import MerlinPlayer from "../AVALON/Ability/MerlinPlayer";
-import PercivalPlayer from "../AVALON/Ability/PercivalPlayer";
 import {Title} from "../../WebComponent/WebPage/Style/CreateRoomStyle";
-import AngelsVote from "../AVALON/ExpeditionVote/AngelsVote";
-import EvilsVote from "../AVALON/ExpeditionVote/EvilsVote";
+
 
 function View() {
     const game = useContext(GameContext)
@@ -44,7 +41,7 @@ function View() {
         )
     }
     if (game.page === Pages.MAIN_FRAME) {
-        const colors = voteStageColor.slice(context.voteStage, 5);
+        const colors = voteStageColor.slice(game.voteStage, 5);
         return (
             <>
                 <div>Main</div>

@@ -1,15 +1,17 @@
-import React, { useContext } from "react";
-import { Store, UserContext } from "../store"
-import { Route, Switch, useHistory } from 'react-router-dom';
+import React, {useContext} from "react";
+import {UserContext} from "../LoginStore"
+import {Route, Switch, useHistory} from 'react-router-dom';
 import LoginPageContainer from "Container/LoginPageContainer";
 import GlobalContainer from "Container/GlobalContainer";
 import ChatComponent from "Component/ChatComponent";
 import RockPaperScissors from "Component/GameComponent/RockPaperScissors";
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import styled from 'styled-components';
 import MineSearch from "Container/GameContainer/MineSearch";
 import Yut from 'Container/GameContainer/Yut/Yut';
 import Yacht from 'Container/GameContainer/Yacht/Yacht';
+import {PeerStore} from './peerStore';
+import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
 
 const GamePage = styled.div`
     display:flex;
@@ -35,47 +37,48 @@ const TemporaryMain = () => {
 }
 
 function app() {
-    const { isAuthenticated } = useContext(UserContext);
+    const {isAuthenticated} = useContext(UserContext);
     console.log("asdf")
     return (
         <BrowserRouter>
 
             {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
-            <Route path="/" component={GlobalContainer} />
-            <Route exact path="/" component={LoginPageContainer} />
-            {isAuthenticated && <Route exact path="/main" component={TemporaryMain} />}
+            <Route path="/" component={GlobalContainer}/>
+            <Route exact path="/" component={LoginPageContainer}/>
+            {isAuthenticated && <Route exact path="/main" component={TemporaryMain}/>}
             {isAuthenticated && <Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <RockPaperScissors />
-                <ChatComponent />
-            </GamePage>} />}
+                <PeerStore>
+                    <RockPaperScissors/>
+                    <ChatComponent/>
+                </PeerStore>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/MineSearch" render={() => <GamePage>
-                <MineSearch />
-            </GamePage>} />}
+                <PeerStore>
+                    <MineSearch/>
+                </PeerStore>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
-                <Yut />
-                <ChatComponent />
-            </GamePage>} />}
+                <PeerStore>
+                    <Yut/>
+                    <ChatComponent/>
+                </PeerStore>
+            </GamePage>}/>}
             {isAuthenticated && <Route exact path="/Yacht" render={() => <GamePage>
-                <StyleDiv>
-                    <Yacht />
-                </StyleDiv>
-                <ChatComponent />
-            </GamePage>} />}
-
-
-
-            {/* {<Route path="/" component={TemporaryMain} />}
-            {<Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <RockPaperScissors />
-                <ChatComponent />
-            </GamePage>} />}
-            {<Route exact path="/MineSearch" render={() => <GamePage>
-                <MineSearch />
-            </GamePage>} />}
-            {<Route exact path="/Yut" render={() => <GamePage>
-                <Yut />
-                <ChatComponent />
-            </GamePage>} />} */}
+                <PeerStore>
+                    <StyleDiv>
+                        <Yacht/>
+                    </StyleDiv>
+                    <ChatComponent/>
+                </PeerStore>
+            </GamePage>}/>}
+            {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
+                <PeerStore>
+                    <StyleDiv>
+                        <AVALON_BETA/>
+                    </StyleDiv>
+                    <ChatComponent/>
+                </PeerStore>
+            </GamePage>}/>}
         </BrowserRouter>
     );
 }

@@ -1,7 +1,5 @@
-import reducerActionHandler from "../../../../../Container/GameContainer/Yut/reducerActionHandler";
 import React, {createContext, useContext, useReducer, useState, useEffect} from "react";
 import shuffle from 'lodash.shuffle';
-import {func} from "./Beta_ver/MVC/AVALON_Reducer";
 import {
     GET_DATA_FROM_PEER,
     STOP_TIMER,
@@ -10,9 +8,8 @@ import {
 } from "../../../Container/GameContainer/Yut/yutReducerType";
 import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
 import {AVALON, GAME, YUT} from "../../../Constants/peerDataTypes";
-import voteOnClick from "../AVALON/Beta_ver/VOTE/voteOnClick";
 import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
-import {Pages} from "./MVC/AVALON_Reducer";
+import {func, Pages} from "./MVC/AVALON_Reducer";
 import {NextPage} from "./MVC/AVALON_Controller";
 
 export const angels = ['Merlin', 'Percival', 'Citizen'];
