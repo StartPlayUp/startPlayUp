@@ -1,17 +1,22 @@
 import React, {useContext} from "react";
 import {Pages} from "./MVC/AVALON_Reducer";
-import {angels, GameContext, PlayerContext, voteStageColor, yutDataContext,} from "./Store";
+import {angels, GameContext, PlayerContext, voteStageColor} from "./Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "./Styled";
 import {Title} from "../../WebComponent/WebPage/Style/CreateRoomStyle";
 
 function View() {
     const game = useContext(GameContext)
     const player = useContext(PlayerContext)
-    console.log(game)
-    console.log(player)
-    console.log(game.test)
+    console.log(`game : $${game}`)
+    console.log(`gameState:${game.gameState}`)
+    console.log(`player:${player}`)
+    console.log(`playerState:${player.playerState}`)
     const setPage = (props) => {
         game.setPage(props)
+    }
+    const gameStart = () => {
+        console.log('gameStart')
+        game.gameStart()
     }
     const voteOnClick = () => {
         console.log('voteOnClick')
@@ -43,7 +48,7 @@ function View() {
     }
     if (game.gameState.page === Pages.START_FRAME) {
         return (
-            <button onClick={game.gameStart}>게임 시작</button>
+            <button onClick={gameStart}>게임 시작</button>
         )
     }
     if (game.gameState.page === Pages.MAIN_FRAME) {
@@ -66,10 +71,11 @@ function View() {
                             <Circle color={color} key={index}/>
                         ))
                     }
+
                 </VoteStageFrame>
                 <PublicFrame>
                     {
-                        game.playerData.map((user, index) => (
+                        player.playerState.map((user, index) => (
                             <User key={index}>
                                 <ul>
                                     <li>{`nickname : ${user.nickname}`}</li>
@@ -96,7 +102,7 @@ function View() {
         return (
             <div>
                 <h3>{"원정에 참여하는 인원 수 : " + game.takeStage[game.expeditionStage] + "명"}</h3>
-                {player.playerData.map((user, index) => (
+                {player.playerState.map((user, index) => (
                     <ul key={index}>
                         <label>{user.nickname}
                             <input
@@ -118,7 +124,7 @@ function View() {
                 <div>VOTE</div>
                 <div>
                     <Title>
-                        {game.playerData.map((user, index) => <Vote key={index} index={index}/>)}
+                        {player.playerState.map((user, index) => <Vote key={index} index={index}/>)}
                     </Title>
                     <button onClick={() => setPage(Pages.VOTE_RESULT)}>결과</button>
                 </div>
@@ -129,7 +135,7 @@ function View() {
     if (game.gameState.page === Pages.VOTE_RESULT) {
         return (
             <div>
-                {game.playerData.map((user, index) => (
+                {player.playerState.map((user, index) => (
                     <ul key={index}>
                         <li>{`nickname : ${user.nickname}`}</li>
                         <li>{`vote : ${user.toGo === 'agree' ? '찬성' : '반대'}`}</li>
@@ -145,7 +151,7 @@ function View() {
             <>
                 <div>
                     {
-                        game.playerData.map((user, index) => (
+                        player.playerState.map((user, index) => (
                             <ul key={index}>
                                 {user.selected ?
                                     <div>
@@ -170,7 +176,7 @@ function View() {
             <div>
                 <div>
                     {
-                        game.expeditionStage === 4 && game.playerData.length >= 7 ?
+                        game.expeditionStage === 4 && player.playerState.length >= 7 ?
                             <div>
                                 {game.vote.filter(element => 'fail' === element).length >= 2 ? '원정 실패' : '원정 성공'}
                                 <div>성공 개수 : {game.vote.filter(element => 'success' === element).length}</div>
@@ -191,7 +197,7 @@ function View() {
         return (
             <>
                 <h3>ASSASSIN</h3>
-                {game.playerData.map((user, index) => (
+                {player.playerState.map((user, index) => (
                     <label key={index}>
                         {user.nickname}
                         <input type="radio"
@@ -212,7 +218,7 @@ function View() {
                 <h1>{game.winner}</h1>
                 <h3>ENDGAME</h3>
                 <hr/>
-                {player.playerData.map((player, index) => (
+                {player.playerState.map((player, index) => (
                     <ul key={index}>
                         <p>player_nickname : <b>{player.nickname}</b></p>
                         <p>role : <b>{player.role}</b></p>

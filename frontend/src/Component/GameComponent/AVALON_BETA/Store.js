@@ -77,30 +77,22 @@ const EXPEDITION_FRAME = 3;
 const ASSASSIN_FRAME = 4;
 const END_GAME_FRAME = 5;
 
-const initialState = {
-    playerData: [
-        {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
-        // {nickname: 'user6', role: '', vote: '', toGo: '',selected : false},
-        // {nickname: 'user7', role: '', vote: '', toGo: '',selected : false},
-        // {nickname: 'user8', role: '', vote: '', toGo: '',selected : false},
-        // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
-        //
-    ],
-    mainFrameClick: false,
-    playerCheckedNumber: 0,
-    voteCount: 0,
-    voteResult: false,
-    expedition: false,
-    winner: '',
-    page: START_FRAME,
-    kill: '',
-}
+
+const testPlayer = [
+    {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
+    {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
+    {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
+    {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
+    {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
+    // {nickname: 'user6', role: '', vote: '', toGo: '',selected : false},
+    // {nickname: 'user7', role: '', vote: '', toGo: '',selected : false},
+    // {nickname: 'user8', role: '', vote: '', toGo: '',selected : false},
+    // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
+    //
+]
+
 const GameContext = React.createContext()
-const PlayerContext = React.createContext(playerData)
+const PlayerContext = React.createContext()
 
 const init = ({initialState, peers}) => {
     console.log("in init : ", peers)
@@ -130,6 +122,7 @@ const Store = ({children}) => {
         toGo: '',
         selected: false
     })
+    const [testState, setTestState] = useState({})
     // const game = useContext(gameData)
     // const user = useContext(playerData)
     const {peers} = useContext(PeersContext);
@@ -167,15 +160,15 @@ const Store = ({children}) => {
     //     }
     // }, [timer])
 
-    // useEffect(() => {
-    //     if (peerData.type === GAME && peerData.game === YUT) {
-    //         const data = peerData.data;
-    //         dispatch({type: GET_DATA_FROM_PEER, data})
-    //     }
-    // }, [peerData])
+    useEffect(() => {
+        if (peerData.type === GAME && peerData.game === YUT) {
+            const data = peerData.data;
+            dispatch({type: GET_DATA_FROM_PEER, data})
+        }
+    }, [peerData])
 
     const gameStart = () => {
-        console.log('Store.gameStart')
+        console.log('gameStart')
         const playersNumber = playerState.length;
         let gameTable = []
         switch (playersNumber) {
@@ -194,7 +187,7 @@ const Store = ({children}) => {
                 gameTable = needPlayers._8to10P;
                 break;
             default:
-                alert('error');
+                console.log('error')
         }
         if (playersNumber >= 5) {
             const temp = [
@@ -236,7 +229,7 @@ const Store = ({children}) => {
             setGameState({...gameState, page: Pages.MAIN_FRAME, gameArr})
             sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {gameArr, playerArr,}})
         } else {
-            alert('error')
+            alert(`${playersNumber}명입니다. ${5 - playersNumber}명이 더 필요합니다.`)
         }
     };
     const voteOnChange = e => { //사용자 선택 e
@@ -353,7 +346,10 @@ const Store = ({children}) => {
     return (
         <div>
             <PlayerContext.Provider value={
-                {playerState}}>
+                {
+                    playerState,
+                    testPlayer
+                }}>
                 <GameContext.Provider value={
                     {
                         gameState,
