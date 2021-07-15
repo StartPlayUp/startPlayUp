@@ -33,6 +33,7 @@ const TemporaryMain = () => {
         <button onClick={() => history.push("/MineSearch")}>MineSearch</button>
         <button onClick={() => history.push("/Yut")}>Yut</button>
         <button onClick={() => history.push("/Yacht")}>Yacht</button>
+        <button onClick={()=> history.push('/AVALON')}>AVALON</button>
     </div>)
 }
 
