@@ -4,7 +4,6 @@ import {angels, GameContext, PlayerContext, voteStageColor,} from "./Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "./Styled";
 import {Title} from "../../WebComponent/WebPage/Style/CreateRoomStyle";
 
-
 function View() {
     const game = useContext(GameContext)
     const player = useContext(PlayerContext)
@@ -12,32 +11,41 @@ function View() {
         game.setPage(props)
     }
     const gameStart = () => {
+        console.log('gameStart')
+        console.log(game.gameStart)
         game.gameStart()
     }
     const voteOnClick = () => {
+        console.log('voteOnClick')
         game.voteOnClick()
     }
     const voteOnChange = () => {
+        console.log('voteOnChange')
         game.voteOnChange()
     }
     const votePage = () => {
+        console.log('votePage')
         game.votePage()
     }
     const nextPage = () => {
+        console.log('nextPage')
         game.nextPage()
     }
     const expeditionClick = () => {
+        console.log('expeditionClick')
         game.expeditionClick()
     }
     const killPlayer = () => {
+        console.log('killPlayer')
         game.killPlayer()
     }
     const selectPlayer = () => {
+        console.log('selectPlayer')
         game.selectPlayer()
     }
     if (game.page === Pages.START_FRAME) {
         return (
-            <button onClick={() => gameStart}>게임 시작</button>
+            <button onClick={gameStart}>게임 시작</button>
         )
     }
     if (game.page === Pages.MAIN_FRAME) {
@@ -216,6 +224,11 @@ function View() {
             </>
         )
     }
+    return (
+        <div>
+            error
+        </div>
+    )
 }
 
 export default View

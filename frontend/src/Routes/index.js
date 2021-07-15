@@ -12,6 +12,7 @@ import Yut from 'Container/GameContainer/Yut/Yut';
 import Yacht from 'Container/GameContainer/Yacht/Yacht';
 import {PeerStore} from './peerStore';
 import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
+import View from "../Component/GameComponent/AVALON_BETA/View";
 
 const GamePage = styled.div`
     display:flex;
@@ -75,7 +76,7 @@ function app() {
             {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
                 <PeerStore>
                     <StyleDiv>
-                        <AVALON_BETA/>
+                        <View/>
                     </StyleDiv>
                     <ChatComponent/>
                 </PeerStore>

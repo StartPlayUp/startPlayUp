@@ -9,8 +9,7 @@ import {
 import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
 import {AVALON, GAME, YUT} from "../../../Constants/peerDataTypes";
 import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
-import {func, Pages} from "./MVC/AVALON_Reducer";
-import {NextPage} from "./MVC/AVALON_Controller";
+import {Pages} from "./MVC/AVALON_Reducer";
 
 export const angels = ['Merlin', 'Percival', 'Citizen'];
 export const evils = ['Morgana', 'Assassin', 'Heresy', 'Modred'];
@@ -40,7 +39,7 @@ const Games = {
     voteResult: false,
     expedition: false,
     winner: '',
-    page: START_FRAME,
+    page: Pages.START_FRAME,
     kill: '',
 }
 
@@ -69,6 +68,7 @@ const gameData = {
     represent: 0,
     vote: [],
     takeStage: [],
+    page : Pages.START_FRAME,
 }
 const START_FRAME = 0;
 const MAIN_FRAME = 1;
@@ -99,41 +99,41 @@ const initialState = {
     page: START_FRAME,
     kill: '',
 }
-export const GameContext = React.createContext()
-export const PlayerContext = React.createContext()
+export const GameContext = React.createContext(gameData)
+export const PlayerContext = React.createContext(playerData)
 const initState = createContext(initialState)
 
 const init = ({initialState, peers}) => {
     console.log("in init : ", peers)
     return {...initialState, peers}
 }
-const reducer = (state, action) => {
-    switch (action.type) {
-        case UPDATE_PEERS: {
-            return {...state, peers: action.peers}
-        }
-        case UPDATE_TIMER:
-            return {...state, timer: state.timer + 1}
-        case GET_DATA_FROM_PEER: {
-            return {...state, ...action.data}
-        }
-        case STOP_TIMER : {
-            return {...state, halted: true}
-        }
-        case func.gameStart: {
-            return {...state, playerData: action.playerData, nowTurnNickname: action.nowTurnNickname, halt: true};
-        }
-        default: {
-            return {...state}
-        }
-    }
-}
+// const reducer = (state, action) => {
+//     switch (action.type) {
+//         case UPDATE_PEERS: {
+//             return {...state, peers: action.peers}
+//         }
+//         case UPDATE_TIMER:
+//             return {...state, timer: state.timer + 1}
+//         case GET_DATA_FROM_PEER: {
+//             return {...state, ...action.data}
+//         }
+//         case STOP_TIMER : {
+//             return {...state, halted: true}
+//         }
+//         case func.gameStart: {
+//             return {...state, playerData: action.playerData, nowTurnNickname: action.nowTurnNickname, halt: true};
+//         }
+//         default: {
+//             return {...state}
+//         }
+//     }
+// }
 
 const Store = ({children}) => {
     const game = useContext(GameContext)
     const user = useContext(PlayerContext)
     const {peers} = useContext(PeersContext);
-    const [state, dispatch] = useReducer(reducer, {initialState, peers}, init);
+    // const [state, dispatch] = useReducer(reducer, {initialState, peers}, init);
     const {peerData} = useContext(PeerDataContext);
     // const [playerCount, setPlayerCount] = useState(0);
     // const [voteCount, setVoteCount] = useState(0);
@@ -141,32 +141,32 @@ const Store = ({children}) => {
     // const [page, setPage] = useState(START_FRAME);
     // const [kill, setKill] = useState('')
 
-    useEffect(() => {
-        let timer;
-        if (halted === false) {
-            timer = setInterval(() => {
-                dispatch({type: UPDATE_TIMER})
-            }, 1000);
-        }
-        return () => {
-            clearInterval(timer);
-        }
-    }, [halted])
-
-    useEffect(() => {
-        if (timer > 3) {
-            // 시간 멈춰놓고
-            dispatch({type: STOP_TIMER});
-            // 컴퓨터 행동 하고
-            // dispatch({ type: PLAY_COMPUTER, dispatch });
-            // 턴 넘겨주고
-            // dispatch({ type: NEXT_TURN });
-            // yutDataSendToPeers(state);
-            reducerActionHandler.playAiHandler({dispatch, state, peers});
-            dispatch({type: STOP_TIMER});
-            // reducerActionHandler.nextTurnHandler({ dispatch, state, peers });
-        }
-    }, [timer])
+    // useEffect(() => {
+    //     let timer;
+    //     if (halted === false) {
+    //         timer = setInterval(() => {
+    //             dispatch({type: UPDATE_TIMER})
+    //         }, 1000);
+    //     }
+    //     return () => {
+    //         clearInterval(timer);
+    //     }
+    // }, [halted])
+    //
+    // useEffect(() => {
+    //     if (timer > 3) {
+    //         // 시간 멈춰놓고
+    //         dispatch({type: STOP_TIMER});
+    //         // 컴퓨터 행동 하고
+    //         // dispatch({ type: PLAY_COMPUTER, dispatch });
+    //         // 턴 넘겨주고
+    //         // dispatch({ type: NEXT_TURN });
+    //         // yutDataSendToPeers(state);
+    //         reducerActionHandler.playAiHandler({dispatch, state, peers});
+    //         dispatch({type: STOP_TIMER});
+    //         // reducerActionHandler.nextTurnHandler({ dispatch, state, peers });
+    //     }
+    // }, [timer])
 
     useEffect(() => {
         if (peerData.type === GAME && peerData.game === YUT) {
@@ -291,7 +291,7 @@ const Store = ({children}) => {
             represent: represent
 
         })
-        NextPage()
+        nextPage()
         // dispatch({
         //     type: func.votePage,
         //     index: index,
@@ -371,11 +371,11 @@ const Store = ({children}) => {
         }
     }, [peerData])
     return (
-        <playerContext.Provider value={
-            {playerState: playerState}
-        }>
-            <gameContext.Provider value={
+        <PlayerContext.Provider value={
+            {playerState: playerState}}>
+            <GameContext.Provider value={
                 {
+                    gameState : gameState,
                     gameStart,
                     voteOnChange,
                     voteOnClick,
@@ -388,10 +388,8 @@ const Store = ({children}) => {
                 }
             }>
                 {children}
-            </gameContext.Provider>
-        </playerContext.Provider>
+            </GameContext.Provider>
+        </PlayerContext.Provider>
     )
 }
-
-
 export default Store
