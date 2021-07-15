@@ -4,12 +4,7 @@ import View from "../View";
 
 function AVALON_VIEW() {
     return (
-        <PlayerContext.Consumer>
-            <GameContext.Consumer>
-                <View/>
-            </GameContext.Consumer>
-        </PlayerContext.Consumer>
-
+        <View/>
     );
 }
 

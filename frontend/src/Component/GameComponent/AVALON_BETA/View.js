@@ -1,19 +1,17 @@
 import React, {useContext} from "react";
 import {Pages} from "./MVC/AVALON_Reducer";
-import {angels, GameContext, PlayerContext, voteStageColor,} from "./Store";
+import {angels, GameContext, PlayerContext, voteStageColor, yutDataContext,} from "./Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "./Styled";
 import {Title} from "../../WebComponent/WebPage/Style/CreateRoomStyle";
 
 function View() {
     const game = useContext(GameContext)
     const player = useContext(PlayerContext)
+    console.log(game)
+    console.log(player)
+    console.log(game.test)
     const setPage = (props) => {
         game.setPage(props)
-    }
-    const gameStart = () => {
-        console.log('gameStart')
-        console.log(game.gameStart)
-        game.gameStart()
     }
     const voteOnClick = () => {
         console.log('voteOnClick')
@@ -43,12 +41,12 @@ function View() {
         console.log('selectPlayer')
         game.selectPlayer()
     }
-    if (game.page === Pages.START_FRAME) {
+    if (game.gameState.page === Pages.START_FRAME) {
         return (
-            <button onClick={gameStart}>게임 시작</button>
+            <button onClick={game.gameStart}>게임 시작</button>
         )
     }
-    if (game.page === Pages.MAIN_FRAME) {
+    if (game.gameState.page === Pages.MAIN_FRAME) {
         const colors = voteStageColor.slice(game.voteStage, 5);
         return (
             <>
@@ -94,7 +92,7 @@ function View() {
             </>
         );
     }
-    if (game.page === Pages.MAIN_VOTE) {
+    if (game.gameState.page === Pages.MAIN_VOTE) {
         return (
             <div>
                 <h3>{"원정에 참여하는 인원 수 : " + game.takeStage[game.expeditionStage] + "명"}</h3>
@@ -114,7 +112,7 @@ function View() {
             </div>
         )
     }
-    if (game.page === Pages.VOTE_FRAME) {
+    if (game.gameState.page === Pages.VOTE_FRAME) {
         return (
             <>
                 <div>VOTE</div>
@@ -128,7 +126,7 @@ function View() {
             </>
         );
     }
-    if (game.page === Pages.VOTE_RESULT) {
+    if (game.gameState.page === Pages.VOTE_RESULT) {
         return (
             <div>
                 {game.playerData.map((user, index) => (
@@ -142,7 +140,7 @@ function View() {
         )
     }
 
-    if (game.page === Pages.EXPEDITION_FRAME) {
+    if (game.gameState.page === Pages.EXPEDITION_FRAME) {
         return (
             <>
                 <div>
@@ -167,7 +165,7 @@ function View() {
             </>
         );
     }
-    if (game.page === Pages.EXPEDITION_RESULT) {
+    if (game.gameState.page === Pages.EXPEDITION_RESULT) {
         return (
             <div>
                 <div>
@@ -189,7 +187,7 @@ function View() {
             </div>
         )
     }
-    if (game.page === Pages.ASSASSIN_FRAME) {
+    if (game.gameState.page === Pages.ASSASSIN_FRAME) {
         return (
             <>
                 <h3>ASSASSIN</h3>
@@ -208,7 +206,7 @@ function View() {
             </>
         )
     }
-    if (game.page === Pages.END_GAME_FRAME) {
+    if (game.gameState.page === Pages.END_GAME_FRAME) {
         return (
             <>
                 <h1>{game.winner}</h1>

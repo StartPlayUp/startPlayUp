@@ -34,7 +34,7 @@ const TemporaryMain = () => {
         <button onClick={() => history.push("/MineSearch")}>MineSearch</button>
         <button onClick={() => history.push("/Yut")}>Yut</button>
         <button onClick={() => history.push("/Yacht")}>Yacht</button>
-        <button onClick={()=> history.push('/AVALON')}>AVALON</button>
+        <button onClick={() => history.push('/AVALON')}>AVALON</button>
     </div>)
 }
 
@@ -76,7 +76,7 @@ function app() {
             {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
                 <PeerStore>
                     <StyleDiv>
-                        <View/>
+                        <AVALON_BETA/>
                     </StyleDiv>
                     <ChatComponent/>
                 </PeerStore>

@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer, useState, useEffect} from "react";
+import React, {createContext, useContext, useReducer, useState, useEffect, useMemo} from "react";
 import shuffle from 'lodash.shuffle';
 import {
     GET_DATA_FROM_PEER,
@@ -61,14 +61,14 @@ const playerData = {
     toGo: '',
     selected: false
 }
-
+//
 const gameData = {
     voteStage: 0,
     expeditionStage: 0,
     represent: 0,
     vote: [],
     takeStage: [],
-    page : Pages.START_FRAME,
+    page: Pages.START_FRAME,
 }
 const START_FRAME = 0;
 const MAIN_FRAME = 1;
@@ -99,41 +99,40 @@ const initialState = {
     page: START_FRAME,
     kill: '',
 }
-export const GameContext = React.createContext(gameData)
-export const PlayerContext = React.createContext(playerData)
-const initState = createContext(initialState)
+const GameContext = React.createContext()
+const PlayerContext = React.createContext(playerData)
 
 const init = ({initialState, peers}) => {
     console.log("in init : ", peers)
     return {...initialState, peers}
 }
-// const reducer = (state, action) => {
-//     switch (action.type) {
-//         case UPDATE_PEERS: {
-//             return {...state, peers: action.peers}
-//         }
-//         case UPDATE_TIMER:
-//             return {...state, timer: state.timer + 1}
-//         case GET_DATA_FROM_PEER: {
-//             return {...state, ...action.data}
-//         }
-//         case STOP_TIMER : {
-//             return {...state, halted: true}
-//         }
-//         case func.gameStart: {
-//             return {...state, playerData: action.playerData, nowTurnNickname: action.nowTurnNickname, halt: true};
-//         }
-//         default: {
-//             return {...state}
-//         }
-//     }
-// }
-
 const Store = ({children}) => {
-    const game = useContext(GameContext)
-    const user = useContext(PlayerContext)
+    const [gameState, setGameState] = useState({
+        voteStage: 0, //5-voteStage 재투표 가능횟수
+        expeditionStage: 0, //게임 expedition 진행 상황
+        represent: 0, //원정 인원 정하는 대표자 index
+        vote: [], //원정 성공 여부 투표함
+        takeStage: [], //인원에 맞는 게임 스테이지 설정
+        playerCount: 0, // 대표자가 원정에 보낼 인원 수
+        voteCount: 0, //
+
+        voteResult: false,
+        expedition: false,
+        //위의 두개는 뷰로 그냥 빼는게 좋을듯??
+        winner: '',
+        page: Pages.START_FRAME,
+        kill: '',
+    })
+    const [playerState, setPlayerState] = useState({
+        nickname: '',
+        role: '',
+        vote: '',
+        toGo: '',
+        selected: false
+    })
+    // const game = useContext(gameData)
+    // const user = useContext(playerData)
     const {peers} = useContext(PeersContext);
-    // const [state, dispatch] = useReducer(reducer, {initialState, peers}, init);
     const {peerData} = useContext(PeerDataContext);
     // const [playerCount, setPlayerCount] = useState(0);
     // const [voteCount, setVoteCount] = useState(0);
@@ -168,64 +167,44 @@ const Store = ({children}) => {
     //     }
     // }, [timer])
 
-    useEffect(() => {
-        if (peerData.type === GAME && peerData.game === YUT) {
-            const data = peerData.data;
-            dispatch({type: GET_DATA_FROM_PEER, data})
-        }
-    }, [peerData])
-    const [gameState, setGameState] = useState({
-        voteStage: 0, //5-voteStage 재투표 가능횟수
-        expeditionStage: 0, //게임 expedition 진행 상황
-        represent: 0, //원정 인원 정하는 대표자 index
-        vote: [], //원정 성공 여부 투표함
-        takeStage: [], //인원에 맞는 게임 스테이지 설정
-        playerCount: 0, // 대표자가 원정에 보낼 인원 수
-        voteCount: 0, //
+    // useEffect(() => {
+    //     if (peerData.type === GAME && peerData.game === YUT) {
+    //         const data = peerData.data;
+    //         dispatch({type: GET_DATA_FROM_PEER, data})
+    //     }
+    // }, [peerData])
 
-        voteResult: false,
-        expedition: false,
-        //위의 두개는 뷰로 그냥 빼는게 좋을듯??
-        winner: '',
-        page: START_FRAME,
-        kill: '',
-    })
-    const [playerState, setPlayerState] = useState({
-        nickname: '',
-        role: '',
-        vote: '',
-        toGo: '',
-        selected: false
-    })
     const gameStart = () => {
-        const PlayersNumber = user.length;
-        const page = MAIN_FRAME
-        switch (user.length) {
+        console.log('Store.gameStart')
+        const playersNumber = playerState.length;
+        let gameTable = []
+        switch (playersNumber) {
             case 5 :
-                game.takeStage = needPlayers._5P;
+                gameTable = needPlayers._5P;
                 break;
             case 6:
-                game.takeStage = needPlayers._6P;
+                gameTable = needPlayers._6P;
                 break;
             case 7:
-                game.takeStage = needPlayers._7P;
+                gameTable = needPlayers._7P;
                 break;
             case 8:
             case 9:
             case 10:
-                game.takeStage = needPlayers._8to10P;
+                gameTable = needPlayers._8to10P;
                 break;
             default:
                 alert('error');
         }
-        if (PlayersNumber >= 5) {
+        if (playersNumber >= 5) {
             const temp = [
                 ...mustHaveRoles,
-                ...expandRoles.slice(0, PlayersNumber - 5),
+                ...expandRoles.slice(0, playersNumber - 5),
             ];
             const roles = shuffle(temp)
             const nickname = localStorage.getItem('nickname')
             const playerArr = [...playerState]
+            const gameArr = [...gameState]
             peers.forEach((i) => {
                 playerArr.push({
                     nickname: i.nickname,
@@ -235,10 +214,27 @@ const Store = ({children}) => {
                     selected: false,
                 })
             })
+            peers.forEach(() => {
+                gameArr.push({
+                    voteStage: 0, //5-voteStage 재투표 가능횟수
+                    expeditionStage: 0, //게임 expedition 진행 상황
+                    represent: 0, //원정 인원 정하는 대표자 index
+                    vote: [], //원정 성공 여부 투표함
+                    takeStage: gameTable, //인원에 맞는 게임 스테이지 설정
+                    playerCount: 0, // 대표자가 원정에 보낼 인원 수
+                    voteCount: 0, //
+                    voteResult: false,
+                    expedition: false,
+                    //위의 두개는 뷰로 그냥 빼는게 좋을듯??
+                    winner: '',
+                    page: Pages.START_FRAME,
+                    kill: '',
+                })
+            })
             const halt = true
             setPlayerState({...playerState, playerArr})
-            setGameState({...gameState, page: MAIN_FRAME})
-            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {gameState, playerArr,}})
+            setGameState({...gameState, page: Pages.MAIN_FRAME, gameArr})
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {gameArr, playerArr,}})
         } else {
             alert('error')
         }
@@ -261,28 +257,28 @@ const Store = ({children}) => {
         }
     }
     const votePage = () => {
-        const agree = state.playerData.filter(element => 'agree' === element).length
-        const oppose = state.playerData.filter(element => 'oppose' === element).length
-        let expeditionStage, index = state.expeditionStage
+        const agree = gameState.playerData.filter(element => 'agree' === element).length
+        const oppose = gameState.playerData.filter(element => 'oppose' === element).length
+        let expeditionStage, index = gameState.expeditionStage
         let voteStage = 0
         let page = ''
         if (agree >= oppose) {
             voteStage = 0
             page = Pages.EXPEDITION_FRAME
         } else {
-            if (state.voteStage === 4) {
-                expeditionStage = state.expeditionStage + 1
+            if (gameState.voteStage === 4) {
+                expeditionStage = gameState.expeditionStage + 1
                 voteStage = 0
                 setGameState({
                     takeStage: 'fail'
                 })
             } else {
                 // state.voteStage += 1;
-                voteStage = state.voteStage + 1
+                voteStage = gameState.voteStage + 1
             }
             page = Pages.MAIN_FRAME
         }
-        const represent = (state.represent + 1) % state.playerData.length
+        const represent = (gameState.represent + 1) % gameState.playerData.length
         setGameState({
             index: index,
             page: page,
@@ -292,19 +288,10 @@ const Store = ({children}) => {
 
         })
         nextPage()
-        // dispatch({
-        //     type: func.votePage,
-        //     index: index,
-        //     page: page,
-        //     voteStage: voteStage,
-        //     expeditionStage: expeditionStage,
-        //     takeStageFail: takeStageFail,
-        //     represent: represent
-        // })
     }
     const nextPage = () => {
-        const angelCount = state.takeStage.filter(element => 'success' === element).length;
-        const evilCount = state.takeStage.filter(element => 'fail' === element).length;
+        const angelCount = gameState.takeStage.filter(element => 'success' === element).length;
+        const evilCount = gameState.takeStage.filter(element => 'fail' === element).length;
         let page = ''
         const winner = 'EVILS_WIN'
         if (angelCount === 3) {
@@ -322,27 +309,21 @@ const Store = ({children}) => {
     }
     const expeditionClick = () => {
         let value = ''
-        if (state.expeditionStage === 4 && state.playerData.length >= 7) {
-            if (state.vote.filter(element => 'fail' === element).length >= 2) {
-                state.takeStage[state.expeditionStage] = 'fail';
+        if (gameState.expeditionStage === 4 && gameState.playerData.length >= 7) {
+            if (gameState.vote.filter(element => 'fail' === element).length >= 2) {
+                gameState.takeStage[gameState.expeditionStage] = 'fail';
                 value = 'fail'
             } else {
-                state.takeStage[state.expeditionStage] = 'success'
+                gameState.takeStage[gameState.expeditionStage] = 'success'
                 value = 'success'
             }
         } else {
-            state.vote.includes('fail') ?
+            gameState.vote.includes('fail') ?
                 value = 'fail' :
                 value = 'success'
         }
-        const expeditionStage = state.expeditionStage
-        const nextExpeditionStage = state.expeditionStage + 1
-        dispatch({
-            type: func.expeditionClick,
-            value: value,
-            expeditionStage: expeditionStage,
-            nextExpeditionStage: nextExpeditionStage
-        })
+        const expeditionStage = gameState.expeditionStage
+        const nextExpeditionStage = gameState.expeditionStage + 1
         setGameState({
             value: value,
             expeditionStage: expeditionStage,
@@ -352,7 +333,6 @@ const Store = ({children}) => {
     const killPlayer = () => {
         const targetPlayer = selectPlayer.toString()
         const winner = targetPlayer === 'Merlin' ? 'ANGELS_WIN' : 'EVILS_WIN'
-        dispatch({type: func.killPlayer, winner: winner, page: Pages.END_GAME_FRAME})
         setGameState({...gameState, winner: winner, page: Pages.END_GAME_FRAME})
     }
     const selectPlayer = e => {
@@ -371,25 +351,28 @@ const Store = ({children}) => {
         }
     }, [peerData])
     return (
-        <PlayerContext.Provider value={
-            {playerState: playerState}}>
-            <GameContext.Provider value={
-                {
-                    gameState : gameState,
-                    gameStart,
-                    voteOnChange,
-                    voteOnClick,
-                    votePage,
-                    nextPage,
-                    expeditionClick,
-                    killPlayer,
-                    selectPlayer,
-                    setPage
-                }
-            }>
-                {children}
-            </GameContext.Provider>
-        </PlayerContext.Provider>
+        <div>
+            <PlayerContext.Provider value={
+                {playerState}}>
+                <GameContext.Provider value={
+                    {
+                        gameState,
+                        gameStart,
+                        voteOnChange,
+                        voteOnClick,
+                        votePage,
+                        nextPage,
+                        expeditionClick,
+                        killPlayer,
+                        selectPlayer,
+                        setPage,
+                    }
+                }>
+                    {children}
+                </GameContext.Provider>
+            </PlayerContext.Provider>
+        </div>
+
     )
 }
-export default Store
+export {PlayerContext, Store, GameContext}
