@@ -4,7 +4,7 @@ import {
     GET_DATA_FROM_PEER,
     STOP_TIMER,
     UPDATE_PEERS,
-    UPDATE_TIMER
+    UPDATE_TIMER,
 } from "../../../Container/GameContainer/Yut/yutReducerType";
 import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
 import {AVALON, GAME, YUT} from "../../../Constants/peerDataTypes";
@@ -189,25 +189,28 @@ const Store = ({children}) => {
             default:
                 console.log('error')
         }
-        if (playersNumber >= 5) {
+        if (playersNumber !== 5) {
             const temp = [
                 ...mustHaveRoles,
                 ...expandRoles.slice(0, playersNumber - 5),
             ];
             const roles = shuffle(temp)
+            roles.map((role, index) => {
+                console.log(role)
+            })
             const nickname = localStorage.getItem('nickname')
             const playerArr = [...playerState]
             const gameArr = [...gameState]
             peers.forEach((i) => {
                 playerArr.push({
-                    nickname: i.nickname,
-                    role: roles[i],
-                    vote: '',
-                    toGo: '',
-                    selected: false,
+                    nickname: i.nickname, // nickname
+                    role: roles[i], // role
+                    vote: '', // 대표자 선정 찬반 투표
+                    toGo: '', // 원정에 선정된 사람은 true, 그렇지 않으면 false
+                    selected: false, // 대표자가 선정
                 })
             })
-            peers.forEach(() => {
+            playerArr.forEach(() => {
                 gameArr.push({
                     voteStage: 0, //5-voteStage 재투표 가능횟수
                     expeditionStage: 0, //게임 expedition 진행 상황
@@ -216,14 +219,12 @@ const Store = ({children}) => {
                     takeStage: gameTable, //인원에 맞는 게임 스테이지 설정
                     playerCount: 0, // 대표자가 원정에 보낼 인원 수
                     voteCount: 0, //
-                    voteResult: false,
-                    expedition: false,
-                    //위의 두개는 뷰로 그냥 빼는게 좋을듯??
                     winner: '',
                     page: Pages.START_FRAME,
                     kill: '',
                 })
             })
+
             const halt = true
             setPlayerState({...playerState, playerArr})
             setGameState({...gameState, page: Pages.MAIN_FRAME, gameArr})

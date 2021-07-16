@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "lodash.shuffle": "^4.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
   }
 }
