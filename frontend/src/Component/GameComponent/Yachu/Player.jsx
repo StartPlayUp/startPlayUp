@@ -2,43 +2,62 @@ import React, { Fragment, useState, useEffect, useContext, useReducer, memo } fr
 import { PlayerData } from "Container/GameContainer/Yacht/YatchStore";
 
 const Player=()=>{
-    const playerData=useContext(PlayerData);
+    const state=useContext(PlayerData);
+    const myName = localStorage.getItem('nickname');
     function select(e){
-        playerData.selectData(e)
+        if (state.halt === true) {
+            const { name, value } = e.target;
+            state.selectData(name,value)
+        }else{
+            alert("니턴 아님")
+        }
     }
     return(
         <PlayerData.Consumer>
-            {({playerData})=>(
+            {({state,nowTurn})=>(
                 <Fragment>
-                    {Object.keys(playerData).map((i,index)=>(
+                    {Object.keys(state.playerData).map((i,index)=>(
                       <div key={index}>
-                        {Object.keys(playerData[i].selectPoint).map((j, dex) => (
+                        {Object.keys(state.playerData[i].selectPoint).map((j, dex) => (
                             <div key={dex}>
-                                {dex === 5 ?
-                                 (<div>
-                                    {j}:
-                                        < button
-                                            disabled={playerData[i].selectPoint[j][1]}
-                                            name={j}
-                                            onClick={select}
-                                            value={playerData[i].selectPoint[j][0]}
-                                        >{playerData[i].selectPoint[j][0]}</button>
-                                        <div>bonus : {playerData[i].bonus[0]} </div>
+                                {nowTurn==i ? 
+                                    (<div>
+                                        { dex === 5 ?
+                                            (<div>
+                                                {j}:
+                                                < button
+                                                    disabled={state.playerData[i].selectPoint[j][1]}
+                                                    name={j}
+                                                    onClick={select}
+                                                    value={state.playerData[i].selectPoint[j][0]}
+                                                >{state.playerData[i].selectPoint[j][0]}</button>
+                                                <div>bonus : {state.playerData[i].bonus[0]} </div>
+                                            </div>
+                                            )
+                                            :
+                                            (<div>
+                                                {j}:
+                                                < button
+                                                    disabled={state.playerData[i].selectPoint[j][1]}
+                                                    name={j}
+                                                    onClick={select}
+                                                    value={state.playerData[i].selectPoint[j][0]}
+                                                >{state.playerData[i].selectPoint[j][0]}</button></div>)}</div>)
+                                :
+                                    (<div>{ dex === 5 ?
+                                        (<div>
+                                            {j}:
+                                            < div>{state.playerData[i].selectPoint[j][0]}</div>
+                                            <div>bonus : {state.playerData[i].bonus[0]} </div>
                                         </div>
                                         )
-                                         :
-                                (<div>
-                                    {j}:
-                                        < button
-                                            disabled={playerData[i].selectPoint[j][1]}
-                                            name={j}
-                                            onClick={select}
-                                            value={playerData[i].selectPoint[j][0]}
-                                        >{playerData[i].selectPoint[j][0]}</button></div>)}
-                                
-                            </div>
+                                        :
+                                        (<div>
+                                            {j}:
+                                            < div>{state.playerData[i].selectPoint[j][0]}</div></div>)}</div>)}
+                                </div>
                         ))}
-                            result : {playerData[i].result}
+                            result : {state.playerData[i].result}
                       </div> 
                     ))}
                 </Fragment>
