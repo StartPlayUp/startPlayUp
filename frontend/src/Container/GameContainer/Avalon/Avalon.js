@@ -1,9 +1,9 @@
 import React from "react";
-import AVALON_TEST from "../../../Component/GameComponent/AVALON/AVALON_TEST";
+import AVALON_BETA from "../../../Component/GameComponent/AVALON_BETA/AVALON_BETA";
 
 function Avalon() {
     return(
-        <AVALON_TEST/>
+        <AVALON_BETA/>
     )
 }
 export default Avalon
