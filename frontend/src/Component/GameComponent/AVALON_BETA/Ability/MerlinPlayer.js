@@ -1,11 +1,12 @@
 import React, {useContext} from "react";
-import {merlinSight, PlayerContext} from "../Store";
+import {GameContext, merlinSight} from "../Store";
+
 function MerlinPlayer() {
-    const player = useContext(PlayerContext)
-    return(
+    const game = useContext(GameContext)
+    return (
         <div>
             {
-                player.playerState.map((user,index)=>(
+                game.gameState.usingPlayers.map((user, index) => (
                     <div key={index}>
                         {merlinSight.includes(user.role) ? user.nickname : null}
                     </div>

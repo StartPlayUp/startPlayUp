@@ -6,7 +6,7 @@ function AngelsVote() {
     const [isClick,setIsClick] = useState(false);
     const onClick = e =>{
         console.log('성공')
-        game.vote.push(e.target.value);
+        game.gameState.vote.push(e.target.value);
         setIsClick(true);
     }
     return(

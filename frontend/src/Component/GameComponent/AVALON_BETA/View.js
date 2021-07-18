@@ -1,12 +1,7 @@
 import React, {useContext} from "react";
 import {Pages} from "./MVC/AVALON_Reducer";
-import {angels, GameContext, PlayerContext, voteStageColor} from "./Store";
-import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "./Styled";
-import {Title} from "../../WebComponent/WebPage/Style/CreateRoomStyle";
-import MerlinPlayer from "./Ability/MerlinPlayer";
-import PercivalPlayer from "./Ability/PercivalPlayer";
-import AngelsVote from "./Ability/AngelsVote";
-import EvilsVote from "./Ability/EvilsVote";
+import {GameContext} from "./Store";
+
 import GameStart from "./View/GameStart";
 import MAIN_FRAME from "./View/MAIN_FRAME";
 import MAIN_VOTE from "./View/MAIN_VOTE";
@@ -41,7 +36,7 @@ function View() {
     }
     return (
         <div>
-            error
+            error_page
         </div>
     )
 }

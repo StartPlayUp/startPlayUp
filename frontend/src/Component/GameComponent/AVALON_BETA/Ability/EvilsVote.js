@@ -6,7 +6,7 @@ function EvilsVote() {
     const [isClick, setIsClick] = useState(false);
     const onClick = e => {
         console.log(`${e.target.value}`)
-        game.vote.push(e.target.value);
+        game.gameState.vote.push(e.target.value);
         setIsClick(true);
     }
     return (
