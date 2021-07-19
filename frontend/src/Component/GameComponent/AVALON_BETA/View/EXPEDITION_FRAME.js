@@ -5,9 +5,6 @@ import EvilsVote from "../Ability/EvilsVote";
 
 function EXPEDITION_FRAME() {
     const game = useContext(GameContext)
-    game.gameState.usingPlayers.map((user, index) => {
-        console.log(`${user.selected}`)
-    })
     return (
         <>
             <div>

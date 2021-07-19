@@ -1,23 +1,23 @@
-import React, {useContext, useState} from "react";
+import React, {useContext,useState} from "react";
 import {GameContext} from "../Store";
+import {VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
 
 function Vote(props) {
-    const game = useContext(GameContext)
+    const {dispatch, gameState} = useContext(GameContext)
+    const gameArr = {...gameState}
     const [vote, setVote] = useState('agree');
     const [click, setClick] = useState(false);
     const onChange = e => {
         setVote(e.target.value);
     };
-
     const onClick = e => {
         if (e.target.value === 'agree') {
             setVote('agree')
         } else if (e.target.value === 'oppose') {
             setVote('oppose')
         }
-        const usingPlayers = game.gameState.usingPlayers
-        usingPlayers[props.index].toGo = vote
-        game.gameState.usingPlayers = usingPlayers
+        gameArr.usingPlayers[props.index].toGo = vote
+        dispatch({type: VOTE_ONCLICK, gameArr})
         setClick(true);
     };
     return (

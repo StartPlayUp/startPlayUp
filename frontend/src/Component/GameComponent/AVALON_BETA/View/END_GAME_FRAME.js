@@ -8,7 +8,7 @@ function END_GAME_FRAME() {
             <h1>{game.gameState.winner}</h1>
             <h3>ENDGAME</h3>
             <hr/>
-            {game.gameState.map((player, index) => (
+            {game.gameState.usingPlayers.map((player, index) => (
                 <ul key={index}>
                     <p>player_nickname : <b>{player.nickname}</b></p>
                     <p>role : <b>{player.role}</b></p>

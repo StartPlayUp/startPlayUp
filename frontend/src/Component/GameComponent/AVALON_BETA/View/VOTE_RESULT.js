@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
-import {GameContext} from "../Store";
-import {Pages} from "../MVC/AVALON_Reducer";
+import {EXPEDITION_FRAME, GameContext} from "../Store";
 function VOTE_RESULT() {
     const game = useContext(GameContext)
+    console.log(game.gameState)
     return (
         <div>
             {game.gameState.usingPlayers.map((user, index) => (
@@ -11,7 +11,7 @@ function VOTE_RESULT() {
                     <li>{`vote : ${user.toGo === 'agree' ? '찬성' : '반대'}`}</li>
                 </ul>
             ))}
-            <button onClick={()=>game.votePage(Pages.EXPEDITION_FRAME)}>다음</button>
+            <button onClick={()=>game.voteCheck(EXPEDITION_FRAME)}>다음</button>
         </div>
     )
 }

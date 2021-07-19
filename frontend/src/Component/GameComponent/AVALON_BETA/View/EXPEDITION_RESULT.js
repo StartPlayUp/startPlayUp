@@ -1,10 +1,8 @@
 import React, {useContext} from "react";
-import {GameContext} from "../Store";
-import {Pages} from "../MVC/AVALON_Reducer";
+import {GameContext, FRAME_MAIN} from "../Store";
 
 function EXPEDITION_RESULT() {
     const game = useContext(GameContext)
-    const page = Pages.MAIN_FRAME
     return (
         <div>
             <div>
@@ -22,7 +20,7 @@ function EXPEDITION_RESULT() {
                         </div>
                 }
             </div>
-            <button onClick={()=>game.nextPage(page)}>다음</button>
+            <button onClick={() => game.setComponent(FRAME_MAIN)}>다음</button>
         </div>
     )
 }

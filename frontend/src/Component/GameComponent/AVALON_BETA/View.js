@@ -1,43 +1,41 @@
 import React, {useContext} from "react";
-import {Pages} from "./MVC/AVALON_Reducer";
-import {GameContext} from "./Store";
+import {
+    GameContext,
+    START_FRAME,
+    FRAME_MAIN,
+    MAIN_VOTE,
+    VOTE_FRAME,
+    VOTE_RESULT,
+    EXPEDITION_RESULT,
+    EXPEDITION_FRAME,
+    ASSASSIN_FRAME,
+    END_GAME_FRAME
+} from "./Store";
 
 import GameStart from "./View/GameStart";
-import MAIN_FRAME from "./View/MAIN_FRAME";
-import MAIN_VOTE from "./View/MAIN_VOTE";
-import VOTE_FRAME from "./View/VOTE_FRAME";
-import VOTE_RESULT from "./View/VOTE_RESULT";
-import EXPEDITION_FRAME from "./View/EXPEDITION_FRAME";
-import EXPEDITION_RESULT from "./View/EXPEDITION_RESULT";
-import ASSASSIN_FRAME from "./View/ASSASSIN_FRAME";
-import END_GAME_FRAME from "./View/END_GAME_FRAME";
+import MAIN from "./View/MAIN_FRAME";
+import RESULT_MAIN from "./View/MAIN_VOTE";
+import VOTE from "./View/VOTE_FRAME";
+import RESULT_VOTE from "./View/VOTE_RESULT";
+import EXPEDITION from "./View/EXPEDITION_FRAME";
+import RESULT_EXPEDITION from "./View/EXPEDITION_RESULT";
+import ASSASSIN from "./View/ASSASSIN_FRAME";
+import END_GAME from "./View/END_GAME_FRAME";
 
 function View() {
-    const game = useContext(GameContext)
-    switch (game.gameState.page) {
-        case Pages.START_FRAME:
-            return <GameStart/>
-        case Pages.MAIN_FRAME:
-            return <MAIN_FRAME/>
-        case Pages.MAIN_VOTE:
-            return <MAIN_VOTE/>
-        case Pages.VOTE_FRAME:
-            return <VOTE_FRAME/>
-        case Pages.VOTE_RESULT:
-            return <VOTE_RESULT/>
-        case Pages.EXPEDITION_FRAME:
-            return <EXPEDITION_FRAME/>
-        case Pages.EXPEDITION_RESULT:
-            return <EXPEDITION_RESULT/>
-        case Pages.ASSASSIN_FRAME:
-            return <ASSASSIN_FRAME/>
-        case Pages.END_GAME_FRAME:
-            return <END_GAME_FRAME/>
-    }
+    const {gameState} = useContext(GameContext)
     return (
-        <div>
-            error_page
-        </div>
+        <>
+            {gameState.component === START_FRAME && <GameStart/>}
+            {gameState.component === FRAME_MAIN && <MAIN/>}
+            {gameState.component === MAIN_VOTE && <RESULT_MAIN/>}q
+            {gameState.component === VOTE_FRAME && <VOTE/>}
+            {gameState.component === VOTE_RESULT && <RESULT_VOTE/>}
+            {gameState.component === EXPEDITION_FRAME && <EXPEDITION/>}
+            {gameState.component === EXPEDITION_RESULT && <RESULT_EXPEDITION/>}
+            {gameState.component === ASSASSIN_FRAME && <ASSASSIN/>}
+            {gameState.component === END_GAME_FRAME && <END_GAME/>}
+        </>
     )
 }
 

@@ -1,9 +1,8 @@
 import React, {useContext} from "react";
-import {GameContext, voteStageColor} from "../Store";
+import {GameContext, MAIN_VOTE, voteStageColor} from "../Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "../Styled";
 import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
-import {Pages} from "../MVC/AVALON_Reducer";
 
 function MAIN_FRAME() {
     const game = useContext(GameContext)
@@ -44,7 +43,7 @@ function MAIN_FRAME() {
                                 }
                             </ul>
                             {index === game.gameState.represent ?
-                                <button onClick={() => game.setPage(Pages.MAIN_VOTE)}>원정 인원 정하기</button>
+                                <button onClick={() => game.setComponent(MAIN_VOTE)}>원정 인원 정하기</button>
                                 : null}
                         </User>
                     ))
