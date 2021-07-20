@@ -1,6 +1,9 @@
-import React, {useEffect, useReducer, useMemo, useState} from "react";
+import React, {useEffect, useReducer, useMemo, useState, useContext} from "react";
 import shuffle from 'lodash.shuffle';
 import reducer, {EXPEDITION_CLICK, GAME_CHECK, SET_COMPONENT, VOTE_CHECK} from "./MVC/AVALON_Reducer";
+import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
+import {AVALON, GAME} from "../../../Constants/peerDataTypes";
+import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
 
 export const START_FRAME = 'START_FRAME'
 export const FRAME_MAIN = 'FRAME_MAIN'
@@ -97,17 +100,30 @@ const initialData = {
     takeStage: [], //인원에 맞는 게임 스테이지 설정
     playerCount: 0, // 대표자가 원정에 보낼 인원 수
     winner: '',
-    component: START_FRAME,
+    component: START_FRAME, //시작 컴포넌트 설정
     index: 0,
     checked: false,
 }
 const GameContext = React.createContext('')
 
 const Store = ({children}) => {
+    const {peers} = useContext(PeersContext);
+    const {peerData} = useContext(PeerDataContext);
     const nickname = localStorage.getItem('nickname')
     const [gameState, dispatch] = useReducer(reducer, initialData)
+    console.log(gameState)
     const gameStart = () => {
         const gameArr = {...gameState}
+        peers.forEach((i) => {
+            console.log(`peers.forEach`)
+            gameArr.usingPlayers.push({
+                nickname: i.nickname,
+                role: '',
+                vote: '',
+                toGo: '',
+                selected: false
+            })
+        })
         const playersNumber = gameArr.usingPlayers.length
         switch (playersNumber) {
             case 5 :
@@ -137,8 +153,8 @@ const Store = ({children}) => {
                 user.role = roles[index]
             })
             gameArr.component = FRAME_MAIN
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameArr})
             dispatch({type: START_FRAME, gameArr})
-            console.log(gameArr)
         } else {
             alert(`${playersNumber}명입니다. ${5 - playersNumber}명이 더 필요합니다.`)
         }
@@ -162,6 +178,7 @@ const Store = ({children}) => {
         }
         gameArr.represent += 1
         gameArr.represent %= gameArr.usingPlayers.length
+        sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameArr})
         dispatch({type: VOTE_CHECK, gameArr})
     }
     const expeditionClick = () => {
@@ -183,30 +200,33 @@ const Store = ({children}) => {
         gameArr.usingPlayers.map((user) => {
             user.selected = false
         })
+        sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameArr})
         dispatch({type: EXPEDITION_CLICK, gameArr})
     }
     const setComponent = (component) => {
+        sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {component: component}})
         dispatch({type: SET_COMPONENT, component: component})
     }
     useEffect(() => {
         const gameArr = {...gameState}
         const angelCount = gameArr.takeStage.filter(element => 'success' === element).length;
         const evilCount = gameArr.takeStage.filter(element => 'fail' === element).length;
-        if (angelCount === 3) {
-            gameArr.component = ASSASSIN_FRAME
+        if (angelCount === 3) { // 선이 원정 3개를 차지한 경우
+            gameArr.component = ASSASSIN_FRAME // 암살자 역할로 넘어감
         }
-        if (evilCount === 3) {
+        if (evilCount === 3) { // 악이 원정 3개를 차지한 경우
             gameArr.winner = 'EVILS_WIN'
-            gameArr.component = END_GAME_FRAME
+            gameArr.component = END_GAME_FRAME //악이 이긴걸로 게임이 종료
         }
         console.log(`useEffect`)
         dispatch({type: GAME_CHECK, gameArr})
-    }, [gameState.expeditionStage])
+    }, [gameState.expeditionStage]) // 게임 종료 조건 useEffect
+
     // useEffect(() => {
     //     if (peerData.type === GAME && peerData.game === AVALON) {
     //         const data = peerData.data
     //         (data)
-    //         setPlayerState([...data.playerArr])
+    //         setPlayerState([...data.gameState])
     //     }
     // }, [peerData])
     return (
