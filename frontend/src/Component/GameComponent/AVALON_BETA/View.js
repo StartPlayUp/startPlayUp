@@ -28,7 +28,7 @@ function View() {
         <>
             {gameState.component === START_FRAME && <GameStart/>}
             {gameState.component === FRAME_MAIN && <MAIN/>}
-            {gameState.component === MAIN_VOTE && <RESULT_MAIN/>}q
+            {gameState.component === MAIN_VOTE && <RESULT_MAIN/>}
             {gameState.component === VOTE_FRAME && <VOTE/>}
             {gameState.component === VOTE_RESULT && <RESULT_VOTE/>}
             {gameState.component === EXPEDITION_FRAME && <EXPEDITION/>}

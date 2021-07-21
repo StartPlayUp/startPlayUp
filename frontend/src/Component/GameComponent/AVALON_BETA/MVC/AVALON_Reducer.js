@@ -2,6 +2,9 @@
 // import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 // import { GAME, AVALON } from 'Constants/peerDataTypes.js';
 // export const initContext = createContext(initState)
+import {GET_DATA_FROM_PEER} from "../../../../Container/GameContainer/Yut/yutReducerType";
+import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
+
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
 export const START_FRAME = 'START_FRAME'
@@ -16,17 +19,15 @@ const reducer = (state, {type, ...action}) => {
     const nickname = localStorage.getItem('nickname');
     console.log('dispatch: ', state, type, action)
     switch (type) {
-        // case UPDATE_TIMER: {
-        //     return { ...state, peers: action.peers }
-        // }
-        // case GET_DATA_FROM_PEER: {
-        //     const halted = !(nickname === action.data.nowTurnNickname)
-        //     return { ...state, ...action.data, halted };
-        // }
-        // case UPDATE_TIMER:
-        //     return { ...state, timer: state.timer + 1 };
+        case UPDATE_TIMER: {
+            return {...state, peers: action.peers}
+        }
+        case GET_DATA_FROM_PEER: {
+            //본인이 선택받은건지 확인을 여기서 해야되나??
+            return {...state, ...action.data};
+        }
         case SET_COMPONENT: {
-            const result = {...state,component:action.component}
+            const result = {...state, component: action.component}
             console.log(`result : ${result}`)
             return result
         }

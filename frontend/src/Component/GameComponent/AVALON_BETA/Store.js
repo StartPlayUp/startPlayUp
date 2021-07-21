@@ -1,9 +1,10 @@
-import React, {useEffect, useReducer, useMemo, useState, useContext} from "react";
+import React, {useEffect, useReducer, useContext} from "react";
 import shuffle from 'lodash.shuffle';
 import reducer, {EXPEDITION_CLICK, GAME_CHECK, SET_COMPONENT, VOTE_CHECK} from "./MVC/AVALON_Reducer";
 import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
 import {AVALON, GAME} from "../../../Constants/peerDataTypes";
 import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
+import {GET_DATA_FROM_PEER} from "../../../Container/GameContainer/Yut/yutReducerType";
 
 export const START_FRAME = 'START_FRAME'
 export const FRAME_MAIN = 'FRAME_MAIN'
@@ -57,7 +58,7 @@ const Players = [
     // {nickname: 'user8', role: '', vote: '', toGo: '',selected : false},
     // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
 ]
-const playerData = {
+const playerInitData = {
     nickname: '',
     role: '',
     vote: '',
@@ -87,11 +88,11 @@ const testPlayer = [
 ]
 const initialData = {
     usingPlayers: [
-        {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
-        {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
+        // {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
+        // {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
+        // {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
+        // {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
+        // {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
     ],
     voteStage: 0, //5-voteStage 재투표 가능횟수
     expeditionStage: 0, //게임 expedition 진행 상황
@@ -102,6 +103,7 @@ const initialData = {
     winner: '',
     component: START_FRAME, //시작 컴포넌트 설정
     index: 0,
+    voteTurn:0,
     checked: false,
 }
 const GameContext = React.createContext('')
@@ -110,10 +112,18 @@ const Store = ({children}) => {
     const {peers} = useContext(PeersContext);
     const {peerData} = useContext(PeerDataContext);
     const nickname = localStorage.getItem('nickname')
+    const playerData = [{nickname}]
+    console.log("playerData", playerData);
     const [gameState, dispatch] = useReducer(reducer, initialData)
     console.log(gameState)
     const gameStart = () => {
         const gameArr = {...gameState}
+        gameArr.usingPlayers.push({
+            nickname: nickname.toString(),
+            role: '',
+            vote: '',
+            selected: false
+        }) //나 추가하기
         peers.forEach((i) => {
             console.log(`peers.forEach`)
             gameArr.usingPlayers.push({
@@ -123,8 +133,8 @@ const Store = ({children}) => {
                 toGo: '',
                 selected: false
             })
-        })
-        const playersNumber = gameArr.usingPlayers.length
+        }) // 나를 제외한 모두 추가하기
+        const playersNumber = gameArr.usingPlayers.length //게임에 참여한 인원
         switch (playersNumber) {
             case 5 :
                 gameArr.takeStage = needPlayers._5P;
@@ -142,8 +152,8 @@ const Store = ({children}) => {
                 break;
             default:
                 alert('error')
-        }
-        if (playersNumber >= 5) {
+        } // 참여 인원별 원정 설정하기
+        if (playersNumber >= 5) { // 5명 이상인 경우 직업설정
             const temp = [
                 ...mustHaveRoles,
                 ...expandRoles.slice(0, gameArr.usingPlayers.length - 5),
@@ -155,7 +165,7 @@ const Store = ({children}) => {
             gameArr.component = FRAME_MAIN
             sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameArr})
             dispatch({type: START_FRAME, gameArr})
-        } else {
+        } else { // 그렇지 않은 경우 몇명 더 필요한지 알림
             alert(`${playersNumber}명입니다. ${5 - playersNumber}명이 더 필요합니다.`)
         }
     }
@@ -221,14 +231,17 @@ const Store = ({children}) => {
         console.log(`useEffect`)
         dispatch({type: GAME_CHECK, gameArr})
     }, [gameState.expeditionStage]) // 게임 종료 조건 useEffect
+    useEffect(()=>{
 
-    // useEffect(() => {
-    //     if (peerData.type === GAME && peerData.game === AVALON) {
-    //         const data = peerData.data
-    //         (data)
-    //         setPlayerState([...data.gameState])
-    //     }
-    // }, [peerData])
+    })
+    useEffect(() => {
+        if (peerData.type === GAME && peerData.game === AVALON) {
+            const data = peerData.data
+            console.log(`data : ${data}`)
+            dispatch({type: GET_DATA_FROM_PEER, data})
+        }
+    }, [peerData])
+
     return (
         <GameContext.Provider value={
             {

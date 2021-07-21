@@ -4,16 +4,20 @@ import {Title} from "../Styled";
 import Vote from "./Vote";
 
 function VOTE_FRAME() {
-    const game = useContext(GameContext)
+    const {gameState, setComponent} = useContext(GameContext)
     return (
         <>
             <div>VOTE</div>
             <div>
                 <Title>
-                    {game.gameState.usingPlayers.map((user, index) =>
-                        <Vote key={index} index={index}/>)}
+                    {/*{gameState.usingPlayers.map((user, index) =>*/}
+                    {/*    <Vote key={index} index={index}/>*/}
+                    {/*)}*/}
+                    {gameState.usingPlayers[gameState.voteTurn].nickname === localStorage.getItem('nickname')
+                        && <Vote key={gameState.voteTurn} index={gameState.voteTurn}/>
+                    }
                 </Title>
-                <button onClick={() => game.setComponent(VOTE_RESULT)}>투표 결과</button>
+                <button onClick={() => setComponent(VOTE_RESULT)}>투표 결과</button>
             </div>
         </>
     )

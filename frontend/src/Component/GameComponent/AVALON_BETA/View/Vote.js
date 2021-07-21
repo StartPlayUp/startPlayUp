@@ -1,4 +1,4 @@
-import React, {useContext,useState} from "react";
+import React, {useContext, useState} from "react";
 import {GameContext} from "../Store";
 import {VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
 
@@ -17,6 +17,7 @@ function Vote(props) {
             setVote('oppose')
         }
         gameArr.usingPlayers[props.index].toGo = vote
+        ++gameArr.voteTurn
         dispatch({type: VOTE_ONCLICK, gameArr})
         setClick(true);
     };
@@ -32,7 +33,7 @@ function Vote(props) {
                             value={'agree'}
                             onChange={onChange}/>
                         </label>
-                        <label>반대 <input
+                        <label>반대 <inputƒ
                             type="radio"
                             name={'vote'}
                             value={'oppose'}
