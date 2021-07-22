@@ -69,7 +69,9 @@ const Store = ({children}) => {
             gameData.winner = 'EVILS_WIN'
             gameData.component = END_GAME_FRAME
         }
-        console.log(`useEffect`)
+        gameData.usingPlayers.map((user, index) => {
+            user.selected = false
+        })
         dispatch({type: GAME_CHECK, gameData})
     }, [gameState.expeditionStage])
 

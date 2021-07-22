@@ -136,7 +136,6 @@ const reducer = (state, {type, ...action}) => {
                 voteStage: gameData.voteStage
             }
         }
-
         case EXPEDITION_CLICK : {
             const gameData = {...state}
             if (gameData.expeditionStage === 4 && gameData.usingPlayers.length >= 7) {
@@ -177,7 +176,6 @@ const reducer = (state, {type, ...action}) => {
         case VOTE_ONCLICK :
         case GAME_CHECK:
         case VOTE_RESULT_CHECK:
-
             return {...state, ...action.gameData}
         default :
             return state

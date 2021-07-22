@@ -8,6 +8,7 @@ import {SET_COMPONENT} from "../MVC/AVALON_Reducer";
 function MAIN_FRAME() {
     const {gameState, dispatch} = useContext(GameContext)
     const colors = voteStageColor.slice(gameState.voteStage, 5);
+    const nickname = localStorage.getItem('nickname')
     return (
         <>
             <div>Main</div>
@@ -30,26 +31,40 @@ function MAIN_FRAME() {
             <PublicFrame>
                 {
                     gameState.usingPlayers.map((user, index) => (
-                        <User key={index}>
+                        <User key-={index}>
                             <ul>
                                 <li>{`nickname : ${user.nickname}`}</li>
-                                <li>{`role : ${user.role}`}</li>
-                                <br/>
-                                {user.role === 'Merlin' ?
-                                    <MerlinPlayer index={index}/> : null
-                                }
-                                {user.role === 'Percival' ?
-                                    <PercivalPlayer index={index}/> : null
-                                }
                             </ul>
-                            {index === gameState.represent ?
-                                <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원
-                                    정하기</button>
-                                : null}
                         </User>
                     ))
                 }
             </PublicFrame>
+            {
+                gameState.usingPlayers.map((user, index) => (
+                    user.nickname === nickname && <User key={index}>
+                        <ul>
+                            <li>{`nickname : ${user.nickname}`}</li>
+                            <li>{`role : ${user.role}`}</li>
+                            {user.role === 'Merlin' ?
+                                <div>
+                                    <h3>EVILS_LIST</h3>
+                                    <MerlinPlayer index={index}/>
+                                </div> : null
+                            }
+                            {user.role === 'Percival' ?
+                                <div>
+                                    <h3>둘 중에 멀린을 찾아 도우세요.</h3>
+                                    <PercivalPlayer index={index}/>
+                                </div> : null
+                            }
+                        </ul>
+                        {index === gameState.represent ?
+                            <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원
+                                정하기</button>
+                            : null}
+                    </User>
+                ))
+            }
         </>
     );
 }

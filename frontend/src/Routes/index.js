@@ -57,7 +57,6 @@ function app() {
     console.log("asdf")
     return (
         <BrowserRouter>
-
             {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
             <Route path="/" component={GlobalContainer}/>
             <Route exact path="/" component={LoginPageContainer}/>
