@@ -4,13 +4,12 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, YUT } from 'Constants/peerDataTypes';
 import { stateContext } from 'Container/GameContainer/Yut/YutStore';
 import { PeersContext } from 'Routes/peerStore';
-import reducerActionHandler from 'Container/GameContainer/Yut/reducerActionHandler'
+import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler'
 
 
-const App = ({ handlerType, dispatch, state, peers, halted, name, action }) => {
+const App = ({ handlerType, nickname, dispatch, state, peers, halted, name, action }) => {
     const dispatchFunction = () => {
-        handlerType !== undefined && reducerActionHandler[handlerType]({ dispatch, state, peers, action });
-
+        handlerType !== undefined && actionHandler[handlerType]({ dispatch, state, peers, nickname, action });
     }
     return (
         <button disabled={halted === true && true} onClick={() => dispatchFunction()}>

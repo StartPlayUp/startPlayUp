@@ -1,11 +1,4 @@
-export const YUT_RESULT_TYPE = {
-    BACK_DO: 0,
-    DO: 1,
-    GAE: 2,
-    GIRL: 3,
-    YUT: 4,
-    MO: 5,
-}
+import { YUT_RESULT_TYPE } from './Constants/yutGame'
 
 const table = {
     5: [[5], 21, 22, 23, 24, 25, 15, 16, 17, 18, 19],
@@ -78,7 +71,7 @@ export const checkPlace = (index, add) => {
 }
 
 export const checkSelectState = (selectHorse, placeToMove, index) => {
-    if (selectHorse === undefined || !placeToMove.hasOwnProperty(String(index))) {
+    if (selectHorse === -1 || !placeToMove.hasOwnProperty(String(index))) {
         // console.log("out of MOVE_HORSE");
         return true;
     }
@@ -86,7 +79,7 @@ export const checkSelectState = (selectHorse, placeToMove, index) => {
 }
 
 export const checkEmptySelectHorse = (selectHorse) => {
-    if (selectHorse === undefined) {
+    if (selectHorse === -1) {
         // console.log("checkEmptySelectHorse true");
         return true;
     }
@@ -101,8 +94,8 @@ export const checkHavePlaceToMove = (placeToMove, index) => {
     return false;
 }
 
-export const checkMyTurn = (player, turn) => {
-    if (player === turn) {
+export const checkMyTurn = (nickname) => {
+    if (nickname === localStorage.getItem('nickname')) {
         // console.log("checkMyTurn true");
         return true;
     }

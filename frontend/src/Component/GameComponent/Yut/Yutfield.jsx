@@ -1,13 +1,19 @@
-import { MOVE_HORSE, MOVE_FIRST_HORSE, UPDATE_GOAL, boardContext } from 'Container/GameContainer/Yut/YutStore';
-import { DESELECT_HORSE } from 'Container/GameContainer/Yut/yutReducerType'
 import React, { useContext, useState, memo, useEffect } from 'react';
 import styled from 'styled-components';
+
 import Horses from 'Component/GameComponent/Yut/Horses'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import { stateContext } from 'Container/GameContainer/Yut/YutStore';
 import { PeersContext } from 'Routes/peerStore';
-import reducerActionHandler from 'Container/GameContainer/Yut/reducerActionHandler';
+
+import { MOVE_HORSE, MOVE_FIRST_HORSE, UPDATE_GOAL, boardContext } from 'Container/GameContainer/Yut/YutStore';
+
+import {
+    YutContext
+} from "Container/GameContainer/Yut/YutStore"
+
+import { DESELECT_HORSE } from 'Container/GameContainer/Yut/Constants/actionType'
+import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
 
 
 const GridContainer = styled.div`
@@ -86,7 +92,29 @@ const App = () => {
         { index: 29, row: 16, column: 16 },
         { index: 30, row: 16, column: 10 },
     ]
-    const { selectHorse, playerData, horsePosition, placeToMove, dispatch } = useContext(boardContext);
+
+
+    const [horsePosition, setHorsePosition] = useState({});
+
+    const { dispatch, ...state } = useContext(YutContext);
+    const {
+        placeToMove,
+        playerHorsePosition,
+        selectHorse,
+        playerData
+    } = state;
+
+    useEffect(() => {
+        const result = {}
+        playerHorsePosition.forEach((i, index) => {
+            Object.entries(i).forEach(([key, value]) => {
+                result[key] = { player: index, horses: value }
+            })
+        })
+        setHorsePosition(result)
+    }, [playerHorsePosition])
+
+
     const changeItemColorHandler = (index) => {
         return Object.keys(placeToMove).includes(String(index)) ? 'yellow' : 'white'
 
@@ -95,17 +123,17 @@ const App = () => {
         e.preventDefault();
         if (selectHorse === 0) {
             // dispatch({ type: MOVE_FIRST_HORSE, index })
-            reducerActionHandler.moveFirstHorseHandler({ dispatch, peers, state, index })
+            actionHandler.moveFirstHorseHandler({ dispatch, peers, state, nickname, index })
             // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
         }
         else {
             // dispatch({ type: MOVE_HORSE, index });
-            reducerActionHandler.moveHorseHandler({ dispatch, peers, state, index })
+            actionHandler.moveHorseHandler({ dispatch, peers, state, nickname, index })
 
             // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
         }
     }
-    const state = useContext(stateContext);
+
     const OnContextMenu = (e) => {
         e.preventDefault();
         dispatch({ type: DESELECT_HORSE })
@@ -125,7 +153,7 @@ const App = () => {
                     </GridPlace>)
                 }
             </GridContainer >
-        </YutDiv>
+        </YutDiv >
     )
 }
 export default memo(App);

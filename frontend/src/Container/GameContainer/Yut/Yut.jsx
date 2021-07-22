@@ -17,7 +17,7 @@ const Yut = (props) => {
         flex-direction: row;
     `;
     return (
-        <YutStore>
+        <YutStore >
             <StyleDiv>
                 <Test>
                     <Yutfield />
