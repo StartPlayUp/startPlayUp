@@ -11,5 +11,5 @@ socketModule({ io });
 
 
 // server.listen("http://localhost:4000", () => console.log('server is running on port 4000'));
-server.listen(process.env.PORT || 4444, () => console.log('server is running on port 4444'));
+server.listen(process.env.PORT || 4000, () => console.log('server is running on port 4000'));
 
