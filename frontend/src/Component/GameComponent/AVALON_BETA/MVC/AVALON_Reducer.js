@@ -3,17 +3,17 @@ import {
     expandRoles,
     EXPEDITION_FRAME,
     EXPEDITION_RESULT,
-    FRAME_MAIN,
+    FRAME_MAIN, initialData,
     mustHaveRoles,
     needPlayers
 } from "../Store";
-import { sendDataToPeers } from "../../../../Common/peerModule/sendToPeers";
-import { AVALON, GAME } from "../../../../Constants/peerDataTypes";
-import { GET_DATA_FROM_PEER } from "../../../../Constants/actionTypes";
-import { UPDATE_TIMER } from "../../../../Container/GameContainer/MineSearch";
-import { PeerDataContext, PeersContext } from "../../../../Routes/peerStore";
-import { useContext, useEffect } from "react";
-import { shuffle } from "lodash";
+import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
+import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
+import {GET_DATA_FROM_PEER} from "../../../../Constants/actionTypes";
+import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
+import {PeerDataContext, PeersContext} from "../../../../Routes/peerStore";
+import {useContext, useEffect} from "react";
+import {shuffle} from "lodash";
 
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
@@ -25,24 +25,22 @@ export const VOTE_RESULT_CHECK = 'VOTE_RESULT_CHECK'
 export const EXPEDITION_CLICK = 'EXPEDITION_CLICK'
 export const ASSASSIN_KILL = 'ASSASSIN_KILL'
 
-const reducer = (state, { type, ...action }) => {
+const reducer = (state, {type, ...action}) => {
     const nickname = localStorage.getItem('nickname');
-    const { peers } = useContext(PeersContext);
-    const { peerData } = useContext(PeerDataContext);
     console.log('dispatch: ', state, type, action)
     switch (type) {
         case UPDATE_TIMER: {
-            return { ...state, peers: action.peers }
+            return {...state, peers: action.peers}
         }
         case GET_DATA_FROM_PEER: {
-            return { ...state, ...action.data };
+            return {...state, ...action.data};
         }
         case SET_COMPONENT: {
-            sendDataToPeers(GAME, { game: AVALON, nickname, peers, data: { component: action.component } })
-            return { ...state, component: action.component }
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {component: action.component}})
+            return {...state, component: action.component}
         }
         case START_FRAME: {
-            const gameData = { ...state }
+            const gameData = {...initialData}
             gameData.usingPlayers.push({
                 nickname: nickname.toString(),
                 role: '',
@@ -50,7 +48,10 @@ const reducer = (state, { type, ...action }) => {
                 toGO: '',
                 selected: false
             }) //나 추가하기
-            peers.forEach((i) => {
+            console.log(`action`)
+            console.log(action)
+            console.log(action.peers)
+            action.peers.forEach((i) => {
                 console.log(`peers.forEach`)
                 gameData.usingPlayers.push({
                     nickname: i.nickname,
@@ -90,8 +91,8 @@ const reducer = (state, { type, ...action }) => {
                 gameData.usingPlayers.map((user, index) => {
                     user.role = roles[index]
                 })
-                sendDataToPeers(GAME, { game: AVALON, nickname, peers, data: gameData })
                 gameData.component = FRAME_MAIN
+                sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})
                 return {
                     ...state,
                     component: gameData.component,
@@ -104,7 +105,7 @@ const reducer = (state, { type, ...action }) => {
             }
         }
         case VOTE_CHECK: {
-            const gameData = { ...state }
+            const gameData = {...state}
             let agree = 0;
             let oppose = 0;
             gameData.usingPlayers.map(e => e.toGo === 'agree' ? ++agree : ++oppose)
@@ -123,7 +124,7 @@ const reducer = (state, { type, ...action }) => {
             gameData.vote = []
             gameData.represent += 1
             gameData.represent %= gameData.usingPlayers.length
-            sendDataToPeers(GAME, { game: AVALON, nickname, peers, data: gameData })
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})
             return {
                 ...state,
                 component: gameData.component,
@@ -135,7 +136,7 @@ const reducer = (state, { type, ...action }) => {
             }
         }
         case EXPEDITION_CLICK: {
-            const gameData = { ...state }
+            const gameData = {...state}
             if (gameData.expeditionStage === 4 && gameData.usingPlayers.length >= 7) {
                 if (gameData.vote.filter(element => 'fail' === element).length >= 2) {
                     gameData.takeStage[gameData.expeditionStage] = 'fail';
@@ -153,7 +154,7 @@ const reducer = (state, { type, ...action }) => {
             gameData.usingPlayers.map((user) => {
                 user.selected = false
             })
-            sendDataToPeers(GAME, { game: AVALON, nickname, peers, data: gameData })
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})
             return {
                 ...state,
                 takeStage: gameData.takeStage,
@@ -174,7 +175,7 @@ const reducer = (state, { type, ...action }) => {
         case VOTE_ONCLICK:
         case GAME_CHECK:
         case VOTE_RESULT_CHECK:
-            return { ...state, ...action.gameData }
+            return {...state, ...action.gameData}
         default:
             return state
     }
