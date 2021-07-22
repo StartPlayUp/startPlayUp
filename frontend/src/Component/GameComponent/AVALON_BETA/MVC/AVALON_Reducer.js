@@ -1,21 +1,19 @@
-// import React, {createContext} from "react";
-// import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
-// import { GAME, AVALON } from 'Constants/peerDataTypes.js';
-// export const initContext = createContext(initState)
-// import {GET_DATA_FROM_PEER} from "../../../../Container/GameContainer/Yut/yutReducerType";
-// import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
-// import {useContext} from "react";
-// import {PeerDataContext, PeersContext} from "../../../../Routes/peerStore";
-import shuffle from "lodash.shuffle";
-// import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
-// import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
-import {expandRoles, EXPEDITION_FRAME, EXPEDITION_RESULT, FRAME_MAIN, mustHaveRoles, needPlayers} from "../Store";
+import {
+    ASSASSIN_FRAME, END_GAME_FRAME,
+    expandRoles,
+    EXPEDITION_FRAME,
+    EXPEDITION_RESULT,
+    FRAME_MAIN,
+    mustHaveRoles,
+    needPlayers
+} from "../Store";
 import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
 import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../../Container/GameContainer/Yut/yutReducerType";
 import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
 import {PeerDataContext, PeersContext} from "../../../../Routes/peerStore";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
+import {shuffle} from "lodash";
 
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
@@ -37,7 +35,6 @@ const reducer = (state, {type, ...action}) => {
             return {...state, peers: action.peers}
         }
         case GET_DATA_FROM_PEER: {
-            //본인이 선택받은건지 확인을 여기서 해야되나??
             return {...state, ...action.data};
         }
         case SET_COMPONENT: {
@@ -133,7 +130,8 @@ const reducer = (state, {type, ...action}) => {
                 usingPlayers: gameData.usingPlayers,
                 vote: gameData.vote,
                 represent: gameData.represent,
-                voteStage: gameData.voteStage
+                voteStage: gameData.voteStage,
+                expeditionStage: gameData.expeditionStage
             }
         }
         case EXPEDITION_CLICK : {
@@ -180,5 +178,30 @@ const reducer = (state, {type, ...action}) => {
         default :
             return state
     }
+    // useEffect(() => {
+    //     const gameData = {...state}
+    //     const angelCount = gameData.takeStage.filter(element => 'success' === element).length;
+    //     const evilCount = gameData.takeStage.filter(element => 'fail' === element).length;
+    //     if (angelCount === 3) {
+    //         gameData.component = ASSASSIN_FRAME
+    //     }
+    //     if (evilCount === 3) {
+    //         gameData.winner = 'EVILS_WIN'
+    //         gameData.component = END_GAME_FRAME
+    //     }
+    //     gameData.usingPlayers.map((user, index) => {
+    //         user.selected = false
+    //     })
+    //     // dispatch({type: GAME_CHECK, gameData})
+    //     return {...state, gameData}
+    // }, [state.expeditionStage])
+    //
+    // useEffect(() => {
+    //     if (peerData.type === GAME && peerData.game === AVALON) {
+    //         const data = peerData.data
+    //         // dispatch({type: GET_DATA_FROM_PEER, data})
+    //         return {...state, data}
+    //     }
+    // }, [peerData])
 }
 export default reducer

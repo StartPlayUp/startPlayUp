@@ -26,7 +26,7 @@ const StyleDiv = styled.div`
         flex-direction: row;
         width: 100%;
         min-height: 100vh;
-    `
+`
 const AVALON_STYLE = styled.div`
     display : flex;
     flex-basis : 70%;
@@ -88,12 +88,12 @@ function app() {
             </GamePage>}/>}
             {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
                 <PeerStore>
-                        <AVALON_STYLE>
-                            <AVALON_BETA/>
-                        </AVALON_STYLE>
-                        <CHAT_STYLE>
-                            <ChatComponent/>
-                        </CHAT_STYLE>
+                    <AVALON_STYLE>
+                        <AVALON_BETA/>
+                    </AVALON_STYLE>
+                    <CHAT_STYLE>
+                        <ChatComponent/>
+                    </CHAT_STYLE>
                 </PeerStore>
             </GamePage>}/>}
         </BrowserRouter>
