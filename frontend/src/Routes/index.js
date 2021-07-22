@@ -27,6 +27,20 @@ const StyleDiv = styled.div`
         width: 100%;
         min-height: 100vh;
     `
+const AVALON_STYLE = styled.div`
+    display : flex;
+    flex-basis : 70%;
+    flex-direction:column;
+    justify-content: flex-start;
+    flex-wrap : wrap;
+    background-color : #FFFFFF
+`
+const CHAT_STYLE = styled.div`
+    display:flex;
+    flex-basis:30%;
+    flex-direction:row;
+    justify-content:flex-end
+`
 const TemporaryMain = () => {
     const history = useHistory();
     return (<div>
@@ -75,10 +89,12 @@ function app() {
             </GamePage>}/>}
             {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
                 <PeerStore>
-                    <StyleDiv>
-                        <AVALON_BETA/>
-                    </StyleDiv>
-                    <ChatComponent/>
+                        <AVALON_STYLE>
+                            <AVALON_BETA/>
+                        </AVALON_STYLE>
+                        <CHAT_STYLE>
+                            <ChatComponent/>
+                        </CHAT_STYLE>
                 </PeerStore>
             </GamePage>}/>}
         </BrowserRouter>
