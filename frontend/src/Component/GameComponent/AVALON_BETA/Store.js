@@ -29,61 +29,6 @@ export const voteStageColor = ['white', 'white', 'white', 'white', 'red'];
 export const mustHaveRoles = ['Merlin', 'Percival', 'Citizen', 'Morgana', 'Assassin'];
 export const expandRoles = ['Citizen', 'Heresy', 'Citizen', 'Modred', 'Citizen'];
 
-const Games = {
-    voteStage: 0,
-    expeditionStage: 0,
-    represent: 0,
-    vote: [],
-    takeStage: [],
-
-//**--------------------**
-    playerCount: 0,
-    voteResult: false,
-    expedition: false,
-    winner: '',
-    component: START_FRAME,
-    kill: '',
-}
-
-const Players = [
-    {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
-    // {nickname: 'user6', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user7', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user8', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
-]
-const playerData = {
-    nickname: '',
-    role: '',
-    vote: '',
-    toGo: '',
-    selected: false
-}
-//
-const gameData = {
-    voteStage: 0,
-    expeditionStage: 0,
-    represent: 0,
-    vote: [],
-    takeStage: [],
-    component: START_FRAME,
-}
-const testPlayer = [
-    {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
-    {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
-    // {nickname: 'user6', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user7', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user8', role: '', vote: '', toGo: '',selected : false},
-    // {nickname: 'user9', role: '', vote: '', toGo: '',selected : false},
-    //
-]
 const initialData = {
     usingPlayers: [
         {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},

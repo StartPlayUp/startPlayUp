@@ -14,6 +14,8 @@ import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
 import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../../Container/GameContainer/Yut/yutReducerType";
 import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
+import {PeerDataContext, PeersContext} from "../../../../Routes/peerStore";
+import {useContext} from "react";
 
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
@@ -26,9 +28,9 @@ export const EXPEDITION_CLICK = 'EXPEDITION_CLICK'
 export const ASSASSIN_KILL = 'ASSASSIN_KILL'
 
 const reducer = (state, {type, ...action}) => {
-    // const nickname = localStorage.getItem('nickname');
-    // const {peers} = useContext(PeersContext);
-    // const {peerData} = useContext(PeerDataContext);
+    const nickname = localStorage.getItem('nickname');
+    const {peers} = useContext(PeersContext);
+    const {peerData} = useContext(PeerDataContext);
     console.log('dispatch: ', state, type, action)
     switch (type) {
         case UPDATE_TIMER: {
