@@ -3,17 +3,17 @@ import {GameContext, MAIN_VOTE, voteStageColor} from "../Store";
 import {Circle, Frame, PublicFrame, User, VoteStageFrame} from "../Styled";
 import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
+import {SET_COMPONENT} from "../MVC/AVALON_Reducer";
 
 function MAIN_FRAME() {
-    const game = useContext(GameContext)
-    const colors = voteStageColor.slice(game.gameState.voteStage, 5);
-    console.log(game.gameState)
+    const {gameState, dispatch} = useContext(GameContext)
+    const colors = voteStageColor.slice(gameState.voteStage, 5);
     return (
         <>
             <div>Main</div>
             <PublicFrame>
                 {
-                    game.gameState.takeStage.map((stage, index) => (
+                    gameState.takeStage.map((stage, index) => (
                         <Frame key={index}>
                             <h3>{stage}</h3>
                         </Frame>
@@ -29,7 +29,7 @@ function MAIN_FRAME() {
             </VoteStageFrame>
             <PublicFrame>
                 {
-                    game.gameState.usingPlayers.map((user, index) => (
+                    gameState.usingPlayers.map((user, index) => (
                         <User key={index}>
                             <ul>
                                 <li>{`nickname : ${user.nickname}`}</li>
@@ -42,8 +42,9 @@ function MAIN_FRAME() {
                                     <PercivalPlayer index={index}/> : null
                                 }
                             </ul>
-                            {index === game.gameState.represent ?
-                                <button onClick={() => game.setComponent(MAIN_VOTE)}>원정 인원 정하기</button>
+                            {index === gameState.represent ?
+                                <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원
+                                    정하기</button>
                                 : null}
                         </User>
                     ))

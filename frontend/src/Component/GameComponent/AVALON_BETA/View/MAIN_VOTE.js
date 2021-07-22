@@ -5,23 +5,23 @@ import{MAIN_VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
 function MAIN_VOTE() {
     const {dispatch, gameState} = useContext(GameContext)
     const [playerCount, setPlayerCount] = useState(0)
-    const gameArr = {...gameState}
+    const gameData = {...gameState}
     const onChange = e => {
-        gameArr.usingPlayers[e.target.value].selected = e.target.checked
+        gameData.usingPlayers[e.target.value].selected = e.target.checked
         e.target.checked ? setPlayerCount(playerCount + 1) : setPlayerCount(playerCount - 1)
-        gameArr.playerCount = playerCount
+        gameData.playerCount = playerCount
         console.log(`playerCount : ${playerCount}`)
         console.log(`index : ${e.target.value} , checked : ${e.target.checked}`)
     }
     const onClick = () => {
-        if (playerCount === gameArr.takeStage[gameArr.expeditionStage]) {
-            gameArr.voteCount += 1
-            gameArr.vote = []
-            gameArr.component = VOTE_FRAME
-            console.log(gameArr)
-            dispatch({type: MAIN_VOTE_ONCLICK, gameArr})
+        if (playerCount === gameData.takeStage[gameData.expeditionStage]) {
+            gameData.voteCount += 1
+            gameData.vote = []
+            gameData.component = VOTE_FRAME
+            console.log(gameData)
+            dispatch({type: MAIN_VOTE_ONCLICK, gameData})
         } else {
-            alert(`${gameArr.takeStage[gameArr.expeditionStage]}명을 선택해야합니다.`)
+            alert(`${gameData.takeStage[gameData.expeditionStage]}명을 선택해야합니다.`)
         }
     }
     return (

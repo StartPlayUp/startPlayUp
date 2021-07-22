@@ -2,14 +2,15 @@ import React, {useContext} from "react";
 import {angels, GameContext} from "../Store";
 import AngelsVote from "../Ability/AngelsVote";
 import EvilsVote from "../Ability/EvilsVote";
+import {EXPEDITION_CLICK} from "../MVC/AVALON_Reducer";
 
 function EXPEDITION_FRAME() {
-    const game = useContext(GameContext)
+    const {gameState, dispatch} = useContext(GameContext)
     return (
         <>
             <div>
                 {
-                    game.gameState.usingPlayers.map((user, index) => (
+                    gameState.usingPlayers.map((user, index) => (
                         <ul key={index}>
                             {user.selected ?
                                 <div>
@@ -23,7 +24,7 @@ function EXPEDITION_FRAME() {
                         </ul>
                     ))
                 }
-                <button onClick={game.expeditionClick}>결과</button>
+                <button onClick={() => dispatch({type: EXPEDITION_CLICK})}>결과</button>
             </div>
         </>
     );
