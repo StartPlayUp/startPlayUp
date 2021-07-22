@@ -13,7 +13,8 @@ import {DiceStore} from 'Container/GameContainer/Yacht/YatchStore';
     }
     const diceHold = (e)=>{
         if (diceState.halt === true) {
-            diceState.diceHold(e)
+            const {value}=e.target;
+            diceState.diceHold(value)
         }
         else {
             alert("니 턴 아님")

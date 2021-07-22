@@ -109,9 +109,8 @@ const YachuProvider=({children})=>{
     const [state,dispatch]=useReducer(reducer,initialState);
     const [nowTurn, setTurn] = useState(0);
     const [halt,setHalt]=useState(false);
-    const [minutes,setMinutes]=useState(1);
-    const [seconds,setSeconds]=useState(0);
     const [nowTurnNickname, setTurnName] = useState(nickname); // 누구의 턴인지 저장하는 state
+    const [endGame,setGame]=useState(false);
     
     function RollDice() {
         let diceArray = [0, 0, 0, 0, 0];
@@ -144,6 +143,10 @@ const YachuProvider=({children})=>{
             console.assert(test === 5 && diceArray.length === 5, "주사위가 돌지 않았습니다.")
             alert("주사위 던지기 오류")
         }
+    }
+    function diceHold(value){
+        console.log(value)
+        dispatch({type:DICEHOLD,value})
     }
     function selectData(name,value) {
         const player = [...state.playerData]
@@ -198,7 +201,27 @@ const YachuProvider=({children})=>{
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, nowTurnNickname: nowTurnNickname, halt: true } })
             dispatch({ type: SELECT, player })
         }
-        
+        gameOver();
+    }
+    function gameOver(){
+        const player = [...state.playerData]
+        //선택 후 값 리셋하기
+        let complete =Object.keys(player[1].selectPoint).map((i) => {
+            return (player[1].selectPoint[i][1])
+        })
+        //만약 2P가 먹지 못한 점수가 있는지 확인
+        let completeTest = !complete.includes(false);
+        console.log("끝났는가?", completeTest);
+        if (completeTest) {
+            if (player[0].result > player[1].result) {
+                alert("1P의 승리입니다.");
+            } else if (player[0].result === player[1].result) {
+                alert("무승부 입니다.")
+            }
+            else {
+                alert("2P의 승리입니다.");
+            }
+        }
     }
     function StartGame() {
         //const peers = action.peers
@@ -232,6 +255,29 @@ const YachuProvider=({children})=>{
         dispatch({ type: STARTGAME, playerData, nowTurnNickname })
         setHalt(true)
         //dispatch({ type: StartGame, peers })
+    }
+    function timeOver(){
+        if (halt === true) {
+            let nameList = ["ace", "two", "three", "four", "five", "six", "threeOfaKind", "fourOfaKind", "fullHouse", "smallStraight", "largeStraight", "choice", "yahtzee"]
+            const dice = [...state.dice]
+            if (dice.some((i) => i === 0) ) {
+                RollDice()            
+                for (var i = 0; i < nameList.length; i++) {
+                    if (!state.playerData[nowTurn].selectPoint[nameList[i]][1]) {
+                        selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
+                        break;
+                    }
+                }
+            }else{
+                for (var i = 0; i < nameList.length; i++) {
+                    if (!state.playerData[nowTurn].selectPoint[nameList[i]][1]) {
+                        selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
+                        break;
+                    }
+                }
+            }
+        }
+        else { }
     }
     useEffect(() => {
         dispatch({ type: UPDATE_PEERS, peers })
@@ -279,55 +325,15 @@ const YachuProvider=({children})=>{
         }
 
     }, [peerData])
-    useEffect(()=>{
-        const countdown=setInterval(()=>{
-            if(parseInt(seconds)>0){
-                setSeconds(parseInt(seconds)-1);
-            }
-            else if(parseInt(seconds)===0){
-                if(parseInt(minutes)===0){
-                    if(halt===true){
-                        let nameList = ["ace", "two", "three", "four", "five", "six", "threeOfaKind", "fourOfaKind", "fullHouse", "smallStraight", "largeStraight", "choice", "yahtzee"]
-                        if(state.dice=[0,0,0,0,0]){
-                            RollDice()
-                            for (var i=0;i<nameList.length;i++){
-                                if(!state.playerData[nowTurn].selectPoint[nameList[i]][1]){
-                                    selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
-                                    break;
-                                }
-                            }
-                        }
-                        else{
-                            for (var i = 0; i < nameList.length; i++) {
-                                if (!state.playerData[nowTurn].selectPoint[nameList[i]][1]) {
-                                    selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
-                                    break;
-                                }
-                            }
-                        }}
-                    else{}
-                }else{
-                    setMinutes(parseInt(minutes)-1);
-                    setSeconds(59);
-                }
-            }
-        },1000);
-        return ()=>clearInterval(countdown);
-    },[minutes,seconds]);
-    useEffect(()=>{
-        setMinutes(0)
-        setSeconds(15)
-    },[nowTurn])
+
     return (
         <PlayerData.Provider value={//게임 데이터를 표시
             {state:state,halt:halt,nowTurn:nowTurn,selectData }
         }>
             <DiceStore.Provider value={{
-                dice:state.dice,rollCount:state.rollCount,halt:halt,StartGame,RollDice
-            }}>
+                dice:state.dice,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
                 <TimerData.Provider value={{
-                    seconds: seconds, minutes: minutes
-                }}>
+                    nowTurn:nowTurn,timeOver}}>
                     {children}
                 </TimerData.Provider>
             </DiceStore.Provider>

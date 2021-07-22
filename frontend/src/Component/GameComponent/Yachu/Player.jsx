@@ -46,15 +46,13 @@ const Player=()=>{
                                 :
                                     (<div>{ dex === 5 ?
                                         (<div>
-                                            {j}:
-                                            < div>{state.playerData[i].selectPoint[j][0]}</div>
+                                            {j}:{state.playerData[i].selectPoint[j][0]}
                                             <div>bonus : {state.playerData[i].bonus[0]} </div>
                                         </div>
                                         )
                                         :
                                         (<div>
-                                            {j}:
-                                            < div>{state.playerData[i].selectPoint[j][0]}</div></div>)}</div>)}
+                                            {j}:{state.playerData[i].selectPoint[j][0]}</div>)}</div>)}
                                 </div>
                         ))}
                             result : {state.playerData[i].result}
