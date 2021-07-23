@@ -11,11 +11,24 @@ export const testDB = [{
 }, {
     id: '2', password: "", nickname: "유저2"
 }, {
-    id: '3', password: "3", nickname: "유저3"
+    id: '3', password: "", nickname: "유저3"
 }, {
-    id: '4', password: "4", nickname: "유저4"
+    id: '4', password: "", nickname: "유저4"
 }, {
-    id: '5', password: "5", nickname: "유저5"
+    id: '5', password: "", nickname: "유저5"
 }, {
-    id: '6', password: "6", nickname: "유저6"
-},];
+    id: '6', password: "", nickname: "유저6"
+},
+    {
+        id: '7', password: "", nickname: "유저6"
+    },
+    {
+        id: '8', password: "", nickname: "유저6"
+    }, {
+        id: '9', password: "", nickname: "유저6"
+    },
+    {
+        id: '10', password: "", nickname: "유저6"
+    },
+
+];
