@@ -185,6 +185,7 @@ const YachuProvider=({children})=>{
                 alert("보너스 획득")
             }
         }
+        gameOver();
         if (nowTurn === player.length - 1){
             setTurn(0)
             setHalt(false)
@@ -198,10 +199,9 @@ const YachuProvider=({children})=>{
             setHalt(false)
             setTurnName(player[1].nickname)
             const verification = SELECT;
-            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, nowTurnNickname: nowTurnNickname, halt: true } })
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, nowTurnNickname: nowTurnNickname, halt: true  } })
             dispatch({ type: SELECT, player })
         }
-        gameOver();
     }
     function gameOver(){
         const player = [...state.playerData]
@@ -213,14 +213,9 @@ const YachuProvider=({children})=>{
         let completeTest = !complete.includes(false);
         console.log("끝났는가?", completeTest);
         if (completeTest) {
-            if (player[0].result > player[1].result) {
-                alert("1P의 승리입니다.");
-            } else if (player[0].result === player[1].result) {
-                alert("무승부 입니다.")
-            }
-            else {
-                alert("2P의 승리입니다.");
-            }
+            setGame(true);
+            const verification="ENDGAME"
+            sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification,endGame:true } })
         }
     }
     function StartGame() {
@@ -279,6 +274,19 @@ const YachuProvider=({children})=>{
         }
         else { }
     }
+    useEffect(()=>{
+        const player = [...state.playerData]
+        if (endGame) {
+            if (player[0].result > player[1].result) {
+                alert("1P의 승리입니다.");
+            } else if (player[0].result === player[1].result) {
+                alert("무승부 입니다.")
+            }
+            else {
+                alert("2P의 승리입니다.");
+            }
+        }
+    },[endGame])
     useEffect(() => {
         dispatch({ type: UPDATE_PEERS, peers })
     }, [peers])
@@ -318,6 +326,11 @@ const YachuProvider=({children})=>{
                     alert("데이터 수신 실패?")
                 }
                 console.log("SELECT!!")
+            }
+            else if (data.verification === "ENDGAME") {
+                if(data.endGame===true ||data.endGame===false){
+                    setGame(data.endGame)
+                }
             }
             else {
                 dispatch({ type: GET_DATA_FROM_PEER, data })
