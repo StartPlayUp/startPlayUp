@@ -20,15 +20,15 @@ export const testDB = [{
     id: '6', password: "", nickname: "유저6"
 },
     {
-        id: '7', password: "", nickname: "유저6"
+        id: '7', password: "", nickname: "유저7"
     },
     {
-        id: '8', password: "", nickname: "유저6"
+        id: '8', password: "", nickname: "유저8"
     }, {
-        id: '9', password: "", nickname: "유저6"
+        id: '9', password: "", nickname: "유저9"
     },
     {
-        id: '10', password: "", nickname: "유저6"
+        id: '10', password: "", nickname: "유저10"
     },
 
 ];
