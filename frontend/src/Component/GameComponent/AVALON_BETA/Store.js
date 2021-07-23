@@ -1,7 +1,6 @@
-import React, {useEffect, useReducer, useMemo, useState, useContext} from "react";
-import shuffle from 'lodash.shuffle';
-import reducer, {EXPEDITION_CLICK, GAME_CHECK, SET_COMPONENT, VOTE_CHECK} from "./MVC/AVALON_Reducer";
-import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
+import React, {useEffect, useReducer, useContext} from "react";
+import reducer, {GAME_CHECK,} from "./MVC/AVALON_Reducer";
+import {PeerDataContext,} from "../../../Routes/peerStore";
 import {AVALON, GAME} from "../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../Constants/actionTypes";
 
@@ -28,13 +27,13 @@ export const voteStageColor = ['white', 'white', 'white', 'white', 'red'];
 export const mustHaveRoles = ['Merlin', 'Percival', 'Citizen', 'Morgana', 'Assassin'];
 export const expandRoles = ['Citizen', 'Heresy', 'Citizen', 'Modred', 'Citizen'];
 
-const initialData = {
+export const initialData = {
     usingPlayers: [
         {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
         {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
         {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
-        // {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
-        // {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
+        {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
+        {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
     ],
     voteStage: 0, //5-voteStage 재투표 가능횟수
     expeditionStage: 0, //게임 expedition 진행 상황
@@ -51,9 +50,7 @@ const initialData = {
 const GameContext = React.createContext('')
 
 const Store = ({children}) => {
-    const {peers} = useContext(PeersContext);
     const {peerData} = useContext(PeerDataContext);
-    const nickname = localStorage.getItem('nickname');
     const [gameState, dispatch] = useReducer(reducer, initialData)
     console.log(gameState)
 
@@ -75,8 +72,10 @@ const Store = ({children}) => {
     }, [gameState.expeditionStage])
 
     useEffect(() => {
+        console.log('useEffect')
         if (peerData.type === GAME && peerData.game === AVALON) {
             const data = peerData.data
+            console.log(data)
             dispatch({type: GET_DATA_FROM_PEER, data})
         }
     }, [peerData])
