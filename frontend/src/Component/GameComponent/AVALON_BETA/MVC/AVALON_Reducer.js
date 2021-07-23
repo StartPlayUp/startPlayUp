@@ -1,5 +1,4 @@
 import {
-    ASSASSIN_FRAME, END_GAME_FRAME,
     expandRoles,
     EXPEDITION_FRAME,
     EXPEDITION_RESULT,
@@ -10,11 +9,9 @@ import {
 import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
 import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../../Constants/actionTypes";
-import {UPDATE_TIMER} from "../../../../Container/GameContainer/MineSearch";
-import {PeerDataContext, PeersContext} from "../../../../Routes/peerStore";
-import {useContext, useEffect} from "react";
 import {shuffle} from "lodash";
 
+export const UPDATE_TIMER = 'UPDATE_TIMER'
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
 export const START_FRAME = 'START_FRAME'
@@ -179,30 +176,5 @@ const reducer = (state, {type, ...action}) => {
         default:
             return state
     }
-    // useEffect(() => {
-    //     const gameData = {...state}
-    //     const angelCount = gameData.takeStage.filter(element => 'success' === element).length;
-    //     const evilCount = gameData.takeStage.filter(element => 'fail' === element).length;
-    //     if (angelCount === 3) {
-    //         gameData.component = ASSASSIN_FRAME
-    //     }
-    //     if (evilCount === 3) {
-    //         gameData.winner = 'EVILS_WIN'
-    //         gameData.component = END_GAME_FRAME
-    //     }
-    //     gameData.usingPlayers.map((user, index) => {
-    //         user.selected = false
-    //     })
-    //     // dispatch({type: GAME_CHECK, gameData})
-    //     return {...state, gameData}
-    // }, [state.expeditionStage])
-    //
-    // useEffect(() => {
-    //     if (peerData.type === GAME && peerData.game === AVALON) {
-    //         const data = peerData.data
-    //         // dispatch({type: GET_DATA_FROM_PEER, data})
-    //         return {...state, data}
-    //     }
-    // }, [peerData])
 }
 export default reducer

@@ -1,7 +1,6 @@
-import React, {useEffect, useReducer, useMemo, useState, useContext} from "react";
-import shuffle from 'lodash.shuffle';
-import reducer, {EXPEDITION_CLICK, GAME_CHECK, SET_COMPONENT, VOTE_CHECK} from "./MVC/AVALON_Reducer";
-import {PeerDataContext, PeersContext} from "../../../Routes/peerStore";
+import React, {useEffect, useReducer, useContext} from "react";
+import reducer, {GAME_CHECK,} from "./MVC/AVALON_Reducer";
+import {PeerDataContext,} from "../../../Routes/peerStore";
 import {AVALON, GAME} from "../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../Constants/actionTypes";
 
