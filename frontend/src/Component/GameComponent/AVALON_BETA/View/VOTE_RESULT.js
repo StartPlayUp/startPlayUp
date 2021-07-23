@@ -1,9 +1,11 @@
 import React, {useContext} from "react";
 import {GameContext} from "../Store";
 import {VOTE_CHECK} from "../MVC/AVALON_Reducer";
+import {PeersContext} from "../../../../Routes/peerStore";
 
 function VOTE_RESULT() {
     const {gameState, dispatch} = useContext(GameContext)
+    const peers = useContext(PeersContext)
     console.log(gameState)
     return (
         <div>
@@ -13,7 +15,7 @@ function VOTE_RESULT() {
                     <li>{`vote : ${user.toGo === 'agree' ? '찬성' : '반대'}`}</li>
                 </ul>
             ))}
-            <button onClick={() => dispatch({type: VOTE_CHECK})}>다음</button>
+            <button onClick={() => dispatch({type: VOTE_CHECK, peers})}>다음</button>
         </div>
     )
 }

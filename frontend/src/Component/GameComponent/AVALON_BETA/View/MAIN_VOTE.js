@@ -1,9 +1,11 @@
 import React, {useContext, useState} from "react";
 import {GameContext, VOTE_FRAME} from "../Store";
-import{MAIN_VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
+import {MAIN_VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
+import {PeersContext} from "../../../../Routes/peerStore";
 
 function MAIN_VOTE() {
     const {dispatch, gameState} = useContext(GameContext)
+    const {peers} = useContext(PeersContext)
     const [playerCount, setPlayerCount] = useState(0)
     const gameData = {...gameState}
     const onChange = e => {
@@ -13,10 +15,9 @@ function MAIN_VOTE() {
     }
     const onClick = () => {
         if (playerCount === gameData.takeStage[gameData.expeditionStage]) {
-            gameData.voteCount += 1
             gameData.vote = []
             gameData.component = VOTE_FRAME
-            dispatch({type: MAIN_VOTE_ONCLICK, gameData})
+            dispatch({type: MAIN_VOTE_ONCLICK, gameData, peers})
         } else {
             alert(`${gameData.takeStage[gameData.expeditionStage]}명을 선택해야합니다.`)
         }

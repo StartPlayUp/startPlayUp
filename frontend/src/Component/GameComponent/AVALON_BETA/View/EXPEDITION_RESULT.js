@@ -1,9 +1,11 @@
 import React, {useContext} from "react";
 import {GameContext, FRAME_MAIN} from "../Store";
 import {SET_COMPONENT} from "../MVC/AVALON_Reducer";
+import {PeersContext} from "../../../../Routes/peerStore";
 
 function EXPEDITION_RESULT() {
     const {gameState, dispatch} = useContext(GameContext)
+    const peers = useContext(PeersContext)
     return (
         <div>
             <div>
@@ -21,7 +23,7 @@ function EXPEDITION_RESULT() {
                         </div>
                 }
             </div>
-            <button onClick={() => dispatch({type: SET_COMPONENT,component:FRAME_MAIN})}>다음</button>
+            <button onClick={() => dispatch({type: SET_COMPONENT, component: FRAME_MAIN, peers})}>다음</button>
         </div>
     )
 }
