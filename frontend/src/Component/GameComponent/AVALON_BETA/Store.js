@@ -1,9 +1,8 @@
 import React, {useEffect, useReducer, useContext} from "react";
-import reducer, {GAME_CHECK, VOTE_ONCLICK,} from "./MVC/AVALON_Reducer";
+import reducer, {GAME_CHECK,} from "./MVC/AVALON_Reducer";
 import {PeerDataContext,} from "../../../Routes/peerStore";
 import {AVALON, GAME} from "../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../Constants/actionTypes";
-import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
 
 export const START_FRAME = 'START_FRAME'
 export const FRAME_MAIN = 'FRAME_MAIN'

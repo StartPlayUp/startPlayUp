@@ -1,0 +1,456 @@
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/VOTE_FRAME.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext} from \"react\";\nimport {GameContext, VOTE_RESULT} from \"../Store\";\nimport {Title} from \"../Styled\";\nimport Vote from \"./Vote\";\nimport {SET_COMPONENT} from \"../MVC/AVALON_Reducer\";\n\nfunction VOTE_FRAME() {\n    const {gameState, dispatch} = useContext(GameContext)\n    return (\n        <>\n            <div>VOTE</div>\n            <div>\n                <Title>\n                    {gameState.usingPlayers.map((user, index) =>\n                        <Vote key={index} index={index}/>)}\n                </Title>\n                <button onClick={() => dispatch({type: SET_COMPONENT,component:VOTE_RESULT})}>투표 결과</button>\n            </div>\n        </>\n    )\n}\n\nexport default VOTE_FRAME
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/VOTE_FRAME.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/VOTE_FRAME.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/VOTE_FRAME.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/VOTE_FRAME.js	(date 1627039786743)
+@@ -1,20 +1,26 @@
+ import React, {useContext} from "react";
+-import {GameContext, VOTE_RESULT} from "../Store";
++import {GameContext} from "../Store";
+ import {Title} from "../Styled";
+ import Vote from "./Vote";
+-import {SET_COMPONENT} from "../MVC/AVALON_Reducer";
++import Waiting from "./VotePackage/Waiting";
+ 
+ function VOTE_FRAME() {
+-    const {gameState, dispatch} = useContext(GameContext)
++    const {gameState} = useContext(GameContext)
++    const gameData = {...gameState}
++    const nickname = localStorage.getItem('nickname')
++    const voteTurn = gameData.voteTurn
++    console.log('nickname : ' + nickname)
+     return (
+         <>
+             <div>VOTE</div>
+             <div>
+                 <Title>
+-                    {gameState.usingPlayers.map((user, index) =>
+-                        <Vote key={index} index={index}/>)}
++                    {
++                        nickname === gameData.usingPlayers[voteTurn].nickname &&
++                            <Vote key={voteTurn} index={voteTurn}/>
++                    }
+                 </Title>
+-                <button onClick={() => dispatch({type: SET_COMPONENT,component:VOTE_RESULT})}>투표 결과</button>
++                {/*<button onClick={() => dispatch({type: SET_COMPONENT,component:VOTE_RESULT})}>투표 결과</button>*/}
+             </div>
+         </>
+     )
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_VOTE.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext, useState} from \"react\";\nimport {GameContext, VOTE_FRAME} from \"../Store\";\nimport{MAIN_VOTE_ONCLICK} from \"../MVC/AVALON_Reducer\";\n\nfunction MAIN_VOTE() {\n    const {dispatch, gameState} = useContext(GameContext)\n    const [playerCount, setPlayerCount] = useState(0)\n    const gameData = {...gameState}\n    const onChange = e => {\n        gameData.usingPlayers[e.target.value].selected = e.target.checked\n        e.target.checked ? setPlayerCount(playerCount + 1) : setPlayerCount(playerCount - 1)\n        gameData.playerCount = playerCount\n    }\n    const onClick = () => {\n        if (playerCount === gameData.takeStage[gameData.expeditionStage]) {\n            gameData.voteCount += 1\n            gameData.vote = []\n            gameData.component = VOTE_FRAME\n            dispatch({type: MAIN_VOTE_ONCLICK, gameData})\n        } else {\n            alert(`${gameData.takeStage[gameData.expeditionStage]}명을 선택해야합니다.`)\n        }\n    }\n    return (\n        <div>\n            <h3>{\"원정에 참여하는 인원 수 : \" + gameState.takeStage[gameState.expeditionStage] + \"명\"}</h3>\n            {gameState.usingPlayers.map((user, index) => (\n                <ul key={index}>\n                    <label>{user.nickname}\n                        <input\n                            onChange={onChange}\n                            type=\"checkbox\"\n                            name={'checkbox'}\n                            value={index}\n                        />\n                    </label>\n                </ul>\n            ))}\n            <button onClick={onClick}>결정</button>\n        </div>\n    )\n}\n\nexport default MAIN_VOTE
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_VOTE.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_VOTE.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_VOTE.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_VOTE.js	(date 1627029867415)
+@@ -1,9 +1,11 @@
+ import React, {useContext, useState} from "react";
+ import {GameContext, VOTE_FRAME} from "../Store";
+-import{MAIN_VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
++import {MAIN_VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
++import {PeersContext} from "../../../../Routes/peerStore";
+ 
+ function MAIN_VOTE() {
+     const {dispatch, gameState} = useContext(GameContext)
++    const {peers} = useContext(PeersContext)
+     const [playerCount, setPlayerCount] = useState(0)
+     const gameData = {...gameState}
+     const onChange = e => {
+@@ -16,7 +18,7 @@
+             gameData.voteCount += 1
+             gameData.vote = []
+             gameData.component = VOTE_FRAME
+-            dispatch({type: MAIN_VOTE_ONCLICK, gameData})
++            dispatch({type: MAIN_VOTE_ONCLICK, gameData, peers})
+         } else {
+             alert(`${gameData.takeStage[gameData.expeditionStage]}명을 선택해야합니다.`)
+         }
+Index: frontend/src/Common/TestDB/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>export const testDB = [{\n    id: \"jsc\", password: \"1234\", nickname: \"장석찬\"\n}, {\n    id: \"jj\", password: \"1234\", nickname: \"정진\"\n}, {\n    id: \"ljc\", password: \"1234\", nickname: \"이종찬\"\n}, {\n    id: \"csy\", password: \"1234\", nickname: \"조석영\"\n}, {\n    id: '1', password: \"1\", nickname: \"유저1\"\n}, {\n    id: '2', password: \"\", nickname: \"유저2\"\n}, {\n    id: '3', password: \"3\", nickname: \"유저3\"\n}, {\n    id: '4', password: \"4\", nickname: \"유저4\"\n}, {\n    id: '5', password: \"5\", nickname: \"유저5\"\n}, {\n    id: '6', password: \"6\", nickname: \"유저6\"\n},];\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Common/TestDB/index.js b/frontend/src/Common/TestDB/index.js
+--- a/frontend/src/Common/TestDB/index.js	(revision fe171064bd3e6f3e402d7ae4dd943dccabba08f2)
++++ b/frontend/src/Common/TestDB/index.js	(date 1627040000751)
+@@ -7,15 +7,15 @@
+ }, {
+     id: "csy", password: "1234", nickname: "조석영"
+ }, {
+-    id: '1', password: "1", nickname: "유저1"
++    id: 'user1', password: "1234", nickname: "유저1"
+ }, {
+-    id: '2', password: "", nickname: "유저2"
++    id: 'user2', password: "1234", nickname: "유저2"
+ }, {
+-    id: '3', password: "3", nickname: "유저3"
++    id: 'user3', password: "1234", nickname: "유저3"
+ }, {
+-    id: '4', password: "4", nickname: "유저4"
++    id: 'user4', password: "1234", nickname: "유저4"
+ }, {
+-    id: '5', password: "5", nickname: "유저5"
++    id: 'user5', password: "1234", nickname: "유저5"
+ }, {
+-    id: '6', password: "6", nickname: "유저6"
++    id: 'user6', password: "1234", nickname: "유저6"
+ },];
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_FRAME.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext} from \"react\";\nimport {GameContext, MAIN_VOTE, voteStageColor} from \"../Store\";\nimport {Circle, Frame, PublicFrame, User, VoteStageFrame} from \"../Styled\";\nimport MerlinPlayer from \"../Ability/MerlinPlayer\";\nimport PercivalPlayer from \"../Ability/PercivalPlayer\";\nimport {SET_COMPONENT} from \"../MVC/AVALON_Reducer\";\n\nfunction MAIN_FRAME() {\n    const {gameState, dispatch} = useContext(GameContext)\n    const colors = voteStageColor.slice(gameState.voteStage, 5);\n    const nickname = localStorage.getItem('nickname')\n    return (\n        <>\n            <div>Main</div>\n            <PublicFrame>\n                {\n                    gameState.takeStage.map((stage, index) => (\n                        <Frame key={index}>\n                            <h3>{stage}</h3>\n                        </Frame>\n                    ))\n                }\n            </PublicFrame>\n            <VoteStageFrame>\n                {\n                    colors.map((color, index) => (\n                        <Circle color={color} key={index}/>\n                    ))\n                }\n            </VoteStageFrame>\n            <PublicFrame>\n                {\n                    gameState.usingPlayers.map((user, index) => (\n                        <User key-={index}>\n                            <ul>\n                                <li>{`nickname : ${user.nickname}`}</li>\n                            </ul>\n                        </User>\n                    ))\n                }\n            </PublicFrame>\n            {\n                gameState.usingPlayers.map((user, index) => (\n                    user.nickname === nickname && <User key={index}>\n                        <ul>\n                            <li>{`nickname : ${user.nickname}`}</li>\n                            <li>{`role : ${user.role}`}</li>\n                            {user.role === 'Merlin' ?\n                                <div>\n                                    <h3>EVILS_LIST</h3>\n                                    <MerlinPlayer index={index}/>\n                                </div> : null\n                            }\n                            {user.role === 'Percival' ?\n                                <div>\n                                    <h3>둘 중에 멀린을 찾아 도우세요.</h3>\n                                    <PercivalPlayer index={index}/>\n                                </div> : null\n                            }\n                        </ul>\n                        {index === gameState.represent ?\n                            <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원\n                                정하기</button>\n                            : null}\n                    </User>\n                ))\n            }\n        </>\n    );\n}\n\nexport default MAIN_FRAME
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_FRAME.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_FRAME.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_FRAME.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/MAIN_FRAME.js	(date 1627039295963)
+@@ -7,8 +7,8 @@
+ 
+ function MAIN_FRAME() {
+     const {gameState, dispatch} = useContext(GameContext)
+-    const colors = voteStageColor.slice(gameState.voteStage, 5);
+     const nickname = localStorage.getItem('nickname')
++    const colors = voteStageColor.slice(gameState.voteStage, 5);
+     return (
+         <>
+             <div>Main</div>
+Index: frontend/src/Component/GameComponent/AVALON_BETA/Store.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useEffect, useReducer, useContext} from \"react\";\nimport reducer, {GAME_CHECK,} from \"./MVC/AVALON_Reducer\";\nimport {PeerDataContext,} from \"../../../Routes/peerStore\";\nimport {AVALON, GAME} from \"../../../Constants/peerDataTypes\";\nimport {GET_DATA_FROM_PEER} from \"../../../Constants/actionTypes\";\n\nexport const START_FRAME = 'START_FRAME'\nexport const FRAME_MAIN = 'FRAME_MAIN'\nexport const MAIN_VOTE = 'MAIN_VOTE'\nexport const VOTE_FRAME = 'VOTE_FRAME'\nexport const VOTE_RESULT = 'VOTE_RESULT'\nexport const EXPEDITION_FRAME = 'EXPEDITION_FRAME'\nexport const EXPEDITION_RESULT = 'EXPEDITION_RESULT'\nexport const ASSASSIN_FRAME = 'ASSASSIN_FRAME'\nexport const END_GAME_FRAME = 'END_GAME_FRAME'\nexport const angels = ['Merlin', 'Percival', 'Citizen']; // 천사팀\nexport const evils = ['Morgana', 'Assassin', 'Heresy', 'Modred']; //악마팀\nexport const merlinSight = ['Morgana', 'Assassin', 'Heresy']; // 멀린이 볼 수 있는 직업군\nexport const percivalSight = ['Morgana', 'Merlin'];\nexport const needPlayers = {\n    _5P: [2, 3, 2, 3, 3],\n    _6P: [2, 3, 4, 3, 4],\n    _7P: [2, 3, 3, 4, 4],\n    _8to10P: [3, 4, 4, 5, 5],\n}\nexport const voteStageColor = ['white', 'white', 'white', 'white', 'red'];\nexport const mustHaveRoles = ['Merlin', 'Percival', 'Citizen', 'Morgana', 'Assassin'];\nexport const expandRoles = ['Citizen', 'Heresy', 'Citizen', 'Modred', 'Citizen'];\n\nexport const initialData = {\n    usingPlayers: [\n        {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},\n        {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},\n        {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},\n        {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},\n        {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},\n    ],\n    voteStage: 0, //5-voteStage 재투표 가능횟수\n    expeditionStage: 0, //게임 expedition 진행 상황\n    represent: 0, //원정 인원 정하는 대표자 index\n    vote: [], //원정 성공 여부 투표함\n    takeStage: [], //인원에 맞는 게임 스테이지 설정\n    playerCount: 0, // 대표자가 원정에 보낼 인원 수\n    winner: '',\n    component: START_FRAME,\n    index: 0,\n    checked: false,\n}\n\nconst GameContext = React.createContext('')\n\nconst Store = ({children}) => {\n    const {peerData} = useContext(PeerDataContext);\n    const [gameState, dispatch] = useReducer(reducer, initialData)\n    console.log(gameState)\n\n    useEffect(() => {\n        const gameData = {...gameState}\n        const angelCount = gameData.takeStage.filter(element => 'success' === element).length;\n        const evilCount = gameData.takeStage.filter(element => 'fail' === element).length;\n        if (angelCount === 3) {\n            gameData.component = ASSASSIN_FRAME\n        }\n        if (evilCount === 3) {\n            gameData.winner = 'EVILS_WIN'\n            gameData.component = END_GAME_FRAME\n        }\n        gameData.usingPlayers.map((user, index) => {\n            user.selected = false\n        })\n        dispatch({type: GAME_CHECK, gameData})\n    }, [gameState.expeditionStage])\n\n    useEffect(() => {\n        console.log('useEffect')\n        if (peerData.type === GAME && peerData.game === AVALON) {\n            const data = peerData.data\n            console.log(data)\n            dispatch({type: GET_DATA_FROM_PEER, data})\n        }\n    }, [peerData])\n\n    return (\n        <GameContext.Provider value={\n            {\n                gameState,\n                dispatch,\n            }\n        }>\n            {children}\n        </GameContext.Provider>\n    )\n}\nexport {Store, GameContext}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/Store.js b/frontend/src/Component/GameComponent/AVALON_BETA/Store.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/Store.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/Store.js	(date 1627039786755)
+@@ -1,8 +1,9 @@
+ import React, {useEffect, useReducer, useContext} from "react";
+-import reducer, {GAME_CHECK,} from "./MVC/AVALON_Reducer";
++import reducer, {GAME_CHECK, VOTE_ONCLICK,} from "./MVC/AVALON_Reducer";
+ import {PeerDataContext,} from "../../../Routes/peerStore";
+ import {AVALON, GAME} from "../../../Constants/peerDataTypes";
+ import {GET_DATA_FROM_PEER} from "../../../Constants/actionTypes";
++import {sendDataToPeers} from "../../../Common/peerModule/sendToPeers";
+ 
+ export const START_FRAME = 'START_FRAME'
+ export const FRAME_MAIN = 'FRAME_MAIN'
+@@ -29,11 +30,11 @@
+ 
+ export const initialData = {
+     usingPlayers: [
+-        {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
+-        {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
+-        {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
+-        {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
+-        {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
++        // {nickname: 'user1', role: '', vote: '', toGo: '', selected: false},
++        // {nickname: 'user2', role: '', vote: '', toGo: '', selected: false},
++        // {nickname: 'user3', role: '', vote: '', toGo: '', selected: false},
++        // {nickname: 'user4', role: '', vote: '', toGo: '', selected: false},
++        // {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
+     ],
+     voteStage: 0, //5-voteStage 재투표 가능횟수
+     expeditionStage: 0, //게임 expedition 진행 상황
+@@ -42,8 +43,8 @@
+     takeStage: [], //인원에 맞는 게임 스테이지 설정
+     playerCount: 0, // 대표자가 원정에 보낼 인원 수
+     winner: '',
++    voteTurn: 0,
+     component: START_FRAME,
+-    index: 0,
+     checked: false,
+ }
+ 
+@@ -52,9 +53,11 @@
+ const Store = ({children}) => {
+     const {peerData} = useContext(PeerDataContext);
+     const [gameState, dispatch] = useReducer(reducer, initialData)
++    const nickname = localStorage.getItem('nickname')
+     console.log(gameState)
+ 
+     useEffect(() => {
++        console.log(`expedition useEffect`)
+         const gameData = {...gameState}
+         const angelCount = gameData.takeStage.filter(element => 'success' === element).length;
+         const evilCount = gameData.takeStage.filter(element => 'fail' === element).length;
+@@ -72,7 +75,19 @@
+     }, [gameState.expeditionStage])
+ 
+     useEffect(() => {
+-        console.log('useEffect')
++        console.log('voteTurn useEffect')
++        const gameData = {...gameState}
++        const players = gameState.usingPlayers.length
++        if (gameState.voteTurn === players && players >= 5) {
++            gameData.voteTurn = 0
++            gameData.component = VOTE_RESULT
++        }
++        gameData.voteTurn += 1
++        dispatch({type: VOTE_ONCLICK, gameData})
++    }, [gameState.voteTurn])
++
++    useEffect(() => {
++        console.log('peerData useEffect')
+         if (peerData.type === GAME && peerData.game === AVALON) {
+             const data = peerData.data
+             console.log(data)
+Index: frontend/src/Component/GameComponent/AVALON_BETA/MVC/AVALON_Reducer.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {\n    expandRoles,\n    EXPEDITION_FRAME,\n    EXPEDITION_RESULT,\n    FRAME_MAIN, initialData,\n    mustHaveRoles,\n    needPlayers\n} from \"../Store\";\nimport {sendDataToPeers} from \"../../../../Common/peerModule/sendToPeers\";\nimport {AVALON, GAME} from \"../../../../Constants/peerDataTypes\";\nimport {GET_DATA_FROM_PEER} from \"../../../../Constants/actionTypes\";\nimport {shuffle} from \"lodash\";\n\nexport const UPDATE_TIMER = 'UPDATE_TIMER'\nexport const GAME_CHECK = 'GAME_CHECK'\nexport const SET_COMPONENT = 'SET_COMPONENT'\nexport const START_FRAME = 'START_FRAME'\nexport const MAIN_VOTE_ONCLICK = 'MAIN_VOTE_ONCLICK'\nexport const VOTE_CHECK = 'VOTE_CHECK'\nexport const VOTE_ONCLICK = 'VOTE_ONCLICK'\nexport const VOTE_RESULT_CHECK = 'VOTE_RESULT_CHECK'\nexport const EXPEDITION_CLICK = 'EXPEDITION_CLICK'\nexport const ASSASSIN_KILL = 'ASSASSIN_KILL'\n\nconst reducer = (state, {type, ...action}) => {\n    const nickname = localStorage.getItem('nickname');\n    console.log('dispatch: ', state, type, action)\n    switch (type) {\n        case UPDATE_TIMER: {\n            return {...state, peers: action.peers}\n        }\n        case GET_DATA_FROM_PEER: {\n            return {...state, ...action.data};\n        }\n        case SET_COMPONENT: {\n            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {component: action.component}})\n            return {...state, component: action.component}\n        }\n        case START_FRAME: {\n            const gameData = {...initialData}\n            gameData.usingPlayers.push({\n                nickname: nickname.toString(),\n                role: '',\n                vote: '',\n                toGO: '',\n                selected: false\n            }) //나 추가하기\n            console.log(`action`)\n            console.log(action)\n            console.log(action.peers)\n            action.peers.forEach((i) => {\n                console.log(`peers.forEach`)\n                gameData.usingPlayers.push({\n                    nickname: i.nickname,\n                    role: '',\n                    vote: '',\n                    toGo: '',\n                    selected: false\n                })\n            }) // 나를 제외한 모두 추가하기\n            const playersNumber = gameData.usingPlayers.length //게임에 참여한 인원\n            console.log(`playersNumber : ${playersNumber}`)\n            switch (playersNumber) {\n                case 5:\n                    gameData.takeStage = needPlayers._5P;\n                    break;\n                case 6:\n                    gameData.takeStage = needPlayers._6P;\n                    break;\n                case 7:\n                    gameData.takeStage = needPlayers._7P;\n                    break;\n                case 8:\n                case 9:\n                case 10:\n                    gameData.takeStage = needPlayers._8to10P;\n                    break;\n                default:\n                    alert('error')\n            } // 참여 인원별 원정 설정하기\n            console.log(`takeStage : ${gameData.takeStage}`)\n            if (playersNumber >= 5) { // 5명 이상인 경우 직업설정\n                const temp = [\n                    ...mustHaveRoles,\n                    ...expandRoles.slice(0, gameData.usingPlayers.length - 5),\n                ];\n                const roles = shuffle(temp)\n                gameData.usingPlayers.map((user, index) => {\n                    user.role = roles[index]\n                })\n                gameData.component = FRAME_MAIN\n                sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})\n                return {\n                    ...state,\n                    component: gameData.component,\n                    usingPlayers: gameData.usingPlayers,\n                    takeStage: gameData.takeStage,\n                }\n            } else { // 그렇지 않은 경우 몇명 더 필요한지 알림\n                alert(`${playersNumber}명입니다. ${5 - playersNumber}명이 더 필요합니다.`)\n                return null\n            }\n        }\n        case VOTE_CHECK: {\n            const gameData = {...state}\n            let agree = 0;\n            let oppose = 0;\n            gameData.usingPlayers.map(e => e.toGo === 'agree' ? ++agree : ++oppose)\n            if (agree >= oppose) {\n                gameData.component = EXPEDITION_FRAME\n            } else {\n                if (gameData.voteStage === 4) {\n                    gameData.takeStage[gameData.expeditionStage] = 'fail'\n                    gameData.expeditionStage += 1\n                    gameData.voteStage = 0\n                } else {\n                    gameData.voteStage += 1\n                }\n                gameData.component = FRAME_MAIN\n            }\n            gameData.vote = []\n            gameData.represent += 1\n            gameData.represent %= gameData.usingPlayers.length\n            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})\n            return {\n                ...state,\n                component: gameData.component,\n                usingPlayers: gameData.usingPlayers,\n                vote: gameData.vote,\n                represent: gameData.represent,\n                voteStage: gameData.voteStage,\n                expeditionStage: gameData.expeditionStage\n            }\n        }\n        case EXPEDITION_CLICK: {\n            const gameData = {...state}\n            if (gameData.expeditionStage === 4 && gameData.usingPlayers.length >= 7) {\n                if (gameData.vote.filter(element => 'fail' === element).length >= 2) {\n                    gameData.takeStage[gameData.expeditionStage] = 'fail';\n                } else {\n                    gameData.takeStage[gameData.expeditionStage] = 'success'\n                }\n            } else {\n                gameData.vote.includes('fail') ?\n                    gameData.takeStage[gameData.expeditionStage] = 'fail' :\n                    gameData.takeStage[gameData.expeditionStage] = 'success'\n            }\n            gameData.expeditionStage += 1\n            gameData.component = EXPEDITION_RESULT\n            gameData.voteStage = 0\n            gameData.usingPlayers.map((user) => {\n                user.selected = false\n            })\n            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})\n            return {\n                ...state,\n                takeStage: gameData.takeStage,\n                expeditionStage: gameData.expeditionStage,\n                voteStage: gameData.voteStage,\n                usingPlayers: gameData.usingPlayers,\n                component: gameData.component,\n            }\n        }\n        case ASSASSIN_KILL: {\n            return {\n                ...state,\n                winner: action.winner,\n                component: action.component\n            }\n        }\n        case MAIN_VOTE_ONCLICK:\n        case VOTE_ONCLICK:\n        case GAME_CHECK:\n        case VOTE_RESULT_CHECK:\n            return {...state, ...action.gameData}\n        default:\n            return state\n    }\n}\nexport default reducer
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/MVC/AVALON_Reducer.js b/frontend/src/Component/GameComponent/AVALON_BETA/MVC/AVALON_Reducer.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/MVC/AVALON_Reducer.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/MVC/AVALON_Reducer.js	(date 1627039786759)
+@@ -4,7 +4,7 @@
+     EXPEDITION_RESULT,
+     FRAME_MAIN, initialData,
+     mustHaveRoles,
+-    needPlayers
++    needPlayers, VOTE_FRAME, VOTE_RESULT
+ } from "../Store";
+ import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
+ import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
+@@ -21,6 +21,7 @@
+ export const VOTE_RESULT_CHECK = 'VOTE_RESULT_CHECK'
+ export const EXPEDITION_CLICK = 'EXPEDITION_CLICK'
+ export const ASSASSIN_KILL = 'ASSASSIN_KILL'
++export const WAITING = 'WAITING'
+ 
+ const reducer = (state, {type, ...action}) => {
+     const nickname = localStorage.getItem('nickname');
+@@ -30,10 +31,11 @@
+             return {...state, peers: action.peers}
+         }
+         case GET_DATA_FROM_PEER: {
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: state})
+             return {...state, ...action.data};
+         }
+         case SET_COMPONENT: {
+-            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: {component: action.component}})
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: state})
+             return {...state, component: action.component}
+         }
+         case START_FRAME: {
+@@ -45,9 +47,6 @@
+                 toGO: '',
+                 selected: false
+             }) //나 추가하기
+-            console.log(`action`)
+-            console.log(action)
+-            console.log(action.peers)
+             action.peers.forEach((i) => {
+                 console.log(`peers.forEach`)
+                 gameData.usingPlayers.push({
+@@ -121,7 +120,7 @@
+             gameData.vote = []
+             gameData.represent += 1
+             gameData.represent %= gameData.usingPlayers.length
+-            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})
+             return {
+                 ...state,
+                 component: gameData.component,
+@@ -151,7 +150,7 @@
+             gameData.usingPlayers.map((user) => {
+                 user.selected = false
+             })
+-            sendDataToPeers(GAME, {game: AVALON, nickname, peers, data: gameData})
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})
+             return {
+                 ...state,
+                 takeStage: gameData.takeStage,
+@@ -162,17 +161,44 @@
+             }
+         }
+         case ASSASSIN_KILL: {
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
+             return {
+                 ...state,
+                 winner: action.winner,
+                 component: action.component
+             }
+         }
+-        case MAIN_VOTE_ONCLICK:
+-        case VOTE_ONCLICK:
+-        case GAME_CHECK:
+-        case VOTE_RESULT_CHECK:
++        case MAIN_VOTE_ONCLICK: {
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
++            return {...state, ...action.gameData}
++        }
++        case VOTE_ONCLICK: {
++            const gameData = {...state}
++            const players = gameData.usingPlayers.length
++            console.log('vote_on_click')
++            if (gameData.voteTurn === players) {
++                gameData.voteTurn = 0
++                gameData.component = VOTE_RESULT
++            } else {
++                gameData.component = VOTE_FRAME
++                gameData.voteTurn = action.voteTurn
++            }
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})
++            console.log('sendDataToPeers')
++            return {
++                ...state,
++                voteTurn: gameData.voteTurn,
++                component: gameData.component,
++            }
++        }
++        case GAME_CHECK: {
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
++            return {...state, ...action.gameData}
++        }
++        case VOTE_RESULT_CHECK: {
++            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
+             return {...state, ...action.gameData}
++        }
+         default:
+             return state
+     }
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/Vote.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext,useState} from \"react\";\nimport {GameContext} from \"../Store\";\nimport {VOTE_ONCLICK} from \"../MVC/AVALON_Reducer\";\n\nfunction Vote(props) {\n    const {dispatch, gameState} = useContext(GameContext)\n    const gameData = {...gameState}\n    const [vote, setVote] = useState('agree');\n    const [click, setClick] = useState(false);\n    const onChange = e => {\n        setVote(e.target.value);\n    };\n    const onClick = e => {\n        if (e.target.value === 'agree') {\n            setVote('agree')\n        } else if (e.target.value === 'oppose') {\n            setVote('oppose')\n        }\n        gameData.usingPlayers[props.index].toGo = vote\n        dispatch({type: VOTE_ONCLICK, gameData})\n        setClick(true);\n    };\n    return (\n        <div>\n            {click ?\n                <div>{vote === 'agree' ? '찬성' : '반대'}</div> :\n                <div>\n                    <form>\n                        <label>찬성<input\n                            type=\"radio\"\n                            name={'vote'}\n                            value={'agree'}\n                            onChange={onChange}/>\n                        </label>\n                        <label>반대 <input\n                            type=\"radio\"\n                            name={'vote'}\n                            value={'oppose'}\n                            onChange={onChange}/>\n                        </label>\n                    </form>\n                    <button\n                        onClick={onClick}\n                        disabled={click}\n                        value={vote}>\n                        확인\n                    </button>\n                </div>\n            }\n        </div>\n    )\n}\n\nexport default Vote
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/Vote.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/Vote.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/Vote.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/Vote.js	(date 1627039786752)
+@@ -1,12 +1,16 @@
+-import React, {useContext,useState} from "react";
++import React, {useContext, useState} from "react";
+ import {GameContext} from "../Store";
+-import {VOTE_ONCLICK} from "../MVC/AVALON_Reducer";
++import {GAME_CHECK, SET_COMPONENT, VOTE_ONCLICK, WAITING} from "../MVC/AVALON_Reducer";
++import {PeersContext} from "../../../../Routes/peerStore";
++import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
+ 
+ function Vote(props) {
+     const {dispatch, gameState} = useContext(GameContext)
++    const {peers} = useContext(PeersContext)
+     const gameData = {...gameState}
+     const [vote, setVote] = useState('agree');
+     const [click, setClick] = useState(false);
++    console.log('vote')
+     const onChange = e => {
+         setVote(e.target.value);
+     };
+@@ -17,8 +21,9 @@
+             setVote('oppose')
+         }
+         gameData.usingPlayers[props.index].toGo = vote
+-        dispatch({type: VOTE_ONCLICK, gameData})
++        gameData.component = WAITING
+         setClick(true);
++        dispatch({type: GAME_CHECK, gameData})
+     };
+     return (
+         <div>
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/voteWaiting.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/voteWaiting.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/Waiting.js
+rename from frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/voteWaiting.js
+rename to frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/Waiting.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/voteWaiting.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/VotePackage/Waiting.js	(date 1627021184091)
+@@ -1,9 +1,9 @@
+ import React from "react";
+ 
+ //이 부분에다가 대기 애니매이션 첨가 예정
+-function voteWaiting() {
++function Waiting() {
+     return(
+         <h3>대기중 . . . </h3>
+     )
+ }
+-export default voteWaiting()
+\ No newline at end of file
++export default Waiting
+\ No newline at end of file
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext} from \"react\";\nimport {\n    GameContext,\n    START_FRAME,\n    FRAME_MAIN,\n    MAIN_VOTE,\n    VOTE_FRAME,\n    VOTE_RESULT,\n    EXPEDITION_RESULT,\n    EXPEDITION_FRAME,\n    ASSASSIN_FRAME,\n    END_GAME_FRAME\n} from \"./Store\";\n\nimport GameStart from \"./View/GameStart\";\nimport MAIN from \"./View/MAIN_FRAME\";\nimport RESULT_MAIN from \"./View/MAIN_VOTE\";\nimport VOTE from \"./View/VOTE_FRAME\";\nimport RESULT_VOTE from \"./View/VOTE_RESULT\";\nimport EXPEDITION from \"./View/EXPEDITION_FRAME\";\nimport RESULT_EXPEDITION from \"./View/EXPEDITION_RESULT\";\nimport ASSASSIN from \"./View/ASSASSIN_FRAME\";\nimport END_GAME from \"./View/END_GAME_FRAME\";\n\nfunction View() {\n    const {gameState} = useContext(GameContext)\n    return (\n        <>\n            {gameState.component === START_FRAME && <GameStart/>}\n            {gameState.component === FRAME_MAIN && <MAIN/>}\n            {gameState.component === MAIN_VOTE && <RESULT_MAIN/>}\n            {gameState.component === VOTE_FRAME && <VOTE/>}\n            {gameState.component === VOTE_RESULT && <RESULT_VOTE/>}\n            {gameState.component === EXPEDITION_FRAME && <EXPEDITION/>}\n            {gameState.component === EXPEDITION_RESULT && <RESULT_EXPEDITION/>}\n            {gameState.component === ASSASSIN_FRAME && <ASSASSIN/>}\n            {gameState.component === END_GAME_FRAME && <END_GAME/>}\n        </>\n    )\n}\n\nexport default View
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View.js b/frontend/src/Component/GameComponent/AVALON_BETA/View.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View.js	(date 1627039786748)
+@@ -21,6 +21,8 @@
+ import RESULT_EXPEDITION from "./View/EXPEDITION_RESULT";
+ import ASSASSIN from "./View/ASSASSIN_FRAME";
+ import END_GAME from "./View/END_GAME_FRAME";
++import Waiting from "./View/VotePackage/Waiting";
++import {WAITING} from "./MVC/AVALON_Reducer";
+ 
+ function View() {
+     const {gameState} = useContext(GameContext)
+@@ -35,6 +37,7 @@
+             {gameState.component === EXPEDITION_RESULT && <RESULT_EXPEDITION/>}
+             {gameState.component === ASSASSIN_FRAME && <ASSASSIN/>}
+             {gameState.component === END_GAME_FRAME && <END_GAME/>}
++            {gameState.component === WAITING && <Waiting/>}
+         </>
+     )
+ }
+Index: frontend/src/Component/GameComponent/AVALON_BETA/View/EXPEDITION_FRAME.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, {useContext} from \"react\";\nimport {angels, GameContext} from \"../Store\";\nimport AngelsVote from \"../Ability/AngelsVote\";\nimport EvilsVote from \"../Ability/EvilsVote\";\nimport {EXPEDITION_CLICK} from \"../MVC/AVALON_Reducer\";\n\nfunction EXPEDITION_FRAME() {\n    const {gameState, dispatch} = useContext(GameContext)\n    return (\n        <>\n            <div>\n                {\n                    gameState.usingPlayers.map((user, index) => (\n                        <ul key={index}>\n                            {user.selected ?\n                                <div>\n                                    <li>{user.nickname}</li>\n                                    {angels.includes(user.role) ?\n                                        <AngelsVote value={index}/>\n                                        :\n                                        <EvilsVote value={index}/>}\n                                </div>\n                                : null}\n                        </ul>\n                    ))\n                }\n                <button onClick={() => dispatch({type: EXPEDITION_CLICK})}>결과</button>\n            </div>\n        </>\n    );\n}\n\nexport default EXPEDITION_FRAME
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/View/EXPEDITION_FRAME.js b/frontend/src/Component/GameComponent/AVALON_BETA/View/EXPEDITION_FRAME.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/View/EXPEDITION_FRAME.js	(revision 05f901ad1373aafcab184c112017c48af23d00d8)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/View/EXPEDITION_FRAME.js	(date 1627029904812)
+@@ -3,16 +3,18 @@
+ import AngelsVote from "../Ability/AngelsVote";
+ import EvilsVote from "../Ability/EvilsVote";
+ import {EXPEDITION_CLICK} from "../MVC/AVALON_Reducer";
++import Waiting from "./VotePackage/Waiting";
+ 
+ function EXPEDITION_FRAME() {
+-    const {gameState, dispatch} = useContext(GameContext)
++    const {gameState, dispatch,nickname} = useContext(GameContext)
+     return (
+         <>
+             <div>
+                 {
+                     gameState.usingPlayers.map((user, index) => (
++
+                         <ul key={index}>
+-                            {user.selected ?
++                            {user.nickname===nickname && user.selected ?
+                                 <div>
+                                     <li>{user.nickname}</li>
+                                     {angels.includes(user.role) ?
+@@ -20,7 +22,7 @@
+                                         :
+                                         <EvilsVote value={index}/>}
+                                 </div>
+-                                : null}
++                                : <Waiting/>}
+                         </ul>
+                     ))
+                 }
