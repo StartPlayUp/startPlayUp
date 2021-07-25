@@ -5,6 +5,7 @@ import reset from "styled-reset";
 import thunderstorm from "../image/thunderstorm.jpg";
 import FOOTER from "../Component/WebComponent/WebPage/WebFrame/webFooter";
 import HEADER from "../Component/WebComponent/WebPage/WebFrame/webHeader";
+import Snow from './WebBackGroundContainer/Snow/FallingSnow';
 
 const GlobalStyles = createGlobalStyle`
      ${reset};
@@ -12,28 +13,30 @@ const GlobalStyles = createGlobalStyle`
      body{
          //font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
          //font-size: 14px;
-         //background-color: rgb(178, 199, 217); // 카카오톡 배경
-         background-image:url(${thunderstorm})
+         background-color: #E5E5E5; // 카카오톡 배경
+         /* background-image:url(${thunderstorm}) */
      }
-     img{
+     /* img{
       width:20px;
       height:20px;
-     }
+     } */
      html{
       //overflow:hidden;
      }
  `;
 
 
-function ChatContainer() {
-  console.log("debug ChatContainer rerender");
+const Global = () => {
+  console.log("debug Global rerender");
   return (
     <>
       <HEADER />
-      <GlobalStyles image={thunderstorm} />
+      <Snow />
+      <GlobalStyles>
+      </GlobalStyles>
       <FOOTER />
     </>
   );
 }
 
-export default ChatContainer;
+export default Global;

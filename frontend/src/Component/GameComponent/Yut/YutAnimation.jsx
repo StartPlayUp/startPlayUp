@@ -20,12 +20,15 @@ const Container = styled.div`
 	-webkit-perspective-origin:50%;
 `;
 
-const rotate = keyframes`
+const rotate = (y) => keyframes`
 	from{
 		transform: none;
 	}
-	to{
+	99%{
 		transform: rotateY(1800deg);
+	}
+	to{
+		transform:rotateY(''+y+'deg')
 	}
 `;
 
@@ -36,7 +39,7 @@ const Dice = styled.div`
 	bottom: 0;
 	margin: 20px;
 	transform-style: preserve-3d;
-	animation:${rotate} 5s infinite;
+	animation:${rotate} 5s;
 	${props => props.stop === true && "animation-play-state: paused;"};
 	transform:scale(2, 0.5);
 `;
@@ -91,6 +94,8 @@ const FaceText = styled.div`
 const YutAnimation = () => {
 	const list = [0, 1, 2, 3];
 	const [test, setTest] = useState(true);
+	const yutResult = [180, 0, 180, 0];
+
 
 	return (
 		<Background>

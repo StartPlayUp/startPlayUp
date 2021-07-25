@@ -16,22 +16,22 @@ import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler'
 const Horse = styled.div`
         display:flex;
         flex-direction: row;
-        width:20px;
-        height:20px;
+        width:25px;
+        height:25px;
         background-color:${props => props.color !== undefined && props.color};
         border-radius: 100%;
         border: solid 1px black;
         cursor:pointer;
         margin:10px;
-        z-index:${props => props.index};
+        z-index:${props => props.horseIndex !== undefined && props.horseIndex};
         position:absolute;
-        transform: ${props => "translateX(" + props.index * 10 + "px)"};
-         
-    `;
+        transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"};
+
+`;
 
 const StyledButton = styled.button`
-    border:0;
-    outline:0;
+border: 0;
+outline: 0;
 `;
 
 
@@ -42,7 +42,7 @@ const App = ({ horses, player, index }) => {
 
     const { dispatch, ...state } = useContext(YutContext);
 
-
+    const translate = [-45, -30, -15, 0];
 
 
     const clickHorseHandler = async (e, index) => {
@@ -54,7 +54,7 @@ const App = ({ horses, player, index }) => {
     return (
         <div onClick={(e) => clickHorseHandler(e, index, player.nickname)} >
             {[...Array(horses)].map((tp, index) =>
-                <Horse key={index} color={player.color} index={index} />
+                <Horse key={index} color={player.color} horseIndex={index} translate={translate[index]} />
             )}
         </div>
     )

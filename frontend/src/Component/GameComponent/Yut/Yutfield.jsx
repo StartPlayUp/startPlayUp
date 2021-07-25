@@ -19,6 +19,7 @@ import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
 const GridContainer = styled.div`
     /* width:300px;
     height:300px; */
+    margin:10px;
     display:grid;
     grid-gap: 2px;
     grid-template-rows:repeat(21,0.4fr);
@@ -34,8 +35,11 @@ const GridPlace = styled.div`
 const PlaceButton = styled.button`
     background-color:${props => props.color !== undefined && props.color};
     border-radius: 100%;
+    height:40px;
+    width: 40px;
     border: solid 1px black;
-    padding:10px;
+    padding:0px;
+    margin:-5px;
     ${props => props.color !== undefined && "cursor:pointer;"};
     /* top: 40px;
     left: 40px; */
@@ -140,12 +144,15 @@ const App = () => {
         // await sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
     }
 
+    const shortList = [5, 10, 15, 23, 20]
+
     return (
         <YutDiv>
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {gridTable.map((i, index) =>
                     <GridPlace key={index} index={index} row={i.column} column={i.row}>
-                        <PlaceButton key={index} onClick={(e) => moveHorse(e, index)} color={changeItemColorHandler(index)}>{index}</PlaceButton>
+                        {/* <PlaceButton key={index} onClick={(e) => moveHorse(e, index)} color={changeItemColorHandler(index)}>{'O'}</PlaceButton> */}
+                        <PlaceButton key={index} onClick={(e) => moveHorse(e, index)} color={changeItemColorHandler(index)}>{ }</PlaceButton>
                         {horsePosition[index] !== undefined &&
                             <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
                                 {index}

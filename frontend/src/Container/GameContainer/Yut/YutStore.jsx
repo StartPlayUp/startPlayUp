@@ -21,11 +21,8 @@ import {
 } from './Constants/actionType.js';
 import actionHandler from './Action/actionHandler.js';
 
-
 export const YutContext = createContext(null);
 export const TimerContext = createContext(null);
-
-
 
 const reducer = (state, { type, ...action }) => {
     const nickname = localStorage.getItem('nickname');
@@ -63,6 +60,7 @@ const reducer = (state, { type, ...action }) => {
 
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
+    const nickname = localStorage.getItem('nickname');
     const [state, dispatch] = useReducer(reducer, initialState);
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
@@ -88,7 +86,6 @@ const YutStore = ({ children }) => {
     // 타이머가 30 초가 넘었을 때 순서 넘기기
     useEffect(() => {
         if (timer > 30) {
-            const nickname = localStorage.getItem('nickname');
             actionHandler.nextTurnHandler({ dispatch, state, peers, nickname })
         }
     }, [timer])
@@ -190,9 +187,9 @@ const YutStore = ({ children }) => {
 
     return (
         <div>
-            <div>{state.timer}</div>
+            {/* <div>{state.timer}</div>
             <div>nowTurn Index : {nowTurn.index}</div>
-            <div>nowTurn Nickname : {nowTurn.nickname}</div>
+            <div>nowTurn Nickname : {nowTurn.nickname}</div> */}
             {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)}
             <YutContext.Provider value={value}>
                 {/* <TimerContext.Provider value={timerContextValue}> */}
