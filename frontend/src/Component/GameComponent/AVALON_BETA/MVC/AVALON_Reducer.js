@@ -56,6 +56,7 @@ const reducer = (state, {type, ...action}) => {
                     selected: false
                 })
             }) // 나를 제외한 모두 추가하기
+
             const playersNumber = gameData.usingPlayers.length //게임에 참여한 인원
             console.log(`playersNumber : ${playersNumber}`)
             switch (playersNumber) {
