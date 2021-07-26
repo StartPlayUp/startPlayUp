@@ -59,8 +59,7 @@ function MAIN_FRAME() {
                             }
                         </ul>
                         {index === gameState.represent ?
-                            <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원
-                                정하기</button>
+                            <button onClick={() => dispatch({type: SET_COMPONENT, component: MAIN_VOTE})}>원정 인원 정하기</button>
                             : null}
                     </User>
                 ))

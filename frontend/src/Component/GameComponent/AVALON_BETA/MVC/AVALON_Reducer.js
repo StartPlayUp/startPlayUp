@@ -10,6 +10,7 @@ import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
 import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
 import {GET_DATA_FROM_PEER} from "../../../../Constants/actionTypes";
 import {shuffle} from "lodash";
+
 export const UPDATE_TIMER = 'UPDATE_TIMER'
 export const GAME_CHECK = 'GAME_CHECK'
 export const SET_COMPONENT = 'SET_COMPONENT'
@@ -75,7 +76,6 @@ const reducer = (state, {type, ...action}) => {
                 default:
                     alert('error')
             } // 참여 인원별 원정 설정하기
-            console.log(`takeStage : ${gameData.takeStage}`)
             if (playersNumber >= 5) { // 5명 이상인 경우 직업설정
                 const temp = [
                     ...mustHaveRoles,
@@ -177,7 +177,7 @@ const reducer = (state, {type, ...action}) => {
             sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: gameData})
             console.log('sendDataToPeers')
             return {
-                ...state,...action.gameData
+                ...state, ...action.gameData
             }
         }
         case GAME_CHECK: {
@@ -185,7 +185,7 @@ const reducer = (state, {type, ...action}) => {
             return {...state, ...action.gameData}
         }
         case VOTE_RESULT_CHECK: {
-            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})     
+            sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
             return {...state, ...action.gameData}
         }
         default:
