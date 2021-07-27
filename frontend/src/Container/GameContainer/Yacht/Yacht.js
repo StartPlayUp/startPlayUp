@@ -14,17 +14,6 @@ const Yacht=(props)=>{
         width:70%;
 
     `
-    const Header=styled.div`
-        position: fixed;
-        top:0;
-        width:50%;
-        height: 2%;
-        padding: 0.8rem;
-        background-color:black;
-        font-weight: bold;
-        display: flex;
-
-    `
     return(
         <YachuProvider>
             <YachtMan>

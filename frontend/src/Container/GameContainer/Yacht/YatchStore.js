@@ -39,7 +39,27 @@ const initialState={
         },
         result: 0,
         bonus: [0, false]
-    }]
+    },
+    {
+            nickname: "",
+            selectPoint: {
+                ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                two: [0, false],
+                three: [0, false],
+                four: [0, false],
+                five: [0, false],
+                six: [0, false],
+                threeOfaKind: [0, false],
+                fourOfaKind: [0, false],
+                fullHouse: [0, false],
+                smallStraight: [0, false],
+                largeStraight: [0, false],
+                choice: [0, false],
+                yahtzee: [0, false]
+                },
+            result: 0,
+            bonus: [0, false]
+        }]
 }
 const reducer=(state,action)=>{
     switch (action.type) {
@@ -130,7 +150,7 @@ const YachuProvider=({children})=>{
                     }
                 })
                 const verification = ROLLDICE;
-                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, dice: diceArray, count: counter } });
+                sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, dice: diceArray, count: counter,rollCount:state.rollCount - 1 } });
                 dispatch({ type: ROLLDICE, player, diceArray, counter })
 
             }
@@ -221,29 +241,28 @@ const YachuProvider=({children})=>{
     function StartGame() {
         //const peers = action.peers
         const nickname = localStorage.getItem('nickname');
-        const playerData = [...state.playerData];
-        peers.forEach((i) => {
-            playerData.push({
-                nickname: i.nickname,
-                selectPoint: {
-                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
-                    two: [0, false],
-                    three: [0, false],
-                    four: [0, false],
-                    five: [0, false],
-                    six: [0, false],
-                    threeOfaKind: [0, false],
-                    fourOfaKind: [0, false],
-                    fullHouse: [0, false],
-                    smallStraight: [0, false],
-                    largeStraight: [0, false],
-                    choice: [0, false],
-                    yahtzee: [0, false]
-                },
-                result: 0,
-                bonus: [0, false]
-            });
-        })
+        let playerData = [...state.playerData];
+        console.log(peers)
+        playerData[1]=({
+            nickname: peers[0].nickname,
+            selectPoint: {
+                ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                two: [0, false],
+                three: [0, false],
+                four: [0, false],
+                five: [0, false],
+                six: [0, false],
+                threeOfaKind: [0, false],
+                fourOfaKind: [0, false],
+                fullHouse: [0, false],
+                smallStraight: [0, false],
+                largeStraight: [0, false],
+                choice: [0, false],
+                yahtzee: [0, false]
+            },
+            result: 0,
+            bonus: [0, false]
+        });
         const nowTurnNickname = playerData[0].nickname;
         const result = { ...initialState, nowTurnNickname, playerData };
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
