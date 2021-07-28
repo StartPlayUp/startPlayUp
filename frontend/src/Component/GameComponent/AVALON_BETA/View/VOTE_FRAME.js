@@ -4,6 +4,7 @@ import {Title} from "../Styled";
 import Vote from "./Vote";
 import {PeersContext} from "../../../../Routes/peerStore";
 import {GAME_CHECK} from "../MVC/AVALON_Reducer";
+import WaitingView from "./animation/WaitingView";
 
 function VOTE_FRAME() {
     const {dispatch, gameState} = useContext(GameContext)
@@ -52,7 +53,7 @@ function VOTE_FRAME() {
                                     value={vote}>
                                     확인
                                 </button>
-                            </div> : <h3>대기 중 ...</h3>
+                            </div> : <WaitingView/>
                         }
                     </Title>
                 }

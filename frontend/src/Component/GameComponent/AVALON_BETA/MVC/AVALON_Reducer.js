@@ -116,6 +116,7 @@ const reducer = (state, {type, ...action}) => {
                 }
                 gameData.component = FRAME_MAIN
             }
+            // component, voteStage,expeditionStage,vote,represent
             gameData.vote = []
             gameData.represent += 1
             gameData.represent %= gameData.usingPlayers.length
@@ -123,7 +124,7 @@ const reducer = (state, {type, ...action}) => {
             return {
                 ...state,
                 component: gameData.component,
-                usingPlayers: gameData.usingPlayers,
+                // usingPlayers: gameData.usingPlayers,
                 vote: gameData.vote,
                 represent: gameData.represent,
                 voteStage: gameData.voteStage,
@@ -160,6 +161,7 @@ const reducer = (state, {type, ...action}) => {
             }
         }
         case ASSASSIN_KILL: {
+            console.log('ASSASSIN_KILL')
             sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
             return {
                 ...state,
@@ -168,6 +170,7 @@ const reducer = (state, {type, ...action}) => {
             }
         }
         case MAIN_VOTE_ONCLICK: {
+            console.log('MAIN_VOTE_ONCLICK')
             sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
             return {...state, ...action.gameData}
         }
@@ -182,10 +185,12 @@ const reducer = (state, {type, ...action}) => {
             }
         }
         case GAME_CHECK: {
+            console.log('GAME_CHECK')
             sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
             return {...state, ...action.gameData}
         }
         case VOTE_RESULT_CHECK: {
+            console.log('VOTE_RESULT_CHECK')
             sendDataToPeers(GAME, {game: AVALON, nickname, peers: action.peers, data: action.gameData})
             return {...state, ...action.gameData}
         }
