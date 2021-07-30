@@ -13,6 +13,7 @@ export const EXPEDITION_FRAME = 'EXPEDITION_FRAME'
 export const EXPEDITION_RESULT = 'EXPEDITION_RESULT'
 export const ASSASSIN_FRAME = 'ASSASSIN_FRAME'
 export const END_GAME_FRAME = 'END_GAME_FRAME'
+export const WAITINGVIEW = 'WAITINGVIEW'
 export const angels = ['Merlin', 'Percival', 'Citizen']; // 천사팀
 export const evils = ['Morgana', 'Assassin', 'Heresy', 'Modred']; //악마팀
 export const merlinSight = ['Morgana', 'Assassin', 'Heresy']; // 멀린이 볼 수 있는 직업군
@@ -52,7 +53,6 @@ const GameContext = React.createContext('')
 const Store = ({children}) => {
     const {peerData} = useContext(PeerDataContext);
     const [gameState, dispatch] = useReducer(reducer, initialData)
-    const nickname = localStorage.getItem('nickname')
     console.log(gameState)
 
     useEffect(() => {
