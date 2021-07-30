@@ -12,15 +12,15 @@ const App = ({ handlerType, nickname, dispatch, state, peers, halted, name, acti
         handlerType !== undefined && actionHandler[handlerType]({ dispatch, state, peers, nickname, action });
     }
     const hatledButtonStyle = {
-        'border-radius': '30px',
-        'font-size': '1.25em',
-        'border-color': 'black',
+        'borderRadius': '30px',
+        'fontSize': '1.25em',
+        'borderColor': 'black',
         'color': 'white',
-        'background-color': 'brown',
-        'height': '50px;',
-        'width': '240px;',
-        'border': 'solid 3px black;',
-        'flex-grow': '1',
+        'backgroundColor': 'brown',
+        'height': '50px',
+        'width': '240px',
+        'border': 'solid 3px black',
+        'flexGrow': '1',
     };
     return (
         <button style={hatledButtonStyle} disabled={halted === true && true} onClick={() => dispatchFunction()}>
