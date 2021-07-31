@@ -12,5 +12,7 @@ export const DESELECT_HORSE = 'DESELECT_HORSE';
 export const GET_DATA_FROM_PEER = 'GET_DATA_FROM_PEER';
 export const UPDATE_PEERS = 'UPDATE_PEERS';
 export const PLAY_AI = 'PLAY_AI';
+export const INIT_LAST_YUT_DATA = 'INIT_LAST_YUT_DATA';
+
 
 export const UPDATE_STATE = 'UPDATE_STATE';

@@ -1,4 +1,4 @@
-import { YUT_RESULT_TYPE } from './Constants/yutGame'
+import { YUT_RESULT_TYPE } from './Constants/yutGameInitData'
 
 const table = {
     5: [[5], 21, 22, 23, 24, 25, 15, 16, 17, 18, 19],

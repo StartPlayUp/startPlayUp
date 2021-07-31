@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, createContext, useMemo, memo, useContext,
 import styled from 'styled-components';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
-import { initialState } from './Constants/yutGame';
+import { initialState } from './Constants/yutGameInitData';
 
 import {
     DESELECT_HORSE,
@@ -18,6 +18,7 @@ import {
     MOVE_HORSE,
     NEXT_TURN,
     PLAY_AI,
+    INIT_LAST_YUT_DATA,
 } from './Constants/actionType.js';
 import actionHandler from './Action/actionHandler.js';
 
@@ -34,8 +35,11 @@ const reducer = (state, { type, ...action }) => {
             }
             return { ...state, ...action.state, halted };
         };
+        case THROW_YUT: {
+            console.log("THROW_YUT : ", action.state.lastYutData)
+            return { ...action.state };
+        }
         case START_GAME:
-        case THROW_YUT:
         case UPDATE_GOAL:
         case SELECT_HORSE:
         case MOVE_FIRST_HORSE:
@@ -51,6 +55,10 @@ const reducer = (state, { type, ...action }) => {
         case DESELECT_HORSE: {
             return { ...state, selectHorse: -1, placeToMove: {} };
         }
+        case INIT_LAST_YUT_DATA: {
+            console.log("INIT_LAST_YUT_DATA")
+            return { ...state, lastYutData: [20, 20, 20, 20] };
+        }
         // case UPDATE_STATE:
         //     return { ...state, ...action.state }
         default:
@@ -64,7 +72,7 @@ const YutStore = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
-    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition, timer } = state;
+    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition, timer, lastYutData } = state;
 
 
     // const [halted, setHalted] = useState(true);
@@ -85,7 +93,7 @@ const YutStore = ({ children }) => {
 
     // 타이머가 30 초가 넘었을 때 순서 넘기기
     useEffect(() => {
-        if (timer > 30) {
+        if (timer > 100) {
             actionHandler.nextTurnHandler({ dispatch, state, peers, nickname })
         }
     }, [timer])
@@ -165,6 +173,7 @@ const YutStore = ({ children }) => {
         myThrowCount,
         winner,
         timer,
+        lastYutData,
         dispatch
     }),
         [playerData,
@@ -176,14 +185,15 @@ const YutStore = ({ children }) => {
             nowTurn,
             myThrowCount,
             winner,
-            timer,]
+            timer,
+            lastYutData,]
     );
-    useEffect(() => {
-        console.log("state 출력 시작------------")
-        console.log(state)
-        console.log("state 출력 끝------------")
+    // useEffect(() => {
+    //     console.log("state 출력 시작------------")
+    //     console.log(state)
+    //     console.log("state 출력 끝------------")
 
-    }, [state])
+    // }, [state])
 
     return (
         <div>

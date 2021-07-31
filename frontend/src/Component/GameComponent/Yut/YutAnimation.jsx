@@ -1,12 +1,17 @@
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect, useReducer } from "react";
 import styled, { keyframes } from "styled-components";
+
+import {
+	YutContext
+} from "Container/GameContainer/Yut/YutStore"
 
 const Background = styled.div`
 	display:flex;
 	flex-direction: row;
-	background: #28aef9;
-
+	background: #A6634D;
+	border-radius: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 
@@ -24,11 +29,8 @@ const rotate = (y) => keyframes`
 	from{
 		transform: none;
 	}
-	99%{
-		transform: rotateY(1800deg);
-	}
 	to{
-		transform:rotateY(''+y+'deg')
+		transform:rotateY(${y});
 	}
 `;
 
@@ -39,17 +41,22 @@ const Dice = styled.div`
 	bottom: 0;
 	margin: 20px;
 	transform-style: preserve-3d;
-	animation:${rotate} 5s;
-	${props => props.stop === true && "animation-play-state: paused;"};
+	animation:${props => props.lastYutData === 0 ? rotate('1800deg') : (props.lastYutData === 1 ? rotate('1980deg') : rotate('0deg'))} 1s ;
+	animation-fill-mode: forwards;
+	/* animation-fill-mode: backwards; */
+	/* ${props => props.stop === true && "animation-play-state: paused;"}; */
 	transform:scale(2, 0.5);
 `;
-
 
 const Face = styled.div`
 	background-color:white;
 	height:300px;
 	width:50px;
-	border:7px solid #28aef9;
+	border-radius: 20px;
+	border-left:3px solid white;
+	border-right:3px solid white;
+	box-shadow: 3px;
+
 	box-sizing:border-box;
 	position: absolute;
 	margin: auto;
@@ -61,6 +68,8 @@ const Face = styled.div`
 	flex-direction:column;
 	justify-content:space-around;
 	align-items:center;
+
+	background:#ffb14f;
 `;
 
 const Front = styled(Face)`
@@ -84,25 +93,23 @@ const FaceText = styled.div`
 	width: 30px;
 	border-radius: 30%;
 	display:flex;
-	font-size: 5vh;
+	font-size: 4vh;
 	font-weight: bold;
 	justify-content: center;
 	align-items: center;
+	color:#905338;
 `;
 
 
 const YutAnimation = () => {
-	const list = [0, 1, 2, 3];
-	const [test, setTest] = useState(true);
-	const yutResult = [180, 0, 180, 0];
-
+	const { lastYutData } = useContext(YutContext);
 
 	return (
 		<Background>
-			<button onClick={() => setTest(!test)}></button>
-			{list.map((i, index) =>
+			{/* {console.log("내용물")} */}
+			{lastYutData.map((i, index) =>
 				<Container key={index}>
-					<Dice stop={test}>
+					<Dice key={index} lastYutData={i}>
 						<Front>
 							<FaceText>X</FaceText>
 							<FaceText>X</FaceText>
