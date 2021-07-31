@@ -38,17 +38,17 @@ const ButtonTable = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
 `
-const moveTo = keyframes`
-    from{
-        transform: translate(0%,0%) //원래 위치
+const moveTo=(x1,y1,x2,y2) => keyframes`
+    0%{
+        transform: translate(${x1}px,${y1}px); //원래 위치
     }
-    to{
-        transform: translate(150%,150%) //움직일 위치
+    100%{
+        transform: translate(${x2}px,${y2}px); //움직일 위치
     }   
 `;
-const moveFrom = keyframes`
-    from{transform:translate(150%,150%)}//움직인 위치
-    to{transform:translate(0%,0%)
+const moveFrom=(x1,y1,x2,y2)=> keyframes`
+    from{transform:translate(${x1}px,${y1}px);}//움직인 위치
+    to{transform:translate(${x2}px,${y2}px);
     }//원래 위치
     
 `
@@ -63,6 +63,9 @@ const HoldButton = styled.button`
     :active{
         background-color: red;
     }
+`
+const Ani = styled.div`
+    animation: ${(props)=>props.hold? moveTo(props.x1,props.y1,props.x2,props.y2):moveTo(props.x2,props.y2,props.x1,props.y1)} 0.5s linear;
 `
 const IMG=styled.img`
     width:100%;
@@ -162,11 +165,14 @@ const Dice=()=>{
                             {lst.map((i) => (
                                 <>
                                     {hold[i] ?
-                                        ""
-                                    :
-                                        <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
-                                            <IMG src={diceImage[i]}/>
-                                        </HoldButton>}
+                                            <Ani hold={hold[i]} x1={placeX} y1={placeY} x2={boxX} y={boxY} >
+                                                <IMG src={diceImage[i]}/>
+                                            </Ani>
+                                        :
+                                            <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
+                                                <IMG src={diceImage[i]}/>
+                                            </HoldButton>
+                                        }
                                 </>
                                 )
                             )}
@@ -177,11 +183,13 @@ const Dice=()=>{
                                 {lst.map((i) => (
                                     <>
                                         {hold[i] ?
-                                            <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
-                                                <IMG src={diceImage[i]} />
-                                            </HoldButton>
+                                                <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
+                                                    <IMG src={diceImage[i]} />
+                                                </HoldButton>
                                             :
-                                        ""}
+                                        <Ani hold={hold[i]} x1={placeX} y1={placeY} x2={boxX} y={boxY} >
+                                                    <IMG src={diceImage[i]}/>
+                                                </Ani>}
                                     </>
                                     )
                                 )}
