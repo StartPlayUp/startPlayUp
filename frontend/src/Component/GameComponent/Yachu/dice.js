@@ -165,7 +165,7 @@ const Dice=()=>{
                             {lst.map((i) => (
                                 <>
                                     {hold[i] ?
-                                            <Ani hold={hold[i]} x1={placeX} y1={placeY} x2={boxX} y={boxY} >
+                                            <Ani hold={hold[i]} x1={placeX[i]} y1={placeY} x2={boxX} y={boxY} >
                                                 <IMG src={diceImage[i]}/>
                                             </Ani>
                                         :
@@ -187,7 +187,7 @@ const Dice=()=>{
                                                     <IMG src={diceImage[i]} />
                                                 </HoldButton>
                                             :
-                                        <Ani hold={hold[i]} x1={placeX} y1={placeY} x2={boxX} y={boxY} >
+                                        <Ani hold={hold[i]} x1={placeX[i]} y1={placeY} x2={boxX} y={boxY} >
                                                     <IMG src={diceImage[i]}/>
                                                 </Ani>}
                                     </>
