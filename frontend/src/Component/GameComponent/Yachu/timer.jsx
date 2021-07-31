@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { TimerData } from 'Container/GameContainer/Yacht/YatchStore';
+import styled from 'styled-components';
 const Timer=()=>{
     const [minutes, setMinutes]=useState(3);
     const [seconds,setSeconds]=useState(0);

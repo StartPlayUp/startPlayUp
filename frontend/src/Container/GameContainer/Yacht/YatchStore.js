@@ -165,7 +165,6 @@ const YachuProvider=({children})=>{
         }
     }
     function diceHold(value){
-        console.log(value)
         dispatch({type:DICEHOLD,value})
     }
     function selectData(name,value) {
@@ -363,7 +362,7 @@ const YachuProvider=({children})=>{
             {state:state,halt:halt,nowTurn:nowTurn,selectData }
         }>
             <DiceStore.Provider value={{
-                dice:state.dice,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
+                dice:state.dice,hold:state.hold,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
                 <TimerData.Provider value={{
                     nowTurn:nowTurn,timeOver}}>
                     {children}

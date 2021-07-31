@@ -9,19 +9,26 @@ const Yacht=(props)=>{
     const YachtMan=styled.div`
         display: flex;
         background-color: #e7e1cd;
-        justify-content: center;
         align-items: center;
-        width:70%;
+        justify-content: right;
+        width:1280px;
+        height:720px;
 
+    `
+    const ParentDiv = styled.div`
+        display: flex;
+        width:980px;
+        height:100%;
+        justify-content: right;
     `
     return(
         <YachuProvider>
             <YachtMan>
                 <Player />
-                <div>
+                <ParentDiv>
                     <Timer />
                     <Dice />
-                </div>
+                </ParentDiv>
             </YachtMan>
         </YachuProvider>
     );

@@ -1,6 +1,6 @@
-import React, { Fragment, useState, useEffect,useContext } from "react";
+import React, {useRef, Fragment, useState, useEffect,useContext } from "react";
 import {DiceStore} from 'Container/GameContainer/Yacht/YatchStore';
-import styled from 'styled-components';
+import styled,{ keyframes, css } from 'styled-components';
 import dice1 from "./diceImage/dice1.png"
 import dice2 from "./diceImage/dice2.png"
 import dice3 from "./diceImage/dice3.png"
@@ -9,21 +9,60 @@ import dice5 from "./diceImage/dice5.png"
 import dice6 from "./diceImage/dice6.png"
 import diceMK1 from "./diceImage/diceMK1.gif"
 import diceMK2 from "./diceImage/diceMK2.gif"
-const HoldTable=styled.div`
+const ParentDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    margin-top:5%;
+    flex-wrap: wrap;
+`
+const HoldTable = styled.div`
     border:none;
     background-color: #A94B00;
-    width:500px;
+    width:600px;
     height:200px;
     text-align: right;
     color:white;
+    position: relative;
+    margin-top: 33%;
+    margin-left: 30%;
+    right:0%;
     div{
         font-size:24px
     }
 `
+const ButtonTable = styled.div`
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+`
+const moveTo = keyframes`
+    from{
+        transform: translate(0%,0%) //원래 위치
+    }
+    to{
+        transform: translate(150%,150%) //움직일 위치
+    }   
+`;
+const moveFrom = keyframes`
+    from{transform:translate(150%,150%)}//움직인 위치
+    to{transform:translate(0%,0%)
+    }//원래 위치
+    
+`
 const HoldButton = styled.button`
+    display: flex;
     border: none;
     background: none;
-    width:15%;
+    width:100px;
+    :hover{
+        background-color:skyblue;
+    }
+    :active{
+        background-color: red;
+    }
 `
 const IMG=styled.img`
     width:100%;
@@ -35,29 +74,53 @@ const RollButton=styled.button`
     height:40px;
     font-size: 24px;
     color:#FFFFFF;
+    :hover{
+        background-color:skyblue;
+    }
+    :active{
+        background-color: #400064;
+        color:#FFFFFF;
+    }
 `
 const Dice=()=>{
     const diceState=useContext(DiceStore);
     const [second,setSecond]=useState(1);
-    const [diceImage,setImage]=useState([dice1,dice1,dice1,dice1,dice1]);
+    const [diceImage, setImage] = useState([dice1, dice1, dice1, dice1, dice1]);
+    const box = useRef(null);
+    const fromPosition = useRef(null);
+    const [boxX, setBoxX] = useState(0);
+    const [boxY, setBoxY] = useState(0);
+    const [placeX, setPlaceX] = useState([0, 0, 0, 0, 0]);
+    const [placeY, setPlaceY] = useState(0);
+
     function RollDice(){
         if(diceState.halt===true){
             diceState.RollDice()
-
         }
         else{
             alert("니 턴 아님")
         }
     }
-    const diceHold = (e)=>{
+    const diceHold = (e) => {
+        const value = e.currentTarget.value;
+        if (!diceState.hold[value]) {
+            let diceX = [...placeX];
+            const { x, y } = box.current.getBoundingClientRect();
+            const { left, top } = fromPosition.current.getBoundingClientRect();
+            setBoxX(x);
+            setBoxY(y);
+            diceX[value] = left + (value * 100);
+            console.log(diceX);
+            setPlaceX(diceX);
+            setPlaceY(top);            
+        }
+        diceState.diceHold(value);
+        /*
         if (diceState.halt === true) {
-            const {value}=e.target;
-            console.log(value);
-            diceState.diceHold(value)
         }
         else {
             alert("니 턴 아님")
-        }
+        }*/
     }
     const startGame=()=>{
         diceState.StartGame()
@@ -85,39 +148,46 @@ const Dice=()=>{
             setImage(copy)
         }
     },[diceState.rollCount])
+//useRef 리액트 체스 찾아보기
+    const lst = [0, 1, 2, 3, 4];
+
     return (
         <DiceStore.Consumer>
-            {({ dice, rollCount})=>(
+            {({ dice, rollCount,hold})=>(
                 <Fragment>
-                    <div>
-                        <div>
+                    <ParentDiv>
                             <RollButton disabled={rollCount? "":rollCount>=0} onClick={RollDice}>Roll Dice !</RollButton>
-                            <button onClick={startGame}>게임 시작</button>
-                        </div>
-                        <div>
-                            <div>{dice}</div>
-                            <div>
-                                <HoldButton onClick={diceHold} value={0}>
-                                    <IMG src={diceImage[0]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={1}>
-                                    <IMG src={diceImage[1]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={2}>
-                                    <IMG src={diceImage[2]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={3}>
-                                    <IMG src={diceImage[3]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={4}>
-                                    <IMG src={diceImage[4]}/>
-                                </HoldButton>
-                            </div>
-                        </div>
-                        <HoldTable>
+                        <button onClick={startGame}>게임 시작</button>
+                        <ButtonTable>
+                            {lst.map((i) => (
+                                <>
+                                    {hold[i] ?
+                                        ""
+                                    :
+                                        <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
+                                            <IMG src={diceImage[i]}/>
+                                        </HoldButton>}
+                                </>
+                                )
+                            )}
+                        </ButtonTable>
+                        <HoldTable ref={box}>
                             <div>{rollCount} Left</div>
+                            <ButtonTable>
+                                {lst.map((i) => (
+                                    <>
+                                        {hold[i] ?
+                                            <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
+                                                <IMG src={diceImage[i]} />
+                                            </HoldButton>
+                                            :
+                                        ""}
+                                    </>
+                                    )
+                                )}
+                            </ButtonTable>
                         </HoldTable>
-                    </div>
+                    </ParentDiv>
                 </Fragment>
             )}
         </DiceStore.Consumer>
