@@ -34,6 +34,10 @@ const Modal = styled.div`
     left: 0;
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 const ModalButton = styled.button`
@@ -45,7 +49,7 @@ const ModalButton = styled.button`
 const ModalSection = styled.div`
     width: 90%;
     max-width: 450px;
-    margin: 0 auto;
+    min-width: 300px;
     border-radius: .3rem;
     background-color: #fff;
     animation: modelShow .3s;
@@ -99,9 +103,9 @@ const ModalSectionHeader = styled.div`
 const winnerModal = () => {
 
     const { winner, playerData } = useContext(YutContext);
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState(true);
     useEffect(() => {
-        if (playerData.length === winner.length) {
+        if (playerData.length === winner.length && winner.length !== 0) {
             setModalShow(true);
         }
     }, [winner])
@@ -118,8 +122,8 @@ const winnerModal = () => {
 
     return (
         <>
-            <button style={{ height: "100px", width: "100px" }} onClick={modalShowOnHandler}>modalOn</button>
-            <button style={{ height: "100px", width: "100px" }} onClick={modalShowOffHandler}>modalOff</button>
+            {/* <button style={{ height: "100px", width: "100px" }} onClick={modalShowOnHandler}>modalOn</button>
+            <button style={{ height: "100px", width: "100px" }} onClick={modalShowOffHandler}>modalOff</button> */}
             {modalShow && <Modal className="modal page">
                 <ModalSection>
                     <ModalSectionHeader>
