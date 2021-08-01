@@ -1,6 +1,6 @@
 import { THROW_YUT, boardContext, SELECT_HORSE } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { GAME, YUT } from 'Constants/peerDataTypes';
 
@@ -29,9 +29,22 @@ const Horse = styled.div`
 
 `;
 
-const StyledButton = styled.button`
-border: 0;
-outline: 0;
+const bounceIn = keyframes`
+    from {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+    60 % {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    to {
+        transform: scale(1);
+    }
+`;
+
+const StyleDiv = styled.div`
+    animation: ${bounceIn} 0.1s;
 `;
 
 
@@ -52,11 +65,11 @@ const App = ({ horses, player, index }) => {
         actionHandler.selectHorseHandler({ dispatch, peers, state, nickname, index })
     }
     return (
-        <div onClick={(e) => clickHorseHandler(e, index, player.nickname)} >
+        <StyleDiv onClick={(e) => clickHorseHandler(e, index, player.nickname)} >
             {[...Array(horses)].map((tp, index) =>
                 <Horse key={index} color={player.color} horseIndex={index} translate={translate[index]} />
             )}
-        </div>
+        </StyleDiv>
     )
 }
 export default memo(App);

@@ -1,3 +1,3 @@
-export const ErrorMessage =()=>({
-    CHAT_LIMIT_3MINUTE:"채팅 3분 제한",
+export const ErrorMessage = () => ({
+    CHAT_LIMIT_3MINUTE: "채팅 3분 제한",
 });

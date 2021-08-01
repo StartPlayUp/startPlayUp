@@ -1,8 +1,8 @@
 import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, checkHavePlaceToMove } from '../YutFunctionModule.js';
 
-import { initialState, YUT_RESULT_TYPE } from '../Constants/yutGame';
+import { initialState, YUT_RESULT_TYPE, YUT_PLAYER_COLOR } from '../Constants/yutGameInitData';
 
-const randomYut = () => {
+const randomYut = (count) => {
     const yutMatchTable = {
         0: YUT_RESULT_TYPE.MO, // 모
         1: YUT_RESULT_TYPE.DO, // 도
@@ -17,7 +17,7 @@ const randomYut = () => {
     }
     let result = yutMatchTable[arr.reduce((a, b) => a + b)];
     // 백도가 있으면 1 말고 0 출력
-    return result === 1 && arr[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : result;
+    return [result === 1 && arr[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : result, arr];
 }
 
 
@@ -37,17 +37,17 @@ const shuffle = (array) => {
 }
 
 
-const throwYutFunction = (myThrowCount, yutData) => {
+const throwYutFunction = (myThrowCount, yutData, count) => {
     if (myThrowCount <= 0) {
         return { myThrowCount, yutData }
     }
-    const randomYutResult = randomYut();
+    const [randomYutResult, lastYutData] = randomYut(count);
     yutData = [...yutData, randomYutResult];
     if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
         myThrowCount = myThrowCount - 1;
     }
 
-    return { myThrowCount, yutData }
+    return { myThrowCount, yutData, lastYutData }
 }
 
 const addPlaceToMove = (index, yutData) => {
@@ -142,15 +142,14 @@ const PLAY_AI = (state, action) => {
 const START_GAME = (peers) => {
     console.log("peers : ", peers);
     const nickname = localStorage.getItem('nickname');
-    const colorList = ['orange', 'blue', 'green']
 
     // 나의 데이터 추가
-    const playerData = [{ nickname, color: 'red', horses: 4, goal: 0 }];
+    const playerData = [{ nickname, color: YUT_PLAYER_COLOR[0], horses: 1, goal: 3 }];
     const playerHorsePosition = [{}];
 
     peers.slice(0, 3).forEach((i, index) => {
         // 추가된 인원 만큼 플레이어 데이터 배열 추가
-        playerData.push({ nickname: i.nickname, color: colorList[index], horses: 4, goal: 0 });
+        playerData.push({ nickname: i.nickname, color: YUT_PLAYER_COLOR[index + 1], horses: 4, goal: 0 });
 
         // 추가된 인원 만큼 말 위치 배열 추가
         playerHorsePosition.push({});
@@ -160,18 +159,18 @@ const START_GAME = (peers) => {
 
     const nowTurnNickname = playerData[0].nickname; // playerData의 첫번째 닉네임
     const halted = !(nickname === playerData[0].nickname);
-    const result = { ...initialState, nowTurn: { index: 0, nickname: nowTurnNickname }, playerData, myThrowCount: 10, playerHorsePosition };
+    const result = { ...initialState, nowTurn: { index: 0, nickname: nowTurnNickname }, playerData, myThrowCount: 100, playerHorsePosition };
 
     console.log("START GAME : ", { ...result, peers, halted });
     return { ...result, halted };
 }
 
-const THROW_YUT = (state) => {
+const THROW_YUT = (state, count) => {
     // 윷 배열에 던져 나온 수를 추가해줌.
     if (state.myThrowCount <= 0) {
         return { ...state }
     }
-    const throwYut = throwYutFunction(state.myThrowCount, state.yutData);
+    const throwYut = throwYutFunction(state.myThrowCount, state.yutData, count);
     return { ...state, ...throwYut };
 };
 

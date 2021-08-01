@@ -1,7 +1,8 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { TimerData } from 'Container/GameContainer/Yacht/YatchStore';
+import styled from 'styled-components';
 const Timer=()=>{
-    const [minutes, setMinutes]=useState(1);
+    const [minutes, setMinutes]=useState(3);
     const [seconds,setSeconds]=useState(0);
     const state=useContext(TimerData)
     useEffect(() => {
@@ -21,8 +22,8 @@ const Timer=()=>{
         return () => clearInterval(countdown);
     }, [minutes, seconds]);
     useEffect(() => {
-        setMinutes(0)
-        setSeconds(30)
+        setMinutes(3)
+        setSeconds(0)
     }, [state.nowTurn])
     return (
         <TimerData.Consumer>

@@ -31,7 +31,7 @@ const Global = () => {
   return (
     <>
       <HEADER />
-      <Snow />
+      {/* <Snow /> */}
       <GlobalStyles>
       </GlobalStyles>
       <FOOTER />
