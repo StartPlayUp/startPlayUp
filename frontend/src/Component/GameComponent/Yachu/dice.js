@@ -42,6 +42,9 @@ const moveTo=(x1,y1,x2,y2) => keyframes`
     0%{
         transform: translate(${x1}px,${y1}px); //원래 위치
     }
+    1%{
+        display: flex;
+    }
     100%{
         transform: translate(${x2}px,${y2}px); //움직일 위치
     }   
@@ -64,8 +67,9 @@ const HoldButton = styled.button`
         background-color: red;
     }
 `
-const Ani = styled.div`
-    animation: ${(props)=>props.hold? moveTo(props.x1,props.y1,props.x2,props.y2):moveTo(props.x2,props.y2,props.x1,props.y1)} 0.5s linear;
+const Ani = styled.img`
+    display:hidden;
+    animation: ${(props)=>props.hold? moveTo(props.x2,props.y2,props.x1,props.y1) :moveTo(props.x1,props.y1,props.x2,props.y2)} 0.3s linear;
 `
 const IMG=styled.img`
     width:100%;
@@ -162,37 +166,114 @@ const Dice=()=>{
                             <RollButton disabled={rollCount? "":rollCount>=0} onClick={RollDice}>Roll Dice !</RollButton>
                         <button onClick={startGame}>게임 시작</button>
                         <ButtonTable>
-                            {lst.map((i) => (
-                                <>
-                                    {hold[i] ?
-                                            <Ani hold={hold[i]} x1={placeX[i]} y1={placeY} x2={boxX} y={boxY} >
-                                                <IMG src={diceImage[i]}/>
-                                            </Ani>
-                                        :
-                                            <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
-                                                <IMG src={diceImage[i]}/>
-                                            </HoldButton>
-                                        }
-                                </>
-                                )
-                            )}
+                            <>
+                                {hold[0] ?
+                                    <Ani hold={hold[0]} x1={boxX} y1={boxY} x2={placeX[0]} y={placeY} src={diceImage[0]}>
+                                    </Ani>
+                                    :
+                                    <>
+                                    <Ani hold={hold[0]} x1={boxX} y1={boxY} x2={placeX[0]} y={placeY} src={diceImage[0]}>
+                                    </Ani>
+                                    <HoldButton onClick={diceHold} value={0} ref={fromPosition}>
+                                        <IMG src={diceImage[0]}/>
+                                    </HoldButton>
+                                    
+                                    </>
+                                }
+                                {hold[1] ?
+                                    <Ani hold={hold[1]} x1={boxX} y1={boxY} x2={placeX[1]} y={placeY} src={diceImage[1]}>
+                                    </Ani>
+                                :
+                                    <>
+                                    <Ani hold={hold[1]} x1={boxX} y1={boxY} x2={placeX[1]} y={placeY} src={diceImage[1]}>
+                                    </Ani>                                    
+                                    <HoldButton onClick={diceHold} value={1} ref={fromPosition}>
+                                        <IMG src={diceImage[1]}/>
+                                    </HoldButton>
+                                    </>
+                                }
+                                {hold[2] ?
+                                    <Ani hold={hold[2]} x1={boxX} y1={boxY} x2={placeX[2]} y={placeY} src={diceImage[2]}>
+                                    </Ani>
+                                    :
+                                    <>
+                                    <Ani hold={hold[2]} x1={boxX} y1={boxY} x2={placeX[2]} y={placeY} src={diceImage[2]}>
+                                    </Ani>
+                                    <HoldButton onClick={diceHold} value={2} ref={fromPosition}>
+                                        <IMG src={diceImage[2]}/>
+                                    </HoldButton>
+                                    
+                                    </>
+                                }
+                                {hold[3] ?
+                                    <Ani hold={hold[3]} x1={boxX} y1={boxY} x2={placeX[3]} y={placeY} src={diceImage[3]}>
+                                    </Ani>
+                                    :
+                                    <>
+                                    <Ani hold={hold[3]} x1={boxX} y1={boxY} x2={placeX[3]} y={placeY} src={diceImage[3]}>
+                                    </Ani>
+                                    <HoldButton onClick={diceHold} value={3} ref={fromPosition}>
+                                        <IMG src={diceImage[3]}/>
+                                    </HoldButton>
+                                    
+                                    </>
+                                }
+                                {hold[4] ?
+                                    <Ani hold={hold[4]} x1={boxX} y1={boxY} x2={placeX[4]} y={placeY} src={diceImage[4]}>
+                                    </Ani>
+                                    :
+                                    <>
+                                    <Ani hold={hold[4]} x1={boxX} y1={boxY} x2={placeX[4]} y={placeY} src={diceImage[4]}>
+                                    </Ani>
+                                    <HoldButton onClick={diceHold} value={4} ref={fromPosition}>
+                                        <IMG src={diceImage[4]}/>
+                                    </HoldButton>
+                                    
+                                    </>
+                                }
+                            </>
                         </ButtonTable>
                         <HoldTable ref={box}>
                             <div>{rollCount} Left</div>
                             <ButtonTable>
-                                {lst.map((i) => (
-                                    <>
-                                        {hold[i] ?
-                                                <HoldButton onClick={diceHold} value={i} ref={fromPosition}>
-                                                    <IMG src={diceImage[i]} />
-                                                </HoldButton>
-                                            :
-                                        <Ani hold={hold[i]} x1={placeX[i]} y1={placeY} x2={boxX} y={boxY} >
-                                                    <IMG src={diceImage[i]}/>
-                                                </Ani>}
-                                    </>
-                                    )
-                                )}
+                                <>
+                                    {hold[0] ?
+                                        <HoldButton onClick={diceHold} value={0} ref={fromPosition}>
+                                            <IMG src={diceImage[0]}/>
+                                        </HoldButton>
+                                    :
+                                        ""
+                                        
+                                    }
+                                    {hold[1] ?
+                                        <HoldButton onClick={diceHold} value={1} ref={fromPosition}>
+                                            <IMG src={diceImage[1]}/>
+                                        </HoldButton>
+                                    :
+                                        ""
+                                    }
+                                    {hold[2] ?
+                                        <HoldButton onClick={diceHold} value={2} ref={fromPosition}>
+                                            <IMG src={diceImage[2]}/>
+                                        </HoldButton>
+                                    :
+                                        ""
+                                    }
+                                    {hold[3] ?
+                                        <HoldButton onClick={diceHold} value={3} ref={fromPosition}>
+                                            <IMG src={diceImage[3]}/>
+                                        </HoldButton>
+                                    :
+                                        ""
+                                    }
+                                    {hold[4] ?
+                                        <HoldButton onClick={diceHold} value={4} ref={fromPosition}>
+                                            <IMG src={diceImage[4]}/>
+                                        </HoldButton>
+                                    :
+                                        ""
+                                    }
+                                </>
                             </ButtonTable>
                         </HoldTable>
                     </ParentDiv>

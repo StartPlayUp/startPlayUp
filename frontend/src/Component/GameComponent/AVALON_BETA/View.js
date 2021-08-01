@@ -37,7 +37,6 @@ function View() {
             {gameState.component === EXPEDITION_RESULT && <RESULT_EXPEDITION/>}
             {gameState.component === ASSASSIN_FRAME && <ASSASSIN/>}
             {gameState.component === END_GAME_FRAME && <END_GAME/>}
-            {gameState.component === WAITINGVIEW && <WaitingView/>}
         </>
     )
 }
