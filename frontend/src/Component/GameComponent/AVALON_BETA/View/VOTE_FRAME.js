@@ -1,65 +1,39 @@
-import React, {useContext, useState} from "react";
-import {GameContext} from "../Store";
+import React, {useContext} from "react";
+import {GameContext, VOTE_RESULT} from "../Store";
 import {Title} from "../Styled";
 import Vote from "./Vote";
-import {PeersContext} from "../../../../Routes/peerStore";
-import {GAME_CHECK} from "../MVC/AVALON_Reducer";
-import WaitingView from "./animation/WaitingView";
+import {SET_COMPONENT} from "../MVC/AVALON_Reducer";
+import * as S from '../Styled'
 
 function VOTE_FRAME() {
-    const {dispatch, gameState} = useContext(GameContext)
-    const {peers} = useContext(PeersContext)
-    const nickname = localStorage.getItem('nickname')
-    const gameData = {...gameState}
-    const [vote, setVote] = useState('agree');
-    console.log('vote')
-    const onChange = e => {
-        setVote(e.target.value);
-    };
-    const onClick = e => {
-        if (e.target.value === 'agree') {
-            setVote('agree')
-        } else if (e.target.value === 'oppose') {
-            setVote('oppose')
-        }
-        gameData.usingPlayers[gameData.voteTurn].toGo = vote
-        gameData.voteTurn += 1
-        dispatch({type: GAME_CHECK, gameData, peers})
-    };
+    const {gameState, dispatch} = useContext(GameContext);
+    const selectedPlayers = () => {
+        let temp = []
+        gameState.usingPlayers.map((user) => {
+            user.selected && temp.push(user.nickname)
+        })
+        return temp
+    }
     return (
-        <>
-            <div>VOTE</div>
-            <div>
-                {gameData.voteTurn!==gameData.usingPlayers.length&&
-                    <Title>
-                        {nickname === gameData.usingPlayers[gameData.voteTurn].nickname ?
-                            <div>
-                                <form>
-                                    <label>찬성<input
-                                        type="radio"
-                                        name={'vote'}
-                                        value={'agree'}
-                                        onChange={onChange}/>
-                                    </label>
-                                    <label>반대 <input
-                                        type="radio"
-                                        name={'vote'}
-                                        value={'oppose'}
-                                        onChange={onChange}/>
-                                    </label>
-                                </form>
-                                <button
-                                    onClick={onClick}
-                                    value={vote}>
-                                    확인
-                                </button>
-                            </div> : <WaitingView/>
-                        }
-                    </Title>
-                }
-            </div>
-        </>
-    )
+        <S.VoteFrame>
+            <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
+            <S.VoteImage>
+                <img src={'/img/vote_img.png'} alt={'img'} width={'10%'}/>
+                <h1>동의 합니까?</h1>
+            </S.VoteImage>
+            <Title>
+                {gameState.usingPlayers.map((user, index) => (
+                    <Vote key={index} index={index}/>
+                ))}
+            </Title>
+            <S.MainVoteButton
+                onClick={() =>
+                    dispatch({type: SET_COMPONENT, component: VOTE_RESULT})
+                }>
+                투표 결과
+            </S.MainVoteButton>
+        </S.VoteFrame>
+    );
 }
 
-export default VOTE_FRAME
+export default VOTE_FRAME;
