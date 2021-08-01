@@ -23,7 +23,7 @@ const App = ({ handlerType, nickname, dispatch, state, peers, halted, name, acti
         'flexGrow': '1',
     };
     return (
-        <button style={hatledButtonStyle} disabled={halted === true && true} onClick={() => dispatchFunction()}>
+        <button style={buttonStyle} disabled={halted === true && true} onClick={() => dispatchFunction()}>
             {name}
         </button >
     )

@@ -200,7 +200,7 @@ const YutStore = ({ children }) => {
             {/* <div>{state.timer}</div>
             <div>nowTurn Index : {nowTurn.index}</div>
             <div>nowTurn Nickname : {nowTurn.nickname}</div> */}
-            {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)}
+            {/* {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)} */}
             <YutContext.Provider value={value}>
                 {/* <TimerContext.Provider value={timerContextValue}> */}
                 {children}

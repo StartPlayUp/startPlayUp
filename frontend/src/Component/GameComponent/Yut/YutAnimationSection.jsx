@@ -12,6 +12,12 @@ const Background = styled.div`
 	background: #A6634D;
 	border-radius: 30px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    flex-grow: 4.5;
+    justify-content: center;
+	align-items: center;
+
+	height:570px;
 `;
 
 
@@ -19,10 +25,14 @@ const Container = styled.div`
 	display:flex;
 	justify-content:center;
 	align-items:center;
-	perspective:1000px;
-	-webkit-perspective:1000;
+
+	/* 원근법 perspective */
+	perspective:200px;
+	-webkit-perspective:200;
 	perspective-origin:50%;
 	-webkit-perspective-origin:50%;
+
+	height:inherit;
 `;
 
 const rotate = (y) => keyframes`
@@ -35,11 +45,10 @@ const rotate = (y) => keyframes`
 `;
 
 const Dice = styled.div`
-	height: 400px;
+	height: inherit;
 	width: 100px;
 	position: relative;
 	bottom: 0;
-	margin: 20px;
 	transform-style: preserve-3d;
 	animation:${props => props.lastYutData === 0 ? rotate('1800deg') : (props.lastYutData === 1 ? rotate('1980deg') : rotate('0deg'))} 1s ;
 	animation-fill-mode: forwards;

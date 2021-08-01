@@ -19,21 +19,23 @@ import start from '../../../image/start.png';
 
 
 const GridContainer = styled.div`
-    /* width:300px;
-    height:300px; */
+    width:inherit;
+    height:inherit;
     margin:10px;
     display:grid;
     grid-gap: 2px;
     grid-template-rows:repeat(21,0.4fr);
     grid-template-columns:repeat(21,0.4fr);
+
 `;
 
 const GridPlace = styled.div`
     display:grid;
-    /* grid-row:${props => String(props.row + 1) + " / " + String(props.row + 2)};
-    grid-column:${props => String(props.column + 1) + " / " + String(props.column + 2)}; */
     grid-row:${props => (`${props.row + 1}` + " / " + `${props.row + 2}`)};
     grid-column:${props => (`${props.column + 1}` + " / " + `${props.column + 2}`)};
+
+    justify-content: center;
+    align-items:center;
 
     /* animation: */
     :hover { transform: scale(1.1); }
@@ -44,8 +46,8 @@ const GridPlace = styled.div`
 const PlaceButton = styled.button`
     background-color:${props => props.color !== undefined && props.color};
     border-radius: 100%;
-    height:40px;
-    width: 40px;
+    height:${props => props.buttonSize !== undefined ? props.buttonSize : 40}px;
+    width: ${props => props.buttonSize !== undefined ? props.buttonSize : 40}px;
     border: none;
     padding:0px;
     margin:-5px;
@@ -67,13 +69,15 @@ const YutDiv = styled.div`
     margin: 10px 10px 40px 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius:30px;
-    padding:20px;
+    width:550px;
+    height:500px;
+    padding:20px 40px 50px 40px;
     background:white;
 `;
 
 const StyleImg = styled.img`
-    width:40px;
-    height:40px;
+    width:inherit;
+    height:inherit;
     border-radius: 100%;
     background-color:${props => props.color !== undefined && props.color};
 `;
@@ -84,6 +88,10 @@ const App = () => {
     const { peers } = useContext(PeersContext);
 
     const shortPlace = [5, 10, 15, 23, 20];
+
+    const commonPlaceSize = 40;
+    const shortPlaceSize = 60;
+
     const gridTable = [
         { index: 0, row: 20, column: 20, rotateValue: 0 },
         { index: 1, row: 20, column: 16, rotateValue: 0 },
@@ -170,19 +178,30 @@ const App = () => {
     return (
         <YutDiv>
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
-                {gridTable.map((i, index) =>
-                    <GridPlace key={index} index={index} row={i.column} column={i.row}>
-                        {/* <PlaceButton key={index} onClick={(e) => moveHorse(e, index)} color={changeItemColorHandler(index)}>{'O'}</PlaceButton> */}
-                        <PlaceButton key={index} onClick={(e) => moveHorse(e, index)} color={changeItemColorHandler(index)} rotateValue={i.rotateValue}>{
-                            // <StyledImg src={arrow} />
-                            index === 1 || index === 30 ? (index === 1) ? (<StyleImg src={start} color={changeItemColorHandler(index)} />) : (<StyleImg src={goal} color={changeItemColorHandler(index)} />)
-                                : (<StyleImg src={arrow} color={changeItemColorHandler(index)} />)
-                        }</PlaceButton>
-                        {horsePosition[index] !== undefined &&
-                            <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
-                                {index}
-                            </Horses>}
-                    </GridPlace>)
+                {
+                    gridTable.map((i, index) => {
+                        if (index === 0) return;
+                        return (<GridPlace key={index} index={index} row={i.column} column={i.row}>
+                            <PlaceButton
+                                key={index}
+                                onClick={(e) => moveHorse(e, index)}
+                                color={changeItemColorHandler(index)}
+                                rotateValue={i.rotateValue}
+                                buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
+                                {
+                                    // <StyledImg src={arrow} />
+                                    index === 1 || index === 30 ? (index === 1) ? (<StyleImg src={start} color={changeItemColorHandler(index)} />) : (<StyleImg src={goal} color={changeItemColorHandler(index)} />)
+                                        : (<StyleImg src={arrow} color={changeItemColorHandler(index)} />)
+                                }
+                            </PlaceButton>
+                            {
+                                horsePosition[index] !== undefined &&
+                                <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
+                                    {index}
+                                </Horses>
+                            }
+                        </GridPlace>);
+                    })
                 }
             </GridContainer >
 

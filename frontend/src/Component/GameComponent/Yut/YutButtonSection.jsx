@@ -22,55 +22,6 @@ import { NUMBER_TO_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGam
 import Gauge from './Gauge'
 
 
-
-
-const StylePlayerWithYutData = styled.div`
-    display:flex;
-    flex-direction: column;
-    flex-grow:70;
-`;
-
-const StyleDiv = styled.div`
-    display:flex;
-    height:30px;
-    flex-direction: row;
-    margin:10px;
-
-    background-color: #FFFFF3;
-    border-radius: 30px;
-    align-items: center;
-    justify-content: space-evenly;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    flex-grow: 70;
-`;
-
-const PlayerSection = styled.div`
-    display:flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding:5px;
-    background-color: #FFFFF3;
-    border-radius: 30px;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-    // 비율
-    flex-grow:70;
-`;
-
-const Player = styled.div`
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding:10px;
-    margin:0px;
-    background-color:#C4C4C4;
-    border-radius: 30px;
-    box-shadow: 0px 3px 0px 3px gray;
-`;
-
 const HatledButtonSection = styled.div`
     display:flex;
     flex-direction: column;
@@ -79,15 +30,6 @@ const HatledButtonSection = styled.div`
     height:100px;
 `;
 
-const StyleHaltedButton = styled(HaltButton)`
-    border-radius: 30px;
-    border-color: black;
-    color: white;
-    background-color: brown;
-    height: 50px;
-    width: 240px;
-    border: solid 3px black;
-`;
 
 const PlayerButtonSection = styled.div`
     display:flex;
@@ -101,7 +43,7 @@ const PlayerButtonSection = styled.div`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
     // 비율
-    flex-grow:45;
+    flex-grow:1;
 `;
 
 const NowPlayerNickname = styled.div`
@@ -118,11 +60,6 @@ const NowPlayerNickname = styled.div`
 
 `;
 
-const StyledPlayerSection = styled.div`
-    display:flex;
-    flex-direction: row;
-    font-size: 1.25em;
-`;
 
 const StyleCenterDiv = styled.div`
     display: flex;
@@ -138,34 +75,20 @@ const App = () => {
     const nickname = localStorage.getItem('nickname');
 
     const { halted, yutData, myThrowCount, playerData, nowTurn, timer } = state;
-    // const [sendRequest, setSendRequest] = useState(false);
-    // const state = useContext(stateContext);
-
-    // const { playerData, playerDataDispatch } = useContext(playerDataContextValue)
-    // // const player = useContext(playerDataContextValue)
-
-
 
 
     const hatledButtonStyle = {
         'borderRadius': '30px',
+        'fontSize': '1.25em',
         'borderColor': 'black',
         'color': 'white',
         'backgroundColor': 'brown',
-        'height': '50px;',
-        'width': '240px;',
-        'border': 'solid 3px black;',
+        'height': '50px',
+        'width': '240px',
+        'border': 'solid 3px black',
+        'flexGrow': '1',
     };
 
-    const [yutResultList, setYutresultList] = useState([0, 0, 0, 0, 0, 0])
-
-    useEffect(() => {
-        const yutList = [0, 0, 0, 0, 0, 0];
-        yutData.forEach((i) => {
-            yutList[i] += 1;
-        })
-        setYutresultList(yutList);
-    }, [yutData])
 
     const [count, setCount] = useState(0);
     const intervalRef = useRef(null);
@@ -186,7 +109,7 @@ const App = () => {
     }, [halted])
 
     const startCount = () => {
-        if (intervalRef.current) return;
+        if (intervalRef.current || myThrowCount === 0) return;
         intervalRef.current = setInterval(() => {
             setCount((prevCounter) => prevCounter + 10);
         }, 50);
@@ -209,43 +132,21 @@ const App = () => {
     }
 
 
-
-
     return (
-        <div>
-            <button onClick={() => actionHandler.startGameHandler({ dispatch, state, peers, nickname })}>게임 시작</button>
-            <StyledPlayerSection>
-                <StylePlayerWithYutData>
-                    <StyleDiv>
-                        {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_YUT_TYPE[index]} : {i}</div>))}
-                    </StyleDiv>
-                    <PlayerSection>
-                        {playerData.map((i, index) => <Player key={index}>
-                            player{index + 1}<div>{i.nickname}</div>
-                            <div style={{ "height": "60px" }} >
-                                <Horses player={i} index={0} horses={i.horses} />
-                            </div>
-                            <div>얻은 점수 : {i.goal}</div>
-                            <p />
-                        </Player>)}
-                    </PlayerSection>
-                </StylePlayerWithYutData>
-                <PlayerButtonSection>
-                    <NowPlayerNickname>
-                        <StyleCenterDiv>시간 초 : {timer}</StyleCenterDiv>
-                        <StyleCenterDiv>윷 횟수 : {myThrowCount}</StyleCenterDiv>
-                        <StyleCenterDiv>현재 턴 : {nowTurn.nickname}</StyleCenterDiv>
-                    </NowPlayerNickname>
-                    <HatledButtonSection>
-                        <div style={{ margin: '5px' }} className="App">
-                            <Gauge counterHandler={countHandler} />
-                        </div>
-                        <HaltGagueButton count={count} buttonEvent={{ startCount, stopCount }} buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} nickname={nickname} name={'윷 굴리기'} />
-                        <HaltButton buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} nickname={nickname} name={'다음 턴'} />
-                    </HatledButtonSection>
-                </PlayerButtonSection>
-            </StyledPlayerSection >
-        </div>
+        <PlayerButtonSection>
+            <NowPlayerNickname>
+                <StyleCenterDiv>시간 초 : {timer}</StyleCenterDiv>
+                <StyleCenterDiv>윷 횟수 : {myThrowCount}</StyleCenterDiv>
+                <StyleCenterDiv>현재 턴 : {nowTurn.nickname}</StyleCenterDiv>
+            </NowPlayerNickname>
+            <HatledButtonSection>
+                <div style={{ margin: '5px' }} className="App">
+                    <Gauge counterHandler={countHandler} />
+                </div>
+                <HaltGagueButton count={count} buttonEvent={{ startCount, stopCount }} buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} nickname={nickname} name={'윷 굴리기'} />
+                <HaltButton buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} nickname={nickname} name={'다음 턴'} />
+            </HatledButtonSection>
+        </PlayerButtonSection>
     )
 }
 export default memo(App);

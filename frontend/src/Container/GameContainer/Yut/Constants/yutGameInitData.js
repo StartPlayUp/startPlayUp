@@ -19,7 +19,10 @@ export const initialState = {
     lastYutData: [0, 0, 0, 0],
 };
 
+// 플레이어 색
+export const YUT_PLAYER_COLOR = ['red', '#7bd3f7', 'orange', '#98ff98']
 
+// 윷 타입
 export const YUT_RESULT_TYPE = {
     BACK_DO: 0,
     DO: 1,

@@ -1,6 +1,6 @@
 import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, checkHavePlaceToMove } from '../YutFunctionModule.js';
 
-import { initialState, YUT_RESULT_TYPE } from '../Constants/yutGameInitData';
+import { initialState, YUT_RESULT_TYPE, YUT_PLAYER_COLOR } from '../Constants/yutGameInitData';
 
 const randomYut = (count) => {
     const yutMatchTable = {
@@ -142,15 +142,14 @@ const PLAY_AI = (state, action) => {
 const START_GAME = (peers) => {
     console.log("peers : ", peers);
     const nickname = localStorage.getItem('nickname');
-    const colorList = ['orange', 'blue', 'green']
 
     // 나의 데이터 추가
-    const playerData = [{ nickname, color: 'red', horses: 4, goal: 0 }];
+    const playerData = [{ nickname, color: YUT_PLAYER_COLOR[0], horses: 1, goal: 3 }];
     const playerHorsePosition = [{}];
 
     peers.slice(0, 3).forEach((i, index) => {
         // 추가된 인원 만큼 플레이어 데이터 배열 추가
-        playerData.push({ nickname: i.nickname, color: colorList[index], horses: 4, goal: 0 });
+        playerData.push({ nickname: i.nickname, color: YUT_PLAYER_COLOR[index + 1], horses: 4, goal: 0 });
 
         // 추가된 인원 만큼 말 위치 배열 추가
         playerHorsePosition.push({});

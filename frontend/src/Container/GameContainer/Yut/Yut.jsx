@@ -1,7 +1,10 @@
 import React, { useReducer } from 'react';
 import styled from 'styled-components';
 import Yutfield from 'Component/GameComponent/Yut/YutfieldSection'
+
 import YutPlayersSection from 'Component/GameComponent/Yut/YutPlayersSection';
+import YutButtonSection from 'Component/GameComponent/Yut/YutButtonSection';
+
 import YutStore from './YutStore';
 import YutAnimation from 'Component/GameComponent/Yut/YutAnimationSection';
 import WinnerModal from './WinnerModal';
@@ -9,17 +12,53 @@ import WinnerModal from './WinnerModal';
 const StyleDivFlexRow = styled.div`
     display:flex;
     flex-direction: row;
-    width: inherit;
-    height:inherit;
+    width: 1150px;
+    height:750px;
 `;
 
-const StyledYutAnimation = styled(YutAnimation)`   
-    flex-grow: 7;
+const FieldAnimationSection = styled.div`
+    display:flex;
+    flex-direction: row;
+    width: 1150px;
+    height:550px;
+    justify-content: center;
+    align-items: center;`;
 
+const PlayerButtonSection = styled.div`
+    display:flex;
+    flex-direction: row;
+    width: inherit;
+    height:240px;
+    justify-content: center;
+    align-items: center;
+    margin:0px;
+`;
+
+
+const StyledYutAnimation = styled(YutAnimation)`   
+    /* flex-grow: 7; */
+    justify-content: center;
+    align-items: center;
 `;
 
 const StyledYutfield = styled(Yutfield)`
-    flex-grow: 4.5;
+    /* flex-grow: 4.5; */
+    justify-content: center;
+    align-items: center;
+`;
+
+
+const StyledYutPlayersSection = styled(YutPlayersSection)`   
+    /* flex-grow: 7; */
+    justify-content: center;
+    align-items: center;
+
+`;
+
+const StyledYutButtonSection = styled(YutButtonSection)`
+    /* flex-grow: 4.5; */
+    justify-content: center;
+    align-items: center;
 `;
 
 const Yut = (props) => {
@@ -36,7 +75,7 @@ const Yut = (props) => {
         /* Auto Layout */
         display: flex;
         flex-direction: column;
-        padding: 50px;
+        padding: 30px;
 
         /* width: 1150px;
         height: 775px; */
@@ -49,21 +88,18 @@ const Yut = (props) => {
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     `;
 
-
-
-
-    // const [value, setValue] = useReducer((state) => state + 1, 0); // integer state
-    // return () => setValue(value => value + 1); // update the state to force render
-
     return (
         <YutStore >
             <WinnerModal />
             <StyleDiv>
-                <StyleDivFlexRow>
-                    <StyledYutfield />
-                    <StyledYutAnimation />
-                </StyleDivFlexRow>
-                <YutPlayersSection />
+                <FieldAnimationSection>
+                    <Yutfield />
+                    <YutAnimation />
+                </FieldAnimationSection>
+                <PlayerButtonSection>
+                    <YutPlayersSection />
+                    <YutButtonSection />
+                </PlayerButtonSection>
             </StyleDiv>
         </YutStore>
     )
