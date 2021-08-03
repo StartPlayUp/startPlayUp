@@ -11,10 +11,10 @@ const Fade = keyframes`
     0%{
         opacity:0;
     }
-    25%{
+    10%{
         opacity:1;
     }
-    75%{
+    90%{
         opacity:1;
     }
     100%{
@@ -68,8 +68,6 @@ const Player = () => {
     useEffect(() => {
         const copyData = [...dataState.state.playerData];
         const turn = dataState.nowTurn
-        console.log(copyData);
-        console.log(turn);
         let lower = Object.keys(copyData[turn].selectPoint).map((i) => {
             return copyData[turn].selectPoint[i][0]
         })
@@ -90,10 +88,12 @@ const Player = () => {
                 console.log(word[i])
                 setWord(word[i]);
                 setLower(true);
+                console.log("lowerState 확인용", lowerState);
                 break;
             }
         }
-        setTimeout(setLower(false),3000)
+        setTimeout(() => { setLower(false) }, 3000)
+
     }, [dataState.state])
     return (
         <PlayerData.Consumer>
