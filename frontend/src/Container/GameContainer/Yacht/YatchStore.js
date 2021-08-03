@@ -358,17 +358,18 @@ const YachuProvider=({children})=>{
     }, [peerData])
 
     return (
-        <PlayerData.Provider value={//게임 데이터를 표시
-            {state:state,halt:halt,nowTurn:nowTurn,selectData }
-        }>
-            <DiceStore.Provider value={{
+        <DiceStore.Provider value={{
                 dice:state.dice,hold:state.hold,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
+            <PlayerData.Provider value={//게임 데이터를 표시
+                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,selectData }
+            }>
+            
                 <TimerData.Provider value={{
                     nowTurn:nowTurn,timeOver}}>
                     {children}
                 </TimerData.Provider>
-            </DiceStore.Provider>
-        </PlayerData.Provider>
+            </PlayerData.Provider>
+        </DiceStore.Provider>
     )
 }
 export {TimerData,DiceStore,PlayerData,YachuProvider};

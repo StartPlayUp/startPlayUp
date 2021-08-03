@@ -38,30 +38,40 @@ const ButtonTable = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
 `
-const boxToDiceTable=(x,y) => keyframes`
+//로그 찍었을 때 state가 변했기 때문에 버튼 하나만 눌러도 5번 뜸->state를 분리해서 변한것만 리렌더링 할 수 있도록 해야함
+//false 일때 롤 다이스 아래에 주사위가 위치함->아래에서 위로 올라와야함
+//true 일때 홀드 판 위치에 주사위가 위치함->위에서 아래로 내려와야함
+const moveTo=(x1,y1,x2,y2) => keyframes`
     0%{
-        transform: translate(0px,0px); //원래 위치
+        transform: translate(${x1}px,${y1}px); //원래 위치
     }
     100%{
-        transform: translate(-${x}px,-${y}px); //움직일 위치
+        transform: translate(${x2}px,${y2}px); //움직일 위치
     }   
 `;
-const diceTableToBox = (x, y) => keyframes`
-    0%{
-        transform: translate(0px,0px); //원래 위치
-    }
-    100%{
-        transform: translate(${x}px,${y}px); //움직일 위치
-    } 
+const moveFrom=(x1,y1,x2,y2)=> keyframes`
+    from{transform:translate(-${x2}px,-${y2}px);}//움직인 위치
+    to{transform:translate(0px,0px);
+    }//원래 위치
+    
 `
+//위에서 아래로 내려가는 주사위 애니메이션이 2개까지만 정상적으로 나오고 3개부턴 나오지 않음
+//콘솔로그로 확인해본 결과 3번째 주사위부터 좌표값이 음수로 나오기 때문에 if 문을 통해서 음수인 경우 양수로 들어가게끔 시도
+const Test=(x1,y1,x2,y2)=> keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
+    from{transform:translate(${x2}px,-${y2}px);}//움직인 위치
+    to{transform:translate(0px,0px);
+    }//원래 위치
+    
+`
+//moveTo(props.x1,props.y1,props.x2,props.y2)
 const HoldButton = styled.button`
     display: flex;
     border: none;
     background: none;
     width:100px;
-    z-index:99;
-    animation: ${(props) => { props.hold ? boxToDiceTable(props.x1, props.y1) : diceTableToBox(props.x2, props.y2) }} 0.5s linear;
-    ${(props)=>{console.log("애니메이션 테스트",props)}}
+    z-index:95;
+    animation: ${(props) => props.hold ? (props.x1>0 ? (console.log("양수임"),  moveFrom(props.x2, props.y2, props.x1, props.y1)): (console.log("음수임"), Test(props.x2, props.y2, props.x1, props.y1))) : moveTo(props.x1,props.y1,props.x2,props.y2)} 0.3s linear;
+    ${(props) => { console.log(props)}}
     :hover{
         background-color:skyblue;
     }
@@ -69,8 +79,7 @@ const HoldButton = styled.button`
         background-color: red;
     }
 `
-
-const IMG = styled.img`
+const IMG=styled.img`
     width:100%;
 `
 const RollButton=styled.button`
@@ -99,7 +108,6 @@ const Dice=()=>{
     const [placeX, setPlaceX] = useState([0, 0, 0, 0, 0]);
     const [placeY, setPlaceY] = useState(0);
 
-    
     function RollDice(){
         if(diceState.halt===true){
             diceState.RollDice()
@@ -125,11 +133,10 @@ const Dice=()=>{
             diceX[value] = left + (value * 100);
             console.log(diceX);
             setPlaceX(diceX);
-            setPlaceY(top);            
+            setPlaceY(top);           
         }
         diceState.diceHold(value);
         /*
-        ${(props)=>console.log("props.hold:",props.hold,"props.x",props.x1,props.x2,props.y1,props.y2)}
         if (diceState.halt === true) {
         }
         else {
@@ -173,27 +180,28 @@ const Dice=()=>{
                             <RollButton disabled={rollCount? "":rollCount>=0} onClick={RollDice}>Roll Dice !</RollButton>
                         <button onClick={startGame}>게임 시작</button>
                         <ButtonTable ref={fromPosition}>
-                            <>
-                                <HoldButton onClick={diceHold} value={0}  hold={hold[0]} x1={boxX} y1={boxY} x2={placeX[0]} y2={placeY}>
-                                    <IMG src={diceImage[0]}/>
-                                </HoldButton>                                
-                                <HoldButton onClick={diceHold} value={1} hold={hold[1]} x1={boxX+100} y1={boxY} x2={placeX[1]} y2={placeY}>
-                                    <IMG src={diceImage[1]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={2} hold={hold[2]} x1={boxX+200} y1={boxY} x2={placeX[2]} y2={placeY}>
-                                    <IMG src={diceImage[2]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={3} hold={hold[3]} x1={boxX+300} y1={boxY} x2={placeX[3]} y2={placeY}>
-                                    <IMG src={diceImage[3]}/>
-                                </HoldButton>
-                                <HoldButton onClick={diceHold} value={4} hold={hold[4]} x1={boxX+400} y1={boxY} x2={placeX[4]} y2={placeY}>
-                                    <IMG src={diceImage[4]}/>
-                                </HoldButton>
-                            </>
+                            {lst.map((i) => (
+                                <>
+                                    {!hold[i] &&
+                                        <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]} y={placeY}>
+                                        <IMG src={diceImage[i]} />
+                                    </HoldButton>
+                                }
+                                </>
+                            ))}
                         </ButtonTable>
-                        <HoldTable>
+                        <HoldTable ref={box}>
                             <div>{rollCount} Left</div>
-                            <ButtonTable ref={box}>
+                            <ButtonTable>
+                                {lst.map((i) => (
+                                    <>
+                                        {hold[i] &&
+                                            <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]} y2={placeY}>
+                                                <IMG src={diceImage[i]}/>
+                                            </HoldButton>
+                                        }
+                                    </>
+                                ))}
                             </ButtonTable>
                         </HoldTable>
                     </ParentDiv>
@@ -203,44 +211,3 @@ const Dice=()=>{
     )
  }
 export default Dice;
-
-/*
-                                <>
-                                    {hold[0] ?
-                                        <HoldBox onClick={diceHold} value={0}  hold={hold[0]} x={placeX[0]} y={placeY} src={diceImage[0]}>
-                                            <IMG src={diceImage[0]}/>
-                                        </HoldBox>
-                                    :
-                                        ""
-                                        
-                                    }
-                                    {hold[1] ?
-                                        <HoldBox onClick={diceHold} value={1} hold={hold[1]} x={placeX[1]} y={placeY} src={diceImage[1]}>
-                                            <IMG src={diceImage[1]}/>
-                                        </HoldBox>
-                                    :
-                                        ""
-                                    }
-                                    {hold[2] ?
-                                        <HoldBox onClick={diceHold} value={2} hold={hold[2]} x={placeX[2]} y={placeY} src={diceImage[2]}>
-                                            <IMG src={diceImage[2]}/>
-                                        </HoldBox>
-                                    :
-                                        ""
-                                    }
-                                    {hold[3] ?
-                                        <HoldBox onClick={diceHold} value={3} hold={hold[3]} x={placeX[3]} y={placeY} src={diceImage[3]}>
-                                            <IMG src={diceImage[3]}/>
-                                        </HoldBox>
-                                    :
-                                        ""
-                                    }
-                                    {hold[4] ?
-                                        <HoldBox onClick={diceHold} value={4} hold={hold[4]} x={placeX[4]} y={placeY} src={diceImage[4]}>
-                                            <IMG src={diceImage[4]}/>
-                                        </HoldBox>
-                                    :
-                                        ""
-                                    }
-                                </>
-*/

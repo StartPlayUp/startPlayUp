@@ -66,7 +66,7 @@ const Player = () => {
         }
     }
     useEffect(() => {
-        const copyData = [...dataState.state.playerData];
+        const copyData = [...dataState.playerData];
         const turn = dataState.nowTurn
         let lower = Object.keys(copyData[turn].selectPoint).map((i) => {
             return copyData[turn].selectPoint[i][0]
@@ -94,10 +94,10 @@ const Player = () => {
         }
         setTimeout(() => { setLower(false) }, 3000)
 
-    }, [dataState.state])
+    }, [dataState.playerData])
     return (
         <PlayerData.Consumer>
-            {({ state, nowTurn }) => (
+            {({ playerData, nowTurn }) => (
                 <Fragment>
                     <Div>
                         {lowerState && <LowerWord>{console.log("tesatat", wordState)}{wordState}</LowerWord>}
@@ -105,57 +105,57 @@ const Player = () => {
                             <thead>
                                 <tr>
                                     <th>점수표</th>
-                                    {Object.keys(state.playerData).map((i, index) => (<th keys={index}>{state.playerData[i].nickname}</th>))}
+                                    {Object.keys(playerData).map((i, index) => (<th keys={index}>{playerData[i].nickname}</th>))}
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        {Object.keys(state.playerData[0].selectPoint).map((j, dex) => (
+                                        {Object.keys(playerData[0].selectPoint).map((j, dex) => (
                                             <tr key={dex}>
                                                 {dex === 5 ? <><tr><td>{j}</td></tr><tr><td>bonus</td></tr></> : <>{j}</>}
                                             </tr>
                                         ))}
                                         <td>result</td>
                                     </td>
-                                    {Object.keys(state.playerData).map((i, index) => (
+                                    {Object.keys(playerData).map((i, index) => (
                                         <td key={index}>
-                                            {Object.keys(state.playerData[i].selectPoint).map((j, dex) => (
+                                            {Object.keys(playerData[i].selectPoint).map((j, dex) => (
                                                 <tr key={dex}>
                                                     {nowTurn == i ?
                                                         (<>
                                                             {dex === 5 ?
                                                                 (<>
                                                                     <tr><td><button
-                                                                        disabled={state.playerData[i].selectPoint[j][1]}
+                                                                        disabled={playerData[i].selectPoint[j][1]}
                                                                         name={j}
                                                                         onClick={select}
-                                                                        value={state.playerData[i].selectPoint[j][0]}
-                                                                    >{state.playerData[i].selectPoint[j][0]}</button></td></tr>
-                                                                    <tr><td>{state.playerData[i].bonus[0]}</td></tr>
+                                                                        value={playerData[i].selectPoint[j][0]}
+                                                                    >{playerData[i].selectPoint[j][0]}</button></td></tr>
+                                                                    <tr><td>{playerData[i].bonus[0]}</td></tr>
                                                                 </>
                                                                 )
                                                                 :
                                                                 (<td>
                                                                     <button
-                                                                        disabled={state.playerData[i].selectPoint[j][1]}
+                                                                        disabled={playerData[i].selectPoint[j][1]}
                                                                         name={j}
                                                                         onClick={select}
-                                                                        value={state.playerData[i].selectPoint[j][0]}
-                                                                    >{state.playerData[i].selectPoint[j][0]}</button></td>)}</>)
+                                                                        value={playerData[i].selectPoint[j][0]}
+                                                                    >{playerData[i].selectPoint[j][0]}</button></td>)}</>)
                                                         :
                                                         (<>{dex === 5 ?
-                                                            (<><tr><td>{state.playerData[i].selectPoint[j][0]}</td></tr>
-                                                                <tr><td>{state.playerData[i].bonus[0]}</td></tr>
+                                                            (<><tr><td>{playerData[i].selectPoint[j][0]}</td></tr>
+                                                                <tr><td>{playerData[i].bonus[0]}</td></tr>
                                                             </>
                                                             )
                                                             :
                                                             (<>
-                                                                {state.playerData[i].selectPoint[j][0]}</>)}</>)}
+                                                                {playerData[i].selectPoint[j][0]}</>)}</>)}
                                                 </tr>
                                             ))}
                                             <tr>
-                                                <td>{state.playerData[i].result}</td>
+                                                <td>{playerData[i].result}</td>
                                             </tr>
                                         </td>
                                     ))}
