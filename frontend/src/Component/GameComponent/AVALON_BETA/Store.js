@@ -53,7 +53,12 @@ const GameContext = React.createContext('')
 const Store = ({children}) => {
     const {peerData} = useContext(PeerDataContext);
     const [gameState, dispatch] = useReducer(reducer, initialData)
+<<<<<<< HEAD
     console.log(`gameState : ${gameState}`)
+=======
+    console.log(gameState)
+
+>>>>>>> 07b1ce7393c7ddfbed682d3ab7496a3aab734b8a
     useEffect(() => {
         console.log(`expedition useEffect`)
         const gameData = {...gameState}
