@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef, useReducer } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import crown from 'image/crown.png'
@@ -173,9 +173,9 @@ const moveImg = (x, y) => keyframes`
 `;
 
 const ImgAnimation = styled.img`
-    position:absolute;
-    animation:${props => moveImg(props.placeXY[0], props.placeXY[1])} 1s linear;
-    animation-fill-mode: forwards;
+    animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear;
+    ${props => console.log("asdf", props.playerPosition[0], props.playerPosition[1])}
+    animation-fill-mode: backwards;
 `;
 
 
@@ -184,9 +184,16 @@ const ImgAnimation = styled.img`
 const winnerModal = () => {
     const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
-    const [modalShow, setModalShow] = useState(true);
-    const [placeXY, setPlaceXY] = useState([]);
+    const [modalShow, setModalShow] = useState(false);
+    const [playerPosition, setPlayerPosition] = useState([0, 0]);
+
+    const imgRef = useRef();
     const playerRef = useRef([]);
+
+    const useForceRender = () => {
+        const [, forceRender] = useReducer((oldVal) => oldVal + 1, 0)
+        return forceRender
+    }
 
     useEffect(() => {
         if (playerData.length === winner.length && winner.length !== 0) {
@@ -200,10 +207,21 @@ const winnerModal = () => {
         if (modalShow === true && playerRef.current[0] !== undefined) {
             // const { top, right, bottom, left } = playerRef.current[0].getBoundingClientRect();
             // setPlaceXY([left, top]);
-            console.log(playerRef.current[0].scrollTop, playerRef.current[0].clientHeight, playerRef.current[0].clientWidth)
-            console.log(playerRef.current[0].screenX)
-            setPlaceXY([playerRef.current[0].screenX, playerRef.current[0].screenY]);
+            // setPlaceXY([playerRef.current[0].screenX, playerRef.current[0].screenY]);
             // console.log("left top : ", left, top)
+
+            const posImg = imgRef.current.getBoundingClientRect();
+            const posPlayer = playerRef.current[0].getBoundingClientRect();
+
+            // const top = posPlayer.top - posImg.top - (playerRef.current[0].offsetHeight) - 20;
+            const top = posPlayer.top - posImg.top;
+            // const left = posPlayer.left - posImg.left + (playerRef.current[0].offsetWidth / 2);
+            const left = posPlayer.left - posImg.left;
+
+            setPlayerPosition([left, top]);
+            console.log("left : ", posPlayer.left, posImg.left,)
+            console.log("top : ", posPlayer.top, posImg.top,)
+
         }
     }, [modalShow])
 
@@ -211,7 +229,7 @@ const winnerModal = () => {
         console.log("set Modal off")
         setModalShow(false);
     }
-
+    useForceRender();
     return (
         <>
             <StyleExitButton onClick={() => setModalShow(true)}> EXIT </StyleExitButton>
@@ -220,16 +238,20 @@ const winnerModal = () => {
                     <ModalSection>
                         <ModalSectionHeader>
                             <DivHeader>
-                                <ImgAnimation placeXY={placeXY} src={crown} />
+                                <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} />
                                 <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
                             </DivHeader>
                             <WinnerSection>
-                                {
+                                <div key={0} ref={el => playerRef.current[0] = el} >
+                                    <div>{1} 등</div>
+                                    <Winner>{1}</Winner>
+                                </div>
+                                {/* {
                                     winner.map((i, index) => <div key={index} ref={el => playerRef.current[index] = el}>
                                         <div>{index + 1} 등</div>
                                         <Winner>{i}</Winner>
                                     </div>)
-                                }
+                                } */}
                             </WinnerSection>
                         </ModalSectionHeader>
                     </ModalSection>
