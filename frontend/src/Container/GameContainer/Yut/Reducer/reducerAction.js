@@ -364,7 +364,8 @@ const NEXT_TURN = (state) => {
         const nowTurnNickname = state.playerData[nowTurnIndex].nickname;
         const nowTurn = { index: nowTurnIndex, nickname: nowTurnNickname }
 
-        return [{ ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurn, timer: 0, halted: true }, true]
+        // return [{ ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurn, timer: 0, halted: true }, true]
+        return [{ ...state, placeToMove: {}, myThrowCount: 1, yutData: [], nowTurn, halted: true }, true]
     }
     else {
         return [{}, false]

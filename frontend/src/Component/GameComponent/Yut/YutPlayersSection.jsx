@@ -79,7 +79,7 @@ const App = () => {
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
 
-    const { halted, yutData, myThrowCount, playerData, nowTurn, timer } = state;
+    const { yutData, playerData, } = state;
 
     const [yutResultList, setYutresultList] = useState([0, 0, 0, 0, 0, 0])
 

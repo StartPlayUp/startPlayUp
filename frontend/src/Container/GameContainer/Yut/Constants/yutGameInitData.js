@@ -13,7 +13,7 @@ export const initialState = {
     yutData: [], // 윷을 던졌을때 윷 또는 모가 나오거나, 상대 말을 잡을 때 추가
     selectHorse: -1, // 현재 선택한 말.
     placeToMove: {},
-    timer: 0, // 1초에 +1 씩 더해준다.
+    // timer: 0, // 1초에 +1 씩 더해준다.
     myThrowCount: 1, // 윷을 던질 수 있는 횟수를 나타냄. // halted 와 useEffect 사용해서 대체할 수 있는지 테스트 //
     winner: [], // 이긴사람을 순서대로 추가함.
     lastYutData: [0, 0, 0, 0],
@@ -40,3 +40,5 @@ export const NUMBER_TO_YUT_TYPE = {
     4: "윷",
     5: "모",
 }
+
+export const DEFAULT_TIME_VALUE = 30;

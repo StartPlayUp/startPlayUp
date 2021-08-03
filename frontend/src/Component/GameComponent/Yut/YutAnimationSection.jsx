@@ -1,5 +1,5 @@
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import React, { useContext, useState, useEffect, useReducer } from "react";
+import React, { useContext, useState, useEffect, useReducer, memo } from "react";
 import styled, { keyframes } from "styled-components";
 
 import {
@@ -112,13 +112,17 @@ const FaceText = styled.div`
 
 const YutAnimation = () => {
 	const { lastYutData } = useContext(YutContext);
+	const [trigger, setTrigger] = useState(0);
+
+	useEffect(() => {
+		setTrigger(trigger + 1);
+	}, [lastYutData])
 
 	return (
 		<Background>
-			{/* {console.log("내용물")} */}
-			{lastYutData.map((i, index) =>
-				<Container key={index}>
-					<Dice key={index} lastYutData={i}>
+			{/* {lastYutData.map((i, index) =>
+				<Container key={trigger} >
+					<Dice lastYutData={i}>
 						<Front>
 							<FaceText>X</FaceText>
 							<FaceText>X</FaceText>
@@ -131,8 +135,58 @@ const YutAnimation = () => {
 						</Back>
 					</Dice>
 				</Container>)
-			}
+			} */}
+			<Container>
+				<Dice key={trigger} lastYutData={lastYutData[0]}>
+					<Front>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+					</Front>
+					<Left />
+					<Right />
+					<Back>
+						<FaceText>백 도</FaceText>
+					</Back>
+				</Dice>
+			</Container>
+			<Container >
+				<Dice key={trigger} lastYutData={lastYutData[1]}>
+					<Front>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+					</Front>
+					<Left />
+					<Right />
+					<Back />
+				</Dice>
+			</Container>
+			<Container>
+				<Dice key={trigger} lastYutData={lastYutData[2]}>
+					<Front>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+					</Front>
+					<Left />
+					<Right />
+					<Back />
+				</Dice>
+			</Container>
+			<Container >
+				<Dice key={trigger} lastYutData={lastYutData[3]}>
+					<Front>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+						<FaceText>X</FaceText>
+					</Front>
+					<Left />
+					<Right />
+					<Back />
+				</Dice>
+			</Container>
 		</Background >
 	)
 }
-export default YutAnimation;
+export default memo(YutAnimation);

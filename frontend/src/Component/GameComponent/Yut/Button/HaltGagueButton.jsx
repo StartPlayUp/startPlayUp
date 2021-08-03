@@ -17,19 +17,26 @@ const App = ({ handlerType, nickname, dispatch, state, peers, halted, name, acti
         'flexGrow': '1',
     };
 
-    const [trigger, setTrigger] = useState(true);
+    // const [trigger, setTrigger] = useState(true);
+
+    // const onclickHandler = () => {
+    //     if (handlerType !== undefined) {
+    //         dispatch({ type: INIT_LAST_YUT_DATA });
+    //         setTrigger(prev => !prev);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     actionHandler[handlerType]({ dispatch, state, peers, nickname, action, count });
+    // }, [trigger])
 
     const onclickHandler = () => {
-        if (handlerType !== undefined) {
-            dispatch({ type: INIT_LAST_YUT_DATA });
-            setTrigger(prev => !prev);
+        if (handlerType !== undefined && !state.halted) {
+            // handle 타입이 들어왔고
+            // halted 값으로 현재 차례이면 아래 함수 동작
+            actionHandler[handlerType]({ dispatch, state, peers, nickname, action, count });
         }
     }
-
-    useEffect(() => {
-        actionHandler[handlerType]({ dispatch, state, peers, nickname, action, count });
-    }, [trigger])
-
 
     return (
         <button onMouseDown={buttonEvent.startCount} onMouseUp={buttonEvent.stopCount} onMouseLeave={buttonEvent.stopCount} style={buttonStyle} disabled={halted === true && true} onClick={onclickHandler}>

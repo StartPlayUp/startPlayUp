@@ -40,7 +40,7 @@ const throwYutHandler = ({ dispatch, state, peers, nickname, count }) => {
         const newState = reducerAction.THROW_YUT(state, count);
         console.log("left dispatch lastYutData :", state.lastYutData);
         dispatch({ type: THROW_YUT, state: newState });
-        sendDataToPeers(GAME, { nickname, peers, game: YUT, data: newState });
+        sendDataToPeers(GAME, { nickname, peers, game: YUT, data: newState, reducerActionType: THROW_YUT });
     }
     else {
         console.log(count)
@@ -168,21 +168,6 @@ const playAiHandler = ({ dispatch, state, peers, nickname }) => {
 }
 
 
-const InitlastYutDataHandler = ({ dispatch, state, peers, nickname }) => {
-    console.log(dispatch, state, peers)
-    if (typeof (dispatch) === "function"
-        && typeof (state) === "object"
-        && typeof (peers) === "object"
-        && typeof (nickname) === "string") {
-        const newState = { ...state, lastYutData: [1, 1, 1, 1] }
-        dispatch({ type: INIT_LAST_YUT_DATA, state: newState });
-        sendDataToPeers(GAME, { nickname, peers, game: YUT, data: newState });
-    }
-    else {
-        console.error("playAiHandler");
-    }
-}
-
 export default {
     nextTurnHandler,
     startGameHandler,
@@ -192,5 +177,4 @@ export default {
     moveFirstHorseHandler,
     moveHorseHandler,
     playAiHandler,
-    InitlastYutDataHandler
 }

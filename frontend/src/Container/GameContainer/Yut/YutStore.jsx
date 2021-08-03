@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, createContext, useMemo, memo, useContext,
 import styled from 'styled-components';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
-import { initialState } from './Constants/yutGameInitData';
+import { initialState, DEFAULT_TIME_VALUE } from './Constants/yutGameInitData';
 
 import {
     DESELECT_HORSE,
@@ -23,6 +23,7 @@ import {
 import actionHandler from './Action/actionHandler.js';
 
 export const YutContext = createContext(null);
+export const YutViewContext = createContext(null);
 export const TimerContext = createContext(null);
 
 const reducer = (state, { type, ...action }) => {
@@ -48,17 +49,17 @@ const reducer = (state, { type, ...action }) => {
         case PLAY_AI: {
             return { ...action.state };
         }
-        case UPDATE_TIMER:
-            return { ...state, timer: state.timer + 1 };
-        case STOP_TIMER:
-            return { ...state, halted: true };
+        // case UPDATE_TIMER:
+        //     return { ...state, timer: state.timer + 1 };
+        // case STOP_TIMER:
+        //     return { ...state, halted: true };
         case DESELECT_HORSE: {
             return { ...state, selectHorse: -1, placeToMove: {} };
         }
-        case INIT_LAST_YUT_DATA: {
-            console.log("INIT_LAST_YUT_DATA")
-            return { ...state, lastYutData: [20, 20, 20, 20] };
-        }
+        // case INIT_LAST_YUT_DATA: {
+        //     console.log("INIT_LAST_YUT_DATA")
+        //     return { ...state, lastYutData: [20, 20, 20, 20] };
+        // }
         // case UPDATE_STATE:
         //     return { ...state, ...action.state }
         default:
@@ -74,29 +75,33 @@ const YutStore = ({ children }) => {
     const { peerData } = useContext(PeerDataContext);
     const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition, timer, lastYutData } = state;
 
+    const [time, setTime] = useState(DEFAULT_TIME_VALUE);
+
 
     // const [halted, setHalted] = useState(true);
     // // 보내야 하는 데이터 
 
     // // 타이머 돌리기
-    useEffect(() => {
-        let t;
-        if (halted === false) {
-            t = setInterval(() => {
-                dispatch({ type: UPDATE_TIMER })
-            }, 1000);
-        }
-        return () => {
-            clearInterval(t);
-        }
-    }, [halted])
+
+    // useEffect(() => {
+    //     let t;
+    //     if (halted === false) {
+    //         t = setInterval(() => {
+    //             dispatch({ type: UPDATE_TIMER })
+    //         }, 1000);
+    //     }
+    //     return () => {
+    //         clearInterval(t);
+    //     }
+    // }, [halted])
 
     // 타이머가 30 초가 넘었을 때 순서 넘기기
-    useEffect(() => {
-        if (timer > 100) {
-            actionHandler.nextTurnHandler({ dispatch, state, peers, nickname })
-        }
-    }, [timer])
+
+    // useEffect(() => {
+    //     if (timer > 100) {
+    //         actionHandler.nextTurnHandler({ dispatch, state, peers, nickname })
+    //     }
+    // }, [timer])
 
     useEffect(() => {
         console.log("nowTurn", typeof (nowTurn))
@@ -124,7 +129,8 @@ const YutStore = ({ children }) => {
                 typeof (state.selectHorse) === "number" && state.selectHorse >= -1 && state.selectHorse <= 30 &&
                 typeof (state.myThrowCount) === "number" && state.myThrowCount > -1 &&
                 Array.isArray(state.winner)) {
-                dispatch({ type: GET_DATA_FROM_PEER, state: { ...state, timer: 0 } })
+                dispatch({ type: GET_DATA_FROM_PEER, state })
+                setTime(DEFAULT_TIME_VALUE);
             }
             else {
                 console.log(state)
@@ -172,7 +178,6 @@ const YutStore = ({ children }) => {
         nowTurn,
         myThrowCount,
         winner,
-        timer,
         lastYutData,
         dispatch
     }),
@@ -185,9 +190,14 @@ const YutStore = ({ children }) => {
             nowTurn,
             myThrowCount,
             winner,
-            timer,
             lastYutData,]
     );
+
+    const timeValue = useMemo(() => ({
+        time, setTime, setTimeHandler: () => {
+            setTime(prev => prev - 1);
+        }
+    }), [time])
     // useEffect(() => {
     //     console.log("state 출력 시작------------")
     //     console.log(state)
@@ -203,7 +213,9 @@ const YutStore = ({ children }) => {
             {/* {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)} */}
             <YutContext.Provider value={value}>
                 {/* <TimerContext.Provider value={timerContextValue}> */}
-                {children}
+                <TimerContext.Provider value={timeValue}>
+                    {children}
+                </TimerContext.Provider>
                 {/* </TimerContext.Provider> */}
             </YutContext.Provider >
         </div >

@@ -57,8 +57,8 @@ const ModalSectionHeader = styled.div`
     display:flex;
     flex-direction: column;
     justify-content:space-between;
+    align-items: center;
     width:100%;
-    margin:30px;
     /* padding: 16px 16px 50px 16px; */
     font-weight: 700;
 `;
@@ -100,6 +100,9 @@ const DivHeader = styled.div`
     display:flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height:450px;
 
 `;
 
@@ -131,6 +134,9 @@ const WinnerSection = styled.div`
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-end;
+    width: 1000px;
+    height:450px;
+
 `;
 
 const Winner = styled.div`
@@ -175,7 +181,7 @@ const moveImg = (x, y) => keyframes`
 const ImgAnimation = styled.img`
     animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear;
     ${props => console.log("asdf", props.playerPosition[0], props.playerPosition[1])}
-    animation-fill-mode: backwards;
+    animation-fill-mode: forwards;
 `;
 
 
@@ -239,7 +245,7 @@ const winnerModal = () => {
                         <ModalSectionHeader>
                             <DivHeader>
                                 <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} />
-                                <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
+                                <button onClick={modalShowOffHandler}> EXIT </button>
                             </DivHeader>
                             <WinnerSection>
                                 <div key={0} ref={el => playerRef.current[0] = el} >

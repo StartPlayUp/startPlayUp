@@ -20,6 +20,7 @@ import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
 import { NUMBER_TO_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGameInitData';
 
 import Gauge from './Gauge'
+import { TimerContext } from 'Container/GameContainer/Yut/YutStore';
 
 
 const HatledButtonSection = styled.div`
@@ -74,7 +75,9 @@ const App = () => {
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
 
-    const { halted, yutData, myThrowCount, playerData, nowTurn, timer } = state;
+    const { halted, myThrowCount, nowTurn } = state;
+
+    const { time } = useContext(TimerContext);
 
 
     const hatledButtonStyle = {
@@ -135,7 +138,7 @@ const App = () => {
     return (
         <PlayerButtonSection>
             <NowPlayerNickname>
-                <StyleCenterDiv>시간 초 : {timer}</StyleCenterDiv>
+                <StyleCenterDiv>시간 초 : {time}</StyleCenterDiv>
                 <StyleCenterDiv>윷 횟수 : {myThrowCount}</StyleCenterDiv>
                 <StyleCenterDiv>현재 턴 : {nowTurn.nickname}</StyleCenterDiv>
             </NowPlayerNickname>
