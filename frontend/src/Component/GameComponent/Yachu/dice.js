@@ -11,6 +11,7 @@ import diceMK1 from "./diceImage/diceMK1.gif"
 import diceMK2 from "./diceImage/diceMK2.gif"
 const ParentDiv = styled.div`
     display: flex;
+    position: relative;
     flex-direction: column;
     width: 100%;
     height: 100%;
@@ -25,10 +26,9 @@ const HoldTable = styled.div`
     height:200px;
     text-align: right;
     color:white;
-    position: relative;
-    margin-top: 33%;
-    margin-left: 30%;
-    right:0%;
+    position: absolute;
+    bottom: 15%;
+    right:1%;
     div{
         font-size:24px
     }
@@ -38,28 +38,22 @@ const ButtonTable = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
 `
-const moveTo=(x1,y1,x2,y2) => keyframes`
+const moveTo=(x,y) => keyframes`
     0%{
-        transform: translate(${x1}px,${y1}px); //원래 위치
-    }
-    1%{
-        display: flex;
+        transform: translate(0px,0px); //원래 위치
     }
     100%{
-        transform: translate(${x2}px,${y2}px); //움직일 위치
+        transform: translate(${x}px,${y}px); //움직일 위치
     }   
 `;
-const moveFrom=(x1,y1,x2,y2)=> keyframes`
-    from{transform:translate(${x1}px,${y1}px);}//움직인 위치
-    to{transform:translate(${x2}px,${y2}px);
-    }//원래 위치
-    
-`
+
 const HoldButton = styled.button`
     display: flex;
     border: none;
     background: none;
     width:100px;
+    animation: ${(props) => moveTo(props.x1, props.y1,props.x2, props.y2)} 1s linear;
+    
     :hover{
         background-color:skyblue;
     }
@@ -67,11 +61,7 @@ const HoldButton = styled.button`
         background-color: red;
     }
 `
-const Ani = styled.img`
-    display:hidden;
-    animation: ${(props)=>props.hold? moveTo(props.x2,props.y2,props.x1,props.y1) :moveTo(props.x1,props.y1,props.x2,props.y2)} 0.3s linear;
-`
-const IMG=styled.img`
+const IMG = styled.img`
     width:100%;
 `
 const RollButton=styled.button`
@@ -100,6 +90,7 @@ const Dice=()=>{
     const [placeX, setPlaceX] = useState([0, 0, 0, 0, 0]);
     const [placeY, setPlaceY] = useState(0);
 
+    
     function RollDice(){
         if(diceState.halt===true){
             diceState.RollDice()
@@ -114,8 +105,14 @@ const Dice=()=>{
             let diceX = [...placeX];
             const { x, y } = box.current.getBoundingClientRect();
             const { left, top } = fromPosition.current.getBoundingClientRect();
-            setBoxX(x);
-            setBoxY(y);
+            var test1 = x - left;
+            var test2 = y - top;
+            setBoxX(test1);
+            setBoxY(test2);
+            console.log("x", x);
+            console.log("y", y);
+            console.log("test1", test1);
+            console.log("test2", test2);
             diceX[value] = left + (value * 100);
             console.log(diceX);
             setPlaceX(diceX);
@@ -123,6 +120,7 @@ const Dice=()=>{
         }
         diceState.diceHold(value);
         /*
+        ${(props)=>console.log("props.hold:",props.hold,"props.x",props.x1,props.x2,props.y1,props.y2)}
         if (diceState.halt === true) {
         }
         else {
@@ -165,71 +163,42 @@ const Dice=()=>{
                     <ParentDiv>
                             <RollButton disabled={rollCount? "":rollCount>=0} onClick={RollDice}>Roll Dice !</RollButton>
                         <button onClick={startGame}>게임 시작</button>
-                        <ButtonTable>
+                        <ButtonTable ref={fromPosition}>
                             <>
                                 {hold[0] ?
-                                    <Ani hold={hold[0]} x1={boxX} y1={boxY} x2={placeX[0]} y={placeY} src={diceImage[0]}>
-                                    </Ani>
+                                    ""
                                     :
-                                    <>
-                                    <Ani hold={hold[0]} x1={boxX} y1={boxY} x2={placeX[0]} y={placeY} src={diceImage[0]}>
-                                    </Ani>
-                                    <HoldButton onClick={diceHold} value={0} ref={fromPosition}>
+                                    <HoldButton onClick={diceHold} value={0}  hold={hold[0]} x={boxX} y={boxY} src={diceImage[0]}>
                                         <IMG src={diceImage[0]}/>
                                     </HoldButton>
-                                    
-                                    </>
                                 }
                                 {hold[1] ?
-                                    <Ani hold={hold[1]} x1={boxX} y1={boxY} x2={placeX[1]} y={placeY} src={diceImage[1]}>
-                                    </Ani>
-                                :
-                                    <>
-                                    <Ani hold={hold[1]} x1={boxX} y1={boxY} x2={placeX[1]} y={placeY} src={diceImage[1]}>
-                                    </Ani>                                    
-                                    <HoldButton onClick={diceHold} value={1} ref={fromPosition}>
+                                    ""
+                                :                                  
+                                    <HoldButton onClick={diceHold} value={1} hold={hold[1]} x={boxX} y={boxY} src={diceImage[1]}>
                                         <IMG src={diceImage[1]}/>
                                     </HoldButton>
-                                    </>
                                 }
                                 {hold[2] ?
-                                    <Ani hold={hold[2]} x1={boxX} y1={boxY} x2={placeX[2]} y={placeY} src={diceImage[2]}>
-                                    </Ani>
+                                    ""
                                     :
-                                    <>
-                                    <Ani hold={hold[2]} x1={boxX} y1={boxY} x2={placeX[2]} y={placeY} src={diceImage[2]}>
-                                    </Ani>
-                                    <HoldButton onClick={diceHold} value={2} ref={fromPosition}>
+                                    <HoldButton onClick={diceHold} value={2} hold={hold[2]} x={boxX} y={boxY} src={diceImage[2]}>
                                         <IMG src={diceImage[2]}/>
                                     </HoldButton>
-                                    
-                                    </>
                                 }
                                 {hold[3] ?
-                                    <Ani hold={hold[3]} x1={boxX} y1={boxY} x2={placeX[3]} y={placeY} src={diceImage[3]}>
-                                    </Ani>
+                                    ""
                                     :
-                                    <>
-                                    <Ani hold={hold[3]} x1={boxX} y1={boxY} x2={placeX[3]} y={placeY} src={diceImage[3]}>
-                                    </Ani>
-                                    <HoldButton onClick={diceHold} value={3} ref={fromPosition}>
+                                    <HoldButton onClick={diceHold} value={3} hold={hold[3]} x={boxX} y={boxY} src={diceImage[3]}>
                                         <IMG src={diceImage[3]}/>
                                     </HoldButton>
-                                    
-                                    </>
                                 }
                                 {hold[4] ?
-                                    <Ani hold={hold[4]} x1={boxX} y1={boxY} x2={placeX[4]} y={placeY} src={diceImage[4]}>
-                                    </Ani>
+                                    ""
                                     :
-                                    <>
-                                    <Ani hold={hold[4]} x1={boxX} y1={boxY} x2={placeX[4]} y={placeY} src={diceImage[4]}>
-                                    </Ani>
-                                    <HoldButton onClick={diceHold} value={4} ref={fromPosition}>
+                                    <HoldButton onClick={diceHold} value={4} hold={hold[4]} x={boxX} y={boxY} src={diceImage[4]}>
                                         <IMG src={diceImage[4]}/>
                                     </HoldButton>
-                                    
-                                    </>
                                 }
                             </>
                         </ButtonTable>
@@ -238,7 +207,7 @@ const Dice=()=>{
                             <ButtonTable>
                                 <>
                                     {hold[0] ?
-                                        <HoldButton onClick={diceHold} value={0} ref={fromPosition}>
+                                        <HoldButton onClick={diceHold} value={0}  hold={hold[0]} x={placeX[0]} y={placeY} src={diceImage[0]}>
                                             <IMG src={diceImage[0]}/>
                                         </HoldButton>
                                     :
@@ -246,28 +215,28 @@ const Dice=()=>{
                                         
                                     }
                                     {hold[1] ?
-                                        <HoldButton onClick={diceHold} value={1} ref={fromPosition}>
+                                        <HoldButton onClick={diceHold} value={1} hold={hold[1]} x={placeX[1]} y={placeY} src={diceImage[1]}>
                                             <IMG src={diceImage[1]}/>
                                         </HoldButton>
                                     :
                                         ""
                                     }
                                     {hold[2] ?
-                                        <HoldButton onClick={diceHold} value={2} ref={fromPosition}>
+                                        <HoldButton onClick={diceHold} value={2} hold={hold[2]} x={placeX[2]} y={placeY} src={diceImage[2]}>
                                             <IMG src={diceImage[2]}/>
                                         </HoldButton>
                                     :
                                         ""
                                     }
                                     {hold[3] ?
-                                        <HoldButton onClick={diceHold} value={3} ref={fromPosition}>
+                                        <HoldButton onClick={diceHold} value={3} hold={hold[3]} x={placeX[3]} y={placeY} src={diceImage[3]}>
                                             <IMG src={diceImage[3]}/>
                                         </HoldButton>
                                     :
                                         ""
                                     }
                                     {hold[4] ?
-                                        <HoldButton onClick={diceHold} value={4} ref={fromPosition}>
+                                        <HoldButton onClick={diceHold} value={4} hold={hold[4]} x={placeX[4]} y={placeY} src={diceImage[4]}>
                                             <IMG src={diceImage[4]}/>
                                         </HoldButton>
                                     :

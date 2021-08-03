@@ -1,10 +1,35 @@
 import React, { Fragment, useState, useEffect, useContext, useReducer, memo } from "react";
 import { PlayerData } from "Container/GameContainer/Yacht/YatchStore";
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 const Div = styled.div`
     display: flex;
     width:300px;
     height:700px;
+
+`
+const Fade = keyframes`
+    0%{
+        opacity:0;
+    }
+    25%{
+        opacity:1;
+    }
+    75%{
+        opacity:1;
+    }
+    100%{
+        opacity:0;
+    }
+`
+const LowerWord = styled.div`
+    position:absolute;
+    left:35%;
+    font-size: 7.5vw;
+    z-index: 99;
+    stroke: black;
+    color:#FFB800;
+    -webkit-text-stroke-width:3px;
+    animation:${Fade} 3s linear;
 
 `
 const Table = styled.table`
@@ -28,21 +53,54 @@ const Button = styled.button`
     height:4.3vh;
 `
 const Player = () => {
-    const state = useContext(PlayerData);
+    const dataState = useContext(PlayerData);
+    const [lowerState, setLower] = useState(false);
+    const [wordState, setWord] = useState('');
     const myName = localStorage.getItem('nickname');
     function select(e) {
-        if (state.halt === true) {
+        if (dataState.halt === true) {
             const { name, value } = e.target;
-            state.selectData(name, value)
+            dataState.selectData(name, value)
         } else {
             alert("니턴 아님")
         }
     }
+    useEffect(() => {
+        const copyData = [...dataState.state.playerData];
+        const turn = dataState.nowTurn
+        console.log(copyData);
+        console.log(turn);
+        let lower = Object.keys(copyData[turn].selectPoint).map((i) => {
+            return copyData[turn].selectPoint[i][0]
+        })
+        let getPoint = Object.keys(copyData[turn].selectPoint).map((i) => {
+            return copyData[turn].selectPoint[i][1]
+        })
+        let copyLower = lower.slice(6, 11);
+        copyLower.push(lower[12]);
+        let copyGet = getPoint.slice(6, 11);
+        let word = ['Three Of a Kind!', 'Four Of a Kind!', 'Full House!', 'Small Straight!', 'Large Straight!', 'YAHTZEE!']
+        copyGet.push(getPoint[12]);
+        console.log(copyLower, copyGet)
+        for (var i = 5; i >= 0; i--) {
+            if (copyGet[i]) {
+                continue;
+            }
+            if (copyLower[i] !== 0) {
+                console.log(word[i])
+                setWord(word[i]);
+                setLower(true);
+                break;
+            }
+        }
+        setTimeout(setLower(false),3000)
+    }, [dataState.state])
     return (
         <PlayerData.Consumer>
             {({ state, nowTurn }) => (
                 <Fragment>
                     <Div>
+                        {lowerState && <LowerWord>{console.log("tesatat", wordState)}{wordState}</LowerWord>}
                         <Table>
                             <thead>
                                 <tr>
