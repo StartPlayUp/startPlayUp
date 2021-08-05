@@ -2,17 +2,17 @@ import React, { Fragment, useState, useEffect, useContext, useReducer, memo } fr
 import { PlayerData } from "Container/GameContainer/Yacht/YatchStore";
 import styled, { keyframes } from 'styled-components';
 const Div = styled.div`
-    display: flex;
+    display: relative;
     width:300px;
     height:700px;
 
 `
-const Fade = keyframes`
+const Notification = keyframes`
     0%{
-        opacity:0;
+        transform:scale(10.0);
     }
     10%{
-        opacity:1;
+        transform:scale(1.0);
     }
     90%{
         opacity:1;
@@ -23,14 +23,27 @@ const Fade = keyframes`
 `
 const LowerWord = styled.div`
     position:absolute;
-    left:35%;
+    top:25%;
+    left:10%;
+    margin:auto;
     font-size: 7.5vw;
     z-index: 99;
     stroke: black;
     color:#FFB800;
     -webkit-text-stroke-width:3px;
-    animation:${Fade} 3s linear;
+    animation:${Notification} 3s linear;
 
+`
+const TableAnimaion = keyframes`
+    0%{
+        transform:translateX(5px)
+    }
+    50%{
+        transform:translateX(-5px)
+    }
+    75%{
+        transform:translateX(0px)
+    }
 `
 const Table = styled.table`
     border:2px solid;
@@ -38,7 +51,8 @@ const Table = styled.table`
     width:200px;
     height:650px;
     position: absolute;
-
+    animation: ${(props) => props.check && TableAnimaion} 0.1s infinite;
+    ${(props) => console.log(props.check)};
     tr{
         text-align: center;
         height:4.3vh;
@@ -93,7 +107,6 @@ const Player = () => {
             }
         }
         setTimeout(() => { setLower(false) }, 3000)
-
     }, [dataState.playerData])
     return (
         <PlayerData.Consumer>
@@ -101,7 +114,7 @@ const Player = () => {
                 <Fragment>
                     <Div>
                         {lowerState && <LowerWord>{console.log("tesatat", wordState)}{wordState}</LowerWord>}
-                        <Table>
+                        <Table check={lowerState}>
                             <thead>
                                 <tr>
                                     <th>점수표</th>

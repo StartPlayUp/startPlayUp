@@ -38,43 +38,46 @@ const ButtonTable = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
 `
-const BoxToDiceTable = (x, y) => keyframes`
+//false 일때 롤 다이스 아래에 주사위가 위치함->아래에서 위로 올라와야함
+//true 일때 홀드 판 위치에 주사위가 위치함->위에서 아래로 내려와야함
+const moveTo = (x1, y1, x2) => keyframes`
     0%{
-        transform: translate(0px,0px); //원래 위치
+        transform: translate(${x1}px,${y1}px); //원래 위치
     }
     100%{
-        transform: translate(${x}px,${y}px); //움직일 위치
+        transform: translateX(${x2}px,0); //움직일 위치
     }   
 `;
-const DiceTableToBox = (x, y) => keyframes`
-    0%{
-        transform: translate(0px,0px); //원래 위치
-    }
-    100%{
-        transform: translate(${x}px,${y}px); //움직일 위치
-    } 
-`;
+const moveFrom = (x2, y2) => keyframes`
+    from{transform:translate(-${x2}px,-${y2}px);}//움직인 위치
+    to{transform:translate(0px,0px);
+    }//원래 위치
+    
+`
+//위에서 아래로 내려가는 주사위 애니메이션이 2개까지만 정상적으로 나오고 3개부턴 나오지 않음
+//콘솔로그로 확인해본 결과 3번째 주사위부터 좌표값이 음수로 나오기 때문에 if 문을 통해서 음수인 경우 양수로 들어가게끔 시도
+const Test = (x2, y2) => keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
+    from{transform:translate(${x2}px,-${y2}px);}//움직인 위치
+    to{transform:translate(0px,0px);
+    }//원래 위치
+    
+`
+//moveTo(props.x1,props.y1,props.x2,props.y2)
 const HoldButton = styled.button`
     display: flex;
     border: none;
     background: none;
     width:100px;
     z-index:95;
+    animation: ${(props) => props.hold ? (props.x1 > 0 ? (console.log("양수임"), moveFrom(props.x1, props.y1)) : (console.log("음수임"), Test(props.x1, props.y1))) : (console.log("moveTo 함수 작동"), moveTo(props.x1, props.y1, props.x2))} 0.3s linear;
+    ${(props) => { console.log(props) }}
     :hover{
         background-color:skyblue;
     }
     :active{
         background-color: red;
     }
-`;
-const TestButton1 = styled(HoldButton)`
-    animation: ${(props) => { !props.hold && DiceTableToBox(props.x, props.y) }} 0.5s forwards;
-    ${(props) => { console.log("애니메이션 테스트", props) }}
-`;
-const TestButton2 = styled(HoldButton)`
-    animation:${(props) => { props.hold && BoxToDiceTable(props.x, props.y) }} 0.5s forwards;
-    ${(props) => { console.log("애니메이션 테스트", props) }}
-`;
+`
 const IMG = styled.img`
     width:100%;
 `
@@ -115,7 +118,6 @@ const Dice = () => {
     }
     const diceHold = (e) => {
         const value = e.currentTarget.value;
-        diceState.diceHold(value);
         if (!diceState.hold[value]) {
             let diceX = [...placeX];
             const { x, y } = box.current.getBoundingClientRect();
@@ -128,13 +130,13 @@ const Dice = () => {
             console.log("y", y);
             console.log("test1", test1);
             console.log("test2", test2);
-            diceX[value] = left + (value * 100);
+            diceX[value] = left;
             console.log(diceX);
             setPlaceX(diceX);
             setPlaceY(top);
         }
+        diceState.diceHold(value);
         /*
-        ${(props)=>console.log("props.hold:",props.hold,"props.x",props.x1,props.x2,props.y1,props.y2)}
         if (diceState.halt === true) {
         }
         else {
@@ -144,6 +146,9 @@ const Dice = () => {
     const startGame = () => {
         diceState.StartGame()
     }
+    useEffect(() => {
+
+    }, diceState.hold)
     useEffect(() => {
         if (diceState.rollCount === 3) {
             setImage([dice1, dice1, dice1, dice1, dice1]);
@@ -177,60 +182,29 @@ const Dice = () => {
                     <ParentDiv>
                         <RollButton disabled={rollCount ? "" : rollCount >= 0} onClick={RollDice}>Roll Dice !</RollButton>
                         <button onClick={startGame}>게임 시작</button>
-
                         <ButtonTable ref={fromPosition}>
-                            <>
-                                {!hold[0] &&
-                                    <TestButton1 onClick={diceHold} value={0} hold={hold[0]} x={boxX} y={boxY}>
-                                        <IMG src={diceImage[0]} />
-                                    </TestButton1>}
-                                {!hold[1] &&
-                                    <TestButton1 onClick={diceHold} value={1} hold={hold[1]} x={boxX + 100} y={boxY}>
-                                        <IMG src={diceImage[1]} />
-                                    </TestButton1>
-                                }
-                                {!hold[2] &&
-                                    <TestButton1 onClick={diceHold} value={2} hold={hold[2]} x={boxX + 200} y={boxY}>
-                                        <IMG src={diceImage[2]} />
-                                    </TestButton1>
-                                }
-                                {!hold[3] &&
-                                    <TestButton1 onClick={diceHold} value={3} hold={hold[3]} x={boxX + 300} y={boxY}>
-                                        <IMG src={diceImage[3]} />
-                                    </TestButton1>
-                                }
-                                {!hold[4] &&
-                                    <TestButton1 onClick={diceHold} value={4} hold={hold[4]} x={boxX + 400} y={boxY}>
-                                        <IMG src={diceImage[4]} />
-                                    </TestButton1>
-                                }
-                            </>
-                        </ButtonTable>
-                        <HoldTable>
-                            <div>{rollCount} Left</div>
-                            <ButtonTable ref={box}>
+                            {lst.map((i) => (
                                 <>
-                                    {hold[0] &&
-                                        <TestButton2 onClick={diceHold} value={0} hold={hold[0]} x={placeX[0]} y={placeY}>
-                                            <IMG src={diceImage[0]} />
-                                        </TestButton2>}
-                                    {hold[1] &&
-                                        <TestButton2 onClick={diceHold} value={1} hold={hold[1]} x={placeX[1]} y={placeY}>
-                                            <IMG src={diceImage[1]} />
-                                        </TestButton2>}
-                                    {hold[2] &&
-                                        <TestButton2 onClick={diceHold} value={2} hold={hold[2]} x={placeX[2]} y={placeY}>
-                                            <IMG src={diceImage[2]} />
-                                        </TestButton2>}
-                                    {hold[3] &&
-                                        <TestButton2 onClick={diceHold} value={3} hold={hold[3]} x={placeX[3]} y={placeY}>
-                                            <IMG src={diceImage[3]} />
-                                        </TestButton2>}
-                                    {hold[4] &&
-                                        <TestButton2 onClick={diceHold} value={4} hold={hold[4]} x={placeX[4]} y={placeY}>
-                                            <IMG src={diceImage[4]} />
-                                        </TestButton2>}
+                                    {!hold[i] &&
+                                        <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]}>
+                                            <IMG src={diceImage[i]} />
+                                        </HoldButton>
+                                    }
                                 </>
+                            ))}
+                        </ButtonTable>
+                        <HoldTable ref={box}>
+                            <div>{rollCount} Left</div>
+                            <ButtonTable>
+                                {lst.map((i) => (
+                                    <>
+                                        {hold[i] &&
+                                            <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]} y2={placeY}>
+                                                <IMG src={diceImage[i]} />
+                                            </HoldButton>
+                                        }
+                                    </>
+                                ))}
                             </ButtonTable>
                         </HoldTable>
                     </ParentDiv>
@@ -240,7 +214,3 @@ const Dice = () => {
     )
 }
 export default Dice;
-
-/*
-
-*/

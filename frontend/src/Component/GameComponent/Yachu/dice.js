@@ -38,18 +38,17 @@ const ButtonTable = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
 `
-//로그 찍었을 때 state가 변했기 때문에 버튼 하나만 눌러도 5번 뜸->state를 분리해서 변한것만 리렌더링 할 수 있도록 해야함
 //false 일때 롤 다이스 아래에 주사위가 위치함->아래에서 위로 올라와야함
 //true 일때 홀드 판 위치에 주사위가 위치함->위에서 아래로 내려와야함
-const moveTo=(x1,y1,x2,y2) => keyframes`
+const moveTo=(x1,y1,x2) => keyframes`
     0%{
         transform: translate(${x1}px,${y1}px); //원래 위치
     }
     100%{
-        transform: translate(${x2}px,${y2}px); //움직일 위치
+        transform: translateX(${x2}px,0); //움직일 위치
     }   
 `;
-const moveFrom=(x1,y1,x2,y2)=> keyframes`
+const moveFrom=(x2,y2)=> keyframes`
     from{transform:translate(-${x2}px,-${y2}px);}//움직인 위치
     to{transform:translate(0px,0px);
     }//원래 위치
@@ -57,21 +56,32 @@ const moveFrom=(x1,y1,x2,y2)=> keyframes`
 `
 //위에서 아래로 내려가는 주사위 애니메이션이 2개까지만 정상적으로 나오고 3개부턴 나오지 않음
 //콘솔로그로 확인해본 결과 3번째 주사위부터 좌표값이 음수로 나오기 때문에 if 문을 통해서 음수인 경우 양수로 들어가게끔 시도
-const Test=(x1,y1,x2,y2)=> keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
+const Test=(x2,y2)=> keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
     from{transform:translate(${x2}px,-${y2}px);}//움직인 위치
     to{transform:translate(0px,0px);
     }//원래 위치
     
 `
+const StopAnimation=(x,y) => keyframes`
+    to{transform:translate(-${x}px)}
+`
 //moveTo(props.x1,props.y1,props.x2,props.y2)
+//props.hold ? (props.x1>0 ? (console.log("양수임"),  moveFrom(props.x1, props.y1)): (console.log("음수임"), Test(props.x1, props.y1))) : (console.log("moveTo 함수 작동"), moveTo(props.x1,props.y1,props.x2))
+const Fade = keyframes`
+    0%{
+        opacity:0;
+    }
+    100%{
+        opacity:1;
+    }
+`
 const HoldButton = styled.button`
     display: flex;
     border: none;
     background: none;
     width:100px;
     z-index:95;
-    animation: ${(props) => props.hold ? (props.x1>0 ? (console.log("양수임"),  moveFrom(props.x2, props.y2, props.x1, props.y1)): (console.log("음수임"), Test(props.x2, props.y2, props.x1, props.y1))) : moveTo(props.x1,props.y1,props.x2,props.y2)} 0.3s linear;
-    ${(props) => { console.log(props)}}
+    animation: ${(props)=>props.hold===2 ? (StopAnimation(props.x2,props.y1)):(props.hold===0?(moveFrom(props.x1,props.y1)):moveTo(props.x1,props.y1,props.x2))} 0.5s;
     :hover{
         background-color:skyblue;
     }
@@ -107,7 +117,10 @@ const Dice=()=>{
     const [boxY, setBoxY] = useState(0);
     const [placeX, setPlaceX] = useState([0, 0, 0, 0, 0]);
     const [placeY, setPlaceY] = useState(0);
-
+    const [localHold, setLocal] = useState([2, 2, 2, 2, 2]) //store에서 받아온 hold를 기준으로 지역 state생성 0이면 true 1이면 false 아무것도 아닌 상태 2
+    const [trigger, setTrigger] = useState(false); //store쪽의 hold에 변화가 생길 경우 localHold값을 2로 만들어 애니메이션이 동작하지 않도록 막아주는 trigger
+    const [copyStoreHold, setStoreHold] = useState([diceState.hold])
+    
     function RollDice(){
         if(diceState.halt===true){
             diceState.RollDice()
@@ -117,6 +130,7 @@ const Dice=()=>{
         }
     }
     const diceHold = (e) => {
+        setStoreHold(diceState.hold)
         const value = e.currentTarget.value;
         if (!diceState.hold[value]) {
             let diceX = [...placeX];
@@ -130,7 +144,7 @@ const Dice=()=>{
             console.log("y", y);
             console.log("test1", test1);
             console.log("test2", test2);
-            diceX[value] = left + (value * 100);
+            diceX[value] = left ;
             console.log(diceX);
             setPlaceX(diceX);
             setPlaceY(top);           
@@ -146,6 +160,26 @@ const Dice=()=>{
     const startGame=()=>{
         diceState.StartGame()
     }
+    useEffect(() => {
+        const copyLocalHold = [...localHold];
+        for (var i = 0; i < 5; i++){
+            if (copyStoreHold[i]!==diceState.hold[i]) {
+                if (diceState.hold[i]) {
+                    copyLocalHold[i] = 0;
+                }
+                else if (!diceState.hold[i]) {
+                    copyLocalHold[i] = 1;
+                }
+            }
+        }
+        setLocal(copyLocalHold);
+        console.log(copyLocalHold)
+        setTrigger(prev=>!prev)
+    }, diceState.hold)
+    useEffect(() => {
+        console.log("setLocal")
+        setLocal([2, 2, 2, 2, 2]);
+    },[trigger])
     useEffect(()=>{
         if(diceState.rollCount===3){
             setImage([dice1,dice1,dice1,dice1,dice1]);
@@ -169,7 +203,6 @@ const Dice=()=>{
             setImage(copy)
         }
     },[diceState.rollCount])
-//useRef 리액트 체스 찾아보기
     const lst = [0, 1, 2, 3, 4];
 
     return (
@@ -183,7 +216,7 @@ const Dice=()=>{
                             {lst.map((i) => (
                                 <>
                                     {!hold[i] &&
-                                        <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]} y={placeY}>
+                                        <HoldButton onClick={diceHold} value={i} hold={localHold[i]} x1={boxX} y1={boxY} x2={placeX[i]}>
                                         <IMG src={diceImage[i]} />
                                     </HoldButton>
                                 }
@@ -196,7 +229,7 @@ const Dice=()=>{
                                 {lst.map((i) => (
                                     <>
                                         {hold[i] &&
-                                            <HoldButton onClick={diceHold} value={i} hold={hold[i]} x1={boxX} y1={boxY} x2={placeX[i]} y2={placeY}>
+                                            <HoldButton onClick={diceHold} value={i} hold={localHold[i]} x1={boxX} y1={boxY}>
                                                 <IMG src={diceImage[i]}/>
                                             </HoldButton>
                                         }
