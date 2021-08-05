@@ -3,7 +3,33 @@ import React, {Component} from 'react';
 import {Motion, spring} from 'react-motion';
 import {FrontImg} from "../Styled";
 
+const styles = {
+    menu: {
+        overflow: 'hidden',
+        border: '2px solid #ddd',
+        width: 300,
+        marginTop: 20,
+    },
+    selection: {
+        padding: 10,
+        margin: 0,
+        borderBottom: '1px solid #ededed'
+    },
+    button: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        cursor: 'pointer',
+        width: 200,
+        height: 45,
+        border: 'none',
+        borderRadius: 4,
+        backgroundColor: '#ffc107',
+    },
+}
+
 class Motion_Test extends Component {
+
     state = {
         // width: 20,
         height: 38
@@ -38,28 +64,4 @@ class Motion_Test extends Component {
     }
 }
 
-const styles = {
-    menu: {
-        overflow: 'hidden',
-        border: '2px solid #ddd',
-        width: 300,
-        marginTop: 20,
-    },
-    selection: {
-        padding: 10,
-        margin: 0,
-        borderBottom: '1px solid #ededed'
-    },
-    button: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
-        cursor: 'pointer',
-        width: 200,
-        height: 45,
-        border: 'none',
-        borderRadius: 4,
-        backgroundColor: '#ffc107',
-    },
-}
 export default Motion_Test
