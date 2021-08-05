@@ -22,7 +22,7 @@ const ParentDiv = styled.div`
 const HoldTable = styled.div`
     border:none;
     background-color: #A94B00;
-    width:600px;
+    width:700px;
     height:200px;
     text-align: right;
     color:white;
@@ -40,6 +40,7 @@ const ButtonTable = styled.div`
 `
 //false 일때 롤 다이스 아래에 주사위가 위치함->아래에서 위로 올라와야함
 //true 일때 홀드 판 위치에 주사위가 위치함->위에서 아래로 내려와야함
+/*
 const moveTo=(x1,y1,x2) => keyframes`
     0%{
         transform: translate(${x1}px,${y1}px); //원래 위치
@@ -53,10 +54,11 @@ const moveFrom=(x2,y2)=> keyframes`
     to{transform:translate(0px,0px);
     }//원래 위치
     
-`
+`*/
 //위에서 아래로 내려가는 주사위 애니메이션이 2개까지만 정상적으로 나오고 3개부턴 나오지 않음
 //콘솔로그로 확인해본 결과 3번째 주사위부터 좌표값이 음수로 나오기 때문에 if 문을 통해서 음수인 경우 양수로 들어가게끔 시도
-const Test=(x2,y2)=> keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
+/*
+const Test = (x2, y2) => keyframes`   //테스트로 임의 함수 생성 테스트 끝나면 반드시 함수 이름 제대로 지정할것
     from{transform:translate(${x2}px,-${y2}px);}//움직인 위치
     to{transform:translate(0px,0px);
     }//원래 위치
@@ -74,6 +76,23 @@ const Fade = keyframes`
     100%{
         opacity:1;
     }
+`*/
+//(StopAnimation(props.x2,props.y1)):(props.hold===0?(moveFrom(props.x1,props.y1)):moveTo(props.x1,props.y1,props.x2))
+const dice_top_to_bottom = (y) => keyframes` //위에서 아래로 내려가는 주사위 애니메이션
+    0%{
+        transform: translateY(-${y}px);
+    }
+    100%{
+        transform:translateY(0px)
+    }
+`
+const dice_bottom_to_top = (y) => keyframes` //아래에서 위로 올라가는 주사위 애니메이션
+    0%{
+        transform: translateY(${y}px);
+    }
+    100%{
+        transform:translateY(0px);
+    }
 `
 const HoldButton = styled.button`
     display: flex;
@@ -81,7 +100,7 @@ const HoldButton = styled.button`
     background: none;
     width:100px;
     z-index:95;
-    animation: ${(props)=>props.hold===2 ? (StopAnimation(props.x2,props.y1)):(props.hold===0?(moveFrom(props.x1,props.y1)):moveTo(props.x1,props.y1,props.x2))} 0.5s;
+    animation: ${(props)=>props.hold ? dice_top_to_bottom(props.y):dice_bottom_to_top(props.y)} 0.5s;  //true일 때 diceHolder에 위치 -> 위에서 아래로 false일 때 주사위판에 위치-> 아래에서 위로 올라가야함
     :hover{
         background-color:skyblue;
     }
@@ -113,13 +132,11 @@ const Dice=()=>{
     const [diceImage, setImage] = useState([dice1, dice1, dice1, dice1, dice1]);
     const box = useRef(null);
     const fromPosition = useRef(null);
-    const [boxX, setBoxX] = useState(0);
     const [boxY, setBoxY] = useState(0);
-    const [placeX, setPlaceX] = useState([0, 0, 0, 0, 0]);
     const [placeY, setPlaceY] = useState(0);
-    const [localHold, setLocal] = useState([2, 2, 2, 2, 2]) //store에서 받아온 hold를 기준으로 지역 state생성 0이면 true 1이면 false 아무것도 아닌 상태 2
-    const [trigger, setTrigger] = useState(false); //store쪽의 hold에 변화가 생길 경우 localHold값을 2로 만들어 애니메이션이 동작하지 않도록 막아주는 trigger
-    const [copyStoreHold, setStoreHold] = useState([diceState.hold])
+    //const [localHold, setLocal] = useState([2, 2, 2, 2, 2]) //store에서 받아온 hold를 기준으로 지역 state생성 0이면 true 1이면 false 아무것도 아닌 상태 2
+    //const [trigger, setTrigger] = useState(false); //store쪽의 hold에 변화가 생길 경우 localHold값을 2로 만들어 애니메이션이 동작하지 않도록 막아주는 trigger
+    //const [copyStoreHold, setStoreHold] = useState([diceState.hold])
     
     function RollDice(){
         if(diceState.halt===true){
@@ -130,23 +147,16 @@ const Dice=()=>{
         }
     }
     const diceHold = (e) => {
-        setStoreHold(diceState.hold)
+        //setStoreHold(diceState.hold)
         const value = e.currentTarget.value;
         if (!diceState.hold[value]) {
-            let diceX = [...placeX];
-            const { x, y } = box.current.getBoundingClientRect();
-            const { left, top } = fromPosition.current.getBoundingClientRect();
-            var test1 = x - left;
-            var test2 = y - top;
-            setBoxX(test1);
-            setBoxY(test2);
-            console.log("x", x);
+            //let diceX = [...placeX];
+            const { y } = box.current.getBoundingClientRect();
+            const { top } = fromPosition.current.getBoundingClientRect();
+            var height = y - top;
+            setBoxY(height);
             console.log("y", y);
-            console.log("test1", test1);
-            console.log("test2", test2);
-            diceX[value] = left ;
-            console.log(diceX);
-            setPlaceX(diceX);
+            console.log("홀드 박스 높이-주사위 높이", height);
             setPlaceY(top);           
         }
         diceState.diceHold(value);
@@ -160,6 +170,7 @@ const Dice=()=>{
     const startGame=()=>{
         diceState.StartGame()
     }
+    /*
     useEffect(() => {
         const copyLocalHold = [...localHold];
         for (var i = 0; i < 5; i++){
@@ -180,6 +191,7 @@ const Dice=()=>{
         console.log("setLocal")
         setLocal([2, 2, 2, 2, 2]);
     },[trigger])
+    */
     useEffect(()=>{
         if(diceState.rollCount===3){
             setImage([dice1,dice1,dice1,dice1,dice1]);
@@ -215,8 +227,8 @@ const Dice=()=>{
                         <ButtonTable ref={fromPosition}>
                             {lst.map((i) => (
                                 <>
-                                    {!hold[i] &&
-                                        <HoldButton onClick={diceHold} value={i} hold={localHold[i]} x1={boxX} y1={boxY} x2={placeX[i]}>
+                                    {!hold[i] &&    //주사위를 홀드 하지 않은 경우 (주사위 굴리기 버튼 아래) 아래에서 위로 올라와야 한다.
+                                        <HoldButton onClick={diceHold} value={i} hold={hold[i]} y={boxY}>
                                         <IMG src={diceImage[i]} />
                                     </HoldButton>
                                 }
@@ -228,8 +240,8 @@ const Dice=()=>{
                             <ButtonTable>
                                 {lst.map((i) => (
                                     <>
-                                        {hold[i] &&
-                                            <HoldButton onClick={diceHold} value={i} hold={localHold[i]} x1={boxX} y1={boxY}>
+                                        {hold[i] && //주사위를 홀드 한 경우 (주사위 굴리기 버튼 아래) 위에서 아래로 내려와야 한다.
+                                            <HoldButton onClick={diceHold} value={i} hold={hold[i]} y={placeY}>
                                                 <IMG src={diceImage[i]}/>
                                             </HoldButton>
                                         }
