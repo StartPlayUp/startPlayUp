@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Dice from 'Component/GameComponent/Yachu/dice';
 import Player from 'Component/GameComponent/Yachu/Player';
 import Timer from 'Component/GameComponent/Yachu/timer';
+import NicknameDisplay from 'Component/GameComponent/Yachu/playerNickname';
 import {YachuProvider} from './YatchStore';
 const Yacht=(props)=>{
 
@@ -17,16 +18,20 @@ const Yacht=(props)=>{
     `
     const ParentDiv = styled.div`
         display: flex;
+        align-items:center;
+        position:relative;
         width:980px;
         height:100%;
         justify-content: right;
     `
+
     return(
         <YachuProvider>
             <YachtMan>
                 <Player />
                 <ParentDiv>
                     <Timer />
+                    <NicknameDisplay />
                     <Dice />
                 </ParentDiv>
             </YachtMan>

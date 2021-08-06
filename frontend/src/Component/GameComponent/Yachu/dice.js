@@ -16,7 +16,7 @@ const ParentDiv = styled.div`
     width: 100%;
     height: 100%;
     align-items: center;
-    margin-top:5%;
+    margin-top:20%;
     flex-wrap: wrap;
 `
 const HoldTable = styled.div`
@@ -99,7 +99,7 @@ const HoldButton = styled.button`
     border: none;
     background: none;
     width:100px;
-    z-index:95;
+    z-index:80;
     animation: ${(props)=>props.hold ? dice_top_to_bottom(props.y):dice_bottom_to_top(props.y)} 0.5s;  //true일 때 diceHolder에 위치 -> 위에서 아래로 false일 때 주사위판에 위치-> 아래에서 위로 올라가야함
     :hover{
         background-color:skyblue;

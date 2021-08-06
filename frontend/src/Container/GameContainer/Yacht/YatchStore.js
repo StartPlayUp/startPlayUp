@@ -13,7 +13,9 @@ const ROLLRESET = 'ROLLRESET';
 const UPDATE_PEERS = "UPDATE_PEERS"
 const DiceStore=React.createContext();
 const PlayerData=React.createContext();
-const TimerData=React.createContext();
+const TimerData = React.createContext();
+const PlayerNickName = React.createContext();
+
 const nickname=localStorage.getItem('nickname');
 const initialState={
     dice: [0, 0, 0, 0, 0],
@@ -82,7 +84,7 @@ const reducer=(state,action)=>{
             const value = action.value;
             let holding = [...state.hold]
             holding[value] = !holding[value];
-            return { ...state, hold: holding }
+            return { ...state, hold:holding }
         }
         case SELECT: {
             return { ...state, playerData: action.player }
@@ -164,7 +166,10 @@ const YachuProvider=({children})=>{
             alert("주사위 던지기 오류")
         }
     }
-    function diceHold(value){
+    function diceHold(value) {
+        let holding = [...state.hold]
+        holding[value] = !holding[value];
+        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
         dispatch({type:DICEHOLD,value})
     }
     function selectData(name,value) {
@@ -292,6 +297,7 @@ const YachuProvider=({children})=>{
         }
         else { }
     }
+    /*
     useEffect(()=>{
         const player = [...state.playerData]
         if (endGame) {
@@ -304,7 +310,8 @@ const YachuProvider=({children})=>{
                 alert("2P의 승리입니다.");
             }
         }
-    },[endGame])
+    },[endGame]) 임시로 만들어 놓은 승리화면 리팩토링시 지울것
+    */
     useEffect(() => {
         dispatch({ type: UPDATE_PEERS, peers })
     }, [peers])
@@ -361,15 +368,15 @@ const YachuProvider=({children})=>{
         <DiceStore.Provider value={{
                 dice:state.dice,hold:state.hold,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
             <PlayerData.Provider value={//게임 데이터를 표시
-                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,selectData }
-            }>
-            
-                <TimerData.Provider value={{
-                    nowTurn:nowTurn,timeOver}}>
-                    {children}
-                </TimerData.Provider>
+                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,endGame:endGame,selectData }}>
+                <PlayerNickName.Provider value={{playerOne:state.playerData[0].nickname,playerTwo:state.playerData[1].nickname,nowTurn:nowTurn}}>
+                    <TimerData.Provider value={{
+                        nowTurn:nowTurn,timeOver}}>
+                        {children}
+                        </TimerData.Provider>
+                </PlayerNickName.Provider>
             </PlayerData.Provider>
         </DiceStore.Provider>
     )
 }
-export {TimerData,DiceStore,PlayerData,YachuProvider};
+export {TimerData,DiceStore,PlayerData,PlayerNickName,YachuProvider};

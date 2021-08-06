@@ -1,6 +1,12 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { TimerData } from 'Container/GameContainer/Yacht/YatchStore';
 import styled from 'styled-components';
+const Time_remaining = styled.div`
+    position: absolute;
+    font-size: 1.6vw;
+    right:1%;
+    top:58%;
+`
 const Timer=()=>{
     const [minutes, setMinutes]=useState(3);
     const [seconds,setSeconds]=useState(0);
@@ -29,7 +35,7 @@ const Timer=()=>{
         <TimerData.Consumer>
             {({})=>(
                 <Fragment>
-                    <div>남은 시간 {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</div>
+                        <Time_remaining>{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</Time_remaining>
                 </Fragment>
             )}
         </TimerData.Consumer>
