@@ -63,39 +63,6 @@ const ModalSectionHeader = styled.div`
     font-weight: 700;
 `;
 
-// .modal > section > header button {
-//     position: absolute;
-//     top: 15px;
-//     right: 15px;
-//     width: 30px;
-//     font - size: 21px;
-//     font - weight: 700;
-//     text - align: center;
-//     color: #999;
-//     background - color: transparent;
-// }
-// .modal > section > main {
-//     padding: 16px;
-//     border - bottom: 1px solid #dee2e6;
-//     border - top: 1px solid #dee2e6;
-// }
-// .modal > section > footer {
-//     padding: 12px 16px;
-//     text - align: right;
-// }
-// .modal > section > footer button {
-//     padding: 6px 12px;
-//     color: #fff;
-//     background - color: #6c757d;
-//     border - radius: 5px;
-//     font - size: 13px;
-// }
-// .modal.openModal {
-//     display: flex;
-//     align - items: center;
-//     /* 팝업이 열릴때 스르륵 열리는 효과 */
-//     animation: modal - bg - show .3s;
-// }
 const DivHeader = styled.div`
     display:flex;
     flex-direction: row;
@@ -180,7 +147,7 @@ const moveImg = (x, y) => keyframes`
 
 const ImgAnimation = styled.img`
     animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear;
-    ${props => console.log("asdf", props.playerPosition[0], props.playerPosition[1])}
+    /* ${props => console.log("asdf", props.playerPosition[0], props.playerPosition[1])} */
     animation-fill-mode: forwards;
 `;
 
@@ -191,14 +158,18 @@ const winnerModal = () => {
     const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
     const [modalShow, setModalShow] = useState(false);
+
+    const [imgLoading, setImgLoading] = useState(false);
     const [playerPosition, setPlayerPosition] = useState([0, 0]);
+
 
     const imgRef = useRef();
     const playerRef = useRef([]);
 
-    const useForceRender = () => {
-        const [, forceRender] = useReducer((oldVal) => oldVal + 1, 0)
-        return forceRender
+
+    const modalShowOffHandler = () => {
+        console.log("set Modal off")
+        setModalShow(false);
     }
 
     useEffect(() => {
@@ -210,7 +181,8 @@ const winnerModal = () => {
     }, [winner])
 
     useEffect(() => {
-        if (modalShow === true && playerRef.current[0] !== undefined) {
+        console.log("fsadfasdafsdasfdasfd")
+        if (imgLoading) {
             // const { top, right, bottom, left } = playerRef.current[0].getBoundingClientRect();
             // setPlaceXY([left, top]);
             // setPlaceXY([playerRef.current[0].screenX, playerRef.current[0].screenY]);
@@ -219,45 +191,48 @@ const winnerModal = () => {
             const posImg = imgRef.current.getBoundingClientRect();
             const posPlayer = playerRef.current[0].getBoundingClientRect();
 
-            // const top = posPlayer.top - posImg.top - (playerRef.current[0].offsetHeight) - 20;
-            const top = posPlayer.top - posImg.top;
-            // const left = posPlayer.left - posImg.left + (playerRef.current[0].offsetWidth / 2);
+            const top = posPlayer.top - posImg.top - posImg.height;
             const left = posPlayer.left - posImg.left;
 
             setPlayerPosition([left, top]);
             console.log("left : ", posPlayer.left, posImg.left,)
+            console.log("playerRef.current[0].offsetWidth : ", playerRef.current[0].offsetWidth)
             console.log("top : ", posPlayer.top, posImg.top,)
-
+            console.log("posImg : ", posImg, posImg.height, posImg.width)
+            console.log("posPlayer : ", posPlayer, posPlayer.height, posPlayer.width)
         }
-    }, [modalShow])
+    }, [imgLoading])
 
-    const modalShowOffHandler = () => {
-        console.log("set Modal off")
-        setModalShow(false);
-    }
-    useForceRender();
+    // useForceRender();
     return (
         <>
-            <StyleExitButton onClick={() => setModalShow(true)}> EXIT </StyleExitButton>
             {
                 modalShow && <Modal>
                     <ModalSection>
                         <ModalSectionHeader>
                             <DivHeader>
-                                <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} />
-                                <button onClick={modalShowOffHandler}> EXIT </button>
+                                <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} onLoad={() => {
+                                    console.log("imgSection onload")
+                                    setImgLoading(true)
+                                }} />
+                                <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
                             </DivHeader>
                             <WinnerSection>
-                                <div key={0} ref={el => playerRef.current[0] = el} >
+                                {/* 테스트 코드 */}
+                                {/* <div key={0}  >
                                     <div>{1} 등</div>
-                                    <Winner>{1}</Winner>
+                                    <Winner ref={el => playerRef.current[0] = el}>{1}</Winner>
                                 </div>
-                                {/* {
+                                <div key={1}  >
+                                    <div>{2} 등</div>
+                                    <Winner ref={el => playerRef.current[1] = el}>{2}</Winner>
+                                </div> */}
+                                {
                                     winner.map((i, index) => <div key={index} ref={el => playerRef.current[index] = el}>
                                         <div>{index + 1} 등</div>
                                         <Winner>{i}</Winner>
                                     </div>)
-                                } */}
+                                }
                             </WinnerSection>
                         </ModalSectionHeader>
                     </ModalSection>

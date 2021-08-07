@@ -1,25 +1,15 @@
-import { THROW_YUT, START_GAME, boardContext } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Horses from 'Component/GameComponent/Yut/Horses'
-
 import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
-
-import HaltButton from './Button/HaltButton';
-import ContextButton from './Button/HaltButton';
-
-import HaltGagueButton from './Button/HaltGagueButton';
-
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import { stateContext } from 'Container/GameContainer/Yut/YutStore';
-import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
-
 import { NUMBER_TO_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGameInitData';
-
-import Gauge from './Gauge'
+import { START_GAME } from 'Container/GameContainer/Yut/Constants/yutActionType';
+import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 
 
@@ -91,14 +81,33 @@ const App = () => {
         setYutresultList(yutList);
     }, [yutData])
 
+    const startGameHandler = () => {
+        if (typeof (dispatch) === "function"
+            && typeof (state) === "object"
+            && typeof (peers) === "object"
+            && typeof (nickname) === "string") {
+            const newState = reducerAction.START_GAME(peers);
+            dispatch({ type: START_GAME, state: newState });
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: START_GAME } });
+        } else {
+            console.error("startGameHandler");
+            console.log(typeof (dispatch) === "function"
+                , typeof (state) === "object"
+                , typeof (peers) === "object"
+                , typeof (nickname) === "string");
+            console.log(typeof (dispatch))
+        }
+    }
+
 
     return (
         <StylePlayerWithYutData>
-            <button onClick={() => actionHandler.startGameHandler({ dispatch, state, peers, nickname })}>게임 시작</button>
+            <button onClick={startGameHandler}>게임 시작</button>
             <StyleDiv>
                 {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_YUT_TYPE[index]} : {i}</div>))}
             </StyleDiv>
-            <PlayerSection>
+            {/* {console.log('playerData : ^^^', playerData)} */}
+            {playerData.length > 0 && <PlayerSection>
                 {playerData.map((i, index) => <Player key={index} player={i}>
                     player{index + 1}<div>{i.nickname}</div>
                     <div style={{ "height": "60px" }} >
@@ -107,7 +116,7 @@ const App = () => {
                     <div>얻은 점수 : {i.goal}</div>
                     <p />
                 </Player>)}
-            </PlayerSection>
+            </PlayerSection>}
         </StylePlayerWithYutData>
     )
 }

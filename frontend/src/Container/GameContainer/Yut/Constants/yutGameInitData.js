@@ -16,11 +16,10 @@ export const initialState = {
     // timer: 0, // 1초에 +1 씩 더해준다.
     myThrowCount: 1, // 윷을 던질 수 있는 횟수를 나타냄. // halted 와 useEffect 사용해서 대체할 수 있는지 테스트 //
     winner: [], // 이긴사람을 순서대로 추가함.
-    lastYutData: [0, 0, 0, 0],
 };
 
 // 플레이어 색
-export const YUT_PLAYER_COLOR = ['red', '#7bd3f7', 'orange', '#98ff98']
+export const YUT_PLAYER_COLOR = ['#FF0000', '#7bd3f7', '#FFA500', '#98ff98']
 
 // 윷 타입
 export const YUT_RESULT_TYPE = {

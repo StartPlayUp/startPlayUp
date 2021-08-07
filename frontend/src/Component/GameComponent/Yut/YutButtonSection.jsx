@@ -1,26 +1,18 @@
-import { THROW_YUT, START_GAME, boardContext } from 'Container/GameContainer/Yut/YutStore';
 import React, { useContext, useState, memo, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import Horses from 'Component/GameComponent/Yut/Horses'
-
 import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
 
-import HaltButton from './Button/HaltButton';
-import ContextButton from './Button/HaltButton';
-
-import HaltGagueButton from './Button/HaltGagueButton';
-
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import { stateContext } from 'Container/GameContainer/Yut/YutStore';
-import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
-
-import { NUMBER_TO_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGameInitData';
 
 import Gauge from './Gauge'
-import { TimerContext } from 'Container/GameContainer/Yut/YutStore';
+import { TimerContext, YutViewContext } from 'Container/GameContainer/Yut/YutStore';
+
+import { THROW_YUT, NEXT_TURN } from 'Container/GameContainer/Yut/Constants/yutActionType';
+import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 
 const HatledButtonSection = styled.div`
@@ -56,9 +48,24 @@ const NowPlayerNickname = styled.div`
     margin:5px;
     height: 100px;
     width: 180px;
-    border: solid 3px black;
-    background: #C4C4C4;
+    
+    background:${props => props.player !== undefined ? props.player.color + '80' : '#C4C4C4'};
+    
+    ${props => console.log("asdf", props.player)}
+    border:solid 3px ${props => props.player !== undefined ? props.player.color : '#C4C4C4'};
 
+`;
+
+const StyledHaltedButton = styled.button`
+    border-radius: 30px;
+    font-size: 1.25em;
+    border-color: black;
+    color: white;
+    background-color: brown;
+    height: 50px;
+    width: 240px;
+    border: solid 3px black;
+    flex-grow: 1;
 `;
 
 
@@ -72,26 +79,14 @@ const StyleCenterDiv = styled.div`
 const App = () => {
     const { dispatch, ...state } = useContext(YutContext);
     const { peers } = useContext(PeersContext);
+    const { setYutView } = useContext(YutViewContext);
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
 
-    const { halted, myThrowCount, nowTurn } = state;
+    const { halted, myThrowCount, nowTurn, playerData } = state;
+    console.log("yutButtonSection : ", state)
 
     const { time } = useContext(TimerContext);
-
-
-    const hatledButtonStyle = {
-        'borderRadius': '30px',
-        'fontSize': '1.25em',
-        'borderColor': 'black',
-        'color': 'white',
-        'backgroundColor': 'brown',
-        'height': '50px',
-        'width': '240px',
-        'border': 'solid 3px black',
-        'flexGrow': '1',
-    };
-
 
     const [count, setCount] = useState(0);
     const intervalRef = useRef(null);
@@ -134,10 +129,52 @@ const App = () => {
         )
     }
 
+    const throwYutHandler = () => {
+        if (myThrowCount <= 0) {
+            alert("윷을 던질 수 있는 기회가 없습니다.");
+            return;
+        }
+        if (typeof (dispatch) === "function"
+            && typeof (state) === "object"
+            && typeof (peers) === "object"
+            && typeof (nickname) === "string"
+            && typeof (count) === "number") {
+            const { yutView, ...newState } = reducerAction.THROW_YUT(state, count);
+            console.log("throwYutHandler ^^^^", newState, yutView)
+            dispatch({ type: THROW_YUT, state: newState });
+            setYutView([...yutView]);
+            sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, yutView, reducerActionType: THROW_YUT } });
+        }
+        else {
+            console.log(count)
+            console.error("throwYutHandler");
+        }
+    }
+
+    const nextTurnHandler = () => {
+        if (typeof (dispatch) === "function"
+            && typeof (state) === "object"
+            && typeof (peers) === "object"
+            && typeof (nickname) === "string") {
+            const [newState, success] = reducerAction.NEXT_TURN(state);
+            if (success) {
+                dispatch({ type: NEXT_TURN, state: newState });
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: NEXT_TURN } });
+            }
+            else {
+                alert("현재 위치에 본인 말이 있거나, 본인 차례가 아닙니다.");
+            }
+        }
+        else {
+            console.error("nextTurnHandler error");
+
+        }
+    }
+
 
     return (
         <PlayerButtonSection>
-            <NowPlayerNickname>
+            <NowPlayerNickname player={playerData[nowTurn.index]}>
                 <StyleCenterDiv>시간 초 : {time}</StyleCenterDiv>
                 <StyleCenterDiv>윷 횟수 : {myThrowCount}</StyleCenterDiv>
                 <StyleCenterDiv>현재 턴 : {nowTurn.nickname}</StyleCenterDiv>
@@ -146,8 +183,19 @@ const App = () => {
                 <div style={{ margin: '5px' }} className="App">
                     <Gauge counterHandler={countHandler} />
                 </div>
-                <HaltGagueButton count={count} buttonEvent={{ startCount, stopCount }} buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} nickname={nickname} name={'윷 굴리기'} />
-                <HaltButton buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} nickname={nickname} name={'다음 턴'} />
+                {/* <HaltGagueButton count={count} buttonEvent={{ startCount, stopCount }} buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} nickname={nickname} name={'윷 굴리기'} /> */}
+                <StyledHaltedButton
+                    onMouseDown={startCount}
+                    onMouseUp={stopCount}
+                    onMouseLeave={stopCount}
+                    disabled={halted !== undefined && halted}
+                    onClick={throwYutHandler}>
+                    {'윷 굴리기'}
+                </StyledHaltedButton >
+                {/* <HaltButton buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} nickname={nickname} name={'다음 턴'} /> */}
+                <StyledHaltedButton onClick={nextTurnHandler}>
+                    {'다음 턴'}
+                </StyledHaltedButton>
             </HatledButtonSection>
         </PlayerButtonSection>
     )

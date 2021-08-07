@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
 import { initialState, DEFAULT_TIME_VALUE } from './Constants/yutGameInitData';
+import { reducer } from './Reducer/yutStoreReducer';
+
+import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 import {
     DESELECT_HORSE,
@@ -19,53 +23,12 @@ import {
     NEXT_TURN,
     PLAY_AI,
     INIT_LAST_YUT_DATA,
-} from './Constants/actionType.js';
+} from './Constants/yutActionType.js';
 import actionHandler from './Action/actionHandler.js';
 
 export const YutContext = createContext(null);
 export const YutViewContext = createContext(null);
 export const TimerContext = createContext(null);
-
-const reducer = (state, { type, ...action }) => {
-    const nickname = localStorage.getItem('nickname');
-    switch (type) {
-        case GET_DATA_FROM_PEER: {
-            let halted = true;
-            if (action.state.nowTurn.nickname === nickname) {
-                halted = false;
-            }
-            return { ...state, ...action.state, halted };
-        };
-        case THROW_YUT: {
-            console.log("THROW_YUT : ", action.state.lastYutData)
-            return { ...action.state };
-        }
-        case START_GAME:
-        case UPDATE_GOAL:
-        case SELECT_HORSE:
-        case MOVE_FIRST_HORSE:
-        case MOVE_HORSE:
-        case NEXT_TURN:
-        case PLAY_AI: {
-            return { ...action.state };
-        }
-        // case UPDATE_TIMER:
-        //     return { ...state, timer: state.timer + 1 };
-        // case STOP_TIMER:
-        //     return { ...state, halted: true };
-        case DESELECT_HORSE: {
-            return { ...state, selectHorse: -1, placeToMove: {} };
-        }
-        // case INIT_LAST_YUT_DATA: {
-        //     console.log("INIT_LAST_YUT_DATA")
-        //     return { ...state, lastYutData: [20, 20, 20, 20] };
-        // }
-        // case UPDATE_STATE:
-        //     return { ...state, ...action.state }
-        default:
-            return state;
-    }
-}
 
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
@@ -73,35 +36,11 @@ const YutStore = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
-    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition, timer, lastYutData } = state;
+    const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition } = state;
 
     const [time, setTime] = useState(DEFAULT_TIME_VALUE);
+    const [yutView, setYutView] = useState([0, 0, 0, 0])
 
-
-    // const [halted, setHalted] = useState(true);
-    // // 보내야 하는 데이터 
-
-    // // 타이머 돌리기
-
-    // useEffect(() => {
-    //     let t;
-    //     if (halted === false) {
-    //         t = setInterval(() => {
-    //             dispatch({ type: UPDATE_TIMER })
-    //         }, 1000);
-    //     }
-    //     return () => {
-    //         clearInterval(t);
-    //     }
-    // }, [halted])
-
-    // 타이머가 30 초가 넘었을 때 순서 넘기기
-
-    // useEffect(() => {
-    //     if (timer > 100) {
-    //         actionHandler.nextTurnHandler({ dispatch, state, peers, nickname })
-    //     }
-    // }, [timer])
 
     useEffect(() => {
         console.log("nowTurn", typeof (nowTurn))
@@ -119,7 +58,7 @@ const YutStore = ({ children }) => {
             //     myThrowCount,
             //     winner, } = peerData.data;
 
-            const state = peerData.data;
+            const { state, yutView, reducerActionType } = peerData.data;
 
             if (Array.isArray(state.playerData) &&
                 typeof (state.nowTurn) === "object" &&
@@ -128,9 +67,14 @@ const YutStore = ({ children }) => {
                 typeof (state.placeToMove) === "object" && Object.keys(state.placeToMove).length <= 4 && Object.keys(state.placeToMove).length >= 0 &&
                 typeof (state.selectHorse) === "number" && state.selectHorse >= -1 && state.selectHorse <= 30 &&
                 typeof (state.myThrowCount) === "number" && state.myThrowCount > -1 &&
-                Array.isArray(state.winner)) {
+                Array.isArray(state.winner) &&
+                typeof (reducerActionType) === "string") {
                 dispatch({ type: GET_DATA_FROM_PEER, state })
                 setTime(DEFAULT_TIME_VALUE);
+                if (reducerActionType === THROW_YUT && yutView !== undefined) {
+                    setYutView([...yutView]);
+                }
+
             }
             else {
                 console.log(state)
@@ -142,7 +86,8 @@ const YutStore = ({ children }) => {
                     typeof (state.placeToMove) === "object", Object.keys(state.placeToMove).length <= 4, Object.keys(state.placeToMove).length >= 0,
                     typeof (state.selectHorse) === "number", state.selectHorse >= -1, state.selectHorse <= 30,
                     typeof (state.myThrowCount) === "number", state.myThrowCount > -1,
-                    Array.isArray(state.winner) // === "number"
+                    Array.isArray(state.winner), // === "number"
+                    typeof (peerData.reducerActionType)
                 )
                 getDataError();
             }
@@ -164,7 +109,17 @@ const YutStore = ({ children }) => {
         //     dispatch({ type: UPDATE_GOAL })
         // }
         if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
-            actionHandler.updateGoalHandler({ dispatch, state, peers, nickname });
+            if (typeof (dispatch) === "function"
+                && typeof (state) === "object"
+                && typeof (peers) === "object"
+                && typeof (nickname) === "string") {
+                const newState = reducerAction.UPDATE_GOAL(state);
+                dispatch({ type: UPDATE_GOAL, state: newState });
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
+            }
+            else {
+                console.error("updateGoalHandler");
+            }
         }
     }, [playerHorsePosition]);
 
@@ -178,7 +133,6 @@ const YutStore = ({ children }) => {
         nowTurn,
         myThrowCount,
         winner,
-        lastYutData,
         dispatch
     }),
         [playerData,
@@ -189,8 +143,7 @@ const YutStore = ({ children }) => {
             playerHorsePosition,
             nowTurn,
             myThrowCount,
-            winner,
-            lastYutData,]
+            winner]
     );
 
     const timeValue = useMemo(() => ({
@@ -198,12 +151,17 @@ const YutStore = ({ children }) => {
             setTime(prev => prev - 1);
         }
     }), [time])
-    // useEffect(() => {
-    //     console.log("state 출력 시작------------")
-    //     console.log(state)
-    //     console.log("state 출력 끝------------")
 
-    // }, [state])
+    const yutViewValue = useMemo(() => ({
+        yutView, setYutView
+    }), [yutView])
+
+    useEffect(() => {
+        console.log("state 출력 시작------------")
+        console.log(state)
+        console.log("state 출력 끝------------")
+
+    }, [state])
 
     return (
         <div>
@@ -212,11 +170,11 @@ const YutStore = ({ children }) => {
             <div>nowTurn Nickname : {nowTurn.nickname}</div> */}
             {/* {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)} */}
             <YutContext.Provider value={value}>
-                {/* <TimerContext.Provider value={timerContextValue}> */}
-                <TimerContext.Provider value={timeValue}>
-                    {children}
-                </TimerContext.Provider>
-                {/* </TimerContext.Provider> */}
+                <YutViewContext.Provider value={yutViewValue}>
+                    <TimerContext.Provider value={timeValue}>
+                        {children}
+                    </TimerContext.Provider>
+                </YutViewContext.Provider>
             </YutContext.Provider >
         </div >
     );

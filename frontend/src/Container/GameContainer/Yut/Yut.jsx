@@ -91,6 +91,7 @@ const StyleDiv = styled.div`
 const Yut = (props) => {
     return (
         <YutStore >
+            <Timer />
             <WinnerModal />
             <StyleDiv>
                 <FieldAnimationSection>
@@ -101,7 +102,6 @@ const Yut = (props) => {
                     <YutPlayersSection />
                     <YutButtonSection />
                 </PlayerButtonSection>
-                <Timer />
             </StyleDiv>
         </YutStore>
     )

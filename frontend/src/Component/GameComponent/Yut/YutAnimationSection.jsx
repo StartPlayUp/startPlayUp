@@ -5,6 +5,7 @@ import styled, { keyframes } from "styled-components";
 import {
 	YutContext
 } from "Container/GameContainer/Yut/YutStore"
+import { YutViewContext } from 'Container/GameContainer/Yut/YutStore';
 
 const Background = styled.div`
 	display:flex;
@@ -50,7 +51,7 @@ const Dice = styled.div`
 	position: relative;
 	bottom: 0;
 	transform-style: preserve-3d;
-	animation:${props => props.lastYutData === 0 ? rotate('1800deg') : (props.lastYutData === 1 ? rotate('1980deg') : rotate('0deg'))} 1s ;
+	animation:${props => props.yutView === 0 ? rotate('1800deg') : (props.yutView === 1 ? rotate('1980deg') : rotate('0deg'))} 1s ;
 	animation-fill-mode: forwards;
 	/* animation-fill-mode: backwards; */
 	/* ${props => props.stop === true && "animation-play-state: paused;"}; */
@@ -73,6 +74,7 @@ const Face = styled.div`
 	left: 0;
 	right: 0;
 	bottom: 0;
+
 	display: flex;
 	flex-direction:column;
 	justify-content:space-around;
@@ -111,18 +113,18 @@ const FaceText = styled.div`
 
 
 const YutAnimation = () => {
-	const { lastYutData } = useContext(YutContext);
+	const { yutView } = useContext(YutViewContext);
 	const [trigger, setTrigger] = useState(0);
 
 	useEffect(() => {
 		setTrigger(trigger + 1);
-	}, [lastYutData])
+	}, [yutView])
 
 	return (
 		<Background>
-			{/* {lastYutData.map((i, index) =>
+			{/* {yutView.map((i, index) =>
 				<Container key={trigger} >
-					<Dice lastYutData={i}>
+					<Dice yutView={i}>
 						<Front>
 							<FaceText>X</FaceText>
 							<FaceText>X</FaceText>
@@ -137,7 +139,7 @@ const YutAnimation = () => {
 				</Container>)
 			} */}
 			<Container>
-				<Dice key={trigger} lastYutData={lastYutData[0]}>
+				<Dice key={trigger} yutView={yutView[0]}>
 					<Front>
 						<FaceText>X</FaceText>
 						<FaceText>X</FaceText>
@@ -151,7 +153,7 @@ const YutAnimation = () => {
 				</Dice>
 			</Container>
 			<Container >
-				<Dice key={trigger} lastYutData={lastYutData[1]}>
+				<Dice key={trigger} yutView={yutView[1]}>
 					<Front>
 						<FaceText>X</FaceText>
 						<FaceText>X</FaceText>
@@ -163,7 +165,7 @@ const YutAnimation = () => {
 				</Dice>
 			</Container>
 			<Container>
-				<Dice key={trigger} lastYutData={lastYutData[2]}>
+				<Dice key={trigger} yutView={yutView[2]}>
 					<Front>
 						<FaceText>X</FaceText>
 						<FaceText>X</FaceText>
@@ -175,7 +177,7 @@ const YutAnimation = () => {
 				</Dice>
 			</Container>
 			<Container >
-				<Dice key={trigger} lastYutData={lastYutData[3]}>
+				<Dice key={trigger} yutView={yutView[3]}>
 					<Front>
 						<FaceText>X</FaceText>
 						<FaceText>X</FaceText>

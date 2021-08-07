@@ -8,8 +8,11 @@ import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
 
-import { DESELECT_HORSE } from 'Container/GameContainer/Yut/Constants/actionType'
-import actionHandler from 'Container/GameContainer/Yut/Action/actionHandler';
+import { DESELECT_HORSE, MOVE_FIRST_HORSE, MOVE_HORSE } from 'Container/GameContainer/Yut/Constants/yutActionType'
+import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
+import { GAME, YUT } from 'Constants/peerDataTypes';
+
 
 import arrow from '../../../image/arrow.png';
 import goal from '../../../image/goal.png';
@@ -87,6 +90,16 @@ const App = () => {
     const nickname = localStorage.getItem('nickname');
     const { peers } = useContext(PeersContext);
 
+    const [horsePosition, setHorsePosition] = useState({});
+
+    const { dispatch, ...state } = useContext(YutContext);
+    const {
+        placeToMove,
+        playerHorsePosition,
+        selectHorse,
+        playerData
+    } = state;
+
     const shortPlace = [5, 10, 15, 23, 20];
 
     const commonPlaceSize = 40;
@@ -127,16 +140,6 @@ const App = () => {
     ]
 
 
-    const [horsePosition, setHorsePosition] = useState({});
-
-    const { dispatch, ...state } = useContext(YutContext);
-    const {
-        placeToMove,
-        playerHorsePosition,
-        selectHorse,
-        playerData
-    } = state;
-
     useEffect(() => {
         const result = {}
         playerHorsePosition.forEach((i, index) => {
@@ -149,21 +152,59 @@ const App = () => {
 
 
     const changeItemColorHandler = (index) => {
+        // console.log("changeItemColorHandler of index", index)
         return Object.keys(placeToMove).includes(String(index)) ? 'yellow' : 'white'
 
     }
     const moveHorse = (e, index, player) => {
+        const moveFirstHorseHandler = ({ dispatch, state, peers, nickname, index }) => {
+            if (typeof (dispatch) === "function"
+                && typeof (state) === "object"
+                && typeof (peers) === "object"
+                && typeof (nickname) === "string"
+                && typeof (index) === "number") {
+                const [newState, success] = reducerAction.MOVE_FIRST_HORSE(state, index);
+                if (success) {
+                    dispatch({ type: MOVE_FIRST_HORSE, state: newState });
+                    sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_FIRST_HORSE } });
+                }
+                else {
+                    alert("본인 차례가 아닙니다.")
+                }
+
+            }
+            else {
+                console.error("moveFirstHorseHandler");
+            }
+        }
+
+        const moveHorseHandler = ({ dispatch, state, peers, nickname, index }) => {
+            if (typeof (dispatch) === "function"
+                && typeof (state) === "object"
+                && typeof (peers) === "object"
+                && typeof (nickname) === "string"
+                && typeof (index) === "number") {
+
+                const [newState, success] = reducerAction.MOVE_HORSE(state, index);
+                if (success) {
+                    dispatch({ type: MOVE_HORSE, state: newState });
+                    sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE } });
+                }
+                else {
+                    alert("본인 차례가 아닙니다.");
+                }
+            }
+            else {
+                console.error("moveHorseHandler");
+            }
+        }
+
         e.preventDefault();
         if (selectHorse === 0) {
-            // dispatch({ type: MOVE_FIRST_HORSE, index })
-            actionHandler.moveFirstHorseHandler({ dispatch, peers, state, nickname, index })
-            // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
+            moveFirstHorseHandler({ dispatch, peers, state, nickname, index })
         }
         else {
-            // dispatch({ type: MOVE_HORSE, index });
-            actionHandler.moveHorseHandler({ dispatch, peers, state, nickname, index })
-
-            // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
+            moveHorseHandler({ dispatch, peers, state, nickname, index })
         }
     }
 

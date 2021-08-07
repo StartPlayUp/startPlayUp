@@ -78,7 +78,7 @@ const Gauge = ({ counterHandler }) => {
         <>
             <div style={styles.container}>
                 <div style={styles.barsContainer}>
-                    {percentageArray.map((ele, index) => (
+                    {percentageArray.map((i, index) => (
                         <div key={index} style={styles.barContainer}>
                             {index === 0 ? (
                                 <div

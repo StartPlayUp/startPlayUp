@@ -2,7 +2,7 @@ import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, check
 
 import { initialState, YUT_RESULT_TYPE, YUT_PLAYER_COLOR } from '../Constants/yutGameInitData';
 
-const randomYut = (count) => {
+const getRandomYut = (count) => {
     const yutMatchTable = {
         0: YUT_RESULT_TYPE.MO, // 모
         1: YUT_RESULT_TYPE.DO, // 도
@@ -41,13 +41,13 @@ const throwYutFunction = (myThrowCount, yutData, count) => {
     if (myThrowCount <= 0) {
         return { myThrowCount, yutData }
     }
-    const [randomYutResult, lastYutData] = randomYut(count);
+    const [randomYutResult, yutView] = getRandomYut(count);
     yutData = [...yutData, randomYutResult];
     if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
         myThrowCount = myThrowCount - 1;
     }
 
-    return { myThrowCount, yutData, lastYutData }
+    return { myThrowCount, yutData, yutView }
 }
 
 const addPlaceToMove = (index, yutData) => {
