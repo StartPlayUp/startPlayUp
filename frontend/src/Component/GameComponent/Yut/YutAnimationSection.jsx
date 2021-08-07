@@ -1,10 +1,5 @@
-import { GAME, YUT } from 'Constants/peerDataTypes';
 import React, { useContext, useState, useEffect, useReducer, memo } from "react";
 import styled, { keyframes } from "styled-components";
-
-import {
-	YutContext
-} from "Container/GameContainer/Yut/YutStore"
 import { YutViewContext } from 'Container/GameContainer/Yut/YutStore';
 
 const Background = styled.div`
@@ -111,20 +106,18 @@ const FaceText = styled.div`
 	color:#905338;
 `;
 
-
 const YutAnimation = () => {
 	const { yutView } = useContext(YutViewContext);
-	const [trigger, setTrigger] = useState(0);
+	const [forceUpdate, setForceUpdate] = useState(0);
 
 	useEffect(() => {
-		setTrigger(trigger + 1);
+		setForceUpdate(forceUpdate + 1);
 	}, [yutView])
-
 	return (
 		<Background>
-			{/* {yutView.map((i, index) =>
-				<Container key={trigger} >
-					<Dice yutView={i}>
+			{yutView.map((i, index) =>
+				<Container >
+					<Dice key={forceUpdate} yutView={i}>
 						<Front>
 							<FaceText>X</FaceText>
 							<FaceText>X</FaceText>
@@ -137,57 +130,7 @@ const YutAnimation = () => {
 						</Back>
 					</Dice>
 				</Container>)
-			} */}
-			<Container>
-				<Dice key={trigger} yutView={yutView[0]}>
-					<Front>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-					</Front>
-					<Left />
-					<Right />
-					<Back>
-						<FaceText>백 도</FaceText>
-					</Back>
-				</Dice>
-			</Container>
-			<Container >
-				<Dice key={trigger} yutView={yutView[1]}>
-					<Front>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-					</Front>
-					<Left />
-					<Right />
-					<Back />
-				</Dice>
-			</Container>
-			<Container>
-				<Dice key={trigger} yutView={yutView[2]}>
-					<Front>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-					</Front>
-					<Left />
-					<Right />
-					<Back />
-				</Dice>
-			</Container>
-			<Container >
-				<Dice key={trigger} yutView={yutView[3]}>
-					<Front>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-						<FaceText>X</FaceText>
-					</Front>
-					<Left />
-					<Right />
-					<Back />
-				</Dice>
-			</Container>
+			}
 		</Background >
 	)
 }

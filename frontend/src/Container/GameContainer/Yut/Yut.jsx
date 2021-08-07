@@ -9,6 +9,7 @@ import YutStore from './YutStore';
 import YutAnimation from 'Component/GameComponent/Yut/YutAnimationSection';
 import WinnerModal from './WinnerModal';
 import Timer from './Timer';
+import YutTextView from './YutTextViewModal';
 
 const StyleDivFlexRow = styled.div`
     display:flex;
@@ -91,6 +92,7 @@ const StyleDiv = styled.div`
 const Yut = (props) => {
     return (
         <YutStore >
+            <YutTextView />
             <Timer />
             <WinnerModal />
             <StyleDiv>

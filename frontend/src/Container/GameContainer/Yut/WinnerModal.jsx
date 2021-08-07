@@ -59,7 +59,7 @@ const ModalSectionHeader = styled.div`
     justify-content:space-between;
     align-items: center;
     width:100%;
-    /* padding: 16px 16px 50px 16px; */
+    padding: 16px 16px 50px 16px;
     font-weight: 700;
 `;
 
@@ -145,17 +145,30 @@ const moveImg = (x, y) => keyframes`
     }
 `;
 
+const rotateY = (x, y) => keyframes`
+    from{
+        transform: rotateY(0deg) translate(${x}px,${y}px);
+    }
+    to{
+        transform: rotateY(360deg) translate(${x}px,${y}px);
+    }
+`;
+
 const ImgAnimation = styled.img`
-    animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear;
-    /* ${props => console.log("asdf", props.playerPosition[0], props.playerPosition[1])} */
+    /* animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear; */
+    animation-name:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} ,${props => rotateY(props.playerPosition[0], props.playerPosition[1])};
     animation-fill-mode: forwards;
+    animation-delay: 0s, 1s;
+    animation-duration: 1s, 1.5s;
+    animation-iteration-count: 1,infinite;
+    animation-timing-function: ease-in, ease-in;
 `;
 
 
 
 
 const winnerModal = () => {
-    const dummyArray = ['player1', 'player2', 'player3', 'player4']
+    // const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
     const [modalShow, setModalShow] = useState(false);
 

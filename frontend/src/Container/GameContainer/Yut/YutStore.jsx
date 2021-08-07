@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, createContext, useMemo, memo, useContext,
 import styled from 'styled-components';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
-import { initialState, DEFAULT_TIME_VALUE } from './Constants/yutGameInitData';
+import { YUT_INITIAL_STATE, DEFAULT_TIME_VALUE } from './Constants/yutGame';
 import { reducer } from './Reducer/yutStoreReducer';
 
 import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
@@ -24,7 +24,7 @@ import {
     PLAY_AI,
     INIT_LAST_YUT_DATA,
 } from './Constants/yutActionType.js';
-import actionHandler from './Action/actionHandler.js';
+import actionHandler from './Backup/actionHandler.js';
 
 export const YutContext = createContext(null);
 export const YutViewContext = createContext(null);
@@ -33,13 +33,15 @@ export const TimerContext = createContext(null);
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
     const nickname = localStorage.getItem('nickname');
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, YUT_INITIAL_STATE);
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
     const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition } = state;
 
     const [time, setTime] = useState(DEFAULT_TIME_VALUE);
     const [yutView, setYutView] = useState([0, 0, 0, 0])
+
+    const [fieldView, setFieldView] = useState([]);
 
 
     useEffect(() => {
@@ -164,11 +166,9 @@ const YutStore = ({ children }) => {
     }, [state])
 
     return (
-        <div>
-            {/* <div>{state.timer}</div>
-            <div>nowTurn Index : {nowTurn.index}</div>
-            <div>nowTurn Nickname : {nowTurn.nickname}</div> */}
-            {/* {winner.map((i, index) => <div key={index}>{index}등 : {i}</div>)} */}
+        <div style={{
+            userSelect: 'none', overflow: 'hidden'
+        }}>
             <YutContext.Provider value={value}>
                 <YutViewContext.Provider value={yutViewValue}>
                     <TimerContext.Provider value={timeValue}>

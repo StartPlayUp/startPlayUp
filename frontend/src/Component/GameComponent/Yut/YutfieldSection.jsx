@@ -1,4 +1,4 @@
-import React, { useContext, useState, memo, useEffect } from 'react';
+import React, { useContext, useRef, useState, memo, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import Horses from 'Component/GameComponent/Yut/Horses'
@@ -44,8 +44,6 @@ const GridPlace = styled.div`
     :hover { transform: scale(1.1); }
 `;
 
-
-
 const PlaceButton = styled.button`
     background-color:${props => props.color !== undefined && props.color};
     border-radius: 100%;
@@ -56,16 +54,6 @@ const PlaceButton = styled.button`
     margin:-5px;
     ${props => props.rotateValue !== undefined && `transform: rotate(${props.rotateValue}deg)`};
     ${props => props.color !== undefined && "cursor:pointer;"};
-`;
-
-const HorseButton = styled.button`
-    background-color:${props => props.color !== undefined && props.color};
-    border-radius: 100%;
-    border: solid 1px black;
-    padding:10px;
-    cursor:pointer;
-    /* top: 40px;
-    left: 40px; */
 `;
 
 const YutDiv = styled.div`
@@ -88,10 +76,9 @@ const StyleImg = styled.img`
 
 const App = () => {
     const nickname = localStorage.getItem('nickname');
-    const { peers } = useContext(PeersContext);
-
     const [horsePosition, setHorsePosition] = useState({});
-
+    const fieldPlacePositions = useRef([]);
+    const { peers } = useContext(PeersContext);
     const { dispatch, ...state } = useContext(YutContext);
     const {
         placeToMove,
@@ -148,6 +135,9 @@ const App = () => {
             })
         })
         setHorsePosition(result)
+
+
+
     }, [playerHorsePosition])
 
 
@@ -221,9 +211,10 @@ const App = () => {
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {
                     gridTable.map((i, index) => {
-                        if (index === 0) return;
+                        if (index === 0) return (<></>);
                         return (<GridPlace key={index} index={index} row={i.column} column={i.row}>
                             <PlaceButton
+                                ref={fieldPlacePositions[index]}
                                 key={index}
                                 onClick={(e) => moveHorse(e, index)}
                                 color={changeItemColorHandler(index)}
@@ -231,7 +222,10 @@ const App = () => {
                                 buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
                                 {
                                     // <StyledImg src={arrow} />
-                                    index === 1 || index === 30 ? (index === 1) ? (<StyleImg src={start} color={changeItemColorHandler(index)} />) : (<StyleImg src={goal} color={changeItemColorHandler(index)} />)
+                                    index === 1 || index === 30 ?
+                                        (index === 1) ?
+                                            (<StyleImg src={start} color={changeItemColorHandler(index)} />) :
+                                            (<StyleImg src={goal} color={changeItemColorHandler(index)} />)
                                         : (<StyleImg src={arrow} color={changeItemColorHandler(index)} />)
                                 }
                             </PlaceButton>

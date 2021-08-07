@@ -6,7 +6,7 @@ import {
 } from "Container/GameContainer/Yut/YutStore"
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import { NUMBER_TO_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGameInitData';
+import { NUMBER_TO_MATCH_KOREA_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGame';
 import { START_GAME } from 'Container/GameContainer/Yut/Constants/yutActionType';
 import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
@@ -104,7 +104,7 @@ const App = () => {
         <StylePlayerWithYutData>
             <button onClick={startGameHandler}>게임 시작</button>
             <StyleDiv>
-                {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_YUT_TYPE[index]} : {i}</div>))}
+                {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_MATCH_KOREA_YUT_TYPE[index]} : {i}</div>))}
             </StyleDiv>
             {/* {console.log('playerData : ^^^', playerData)} */}
             {playerData.length > 0 && <PlayerSection>

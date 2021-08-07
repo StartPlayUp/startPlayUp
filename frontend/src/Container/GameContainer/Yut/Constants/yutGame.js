@@ -1,4 +1,4 @@
-export const initialState = {
+export const YUT_INITIAL_STATE = {
     playerData: [
         //      (예시)
         //     { nickname: '장석찬', color: 'red', horses: 4, goal: 0 },
@@ -31,7 +31,16 @@ export const YUT_RESULT_TYPE = {
     MO: 5,
 }
 
-export const NUMBER_TO_YUT_TYPE = {
+export const NUMBER_TO_MATCH_YUT_TYPE = {
+    0: YUT_RESULT_TYPE.MO, // 모 
+    1: YUT_RESULT_TYPE.DO, // 도 1
+    2: YUT_RESULT_TYPE.GAE, // 개 2
+    3: YUT_RESULT_TYPE.GIRL, // 걸 3 
+    4: YUT_RESULT_TYPE.YUT  // 윷 4
+    // 0 : 백도
+}
+
+export const NUMBER_TO_MATCH_KOREA_YUT_TYPE = {
     0: "백도",
     1: "도",
     2: "개",
@@ -40,4 +49,8 @@ export const NUMBER_TO_YUT_TYPE = {
     5: "모",
 }
 
+
 export const DEFAULT_TIME_VALUE = 30;
+
+
+export const DEFAULT_FIELD_VALUE = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }]

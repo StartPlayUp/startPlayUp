@@ -1,23 +1,20 @@
 import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, checkHavePlaceToMove } from '../YutFunctionModule.js';
 
-import { initialState, YUT_RESULT_TYPE, YUT_PLAYER_COLOR } from '../Constants/yutGameInitData';
+import { YUT_INITIAL_STATE, YUT_RESULT_TYPE, YUT_PLAYER_COLOR, NUMBER_TO_MATCH_YUT_TYPE } from '../Constants/yutGame';
+
+
+export const sumYutArrayToMatchType = (yutArray) => {
+    let sumYutArray = NUMBER_TO_MATCH_YUT_TYPE[yutArray.reduce((a, b) => a + b)];
+    // 백도가 있으면 1 말고 0 출력
+    return [sumYutArray === 1 && yutArray[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : sumYutArray];
+}
 
 const getRandomYut = (count) => {
-    const yutMatchTable = {
-        0: YUT_RESULT_TYPE.MO, // 모
-        1: YUT_RESULT_TYPE.DO, // 도
-        2: YUT_RESULT_TYPE.GAE, // 개
-        3: YUT_RESULT_TYPE.GIRL, // 걸
-        4: YUT_RESULT_TYPE.YUT  // 윷
-        // 0 : 백도
-    }
     const arr = [];
     for (let i = 0; i < 4; i++) {
         arr.push(Math.floor(Math.random() * 2, 1))
     }
-    let result = yutMatchTable[arr.reduce((a, b) => a + b)];
-    // 백도가 있으면 1 말고 0 출력
-    return [result === 1 && arr[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : result, arr];
+    return arr;
 }
 
 
@@ -41,17 +38,18 @@ const throwYutFunction = (myThrowCount, yutData, count) => {
     if (myThrowCount <= 0) {
         return { myThrowCount, yutData }
     }
-    const [randomYutResult, yutView] = getRandomYut(count);
-    yutData = [...yutData, randomYutResult];
-    if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
+    const randomYutArray = getRandomYut(count);
+    const sumRandomYutResultType = sumYutArrayToMatchType(randomYutArray);
+    yutData = [...yutData, sumRandomYutResultType];
+    if (!(sumRandomYutResultType === YUT_RESULT_TYPE.YUT || sumRandomYutResultType === YUT_RESULT_TYPE.MO)) {
         myThrowCount = myThrowCount - 1;
     }
 
-    return { myThrowCount, yutData, yutView }
+    return { myThrowCount, yutData, yutView: randomYutArray }
 }
 
-const addPlaceToMove = (index, yutData) => {
-    console.log("addPlaceToMove : ", index, yutData);
+const insertPlaceToMove = (index, yutData) => {
+    console.log("insertPlaceToMove : ", index, yutData);
     const placeToMove = {}
     if (yutData.length === 0) {
         return placeToMove;
@@ -112,13 +110,13 @@ const PLAY_AI = (state, action) => {
     const shortCut = [5, 10, 23, 15, 20, 30];
     if (state.playerData[nowTurnIndex].horses > 0) {
         placeToMoveObjIndex.push(0);
-        placeToMoveObj[0] = addPlaceToMove(0, yutData, state.horsePosition);
+        placeToMoveObj[0] = insertPlaceToMove(0, yutData, state.horsePosition);
     }
     const list = []
     Object.entries(state.horsePosition).forEach(([key, value]) => {
         if (value.player === nowTurnIndex) {
             placeToMoveObjIndex.push(key);
-            placeToMoveObj[key] = addPlaceToMove(key, yutData, state.horsePosition);
+            placeToMoveObj[key] = insertPlaceToMove(key, yutData, state.horsePosition);
             console.log("placeToMoveObj[key]", placeToMoveObj[key])
             Object.entries(placeToMoveObj[key]).forEach(([k, v]) => {
                 print("key : ", key, "index", k, "destination", v);
@@ -159,7 +157,7 @@ const START_GAME = (peers) => {
 
     const nowTurnNickname = playerData[0].nickname; // playerData의 첫번째 닉네임
     const halted = !(nickname === playerData[0].nickname);
-    const result = { ...initialState, nowTurn: { index: 0, nickname: nowTurnNickname }, playerData, myThrowCount: 100, playerHorsePosition };
+    const result = { ...YUT_INITIAL_STATE, nowTurn: { index: 0, nickname: nowTurnNickname }, playerData, myThrowCount: 100, playerHorsePosition };
 
     console.log("START GAME : ", { ...result, peers, halted });
     return { ...result, halted };
@@ -196,7 +194,7 @@ const SELECT_HORSE = (state, index) => {
         findHorseOnBoard === state.nowTurn.index || // 선택한 말이 내 말인지
         index === 0) {  // 말이 0번 이라면
         console.log("말이 있음")
-        const placeToMove = addPlaceToMove(index, state.yutData);
+        const placeToMove = insertPlaceToMove(index, state.yutData);
         console.log("말이 갈 수 있는 위치 : ", placeToMove);
         return [{ ...state, selectHorse: index, placeToMove }, true];
     }
