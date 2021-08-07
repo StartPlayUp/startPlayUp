@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext, useReducer, memo } from "react";
 import { PlayerData } from "Container/GameContainer/Yacht/YatchStore";
 import styled, { keyframes } from 'styled-components';
+import GameOverScreen from "./gameOverModal";
 const Div = styled.div`
     display: relative;
     width:400px;
@@ -23,10 +24,10 @@ const Notification = keyframes`
 `
 const LowerWord = styled.div`
     position:absolute;
-    top:25%;
-    left:10%;
+    top:40%;
+    left:28%;
     margin:auto;
-    font-size: 7.5vw;
+    font-size: 5vw;
     z-index: 99;
     stroke: black;
     color:#FFB800;
@@ -52,18 +53,23 @@ const Table = styled.table`
     height:650px;
     position: absolute;
     animation: ${(props) => props.check && TableAnimaion} 0.1s infinite;
-    ${(props) => console.log(props.check)};
     tr{
         text-align: center;
         height:3.3vh;
     }
     td{
-        font-size: 1.4vw;
+        font-size: 1.0vw;
         border:3px solid;
+        vertical-align:middle;
+    }
+    th{
+        font-size: 1.2vw;
+        border:3px solid;
+        vertical-align:middle;
     }
 `
 const Button = styled.button`
-    background-color: white;
+    background-color: #e2f8a7;
     font-size: 1.4vw;
     height:100%;
     border:none;
@@ -143,8 +149,9 @@ const Player = () => {
     }, [dataState.playerData])
     return (
         <PlayerData.Consumer>
-            {({ playerData, nowTurn }) => (
+            {({ playerData, nowTurn,endGame }) => (
                 <Fragment>
+                    <GameOverScreen playerData={playerData} endGame={endGame}/>
                     <Div>
                         {lowerState && <LowerWord>{wordState}</LowerWord>}
                         <Table check={lowerState}>
