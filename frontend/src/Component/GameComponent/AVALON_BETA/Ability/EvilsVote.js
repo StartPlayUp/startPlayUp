@@ -1,24 +1,26 @@
-import React, {useContext, useState} from "react";
-import {GameContext} from "../Store";
-
+import React, { useContext, useState } from "react";
+import { GameContext } from "../Store";
+import WaitingView from "../animation/WaitingView";
+import * as S from "../Styled";
+import { GAME_CHECK } from "../MVC/AVALON_Reducer";
 function EvilsVote() {
-    const game = useContext(GameContext)
-    const [isClick, setIsClick] = useState(false);
-    const onClick = e => {
-        console.log(`${e.target.value}`)
-        game.gameState.vote.push(e.target.value);
-        setIsClick(true);
-    }
-    return (
-        <div>
-            <button onClick={onClick} value={'success'} disabled={isClick}>
-                성공
-            </button>
-            <button onClick={onClick} value={'fail'} disabled={isClick}>
-                실패
-            </button>
-        </div>
-    )
+  const { gameState, dispatch } = useContext(GameContext);
+  const [isClick, setIsClick] = useState(false);
+  const gameData = { ...gameState };
+  const onClick = (e) => {
+    console.log(`${e.target.value}`);
+    gameData.vote.push(e.target.value);
+    dispatch({ type: GAME_CHECK, gameData });
+    setIsClick(true);
+  };
+  return !isClick ? (
+    <S.RowFrame>
+      <S.SuccessImage onClick={onClick} value={"o"} disabled={isClick} />
+      <S.FailImage onClick={onClick} value={"x"} disabled={isClick} />
+    </S.RowFrame>
+  ) : (
+    <WaitingView />
+  );
 }
 
-export default (EvilsVote);
+export default EvilsVote;
