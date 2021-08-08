@@ -1,4 +1,4 @@
-import { YUT_RESULT_TYPE } from './Constants/yutGame'
+import { YUT_RESULT_TYPE } from './Constants/yutGameInitData'
 
 const table = {
     5: [[5], 21, 22, 23, 24, 25, 15, 16, 17, 18, 19],
@@ -33,7 +33,6 @@ const findPlace = (index, add) => {
         result = table[key][add + indexOf]
     }
     // return result;
-    console.log('findPlace', result)
     return [result];
 }
 
@@ -88,7 +87,6 @@ export const checkEmptySelectHorse = (selectHorse) => {
 }
 
 export const checkHavePlaceToMove = (placeToMove, index) => {
-    console.log('checkHavePlaceToMove', placeToMove, index)
     if (!placeToMove.hasOwnProperty(String(index))) {
         // console.log("checkHavePlaceToMove true");
         return true;
