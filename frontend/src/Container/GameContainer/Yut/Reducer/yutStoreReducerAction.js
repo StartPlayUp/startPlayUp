@@ -2,7 +2,6 @@ import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, check
 
 import { YUT_INITIAL_STATE, YUT_RESULT_TYPE, YUT_PLAYER_COLOR, NUMBER_TO_MATCH_YUT_TYPE } from '../Constants/yutGame';
 
-
 export const sumYutArrayToMatchType = (yutArray) => {
     let sumYutArray = NUMBER_TO_MATCH_YUT_TYPE[yutArray.reduce((a, b) => a + b)];
     // 백도가 있으면 1 말고 0 출력
@@ -10,11 +9,21 @@ export const sumYutArrayToMatchType = (yutArray) => {
 }
 
 const getRandomYut = (count) => {
+    const yutMatchTable = {
+        0: YUT_RESULT_TYPE.MO, // 모
+        1: YUT_RESULT_TYPE.DO, // 도
+        2: YUT_RESULT_TYPE.GAE, // 개
+        3: YUT_RESULT_TYPE.GIRL, // 걸
+        4: YUT_RESULT_TYPE.YUT  // 윷
+        // 0 : 백도
+    }
     const arr = [];
     for (let i = 0; i < 4; i++) {
         arr.push(Math.floor(Math.random() * 2, 1))
     }
-    return arr;
+    let result = yutMatchTable[arr.reduce((a, b) => a + b)];
+    // 백도가 있으면 1 말고 0 출력
+    return [result === 1 && arr[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : result, arr];
 }
 
 
@@ -38,32 +47,27 @@ const throwYutFunction = (myThrowCount, yutData, count) => {
     if (myThrowCount <= 0) {
         return { myThrowCount, yutData }
     }
-    const randomYutArray = getRandomYut(count);
-    const sumRandomYutResultType = sumYutArrayToMatchType(randomYutArray);
-    yutData = [...yutData, sumRandomYutResultType];
-    if (!(sumRandomYutResultType === YUT_RESULT_TYPE.YUT || sumRandomYutResultType === YUT_RESULT_TYPE.MO)) {
+    const [randomYutResult, yutView] = getRandomYut(count);
+    yutData = [...yutData, randomYutResult];
+    if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {
         myThrowCount = myThrowCount - 1;
     }
 
-    return { myThrowCount, yutData, yutView: randomYutArray }
+    return { myThrowCount, yutData, yutView }
 }
 
-const insertPlaceToMove = (index, yutData) => {
-    console.log("insertPlaceToMove : ", index, yutData);
+const addPlaceToMove = (index, yutData) => {
+    console.log("addPlaceToMove : ", index, yutData);
     const placeToMove = {}
     if (yutData.length === 0) {
         return placeToMove;
     }
     const sortedYutData = [...new Set(yutData)].sort().reverse();
-    console.log("sortedYutData : ", index, sortedYutData);
-
     sortedYutData.forEach((i) => {
-        console.log("checkPlace", checkPlace(index, i))
         checkPlace(index, i).forEach((p) => {
             placeToMove[p] = i;
         })
     });
-    console.log(placeToMove)
     return placeToMove;
 }
 
@@ -114,13 +118,13 @@ const PLAY_AI = (state, action) => {
     const shortCut = [5, 10, 23, 15, 20, 30];
     if (state.playerData[nowTurnIndex].horses > 0) {
         placeToMoveObjIndex.push(0);
-        placeToMoveObj[0] = insertPlaceToMove(yutData, state.horsePosition);
+        placeToMoveObj[0] = addPlaceToMove(0, yutData, state.horsePosition);
     }
     const list = []
     Object.entries(state.horsePosition).forEach(([key, value]) => {
         if (value.player === nowTurnIndex) {
             placeToMoveObjIndex.push(key);
-            placeToMoveObj[key] = insertPlaceToMove(key, yutData, state.horsePosition);
+            placeToMoveObj[key] = addPlaceToMove(key, yutData, state.horsePosition);
             console.log("placeToMoveObj[key]", placeToMoveObj[key])
             Object.entries(placeToMoveObj[key]).forEach(([k, v]) => {
                 print("key : ", key, "index", k, "destination", v);
@@ -178,14 +182,27 @@ const THROW_YUT = (state, count) => {
 
 const SELECT_HORSE = (state, index) => {
     console.log("말 선택 : ", index)
+    // if (state.yutData.length === 0 ||
+    //     (state.horsePosition.hasOwnProperty(String(index)) && state.nowTurn.index !== state.horsePosition[index].player) ||
+    //     state.halted
+    // ) {
+    //     // 윷 던진 것이 아무것도 없으면 선택 안함.
+    //     // 본인 차례에 상대망 말 클릭하면 선택 안함.
+    //     // halted 가 true 이면( 즉 내 차례가 아님 멈춘 상태일 경우)
+    //     return { ...state }
+    //     // dispatch({ type: START_GAME, result })
+
+    // }
 
     // playerHorsesPosition일때
     const findHorseOnBoard = state.playerHorsePosition.findIndex((i) => i.hasOwnProperty(String(index)));
+    console.log("dfasdf", findHorseOnBoard === state.nowTurnIndex, findHorseOnBoard, state.nowTurnIndex)
     if (
         index >= 0 && index <= 30 && // 0~30까지 선택해야하고
         findHorseOnBoard === state.nowTurn.index || // 선택한 말이 내 말인지
         index === 0) {  // 말이 0번 이라면
-        const placeToMove = insertPlaceToMove(index, state.yutData);
+        console.log("말이 있음")
+        const placeToMove = addPlaceToMove(index, state.yutData);
         console.log("말이 갈 수 있는 위치 : ", placeToMove);
         return [{ ...state, selectHorse: index, placeToMove }, true];
     }
@@ -200,9 +217,6 @@ const MOVE_FIRST_HORSE = (state, index) => {
     if (checkEmptySelectHorse(state.selectHorse) ||
         checkHavePlaceToMove(state.placeToMove, index) ||
         !checkMyTurn(state.nowTurn.nickname)) {
-        console.log(checkEmptySelectHorse(state.selectHorse))
-        console.log(checkHavePlaceToMove(state.placeToMove, index))
-        console.log(!checkMyTurn(state.nowTurn.nickname))
         return [{}, false];
     }
     else {
@@ -223,6 +237,9 @@ const MOVE_FIRST_HORSE = (state, index) => {
         //------------------------------------------------------------
         const playerHorsePosition = [...state.playerHorsePosition]
         const findHorsePositionIndex = state.playerHorsePosition.findIndex((i) => i.hasOwnProperty(String(index)))
+        console.log("asasdfdfsadfasdsfa", findHorsePositionIndex)
+        console.log(nowTurnIndex)
+        console.log(playerHorsePosition)
 
         // playerHorsePosition에 말이 있는지 확인
         if (findHorsePositionIndex > -1) {
@@ -277,6 +294,9 @@ const MOVE_HORSE = (state, index) => {
         const nowTurnIndex = state.nowTurn.index;
         const playerHorsePosition = [...state.playerHorsePosition];
         const findHorsePositionIndex = state.playerHorsePosition.findIndex((i) => i.hasOwnProperty(String(index)));
+        console.log("asasdfdfsadfasdsfa", findHorsePositionIndex);
+        console.log(nowTurnIndex);
+        console.log(playerHorsePosition);
         const selectHorse = state.selectHorse;
         const selectHorseData = state.playerHorsePosition[nowTurnIndex][selectHorse];
 
