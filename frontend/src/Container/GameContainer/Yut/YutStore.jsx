@@ -40,7 +40,6 @@ const YutStore = ({ children }) => {
 
     const [time, setTime] = useState(DEFAULT_TIME_VALUE);
     const [yutView, setYutView] = useState([0, 0, 0, 0])
-
     const [fieldView, setFieldView] = useState([]);
 
 
@@ -159,10 +158,7 @@ const YutStore = ({ children }) => {
     }), [yutView])
 
     useEffect(() => {
-        console.log("state 출력 시작------------")
         console.log(state)
-        console.log("state 출력 끝------------")
-
     }, [state])
 
     return (

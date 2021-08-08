@@ -116,7 +116,7 @@ const YutAnimation = () => {
 	return (
 		<Background>
 			{yutView.map((i, index) =>
-				<Container >
+				<Container key={index}>
 					<Dice key={forceUpdate} yutView={i}>
 						<Front>
 							<FaceText>X</FaceText>

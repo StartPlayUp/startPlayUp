@@ -141,9 +141,10 @@ const App = () => {
     }, [playerHorsePosition])
 
 
-    const changeItemColorHandler = (index) => {
+    const getColorAccordingToPlaceToMove = (index) => {
         // console.log("changeItemColorHandler of index", index)
-        return Object.keys(placeToMove).includes(String(index)) ? 'yellow' : 'white'
+        // console.log("placeToMove", placeToMove, index, Object.keys(placeToMove).includes(String(index)))
+        return Object.keys(placeToMove).includes(String(index)) ? 'yellow' : 'white';
 
     }
     const moveHorse = (e, index, player) => {
@@ -159,6 +160,12 @@ const App = () => {
                     sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_FIRST_HORSE } });
                 }
                 else {
+                    // console.log("test", success)
+                    // console.log(typeof (dispatch) === "function"
+                    //     , typeof (state) === "object"
+                    //     , typeof (peers) === "object"
+                    //     , typeof (nickname) === "string"
+                    //     , typeof (index) === "number");
                     alert("본인 차례가 아닙니다.")
                 }
 
@@ -201,7 +208,7 @@ const App = () => {
     const OnContextMenu = (e) => {
         e.preventDefault();
         dispatch({ type: DESELECT_HORSE })
-        // await sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
+        // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: state });
     }
 
 
@@ -211,31 +218,35 @@ const App = () => {
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {
                     gridTable.map((i, index) => {
-                        if (index === 0) return (<></>);
-                        return (<GridPlace key={index} index={index} row={i.column} column={i.row}>
-                            <PlaceButton
-                                ref={fieldPlacePositions[index]}
-                                key={index}
-                                onClick={(e) => moveHorse(e, index)}
-                                color={changeItemColorHandler(index)}
-                                rotateValue={i.rotateValue}
-                                buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
-                                {
-                                    // <StyledImg src={arrow} />
-                                    index === 1 || index === 30 ?
-                                        (index === 1) ?
-                                            (<StyleImg src={start} color={changeItemColorHandler(index)} />) :
-                                            (<StyleImg src={goal} color={changeItemColorHandler(index)} />)
-                                        : (<StyleImg src={arrow} color={changeItemColorHandler(index)} />)
-                                }
-                            </PlaceButton>
-                            {
-                                horsePosition[index] !== undefined &&
-                                <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
-                                    {index}
-                                </Horses>
-                            }
-                        </GridPlace>);
+                        if (index === 0)
+                            return (<></>);
+                        else
+                            return (
+                                <GridPlace row={i.column} column={i.row}>
+                                    <PlaceButton
+                                        // ref={fieldPlacePositions[index]}
+                                        key={index}
+                                        onClick={(e) => moveHorse(e, index)}
+                                        color={getColorAccordingToPlaceToMove(index)}
+                                        rotateValue={i.rotateValue}
+                                        buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
+                                        {
+                                            // <StyledImg src={arrow} />
+                                            index === 1 || index === 30 ?
+                                                (index === 1) ?
+                                                    (<StyleImg src={start} color={getColorAccordingToPlaceToMove(index)} />) :
+                                                    (<StyleImg src={goal} color={getColorAccordingToPlaceToMove(index)} />)
+                                                : (<StyleImg src={arrow} color={getColorAccordingToPlaceToMove(index)} />)
+                                        }
+                                    </PlaceButton>
+                                    {
+                                        horsePosition[index] !== undefined &&
+                                        <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
+                                            {index}
+                                        </Horses>
+                                    }
+                                </GridPlace>
+                            );
                     })
                 }
             </GridContainer >

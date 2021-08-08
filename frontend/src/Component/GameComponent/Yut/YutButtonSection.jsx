@@ -51,7 +51,6 @@ const NowPlayerNickname = styled.div`
     
     background:${props => props.player !== undefined ? props.player.color + '80' : '#C4C4C4'};
     
-    ${props => console.log("asdf", props.player)}
     border:solid 3px ${props => props.player !== undefined ? props.player.color : '#C4C4C4'};
 
 `;
@@ -84,15 +83,13 @@ const App = () => {
     const nickname = localStorage.getItem('nickname');
 
     const { halted, myThrowCount, nowTurn, playerData } = state;
-    console.log("yutButtonSection : ", state)
-
     const { time } = useContext(TimerContext);
 
     const [count, setCount] = useState(0);
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        return () => stopCount(); // when App is unmounted we should stop counter
+        return () => stopCount();
     }, []);
 
     useEffect(() => {
@@ -183,7 +180,6 @@ const App = () => {
                 <div style={{ margin: '5px' }} className="App">
                     <Gauge counterHandler={countHandler} />
                 </div>
-                {/* <HaltGagueButton count={count} buttonEvent={{ startCount, stopCount }} buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'throwYutHandler'} nickname={nickname} name={'윷 굴리기'} /> */}
                 <StyledHaltedButton
                     onMouseDown={startCount}
                     onMouseUp={stopCount}
@@ -192,7 +188,6 @@ const App = () => {
                     onClick={throwYutHandler}>
                     {'윷 굴리기'}
                 </StyledHaltedButton >
-                {/* <HaltButton buttonStyle={hatledButtonStyle} dispatch={dispatch} state={state} peers={peers} halted={halted} handlerType={'nextTurnHandler'} nickname={nickname} name={'다음 턴'} /> */}
                 <StyledHaltedButton onClick={nextTurnHandler}>
                     {'다음 턴'}
                 </StyledHaltedButton>

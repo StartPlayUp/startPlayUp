@@ -33,6 +33,7 @@ const findPlace = (index, add) => {
         result = table[key][add + indexOf]
     }
     // return result;
+    console.log('findPlace', result)
     return [result];
 }
 
@@ -87,6 +88,7 @@ export const checkEmptySelectHorse = (selectHorse) => {
 }
 
 export const checkHavePlaceToMove = (placeToMove, index) => {
+    console.log('checkHavePlaceToMove', placeToMove, index)
     if (!placeToMove.hasOwnProperty(String(index))) {
         // console.log("checkHavePlaceToMove true");
         return true;
