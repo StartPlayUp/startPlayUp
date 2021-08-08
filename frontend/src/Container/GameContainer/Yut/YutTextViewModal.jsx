@@ -1,12 +1,13 @@
-import React, { useContext, useState, useEffect, useReducer, memo } from "react";
+import React, { useContext, createContext, useState, useEffect, useReducer, memo } from "react";
 import styled, { keyframes } from "styled-components";
 import { YutViewContext } from 'Container/GameContainer/Yut/YutStore';
 import { sumYutArrayToMatchType } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { NUMBER_TO_MATCH_KOREA_YUT_TYPE } from "./Constants/yutGame";
+import { TextModal } from "./YutStore";
 
 const yutViewAnimation = keyframes`
 	from{
-		transform: scale(2);
+		transform: scale(1.2);
 		opacity:1;
 	}
 	30%{
@@ -23,19 +24,27 @@ const yutViewAnimation = keyframes`
 
 const StyledYutResultView = styled.div`
 	position:absolute;
+    left:0;
+    top:0;
+
+    width:99%;
+    height:99%;
+
 	display:flex;
 	justify-content: center;
 	align-items: center;
-	width:99%;
-    height:99%;
-    left:0;
-    top:0;
+
 	animation:${yutViewAnimation} 1.2s linear;
 	animation-fill-mode:forwards;
+
 	z-index: 99;
-	font-size: 50vh;
-	color:black;
-    background-color:rgba(0, 0, 0, 0.5);
+    /* background-color:rgba(0, 0, 0, 0.1); */
+
+    font-family: "Arial Black", sans-serif;
+    font-size: 20vh;    
+    font-weight: bold;
+    color:#03fc6f;
+    text-shadow: 4px 4px 0px #bdbdbd;
 
     // 스크롤 표시 안하게 더 해봐야함.
     overflow:hidden; // 스크롤 표시 안함
@@ -58,33 +67,45 @@ const reducer = (state, action) => {
     }
 }
 
-const YutTextView = () => {
-    const { yutView } = useContext(YutViewContext);
-    const [yutTextView, dispatch] = useReducer(reducer, { show: false, text: "" })
-    const yutTypeIndex = sumYutArrayToMatchType(yutView);
-    let yutTextViewTimeoutSetting;
-    const setShowOffFunction = () => {
-        clearTimeout(yutTextViewTimeoutSetting);
+const TextView = () => {
+    // const { yutView } = useContext(YutViewContext);
+    const { textModal, setTextModal } = useContext(TextModal);
+    const [textView, dispatch] = useReducer(reducer, { show: false, text: "" })
+    // const yutTypeIndex = sumYutArrayToMatchType(yutView);
+
+
+    let textViewTimeoutSetting;
+    const textViewShowOffHandler = () => {
+        clearTimeout(textViewTimeoutSetting);
         dispatch({ type: 'SHOW_OFF' });
     }
 
 
+    // useEffect(() => {
+    //     dispatch({ type: 'SHOW_ON', text: NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex] });
+    //     textViewTimeoutSetting = setTimeout(() => dispatch({ type: 'SHOW_OFF' }), 1000);
+    //     return (() => {
+    //         textViewShowOffHandler()
+    //     })
+    // }, [yutView])
+
+
     useEffect(() => {
-        dispatch({ type: 'SHOW_ON', text: NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex] });
-        yutTextViewTimeoutSetting = setTimeout(() => dispatch({ type: 'SHOW_OFF' }), 1000);
+        dispatch({ type: 'SHOW_ON', text: textModal });
+        textViewTimeoutSetting = setTimeout(() => dispatch({ type: 'SHOW_OFF' }), 1000);
         return (() => {
-            setShowOffFunction()
+            textViewShowOffHandler()
         })
-    }, [yutView])
+    }, [textModal])
 
     const onclickHandler = () => {
-        setShowOffFunction()
+        textViewShowOffHandler()
     }
 
     return (
         <>
-            {yutTextView.show && <StyledYutResultView onClick={onclickHandler}>{yutTextView.text}</StyledYutResultView>}
+            {textView.show && <StyledYutResultView onClick={onclickHandler}>{textView.text}</StyledYutResultView>}
         </>
     )
 }
-export default memo(YutTextView);
+export default TextView;

@@ -2,33 +2,22 @@ import React, { useReducer, useEffect, createContext, useMemo, memo, useContext,
 import styled from 'styled-components';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes.js';
-import { YUT_INITIAL_STATE, DEFAULT_TIME_VALUE } from './Constants/yutGame';
+import { YUT_INITIAL_STATE, DEFAULT_TIME_VALUE, NUMBER_TO_MATCH_KOREA_YUT_TYPE } from './Constants/yutGame';
 import { reducer } from './Reducer/yutStoreReducer';
 
-import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import reducerAction, { sumYutArrayToMatchType } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 
 import {
-    DESELECT_HORSE,
-    UPDATE_TIMER,
-    STOP_TIMER,
     THROW_YUT,
-    UPDATE_STATE,
     GET_DATA_FROM_PEER,
-    START_GAME,
     UPDATE_GOAL,
-    SELECT_HORSE,
-    MOVE_FIRST_HORSE,
-    MOVE_HORSE,
-    NEXT_TURN,
-    PLAY_AI,
-    INIT_LAST_YUT_DATA,
 } from './Constants/yutActionType.js';
-import actionHandler from './Backup/actionHandler.js';
 
 export const YutContext = createContext(null);
 export const YutViewContext = createContext(null);
 export const TimerContext = createContext(null);
+export const TextModal = createContext(null);
 
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
@@ -39,7 +28,9 @@ const YutStore = ({ children }) => {
     const { playerData, placeToMove, myThrowCount, selectHorse, winner, yutData, halted, nowTurn, playerHorsePosition } = state;
 
     const [time, setTime] = useState(DEFAULT_TIME_VALUE);
-    const [yutView, setYutView] = useState([0, 0, 0, 0])
+    const [yutView, setYutView] = useState([0, 0, 0, 0]);
+    const [textModal, setTextModal] = useState("");
+
     const [fieldView, setFieldView] = useState([]);
 
 
@@ -124,6 +115,14 @@ const YutStore = ({ children }) => {
         }
     }, [playerHorsePosition]);
 
+
+    useEffect(() => {
+        if (!halted) {
+            const yutTypeIndex = sumYutArrayToMatchType(yutView);
+            setTextModal(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
+        }
+    }, [yutView])
+
     const value = useMemo(() => ({
         playerData,
         yutData,
@@ -148,18 +147,18 @@ const YutStore = ({ children }) => {
     );
 
     const timeValue = useMemo(() => ({
-        time, setTime, setTimeHandler: () => {
+        time, setTime, decreaseTimeOneSecond: () => {
             setTime(prev => prev - 1);
         }
-    }), [time])
+    }), [time]);
 
     const yutViewValue = useMemo(() => ({
         yutView, setYutView
-    }), [yutView])
+    }), [yutView]);
 
-    useEffect(() => {
-        console.log(state)
-    }, [state])
+    const textModalValue = useMemo(() => (
+        { textModal, setTextModal }
+    ), [textModal]);
 
     return (
         <div style={{
@@ -168,7 +167,9 @@ const YutStore = ({ children }) => {
             <YutContext.Provider value={value}>
                 <YutViewContext.Provider value={yutViewValue}>
                     <TimerContext.Provider value={timeValue}>
-                        {children}
+                        <TextModal.Provider value={textModalValue}>
+                            {children}
+                        </TextModal.Provider>
                     </TimerContext.Provider>
                 </YutViewContext.Provider>
             </YutContext.Provider >

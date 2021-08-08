@@ -194,7 +194,6 @@ const winnerModal = () => {
     }, [winner])
 
     useEffect(() => {
-        console.log("fsadfasdafsdasfdasfd")
         if (imgLoading) {
             // const { top, right, bottom, left } = playerRef.current[0].getBoundingClientRect();
             // setPlaceXY([left, top]);
@@ -208,11 +207,11 @@ const winnerModal = () => {
             const left = posPlayer.left - posImg.left;
 
             setPlayerPosition([left, top]);
-            console.log("left : ", posPlayer.left, posImg.left,)
-            console.log("playerRef.current[0].offsetWidth : ", playerRef.current[0].offsetWidth)
-            console.log("top : ", posPlayer.top, posImg.top,)
-            console.log("posImg : ", posImg, posImg.height, posImg.width)
-            console.log("posPlayer : ", posPlayer, posPlayer.height, posPlayer.width)
+            // console.log("left : ", posPlayer.left, posImg.left,)
+            // console.log("playerRef.current[0].offsetWidth : ", playerRef.current[0].offsetWidth)
+            // console.log("top : ", posPlayer.top, posImg.top,)
+            // console.log("posImg : ", posImg, posImg.height, posImg.width)
+            // console.log("posPlayer : ", posPlayer, posPlayer.height, posPlayer.width)
         }
     }, [imgLoading])
 

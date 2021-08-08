@@ -1,15 +1,17 @@
 import React, { useContext, useState, memo, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Horses from 'Component/GameComponent/Yut/Horses'
 import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
-import { NUMBER_TO_MATCH_KOREA_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGame';
+import { DEFAULT_TIME_VALUE, NUMBER_TO_MATCH_KOREA_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGame';
 import { START_GAME } from 'Container/GameContainer/Yut/Constants/yutActionType';
 import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
+import { TimerContext } from 'Container/GameContainer/Yut/YutStore';
+import { TextModal } from 'Container/GameContainer/Yut/YutStore';
 
 
 
@@ -48,7 +50,6 @@ const PlayerSection = styled.div`
     justify-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
-
 const Player = styled.div`
     display:flex;
     flex-direction: column;
@@ -57,6 +58,7 @@ const Player = styled.div`
     padding:10px;
     /* background-color:${props => props.player.color !== undefined ? props.player.color : '#C4C4C4'}; */
     background-color:white;
+    background:${props => props.player !== undefined ? props.player.color + '80' : '#C4C4C4'};
     border:solid 2px ${props => props.player.color !== undefined ? props.player.color : '#C4C4C4'};
     border-radius: 30px;
     box-shadow: 0px 3px 0px 3px ${props => props.player.color !== undefined ? props.player.color : '#C4C4C4'};
@@ -68,6 +70,9 @@ const App = () => {
     const { peers } = useContext(PeersContext);
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
+    const { setTime } = useContext(TimerContext);
+    const { setTextModal } = useContext(TextModal);
+
 
     const { yutData, playerData, } = state;
 
@@ -88,6 +93,8 @@ const App = () => {
             && typeof (nickname) === "string") {
             const newState = reducerAction.START_GAME(peers);
             dispatch({ type: START_GAME, state: newState });
+            setTime(DEFAULT_TIME_VALUE);
+            setTextModal("게임 시작");
             sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: START_GAME } });
         } else {
             console.error("startGameHandler");

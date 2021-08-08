@@ -72,7 +72,6 @@ export const checkPlace = (index, add) => {
 
 export const checkSelectState = (selectHorse, placeToMove, index) => {
     if (selectHorse === -1 || !placeToMove.hasOwnProperty(String(index))) {
-        // console.log("out of MOVE_HORSE");
         return true;
     }
     return false;

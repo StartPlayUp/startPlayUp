@@ -12,7 +12,7 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 const Timer = ({ children }) => {
     const { peers } = useContext(PeersContext);
     const { dispatch, ...state } = useContext(YutContext);
-    const { time, setTimeHandler } = useContext(TimerContext);
+    const { time, decreaseTimeOneSecond } = useContext(TimerContext);
     const nickname = localStorage.getItem('nickname');
 
     // // 타이머 돌리기
@@ -20,7 +20,7 @@ const Timer = ({ children }) => {
         let t;
         if (state.halted === false) {
             t = setInterval(() => {
-                setTimeHandler();
+                decreaseTimeOneSecond();
             }, 1000);
         }
         return () => {

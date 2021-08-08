@@ -3,8 +3,10 @@ export const STOP_TIMER = 'STOP_TIMER';
 export const START_GAME = 'START_GAME';
 export const THROW_YUT = 'THROW_YUT';
 export const SELECT_HORSE = 'SELECT_HORSE';
-export const MOVE_FIRST_HORSE = 'MOVE_FIRST_HORSE';
-export const MOVE_HORSE = 'MOVE_HORSE';
+
+export const MOVE_HORSE_ON_FIELD_SECTION = 'MOVE_HORSE_ON_FIELD_SECTION';
+export const MOVE_HORSE_ON_PLAYER_SECTION = 'MOVE_HORSE_ON_PLAYER_SECTION';
+
 export const UPDATE_GOAL = 'UPDATE_GOAL'
 export const TIME_OUT = 'TIME_OUT';
 export const NEXT_TURN = 'NEXT_TURN';

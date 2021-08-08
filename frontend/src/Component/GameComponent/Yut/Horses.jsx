@@ -45,8 +45,12 @@ const bounceIn = keyframes`
     }
 `;
 
+
 const StyleDiv = styled.div`
     animation: ${bounceIn} 0.1s;
+    &:hover{
+        transform: scale(1.2);
+    }
 `;
 
 

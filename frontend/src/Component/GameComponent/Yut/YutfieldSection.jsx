@@ -8,7 +8,7 @@ import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
 
-import { DESELECT_HORSE, MOVE_FIRST_HORSE, MOVE_HORSE } from 'Container/GameContainer/Yut/Constants/yutActionType'
+import { DESELECT_HORSE, MOVE_HORSE_ON_FIELD_SECTION, MOVE_HORSE_ON_PLAYER_SECTION } from 'Container/GameContainer/Yut/Constants/yutActionType'
 import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 import { GAME, YUT } from 'Constants/peerDataTypes';
@@ -17,6 +17,7 @@ import { GAME, YUT } from 'Constants/peerDataTypes';
 import arrow from '../../../image/arrow.png';
 import goal from '../../../image/goal.png';
 import start from '../../../image/start.png';
+import { TextModal } from 'Container/GameContainer/Yut/YutStore';
 
 
 
@@ -80,6 +81,7 @@ const App = () => {
     const fieldPlacePositions = useRef([]);
     const { peers } = useContext(PeersContext);
     const { dispatch, ...state } = useContext(YutContext);
+    const { setTextModal } = useContext(TextModal);
     const {
         placeToMove,
         playerHorsePosition,
@@ -142,66 +144,65 @@ const App = () => {
 
 
     const getColorAccordingToPlaceToMove = (index) => {
-        // console.log("changeItemColorHandler of index", index)
-        // console.log("placeToMove", placeToMove, index, Object.keys(placeToMove).includes(String(index)))
         return Object.keys(placeToMove).includes(String(index)) ? 'yellow' : 'white';
-
     }
-    const moveHorse = (e, index, player) => {
-        const moveFirstHorseHandler = ({ dispatch, state, peers, nickname, index }) => {
-            if (typeof (dispatch) === "function"
-                && typeof (state) === "object"
-                && typeof (peers) === "object"
-                && typeof (nickname) === "string"
-                && typeof (index) === "number") {
-                const [newState, success] = reducerAction.MOVE_FIRST_HORSE(state, index);
-                if (success) {
-                    dispatch({ type: MOVE_FIRST_HORSE, state: newState });
-                    sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_FIRST_HORSE } });
-                }
-                else {
-                    // console.log("test", success)
-                    // console.log(typeof (dispatch) === "function"
-                    //     , typeof (state) === "object"
-                    //     , typeof (peers) === "object"
-                    //     , typeof (nickname) === "string"
-                    //     , typeof (index) === "number");
-                    alert("본인 차례가 아닙니다.")
-                }
 
+    const moveHorseOnPlayerSection = ({ dispatch, state, peers, nickname, index }) => {
+        if (typeof (dispatch) === "function"
+            && typeof (state) === "object"
+            && typeof (peers) === "object"
+            && typeof (nickname) === "string"
+            && typeof (index) === "number") {
+            // TextModal
+            const [newState, eatEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_PLAYER_SECTION(state, index);
+            if (success) {
+                if (eatEnemyHorse) {
+                    setTextModal("꺼-억");
+                }
+                dispatch({ type: MOVE_HORSE_ON_PLAYER_SECTION, state: newState });
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_PLAYER_SECTION } });
             }
             else {
-                console.error("moveFirstHorseHandler");
+                alert("본인 차례가 아닙니다.")
             }
-        }
 
-        const moveHorseHandler = ({ dispatch, state, peers, nickname, index }) => {
-            if (typeof (dispatch) === "function"
-                && typeof (state) === "object"
-                && typeof (peers) === "object"
-                && typeof (nickname) === "string"
-                && typeof (index) === "number") {
-
-                const [newState, success] = reducerAction.MOVE_HORSE(state, index);
-                if (success) {
-                    dispatch({ type: MOVE_HORSE, state: newState });
-                    sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE } });
-                }
-                else {
-                    alert("본인 차례가 아닙니다.");
-                }
-            }
-            else {
-                console.error("moveHorseHandler");
-            }
-        }
-
-        e.preventDefault();
-        if (selectHorse === 0) {
-            moveFirstHorseHandler({ dispatch, peers, state, nickname, index })
         }
         else {
-            moveHorseHandler({ dispatch, peers, state, nickname, index })
+            console.error("moveHorseOnPlayerSection");
+        }
+    }
+
+    const moveHorseOnFieldSection = ({ dispatch, state, peers, nickname, index }) => {
+        if (typeof (dispatch) === "function"
+            && typeof (state) === "object"
+            && typeof (peers) === "object"
+            && typeof (nickname) === "string"
+            && typeof (index) === "number") {
+
+            const [newState, eatEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_FIELD_SECTION(state, index);
+            if (success) {
+                if (eatEnemyHorse) {
+                    setTextModal("꺼-억");
+                }
+                dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: newState });
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
+            }
+            else {
+                alert("본인 차례가 아닙니다.");
+            }
+        }
+        else {
+            console.error("moveHorseOnFieldSection");
+        }
+    }
+
+    const moveHorseHandler = (e, index) => {
+        e.preventDefault();
+        if (selectHorse === 0) {
+            moveHorseOnPlayerSection({ dispatch, peers, state, nickname, index })
+        }
+        else {
+            moveHorseOnFieldSection({ dispatch, peers, state, nickname, index })
         }
     }
 
@@ -224,9 +225,9 @@ const App = () => {
                             return (
                                 <GridPlace row={i.column} column={i.row}>
                                     <PlaceButton
-                                        // ref={fieldPlacePositions[index]}
+                                        ref={fieldPlacePositions[index]}
                                         key={index}
-                                        onClick={(e) => moveHorse(e, index)}
+                                        onClick={(e) => moveHorseHandler(e, index)}
                                         color={getColorAccordingToPlaceToMove(index)}
                                         rotateValue={i.rotateValue}
                                         buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>

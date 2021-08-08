@@ -4,8 +4,8 @@ import {
     START_GAME,
     UPDATE_GOAL,
     SELECT_HORSE,
-    MOVE_FIRST_HORSE,
-    MOVE_HORSE,
+    MOVE_HORSE_ON_FIELD_SECTION,
+    MOVE_HORSE_ON_PLAYER_SECTION,
     NEXT_TURN,
     PLAY_AI,
     DESELECT_HORSE
@@ -28,8 +28,8 @@ export const reducer = (state, { type, ...action }) => {
         case START_GAME:
         case UPDATE_GOAL:
         case SELECT_HORSE:
-        case MOVE_FIRST_HORSE:
-        case MOVE_HORSE:
+        case MOVE_HORSE_ON_FIELD_SECTION:
+        case MOVE_HORSE_ON_PLAYER_SECTION:
         case NEXT_TURN:
         case PLAY_AI: {
             return { ...action.state };

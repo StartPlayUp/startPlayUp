@@ -137,7 +137,6 @@ const App = () => {
             && typeof (nickname) === "string"
             && typeof (count) === "number") {
             const { yutView, ...newState } = reducerAction.THROW_YUT(state, count);
-            console.log("throwYutHandler ^^^^", newState, yutView)
             dispatch({ type: THROW_YUT, state: newState });
             setYutView([...yutView]);
             sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, yutView, reducerActionType: THROW_YUT } });
