@@ -2,7 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import { angels, GameContext } from "../Store";
 import AngelsVote from "../Ability/AngelsVote";
 import EvilsVote from "../Ability/EvilsVote";
-import { EXPEDITION_CLICK, GAME_CHECK } from "../MVC/AVALON_Reducer";
+import {
+  EXPEDITION_CLICK,
+  GAME_CHECK,
+  SET_COMPONENT,
+} from "../MVC/AVALON_Reducer";
 import WaitingView from "../animation/WaitingView";
 import { PeersContext } from "../../../../Routes/peerStore";
 import * as S from "../Styled";
@@ -57,7 +61,7 @@ function EXPEDITION_FRAME() {
             <WaitingView />
           )
         )} */}
-      <button onClick={() => dispatch({ type: GAME_CHECK, peers })}>
+      <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
         결과
       </button>
     </S.RowFrame>

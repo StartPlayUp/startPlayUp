@@ -42,11 +42,12 @@ const reducer = (state, { type, ...action }) => {
       return { ...state, ...action.data };
     }
     case SET_COMPONENT: {
+      const gameData = { ...state };
       sendDataToPeers(GAME, {
         game: AVALON,
         nickname,
         peers: action.peers,
-        data: state,
+        data: gameData,
       });
       return { ...state, component: action.component };
     }
@@ -174,7 +175,6 @@ const reducer = (state, { type, ...action }) => {
         } else {
           gameData.takeStage[gameData.expeditionStage] = "o";
         }
-      } else {
         gameData.vote.includes("x")
           ? (gameData.takeStage[gameData.expeditionStage] = "x")
           : (gameData.takeStage[gameData.expeditionStage] = "o");
@@ -185,6 +185,8 @@ const reducer = (state, { type, ...action }) => {
       gameData.usingPlayers.map((user) => {
         user.selected = false;
       });
+      console.log("reducer_expeditionClick");
+      console.log(action.peers);
       sendDataToPeers(GAME, {
         game: AVALON,
         nickname,

@@ -5,7 +5,7 @@ import { PeersContext } from "../../../../Routes/peerStore";
 
 function ASSASSIN_FRAME() {
   const { dispatch, gameState, buttonAnimation } = useContext(GameContext);
-  const peers = useContext(PeersContext);
+  const { peers } = useContext(PeersContext);
   const [killedPlayer, setKilledPlayer] = useState("");
   const onChange = (e) => {
     setKilledPlayer(e.target.value);

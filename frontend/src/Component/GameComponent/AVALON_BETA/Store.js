@@ -126,12 +126,11 @@ const Store = ({ children }) => {
   }, [gameState.voteTurn]);
 
   useEffect(() => {
+    const gameData = { ...gameState };
     console.log(`useEffect_원정 종료 조건`);
-    console.log(`gameState.vote.length : ${gameState.vote.length}`);
-    if (
-      gameState.vote.length === gameState.takeStage[gameState.expeditionStage]
-    ) {
-      const gameData = { ...gameState };
+    console.log(`gameData.vote.length : ${gameData.vote.length}`);
+
+    if (gameData.vote.length === gameData.takeStage[gameData.expeditionStage]) {
       if (gameData.expeditionStage === 4 && gameData.usingPlayers.length >= 7) {
         //게임 스테이지가 4이며 7명 이상인지 체크
         if (gameData.vote.filter((element) => "x" === element).length >= 2) {

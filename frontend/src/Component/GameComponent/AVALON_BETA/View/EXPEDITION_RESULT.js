@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { GameContext, FRAME_MAIN } from "../Store";
+import { GameContext, FRAME_MAIN, EXPEDITION_CLICK } from "../Store";
 import { SET_COMPONENT } from "../MVC/AVALON_Reducer";
 import { PeersContext } from "../../../../Routes/peerStore";
 import * as S from "../Styled";
 function EXPEDITION_RESULT() {
   const { gameState, dispatch } = useContext(GameContext);
-  const peers = useContext(PeersContext);
+  const { peers } = useContext(PeersContext);
   const expeditionResult = gameState.vote.sort();
   const expeditionSuccessCount = expeditionResult.filter(
     (e) => "o" === e
