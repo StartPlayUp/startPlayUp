@@ -1,20 +1,26 @@
-import React, {useContext, useState} from "react";
-import {GameContext} from "../Store";
-import {SuccessImage} from "../Styled";
+import React, { useContext, useState } from "react";
+import { PeersContext } from "Routes/peerStore";
+import WaitingView from "../animation/WaitingView";
+import { GAME_CHECK } from "../MVC/AVALON_Reducer";
+import { GameContext } from "../Store";
+import { SuccessImage } from "../Styled";
 
 function AngelsVote() {
-    const game = useContext(GameContext);
-    const [isClick, setIsClick] = useState(false);
-    const onClick = (e) => {
-        console.log("성공");
-        game.gameState.vote.push(e.target.value);
-        setIsClick(true);
-    };
-    return (
-        !isClick ?
-            <SuccessImage onClick={onClick} value={"success"} disabled={isClick}/>
-            : <h1>투표 완료 !</h1>
-    );
+  const { gameState, dispatch } = useContext(GameContext);
+  const { peers } = useContext(PeersContext);
+  const gameData = { ...gameState };
+  const [isClick, setIsClick] = useState(false);
+  const onClick = (e) => {
+    console.log("성공");
+    gameData.vote.push(e.target.value);
+    dispatch({ type: GAME_CHECK, gameData, peers });
+    setIsClick(true);
+  };
+  return !isClick ? (
+    <SuccessImage onClick={onClick} value={"o"} disabled={isClick} />
+  ) : (
+    <WaitingView />
+  );
 }
 
 export default AngelsVote;
