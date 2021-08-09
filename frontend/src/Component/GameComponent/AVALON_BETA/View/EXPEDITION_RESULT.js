@@ -38,7 +38,7 @@ function EXPEDITION_RESULT() {
       <S.RowFrame>
         <button
           onClick={() =>
-            dispatch({ type: SET_COMPONENT, component: FRAME_MAIN, peers })
+            dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
           }
         >
           다음

@@ -8,6 +8,8 @@ import {
   needPlayers,
   VOTE_FRAME,
   VOTE_RESULT,
+  MINIMUM_PLAYER_NUMBER,
+  MAXIMUM_PLAYER_NUMBER,
 } from "../Store";
 import { sendDataToPeers } from "../../../../Common/peerModule/sendToPeers";
 import { AVALON, GAME } from "../../../../Constants/peerDataTypes";
@@ -94,7 +96,7 @@ const reducer = (state, { type, ...action }) => {
         default:
           alert("error");
       } // 참여 인원별 원정 설정하기
-      if (playersNumber >= 2) {
+      if (playersNumber >= MINIMUM_PLAYER_NUMBER) {
         // 5명 이상인 경우 직업설정
         const temp = [
           ...mustHaveRoles,

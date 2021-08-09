@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { angels, END_GAME_FRAME, GameContext } from "../Store";
 import { ASSASSIN_KILL } from "../MVC/AVALON_Reducer";
 import { PeersContext } from "../../../../Routes/peerStore";

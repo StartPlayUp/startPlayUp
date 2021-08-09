@@ -17,6 +17,8 @@ export const angels = ["Merlin", "Percival", "Citizen"]; // 천사팀
 export const evils = ["Morgana", "Assassin", "Heresy", "Modred"]; //악마팀
 export const merlinSight = ["Morgana", "Assassin", "Heresy"]; // 멀린이 볼 수 있는 직업군
 export const percivalSight = ["Morgana", "Merlin"];
+export const MINIMUM_PLAYER_NUMBER = 2;
+export const MAXIMUM_PLAYER_NUMBER = 10;
 export const needPlayers = {
   _2P: [1, 1, 1, 1, 1],
   _5P: [2, 3, 2, 3, 3],
@@ -118,7 +120,7 @@ const Store = ({ children }) => {
     console.log("voteTurn useEffect");
     const gameData = { ...gameState };
     const players = gameState.usingPlayers.length;
-    if (gameState.voteTurn === players && players >= 2) {
+    if (gameState.voteTurn === players && players >= MINIMUM_PLAYER_NUMBER) {
       gameData.voteTurn = 0;
       gameData.component = VOTE_RESULT;
       dispatch({ type: GAME_CHECK, gameData });

@@ -2,9 +2,11 @@ import React, { useContext, useState } from "react";
 import { GameContext, VOTE_FRAME } from "../Store";
 import { MAIN_VOTE_ONCLICK } from "../MVC/AVALON_Reducer";
 import * as S from "../Styled";
+import { PeersContext } from "Routes/peerStore";
 
 function MAIN_VOTE() {
   const { dispatch, gameState, buttonAnimation } = useContext(GameContext);
+  const { peers } = useContext(PeersContext);
   const [playerCount, setPlayerCount] = useState(0);
   const gameData = { ...gameState };
 
@@ -23,7 +25,7 @@ function MAIN_VOTE() {
       gameData.voteCount += 1;
       gameData.vote = [];
       gameData.component = VOTE_FRAME;
-      dispatch({ type: MAIN_VOTE_ONCLICK, gameData });
+      dispatch({ type: MAIN_VOTE_ONCLICK, gameData, peers });
     } else {
       buttonAnimation(e);
     }
