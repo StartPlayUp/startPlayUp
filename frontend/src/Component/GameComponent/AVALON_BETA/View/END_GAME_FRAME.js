@@ -11,23 +11,23 @@ const Box = styled.div`
   margin: 200px 30px 30px 100px;
 `;
 function END_GAME_FRAME() {
-    const { gameState } = useContext(GameContext);
+  const { gameState } = useContext(GameContext);
 
-    return (
-        <div>
-            <h1>{gameState.winner}</h1>
-            <Box>
-                {gameState.usingPlayers.map((player, index) => (
-                    <div key={index}>
-                        <br />
-                        <div>
-                            <CardFlip nickname={player.nickname} role={player.role} />
-                        </div>
-                    </div>
-                ))}
-            </Box>
-        </div>
-    );
+  return (
+    <div>
+      <h1>{gameState.winner}</h1>
+      <Box>
+        {gameState.usingPlayers.map((player, index) => (
+          <div key={index}>
+            <br />
+            <div>
+              <CardFlip nickname={player.nickname} role={player.role} />
+            </div>
+          </div>
+        ))}
+      </Box>
+    </div>
+  );
 }
 
 export default END_GAME_FRAME;

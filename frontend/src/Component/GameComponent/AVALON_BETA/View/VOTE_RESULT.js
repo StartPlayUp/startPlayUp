@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import { GameContext } from "../Store";
+import { EXPEDITION_FRAME, GameContext } from "../Store";
 import { VOTE_CHECK } from "../MVC/AVALON_Reducer";
 import { PeersContext } from "../../../../Routes/peerStore";
 import * as S from "../Styled";
+import Timer_test from "./Timer";
 
 function VOTE_RESULT() {
   const { gameState, dispatch, selectedPlayers } = useContext(GameContext);
@@ -33,6 +34,7 @@ function VOTE_RESULT() {
   return (
     <S.ColumnFrame>
       <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
+      <Timer_test component={EXPEDITION_FRAME} minutes={0} seconds={5} />
       <S.VotePlayers>
         <S.AgreeVotePlayers>
           <h1>{`찬성 : ${agreeVotedPlayers().length}`}</h1>

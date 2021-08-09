@@ -3,6 +3,7 @@ import { GameContext, FRAME_MAIN, EXPEDITION_CLICK } from "../Store";
 import { SET_COMPONENT } from "../MVC/AVALON_Reducer";
 import { PeersContext } from "../../../../Routes/peerStore";
 import * as S from "../Styled";
+import Timer_test from "./Timer";
 function EXPEDITION_RESULT() {
   const { gameState, dispatch } = useContext(GameContext);
   const { peers } = useContext(PeersContext);
@@ -26,6 +27,8 @@ function EXPEDITION_RESULT() {
   };
   return (
     <S.ColumnFrame>
+      <Timer_test component={FRAME_MAIN} minutes={0} seconds={5} />
+
       <S.MAIN_VOTE_HEADER>{`${expeditionVoteResult()}`}</S.MAIN_VOTE_HEADER>
       <S.RowFrame>
         <h3>{`성공 : ${expeditionSuccessCount} 실패 : ${expeditionFailCount}`}</h3>

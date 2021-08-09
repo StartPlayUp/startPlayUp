@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
+import { PeersContext } from "Routes/peerStore";
 import { SET_COMPONENT } from "../MVC/AVALON_Reducer";
 import { GameContext } from "../Store";
 
@@ -7,7 +8,6 @@ export default function Timer_test(props) {
   const [minutes, setMinutes] = useState(props.minutes);
   const [seconds, setSeconds] = useState(props.seconds);
   const { gameState, dispatch } = useContext(GameContext);
-
   useEffect(() => {
     const countdown = setInterval(() => {
       if (parseInt(seconds) > 0) {
