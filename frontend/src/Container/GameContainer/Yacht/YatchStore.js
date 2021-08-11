@@ -81,10 +81,7 @@ const reducer=(state,action)=>{
             return { ...state, dice: [0, 0, 0, 0, 0], count: [0, 0, 0, 0, 0, 0], rollCount: 3, hold: [false, false, false, false, false] }
         }
         case DICEHOLD: {
-            const value = action.value;
-            let holding = [...state.hold]
-            holding[value] = !holding[value];
-            return { ...state, hold:holding }
+            return { ...state, hold:action.holding }
         }
         case SELECT: {
             return { ...state, playerData: action.player }
@@ -170,8 +167,16 @@ const YachuProvider=({children})=>{
         let holding = [...state.hold]
         holding[value] = !holding[value];
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
-        dispatch({type:DICEHOLD,value})
+        dispatch({ type: DICEHOLD, holding })
     }
+    /*
+    function diceHold(value) {
+        let holding = [...state.hold]
+        holding[value] = !holding[value];
+        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
+        dispatch({ type: DICEHOLD, value })
+    }
+    */
     function selectData(name,value) {
         const player = [...state.playerData]
         player[nowTurn].selectPoint[name] = [value, true];
@@ -297,21 +302,6 @@ const YachuProvider=({children})=>{
         }
         else { }
     }
-    /*
-    useEffect(()=>{
-        const player = [...state.playerData]
-        if (endGame) {
-            if (player[0].result > player[1].result) {
-                alert("1P의 승리입니다.");
-            } else if (player[0].result === player[1].result) {
-                alert("무승부 입니다.")
-            }
-            else {
-                alert("2P의 승리입니다.");
-            }
-        }
-    },[endGame]) 임시로 만들어 놓은 승리화면 리팩토링시 지울것
-    */
     useEffect(() => {
         dispatch({ type: UPDATE_PEERS, peers })
     }, [peers])
