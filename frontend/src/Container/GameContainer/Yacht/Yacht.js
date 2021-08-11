@@ -1,7 +1,7 @@
 import React, { useState, useContext, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 import Dice from 'Component/GameComponent/Yachu/dice';
-import Player from 'Component/GameComponent/Yachu/Player';
+import Player from 'Component/GameComponent/Yachu/scoreTableSector/Player';
 import Timer from 'Component/GameComponent/Yachu/timer';
 import NicknameDisplay from 'Component/GameComponent/Yachu/playerNickname';
 import {YachuProvider} from './YatchStore';
