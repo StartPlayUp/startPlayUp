@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { angels, END_GAME_FRAME, GameContext } from "../Store";
 import { ASSASSIN_KILL } from "../MVC/AVALON_Reducer";
 import { PeersContext } from "../../../../Routes/peerStore";
-
+import * as S from "../Styled";
 function ASSASSIN_FRAME() {
   const { dispatch, gameState, buttonAnimation } = useContext(GameContext);
   const { peers } = useContext(PeersContext);
