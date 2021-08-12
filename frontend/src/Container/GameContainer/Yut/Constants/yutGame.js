@@ -54,3 +54,40 @@ export const DEFAULT_TIME_VALUE = 30;
 
 
 export const DEFAULT_FIELD_VALUE = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }]
+
+
+export const GRID_TABLE = [
+    { index: 0, row: 20, column: 20, rotateValue: 0 },
+    { index: 1, row: 20, column: 16, rotateValue: 0 },
+    { index: 2, row: 20, column: 12, rotateValue: 0 },
+    { index: 3, row: 20, column: 8, rotateValue: 0 },
+    { index: 4, row: 20, column: 4, rotateValue: 0 },
+    { index: 5, row: 20, column: 0, rotateValue: 225 },
+    { index: 6, row: 16, column: 0, rotateValue: 270 },
+    { index: 7, row: 12, column: 0, rotateValue: 270 },
+    { index: 8, row: 8, column: 0, rotateValue: 270 },
+    { index: 9, row: 4, column: 0, rotateValue: 270 },
+    { index: 10, row: 0, column: 0, rotateValue: 135 },
+    { index: 11, row: 0, column: 4, rotateValue: 180 },
+    { index: 12, row: 0, column: 8, rotateValue: 180 },
+    { index: 13, row: 0, column: 12, rotateValue: 180 },
+    { index: 14, row: 0, column: 16, rotateValue: 180 },
+    { index: 15, row: 0, column: 20, rotateValue: 90 },
+    { index: 16, row: 4, column: 20, rotateValue: 90 },
+    { index: 17, row: 8, column: 20, rotateValue: 90 },
+    { index: 18, row: 12, column: 20, rotateValue: 90 },
+    { index: 19, row: 16, column: 20, rotateValue: 90 },
+    { index: 20, row: 20, column: 20, rotateValue: 0 },
+    { index: 21, row: 16, column: 4, rotateValue: 225 },
+    { index: 22, row: 13, column: 7, rotateValue: 225 },
+    { index: 23, row: 10, column: 10, rotateValue: 135 },
+    { index: 24, row: 7, column: 13, rotateValue: 225 },
+    { index: 25, row: 4, column: 16, rotateValue: 225 },
+    { index: 26, row: 4, column: 4, rotateValue: 135 },
+    { index: 27, row: 7, column: 7, rotateValue: 135 },
+    { index: 28, row: 13, column: 13, rotateValue: 135 },
+    { index: 29, row: 16, column: 16, rotateValue: 135 },
+    { index: 30, row: 16, column: 10, rotateValue: 0 },
+]
+
+export const SHORTCUT_PLACE = [5, 10, 15, 23, 20];

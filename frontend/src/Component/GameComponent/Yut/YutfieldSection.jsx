@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, memo, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import Horses from 'Component/GameComponent/Yut/Horses'
+import Horses from 'Component/GameComponent/Yut/ButtonComponents/Horses';
 import { PeersContext } from 'Routes/peerStore';
 
 import {
@@ -17,7 +17,10 @@ import { GAME, YUT } from 'Constants/peerDataTypes';
 import arrow from '../../../image/arrow.png';
 import goal from '../../../image/goal.png';
 import start from '../../../image/start.png';
-import { TextModal } from 'Container/GameContainer/Yut/YutStore';
+// import { TextModal } from 'Container/GameContainer/Yut/YutStore';
+import { TextModal } from 'Container/GameContainer/Yut/YutTextViewModal';
+
+import { GRID_TABLE, SHORTCUT_PLACE } from 'Container/GameContainer/Yut/Constants/yutGame';
 
 
 
@@ -75,7 +78,7 @@ const StyleImg = styled.img`
 `;
 
 
-const App = () => {
+const YutFiledSection = () => {
     const nickname = localStorage.getItem('nickname');
     const [horsePosition, setHorsePosition] = useState({});
     const fieldPlacePositions = useRef([]);
@@ -89,44 +92,8 @@ const App = () => {
         playerData
     } = state;
 
-    const shortPlace = [5, 10, 15, 23, 20];
-
     const commonPlaceSize = 40;
     const shortPlaceSize = 60;
-
-    const gridTable = [
-        { index: 0, row: 20, column: 20, rotateValue: 0 },
-        { index: 1, row: 20, column: 16, rotateValue: 0 },
-        { index: 2, row: 20, column: 12, rotateValue: 0 },
-        { index: 3, row: 20, column: 8, rotateValue: 0 },
-        { index: 4, row: 20, column: 4, rotateValue: 0 },
-        { index: 5, row: 20, column: 0, rotateValue: 225 },
-        { index: 6, row: 16, column: 0, rotateValue: 270 },
-        { index: 7, row: 12, column: 0, rotateValue: 270 },
-        { index: 8, row: 8, column: 0, rotateValue: 270 },
-        { index: 9, row: 4, column: 0, rotateValue: 270 },
-        { index: 10, row: 0, column: 0, rotateValue: 135 },
-        { index: 11, row: 0, column: 4, rotateValue: 180 },
-        { index: 12, row: 0, column: 8, rotateValue: 180 },
-        { index: 13, row: 0, column: 12, rotateValue: 180 },
-        { index: 14, row: 0, column: 16, rotateValue: 180 },
-        { index: 15, row: 0, column: 20, rotateValue: 90 },
-        { index: 16, row: 4, column: 20, rotateValue: 90 },
-        { index: 17, row: 8, column: 20, rotateValue: 90 },
-        { index: 18, row: 12, column: 20, rotateValue: 90 },
-        { index: 19, row: 16, column: 20, rotateValue: 90 },
-        { index: 20, row: 20, column: 20, rotateValue: 0 },
-        { index: 21, row: 16, column: 4, rotateValue: 225 },
-        { index: 22, row: 13, column: 7, rotateValue: 225 },
-        { index: 23, row: 10, column: 10, rotateValue: 135 },
-        { index: 24, row: 7, column: 13, rotateValue: 225 },
-        { index: 25, row: 4, column: 16, rotateValue: 225 },
-        { index: 26, row: 4, column: 4, rotateValue: 135 },
-        { index: 27, row: 7, column: 7, rotateValue: 135 },
-        { index: 28, row: 13, column: 13, rotateValue: 135 },
-        { index: 29, row: 16, column: 16, rotateValue: 135 },
-        { index: 30, row: 16, column: 10, rotateValue: 0 },
-    ]
 
 
     useEffect(() => {
@@ -137,9 +104,6 @@ const App = () => {
             })
         })
         setHorsePosition(result)
-
-
-
     }, [playerHorsePosition])
 
 
@@ -218,19 +182,18 @@ const App = () => {
         <YutDiv>
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {
-                    gridTable.map((i, index) => {
+                    GRID_TABLE.map((i, index) => {
                         if (index === 0)
-                            return (<></>);
+                            return (<div key={'GridPlace' + index}></div>);
                         else
                             return (
-                                <GridPlace row={i.column} column={i.row}>
+                                <GridPlace key={"GridPlace" + index} row={i.column} column={i.row}>
                                     <PlaceButton
                                         ref={fieldPlacePositions[index]}
-                                        key={index}
                                         onClick={(e) => moveHorseHandler(e, index)}
                                         color={getColorAccordingToPlaceToMove(index)}
                                         rotateValue={i.rotateValue}
-                                        buttonSize={shortPlace.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
+                                        buttonSize={SHORTCUT_PLACE.some((i) => index === i) ? shortPlaceSize : commonPlaceSize}>
                                         {
                                             // <StyledImg src={arrow} />
                                             index === 1 || index === 30 ?
@@ -255,4 +218,4 @@ const App = () => {
         </YutDiv >
     )
 }
-export default memo(App);
+export default memo(YutFiledSection);

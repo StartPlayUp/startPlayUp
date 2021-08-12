@@ -7,12 +7,16 @@ import {
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
 
-import Gauge from './Gauge'
+import Gauge from './ButtonComponents/Gauge'
 import { TimerContext, YutViewContext } from 'Container/GameContainer/Yut/YutStore';
 
 import { THROW_YUT, NEXT_TURN } from 'Container/GameContainer/Yut/Constants/yutActionType';
-import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import reducerAction, { sumYutArrayToMatchTypeIndex } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
+import { isString, isFunction, isObject, isNumber } from 'Container/GameContainer/Yut/YutFunctionModule';
+// import { TextModal } from 'Container/GameContainer/Yut/YutStore';
+import { TextModal } from 'Container/GameContainer/Yut/YutTextViewModal';
+import { NUMBER_TO_MATCH_KOREA_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGame';
 
 
 const HatledButtonSection = styled.div`
@@ -75,10 +79,11 @@ const StyleCenterDiv = styled.div`
     flex-grow:1;
 `;
 
-const App = () => {
+const YutButtonSection = () => {
     const { dispatch, ...state } = useContext(YutContext);
     const { peers } = useContext(PeersContext);
     const { setYutView } = useContext(YutViewContext);
+    const { setTextModalHandler } = useContext(TextModal);
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
 
@@ -88,18 +93,13 @@ const App = () => {
     const [count, setCount] = useState(0);
     const intervalRef = useRef(null);
 
-    useEffect(() => {
-        return () => stopCount();
-    }, []);
+    // useEffect(() => {
+    //     return () => stopCount();
+    // }, []);
 
     useEffect(() => {
         if (halted) {
-            setCount(0);
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-                intervalRef.current = null;
-            }
-
+            stopCount()
         }
     }, [halted])
 
@@ -131,27 +131,28 @@ const App = () => {
             alert("윷을 던질 수 있는 기회가 없습니다.");
             return;
         }
-        if (typeof (dispatch) === "function"
-            && typeof (state) === "object"
-            && typeof (peers) === "object"
-            && typeof (nickname) === "string"
-            && typeof (count) === "number") {
+        if (isFunction(dispatch)
+            && isObject(state)
+            && isObject(peers)
+            && isString(nickname)
+            && isNumber(count)) {
             const { yutView, ...newState } = reducerAction.THROW_YUT(state, count);
             dispatch({ type: THROW_YUT, state: newState });
             setYutView([...yutView]);
+            const yutTypeIndex = sumYutArrayToMatchTypeIndex(yutView);
+            setTextModalHandler(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
             sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, yutView, reducerActionType: THROW_YUT } });
         }
         else {
-            console.log(count)
             console.error("throwYutHandler");
         }
     }
 
     const nextTurnHandler = () => {
-        if (typeof (dispatch) === "function"
-            && typeof (state) === "object"
-            && typeof (peers) === "object"
-            && typeof (nickname) === "string") {
+        if (isFunction(dispatch)
+            && isObject(state)
+            && isObject(peers)
+            && isString(nickname)) {
             const [newState, success] = reducerAction.NEXT_TURN(state);
             if (success) {
                 dispatch({ type: NEXT_TURN, state: newState });
@@ -163,7 +164,6 @@ const App = () => {
         }
         else {
             console.error("nextTurnHandler error");
-
         }
     }
 
@@ -194,4 +194,4 @@ const App = () => {
         </PlayerButtonSection>
     )
 }
-export default memo(App);
+export default memo(YutButtonSection);

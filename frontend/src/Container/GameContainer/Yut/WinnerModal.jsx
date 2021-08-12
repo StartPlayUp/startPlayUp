@@ -170,7 +170,7 @@ const ImgAnimation = styled.img`
 const winnerModal = () => {
     // const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState(true);
 
     const [imgLoading, setImgLoading] = useState(false);
     const [playerPosition, setPlayerPosition] = useState([0, 0]);
@@ -185,60 +185,25 @@ const winnerModal = () => {
         setModalShow(false);
     }
 
-    useEffect(() => {
-        if (playerData.length === winner.length && winner.length !== 0) {
-            console.log("set Modal on")
-            setModalShow(true);
-            console.log(playerRef)
-        }
-    }, [winner])
-
-    useEffect(() => {
-        if (imgLoading) {
-            // const { top, right, bottom, left } = playerRef.current[0].getBoundingClientRect();
-            // setPlaceXY([left, top]);
-            // setPlaceXY([playerRef.current[0].screenX, playerRef.current[0].screenY]);
-            // console.log("left top : ", left, top)
-
-            const posImg = imgRef.current.getBoundingClientRect();
-            const posPlayer = playerRef.current[0].getBoundingClientRect();
-
-            const top = posPlayer.top - posImg.top - posImg.height;
-            const left = posPlayer.left - posImg.left;
-
-            setPlayerPosition([left, top]);
-            // console.log("left : ", posPlayer.left, posImg.left,)
-            // console.log("playerRef.current[0].offsetWidth : ", playerRef.current[0].offsetWidth)
-            // console.log("top : ", posPlayer.top, posImg.top,)
-            // console.log("posImg : ", posImg, posImg.height, posImg.width)
-            // console.log("posPlayer : ", posPlayer, posPlayer.height, posPlayer.width)
-        }
-    }, [imgLoading])
-
-    // useForceRender();
     return (
         <>
             {
-                modalShow && <Modal>
+                modalShow && playerData.length === winner.length && winner.length !== 0 && <Modal>
                     <ModalSection>
                         <ModalSectionHeader>
                             <DivHeader>
                                 <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} onLoad={() => {
-                                    console.log("imgSection onload")
-                                    setImgLoading(true)
+                                    const posImg = imgRef.current.getBoundingClientRect();
+                                    const posPlayer = playerRef.current[0].getBoundingClientRect();
+
+                                    const top = posPlayer.top - posImg.top - posImg.height;
+                                    const left = posPlayer.left - posImg.left;
+
+                                    setPlayerPosition([left, top]);
                                 }} />
                                 <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
                             </DivHeader>
                             <WinnerSection>
-                                {/* 테스트 코드 */}
-                                {/* <div key={0}  >
-                                    <div>{1} 등</div>
-                                    <Winner ref={el => playerRef.current[0] = el}>{1}</Winner>
-                                </div>
-                                <div key={1}  >
-                                    <div>{2} 등</div>
-                                    <Winner ref={el => playerRef.current[1] = el}>{2}</Winner>
-                                </div> */}
                                 {
                                     winner.map((i, index) => <div key={index} ref={el => playerRef.current[index] = el}>
                                         <div>{index + 1} 등</div>

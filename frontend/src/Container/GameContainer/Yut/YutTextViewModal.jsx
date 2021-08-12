@@ -1,9 +1,9 @@
-import React, { useContext, createContext, useState, useEffect, useReducer, memo } from "react";
+import React, { useContext, createContext, useState, useEffect, useReducer, memo, useMemo, Children, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { YutViewContext } from 'Container/GameContainer/Yut/YutStore';
-import { sumYutArrayToMatchType } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { NUMBER_TO_MATCH_KOREA_YUT_TYPE } from "./Constants/yutGame";
-import { TextModal } from "./YutStore";
+// import { TextModal } from "./YutStore";
+
 
 const yutViewAnimation = keyframes`
 	from{
@@ -22,29 +22,47 @@ const yutViewAnimation = keyframes`
 	}
 `;
 
-const StyledYutResultView = styled.div`
+const delayAnimation = keyframes`
+    from{
+        opacity:0;
+        background-color:rgba(0, 0, 0, 0.1);
+    }
+    99%{
+        opacity:0;
+    }
+    to{
+        opacity:0;
+        background-color:rgba(0, 0, 0, 0.1);
+    }
+`;
+
+const StyledDivYutText = styled.div`
+    animation: ${yutViewAnimation} 2s linear;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+    font-family: "Arial Black", sans-serif;
+    font-size: 20vh;
+    font-weight: bold;
+    color:#03fc6f;
+    text-shadow: 4px 4px 0px #bdbdbd;
+`;
+
+const StyledDivYutModal = styled.div`
 	position:absolute;
     left:0;
     top:0;
 
-    width:99%;
-    height:99%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-	display:flex;
-	justify-content: center;
-	align-items: center;
+    width:100%;
+    height:100%;
 
-	animation:${yutViewAnimation} 1.2s linear;
-	animation-fill-mode:forwards;
-
+    animation:${delayAnimation} 1s linear;
 	z-index: 99;
-    /* background-color:rgba(0, 0, 0, 0.1); */
+    background-color:rgba(0, 0, 0, 0.1);
 
-    font-family: "Arial Black", sans-serif;
-    font-size: 20vh;    
-    font-weight: bold;
-    color:#03fc6f;
-    text-shadow: 4px 4px 0px #bdbdbd;
 
     // 스크롤 표시 안하게 더 해봐야함.
     overflow:hidden; // 스크롤 표시 안함
@@ -67,44 +85,48 @@ const reducer = (state, action) => {
     }
 }
 
-const TextView = () => {
-    // const { yutView } = useContext(YutViewContext);
-    const { textModal, setTextModal } = useContext(TextModal);
+export const TextModal = createContext('');
+
+const TextView = ({ children }) => {
+    const [textModal, setTextModal] = useState("");
+    const textViewTimeoutSetting = useRef(null);
     const [textView, dispatch] = useReducer(reducer, { show: false, text: "" })
-    // const yutTypeIndex = sumYutArrayToMatchType(yutView);
+    const [forceUpdate, setForceUpdate] = useState(0);
 
-
-    let textViewTimeoutSetting;
-    const textViewShowOffHandler = () => {
-        clearTimeout(textViewTimeoutSetting);
+    // let textViewTimeoutSetting;
+    const textViewShowOff = async () => {
         dispatch({ type: 'SHOW_OFF' });
+        clearTimeout(textViewTimeoutSetting.current);
+        textViewTimeoutSetting.current = null;
     }
-
-
-    // useEffect(() => {
-    //     dispatch({ type: 'SHOW_ON', text: NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex] });
-    //     textViewTimeoutSetting = setTimeout(() => dispatch({ type: 'SHOW_OFF' }), 1000);
-    //     return (() => {
-    //         textViewShowOffHandler()
-    //     })
-    // }, [yutView])
-
-
-    useEffect(() => {
-        dispatch({ type: 'SHOW_ON', text: textModal });
-        textViewTimeoutSetting = setTimeout(() => dispatch({ type: 'SHOW_OFF' }), 1000);
-        return (() => {
-            textViewShowOffHandler()
-        })
-    }, [textModal])
 
     const onclickHandler = () => {
-        textViewShowOffHandler()
+        textViewShowOff()
     }
+
+    const textModalValue = useMemo(() => (
+        {
+            textModal, setTextModal, setTextModalHandler: (text) => {
+                textViewShowOff();
+                setForceUpdate(prev => prev + 1);
+                dispatch({ type: 'SHOW_ON', text: text });
+                textViewTimeoutSetting.current = setTimeout(() =>
+                    textViewShowOff(), 3200
+                );
+            }
+        }
+    ), [textModal]);
 
     return (
         <>
-            {textView.show && <StyledYutResultView onClick={onclickHandler}>{textView.text}</StyledYutResultView>}
+            {textView.show && <StyledDivYutModal onClick={onclickHandler}>
+                <StyledDivYutText key={forceUpdate}>
+                    {textView.text}
+                </StyledDivYutText>
+            </StyledDivYutModal>}
+            <TextModal.Provider value={textModalValue}>
+                {children}
+            </TextModal.Provider>
         </>
     )
 }

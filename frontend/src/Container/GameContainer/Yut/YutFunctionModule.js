@@ -102,3 +102,51 @@ export const checkMyTurn = (nickname) => {
 }
 
 
+
+export const isFunction = (func) => {
+    return typeof (func) === "function";
+}
+
+export const isObject = (obj) => {
+    return typeof (obj) === "object";
+}
+
+export const isString = (str) => {
+    return typeof (str) === "string";
+}
+
+export const isNumber = (num) => {
+    return typeof (num) === "number";
+}
+
+
+export const isArray = (props_Array) => {
+    return Array.isArray(props_Array);
+}
+
+export const notNull = (props_null) => {
+    return typeof (props_null) !== "null";
+}
+
+export const notUndefined = (props_undefined) => {
+    return typeof (props_undefined) !== "undefined";
+}
+
+export const checkGetDataFromPeers = (state) => {
+    const result = (
+        isArray(state.playerData) &&
+        isObject(state.nowTurn) &&
+        isArray(state.playerHorsePosition) && state.playerHorsePosition.length <= 4 && state.playerHorsePosition.length >= 0 &&
+        isArray(state.yutData) &&
+        isObject(state.placeToMove) && Object.keys(state.placeToMove).length <= 4 && Object.keys(state.placeToMove).length >= 0 &&
+        isNumber(state.selectHorse) && state.selectHorse >= -1 && state.selectHorse <= 30 &&
+        isNumber(state.myThrowCount) && state.myThrowCount > -1 &&
+        isArray(state.winner)
+    )
+    return result;
+}
+
+export const getDataFromPeersError = () => {
+    console.error("getDataError");
+    alert("네트워크 오류");
+}

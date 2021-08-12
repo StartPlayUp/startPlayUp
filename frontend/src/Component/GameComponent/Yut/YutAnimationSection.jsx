@@ -106,13 +106,14 @@ const FaceText = styled.div`
 	color:#905338;
 `;
 
-const YutAnimation = () => {
+const YutAnimationSection = () => {
 	const { yutView } = useContext(YutViewContext);
 	const [forceUpdate, setForceUpdate] = useState(0);
 
 	useEffect(() => {
 		setForceUpdate(forceUpdate + 1);
 	}, [yutView])
+
 	return (
 		<Background>
 			{yutView.map((i, index) =>
@@ -134,4 +135,4 @@ const YutAnimation = () => {
 		</Background >
 	)
 }
-export default memo(YutAnimation);
+export default memo(YutAnimationSection);

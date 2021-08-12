@@ -2,7 +2,7 @@ import { checkPlace, checkSelectState, checkMyTurn, checkEmptySelectHorse, check
 
 import { YUT_INITIAL_STATE, YUT_RESULT_TYPE, YUT_PLAYER_COLOR, NUMBER_TO_MATCH_YUT_TYPE } from '../Constants/yutGame';
 
-export const sumYutArrayToMatchType = (yutArray) => {
+export const sumYutArrayToMatchTypeIndex = (yutArray) => {
     let sumYutArray = NUMBER_TO_MATCH_YUT_TYPE[yutArray.reduce((a, b) => a + b)];
     // 백도가 있으면 1 말고 0 출력
     return sumYutArray === 1 && yutArray[0] === 1 ? YUT_RESULT_TYPE.BACK_DO : sumYutArray;
@@ -39,7 +39,7 @@ const throwYutFunction = (myThrowCount, yutData, count) => {
     }
     // const [randomYutResult, yutView] = getRandomYut(count);
     const yutView = getRandomYut(count);
-    const randomYutResult = sumYutArrayToMatchType(yutView);
+    const randomYutResult = sumYutArrayToMatchTypeIndex(yutView);
 
     yutData = [...yutData, randomYutResult];
     if (!(randomYutResult === YUT_RESULT_TYPE.YUT || randomYutResult === YUT_RESULT_TYPE.MO)) {

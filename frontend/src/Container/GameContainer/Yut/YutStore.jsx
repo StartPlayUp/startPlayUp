@@ -5,19 +5,22 @@ import { GAME, YUT } from 'Constants/peerDataTypes.js';
 import { YUT_INITIAL_STATE, DEFAULT_TIME_VALUE, NUMBER_TO_MATCH_KOREA_YUT_TYPE } from './Constants/yutGame';
 import { reducer } from './Reducer/yutStoreReducer';
 
-import reducerAction, { sumYutArrayToMatchType } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
+import reducerAction, { sumYutArrayToMatchTypeIndex } from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
+import { checkGetDataFromPeers, isArray, isFunction, isObject, isString, getDataFromPeersError } from './YutFunctionModule';
 
 import {
     THROW_YUT,
     GET_DATA_FROM_PEER,
     UPDATE_GOAL,
+    START_GAME,
 } from './Constants/yutActionType.js';
+import { TextModal } from './YutTextViewModal';
 
 export const YutContext = createContext(null);
 export const YutViewContext = createContext(null);
 export const TimerContext = createContext(null);
-export const TextModal = createContext(null);
+// export const TextModal = createContext(null);
 
 const YutStore = ({ children }) => {
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
@@ -29,59 +32,33 @@ const YutStore = ({ children }) => {
 
     const [time, setTime] = useState(DEFAULT_TIME_VALUE);
     const [yutView, setYutView] = useState([0, 0, 0, 0]);
-    const [textModal, setTextModal] = useState("");
+    // const [textModal, setTextModal] = useState("");
+    const { setTextModalHandler } = useContext(TextModal);
 
-    const [fieldView, setFieldView] = useState([]);
+    // const [fieldView, setFieldView] = useState([]);
 
 
     useEffect(() => {
         console.log("nowTurn", typeof (nowTurn))
-        const getDataError = () => {
-            console.error("getDataError");
-            alert("네트워크 오류");
-        }
         if (peerData.type === GAME && peerData.game === YUT) {
-            // const { playerData,
-            //     nowTurn,
-            //     playerHorsePosition,
-            //     yutData,
-            //     placeToMove,
-            //     selectHorse,
-            //     myThrowCount,
-            //     winner, } = peerData.data;
-
             const { state, yutView, reducerActionType } = peerData.data;
-
-            if (Array.isArray(state.playerData) &&
-                typeof (state.nowTurn) === "object" &&
-                Array.isArray(state.playerHorsePosition) && state.playerHorsePosition.length <= 4 && state.playerHorsePosition.length >= 0 &&
-                Array.isArray(state.yutData) &&
-                typeof (state.placeToMove) === "object" && Object.keys(state.placeToMove).length <= 4 && Object.keys(state.placeToMove).length >= 0 &&
-                typeof (state.selectHorse) === "number" && state.selectHorse >= -1 && state.selectHorse <= 30 &&
-                typeof (state.myThrowCount) === "number" && state.myThrowCount > -1 &&
-                Array.isArray(state.winner) &&
-                typeof (reducerActionType) === "string") {
+            if (checkGetDataFromPeers(state)
+                && isString(reducerActionType)) {
                 dispatch({ type: GET_DATA_FROM_PEER, state })
                 setTime(DEFAULT_TIME_VALUE);
                 if (reducerActionType === THROW_YUT && yutView !== undefined) {
                     setYutView([...yutView]);
+                    const yutTypeIndex = sumYutArrayToMatchTypeIndex(yutView);
+                    // setTextModal(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
+                    setTextModalHandler(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
                 }
-
+                else if (reducerActionType === START_GAME) {
+                    setTextModalHandler("게임시작");
+                }
             }
             else {
-                console.log(state)
-                console.log(
-                    Array.isArray(state.playerData),
-                    typeof (state.nowTurn) === "object",
-                    Array.isArray(state.playerHorsePosition), state.playerHorsePosition.length <= 4, state.playerHorsePosition.length >= 0,
-                    Array.isArray(state.yutData),
-                    typeof (state.placeToMove) === "object", Object.keys(state.placeToMove).length <= 4, Object.keys(state.placeToMove).length >= 0,
-                    typeof (state.selectHorse) === "number", state.selectHorse >= -1, state.selectHorse <= 30,
-                    typeof (state.myThrowCount) === "number", state.myThrowCount > -1,
-                    Array.isArray(state.winner), // === "number"
-                    typeof (peerData.reducerActionType)
-                )
-                getDataError();
+                console.log(checkGetDataFromPeers(state))
+                getDataFromPeersError();
             }
 
         }
@@ -101,10 +78,10 @@ const YutStore = ({ children }) => {
         //     dispatch({ type: UPDATE_GOAL })
         // }
         if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
-            if (typeof (dispatch) === "function"
-                && typeof (state) === "object"
-                && typeof (peers) === "object"
-                && typeof (nickname) === "string") {
+            if (isFunction(dispatch)
+                && isObject(state)
+                && isObject(peers)
+                && isString(nickname)) {
                 const newState = reducerAction.UPDATE_GOAL(state);
                 dispatch({ type: UPDATE_GOAL, state: newState });
                 sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
@@ -116,12 +93,12 @@ const YutStore = ({ children }) => {
     }, [playerHorsePosition]);
 
 
-    useEffect(() => {
-        if (!halted) {
-            const yutTypeIndex = sumYutArrayToMatchType(yutView);
-            setTextModal(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
-        }
-    }, [yutView])
+    // useEffect(() => {
+    //     if (playerData.length > 0) {
+    //         const yutTypeIndex = sumYutArrayToMatchTypeIndex(yutView);
+    //         setTextModal(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
+    //     }
+    // }, [yutView])
 
     const value = useMemo(() => ({
         playerData,
@@ -156,9 +133,9 @@ const YutStore = ({ children }) => {
         yutView, setYutView
     }), [yutView]);
 
-    const textModalValue = useMemo(() => (
-        { textModal, setTextModal }
-    ), [textModal]);
+    // const textModalValue = useMemo(() => (
+    //     { textModal, setTextModal }
+    // ), [textModal]);
 
     return (
         <div style={{
@@ -167,9 +144,9 @@ const YutStore = ({ children }) => {
             <YutContext.Provider value={value}>
                 <YutViewContext.Provider value={yutViewValue}>
                     <TimerContext.Provider value={timeValue}>
-                        <TextModal.Provider value={textModalValue}>
-                            {children}
-                        </TextModal.Provider>
+                        {/* <TextModal.Provider value={textModalValue}> */}
+                        {children}
+                        {/* </TextModal.Provider> */}
                     </TimerContext.Provider>
                 </YutViewContext.Provider>
             </YutContext.Provider >

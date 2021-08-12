@@ -1,6 +1,6 @@
 import React, { useContext, useState, memo, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-import Horses from 'Component/GameComponent/Yut/Horses'
+import Horses from 'Component/GameComponent/Yut/ButtonComponents/Horses';
 import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
@@ -11,7 +11,11 @@ import { START_GAME } from 'Container/GameContainer/Yut/Constants/yutActionType'
 import reducerAction from 'Container/GameContainer/Yut/Reducer/yutStoreReducerAction'
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers';
 import { TimerContext } from 'Container/GameContainer/Yut/YutStore';
-import { TextModal } from 'Container/GameContainer/Yut/YutStore';
+// import { TextModal } from 'Container/GameContainer/Yut/YutStore';
+import { TextModal } from 'Container/GameContainer/Yut/YutTextViewModal';
+
+
+import { isString, isFunction, isObject } from 'Container/GameContainer/Yut/YutFunctionModule';
 
 
 
@@ -65,13 +69,13 @@ const Player = styled.div`
     margin:0px 5px 0px 5px;
 `;
 
-const App = () => {
+const YutPlayerSection = () => {
     const { dispatch, ...state } = useContext(YutContext);
     const { peers } = useContext(PeersContext);
     // const halted = false;
     const nickname = localStorage.getItem('nickname');
     const { setTime } = useContext(TimerContext);
-    const { setTextModal } = useContext(TextModal);
+    const { setTextModalHandler } = useContext(TextModal);
 
 
     const { yutData, playerData, } = state;
@@ -87,21 +91,21 @@ const App = () => {
     }, [yutData])
 
     const startGameHandler = () => {
-        if (typeof (dispatch) === "function"
-            && typeof (state) === "object"
-            && typeof (peers) === "object"
-            && typeof (nickname) === "string") {
+        if (isFunction(dispatch)
+            && isObject(state)
+            && isObject(peers)
+            && isString(nickname)) {
             const newState = reducerAction.START_GAME(peers);
             dispatch({ type: START_GAME, state: newState });
             setTime(DEFAULT_TIME_VALUE);
-            setTextModal("게임 시작");
+            setTextModalHandler("게임 시작")
             sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: START_GAME } });
         } else {
             console.error("startGameHandler");
-            console.log(typeof (dispatch) === "function"
-                , typeof (state) === "object"
-                , typeof (peers) === "object"
-                , typeof (nickname) === "string");
+            console.log(isFunction(dispatch)
+                && isObject(state)
+                && isObject(peers)
+                && isString(nickname));
             console.log(typeof (dispatch))
         }
     }
@@ -113,7 +117,6 @@ const App = () => {
             <StyleDiv>
                 {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_MATCH_KOREA_YUT_TYPE[index]} : {i}</div>))}
             </StyleDiv>
-            {/* {console.log('playerData : ^^^', playerData)} */}
             {playerData.length > 0 && <PlayerSection>
                 {playerData.map((i, index) => <Player key={index} player={i}>
                     player{index + 1}<div>{i.nickname}</div>
@@ -127,4 +130,4 @@ const App = () => {
         </StylePlayerWithYutData>
     )
 }
-export default memo(App);
+export default memo(YutPlayerSection);

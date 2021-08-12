@@ -15,6 +15,7 @@ import actionHandler from 'Container/GameContainer/Yut/Backup/actionHandler'
 
 
 
+
 const Horse = styled.div`
         display:flex;
         flex-direction: row;
