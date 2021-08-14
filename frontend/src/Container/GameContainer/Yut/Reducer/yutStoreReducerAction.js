@@ -195,7 +195,7 @@ const MOVE_HORSE_ON_PLAYER_SECTION = (state, index) => {
         const nowTurnIndex = state.nowTurn.index;
         const playerData = [...state.playerData]
         let myThrowCount = state.myThrowCount;
-        let eayEnemyHorse = false;
+        let catchEnemyHorse = false;
 
         // 내가 가지고 있는 horses -1 해주기.
         playerData[nowTurnIndex] = { ...playerData[nowTurnIndex], horses: playerData[nowTurnIndex].horses - 1 }
@@ -224,7 +224,7 @@ const MOVE_HORSE_ON_PLAYER_SECTION = (state, index) => {
 
                 // 말을 잡았으니 던질 수 있는 횟수 + 1
                 myThrowCount += 1;
-                eayEnemyHorse = true;
+                catchEnemyHorse = true;
 
 
                 // 말을 이동했으니 해당 자리에 내 말을 놓는다.
@@ -235,7 +235,7 @@ const MOVE_HORSE_ON_PLAYER_SECTION = (state, index) => {
             // 해당 위치에 말을 놓음.
             playerHorsePosition[nowTurnIndex][index] = 1
         }
-        return [{ ...state, yutData, playerData, myThrowCount, playerHorsePosition, selectHorse: -1, placeToMove: {} }, eayEnemyHorse, true];
+        return [{ ...state, yutData, playerData, myThrowCount, playerHorsePosition, selectHorse: -1, placeToMove: {} }, catchEnemyHorse, true];
     }
 }
 
@@ -255,7 +255,7 @@ const MOVE_HORSE_ON_FIELD_SECTION = (state, index) => {
 
         // 말 이동 관련 코드
         let myThrowCount = state.myThrowCount;
-        let eayEnemyHorse = false;
+        let catchEnemyHorse = false;
         const playerData = [...state.playerData];
         const nowTurnIndex = state.nowTurn.index;
         const playerHorsePosition = [...state.playerHorsePosition];
@@ -282,7 +282,7 @@ const MOVE_HORSE_ON_FIELD_SECTION = (state, index) => {
 
                 // 말을 잡았으니 던질 수 있는 횟수 + 1
                 myThrowCount += 1;
-                eayEnemyHorse = true;
+                catchEnemyHorse = true;
 
                 // 말을 이동했으니 해당 자리에 내 말을 놓는다.
                 playerHorsePosition[nowTurnIndex][index] = selectHorseData;
@@ -296,7 +296,7 @@ const MOVE_HORSE_ON_FIELD_SECTION = (state, index) => {
 
 
 
-        return [{ ...state, yutData, playerData, playerHorsePosition, myThrowCount, selectHorse: -1, placeToMove: {} }, eayEnemyHorse, true];
+        return [{ ...state, yutData, playerData, playerHorsePosition, myThrowCount, selectHorse: -1, placeToMove: {} }, catchEnemyHorse, true];
     }
 }
 

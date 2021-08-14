@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, memo, useEffect } from 'react';
+import React, { useContext, useRef, useState, memo, useEffect, useReducer } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import Horses from 'Component/GameComponent/Yut/ButtonComponents/Horses';
@@ -21,9 +21,32 @@ import start from '../../../image/start.png';
 import { TextModal } from 'Container/GameContainer/Yut/YutTextViewModal';
 
 import { GRID_TABLE, SHORTCUT_PLACE } from 'Container/GameContainer/Yut/Constants/yutGame';
+import MoveHorseAnimation from './animation/MoveHorseAnimation';
 
 
+const Horse = styled.div`
+        display:flex;
+        flex-direction: row;
+        width:25px;
+        height:25px;
+        background-color:${props => props.color !== undefined && props.color};
+        border-radius: 100%;
+        border: solid 1px black;
+        cursor:pointer;
+        margin:10px;
+        z-index:${props => props.horseIndex !== undefined && props.horseIndex};
+        position:absolute;
+        transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"};
+`;
 
+const MoveHorseFrame = (startPosition, endPosition) => keyframes`
+    from{
+        translate: transform(${startPosition.x},${startPosition.y});
+    }
+    to{
+        translate: transform(${endPosition.x},${endPosition.y});
+    }
+`;
 
 const GridContainer = styled.div`
     width:inherit;
@@ -82,9 +105,10 @@ const YutFiledSection = () => {
     const nickname = localStorage.getItem('nickname');
     const [horsePosition, setHorsePosition] = useState({});
     const fieldPlacePositions = useRef([]);
+    const boxPosition = useRef([]);
     const { peers } = useContext(PeersContext);
     const { dispatch, ...state } = useContext(YutContext);
-    const { setTextModal } = useContext(TextModal);
+    const { setTextModalHandler } = useContext(TextModal);
     const {
         placeToMove,
         playerHorsePosition,
@@ -94,6 +118,14 @@ const YutFiledSection = () => {
 
     const commonPlaceSize = 40;
     const shortPlaceSize = 60;
+
+    const [positionOfHorseAnimation, setPositionOfHorseAnimation] = useState({
+        color: '',
+        startPosition: { x: 0, y: 0 },
+        endPosition: { x: 0, y: 0 }
+    })
+
+    const [, forceUpdate] = useReducer((prev) => prev + 1, 0)
 
 
     useEffect(() => {
@@ -118,10 +150,11 @@ const YutFiledSection = () => {
             && typeof (nickname) === "string"
             && typeof (index) === "number") {
             // TextModal
-            const [newState, eatEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_PLAYER_SECTION(state, index);
+            const [newState, catchEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_PLAYER_SECTION(state, index);
             if (success) {
-                if (eatEnemyHorse) {
-                    setTextModal("꺼-억");
+                console.log(catchEnemyHorse)
+                if (catchEnemyHorse) {
+                    setTextModalHandler("꺼-억");
                 }
                 dispatch({ type: MOVE_HORSE_ON_PLAYER_SECTION, state: newState });
                 sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_PLAYER_SECTION } });
@@ -143,11 +176,37 @@ const YutFiledSection = () => {
             && typeof (nickname) === "string"
             && typeof (index) === "number") {
 
-            const [newState, eatEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_FIELD_SECTION(state, index);
+            const [newState, catchEnemyHorse, success] = reducerAction.MOVE_HORSE_ON_FIELD_SECTION(state, index);
             if (success) {
-                if (eatEnemyHorse) {
-                    setTextModal("꺼-억");
+                if (catchEnemyHorse) {
+                    setTextModalHandler("꺼-억");
+                    forceUpdate();
                 }
+                // const testState = test(newState);
+                // dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: testState });
+                // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: testState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
+
+                console.log("x y 좌표 ", state.selectHorse, index)
+                const boxPos = boxPosition.current.getBoundingClientRect();
+                const start = fieldPlacePositions.current[state.selectHorse].getBoundingClientRect();
+                const end = fieldPlacePositions.current[index].getBoundingClientRect()
+                const startCenter = {
+                    x: start.left + (start.width / 2) - boxPos.left,
+                    y: start.top + (start.height / 2) - boxPos.top
+                }
+
+                const endCenter = {
+                    x: end.left + (end.width / 2) - boxPos.left,
+                    y: end.top + (end.height / 2) - boxPos.top
+                }
+                console.log("x y 좌표 중앙 ", startCenter, endCenter)
+                console.log(playerData, horsePosition, horsePosition[state.selectHorse]['player'])
+                setPositionOfHorseAnimation({
+                    color: playerData[horsePosition[state.selectHorse]['player']].color,
+                    startPosition: startCenter,
+                    endPosition: endCenter
+                });
+
                 dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: newState });
                 sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
             }
@@ -159,6 +218,23 @@ const YutFiledSection = () => {
             console.error("moveHorseOnFieldSection");
         }
     }
+
+    // const test = (state) => {
+    //     if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
+    //         if (isFunction(dispatch)
+    //             && isObject(state)
+    //             && isObject(peers)
+    //             && isString(nickname)) {
+    //             return reducerAction.UPDATE_GOAL(state);
+    //             // dispatch({ type: UPDATE_GOAL, state: newState });
+    //             // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
+    //         }
+    //         else {
+    //             console.error("updateGoalHandler");
+    //         }
+    //     }
+    // }
+
 
     const moveHorseHandler = (e, index) => {
         e.preventDefault();
@@ -179,7 +255,8 @@ const YutFiledSection = () => {
 
 
     return (
-        <YutDiv>
+        <YutDiv ref={boxPosition}>
+            <MoveHorseAnimation position={positionOfHorseAnimation}></MoveHorseAnimation>
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {
                     GRID_TABLE.map((i, index) => {
@@ -189,7 +266,7 @@ const YutFiledSection = () => {
                             return (
                                 <GridPlace key={"GridPlace" + index} row={i.column} column={i.row}>
                                     <PlaceButton
-                                        ref={fieldPlacePositions[index]}
+                                        ref={el => fieldPlacePositions.current[index] = el}
                                         onClick={(e) => moveHorseHandler(e, index)}
                                         color={getColorAccordingToPlaceToMove(index)}
                                         rotateValue={i.rotateValue}
@@ -205,7 +282,7 @@ const YutFiledSection = () => {
                                     </PlaceButton>
                                     {
                                         horsePosition[index] !== undefined &&
-                                        <Horses player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
+                                        <Horses key={forceUpdate} player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
                                             {index}
                                         </Horses>
                                     }

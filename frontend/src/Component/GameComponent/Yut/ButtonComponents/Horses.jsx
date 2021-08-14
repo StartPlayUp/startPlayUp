@@ -29,7 +29,6 @@ const Horse = styled.div`
         z-index:${props => props.horseIndex !== undefined && props.horseIndex};
         position:absolute;
         transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"};
-
 `;
 
 const bounceIn = keyframes`
@@ -43,12 +42,15 @@ const bounceIn = keyframes`
     }
     to {
         transform: scale(1);
+        opacity: 1;
     }
 `;
 
 
 const StyleDiv = styled.div`
-    animation: ${bounceIn} 0.1s;
+    animation: ${bounceIn} 0.1s 0.5s;
+    opacity: 0;
+    animation-fill-mode: forwards;
     &:hover{
         transform: scale(1.2);
     }

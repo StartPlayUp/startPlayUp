@@ -18,7 +18,6 @@ const modelShow = keyframes`
 
 
 const Modal = styled.div`
-
     width: 100%;
     height: 100%;
 
@@ -131,7 +130,6 @@ const Winner = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-
 `;
 
 const moveImg = (x, y) => keyframes`
@@ -141,27 +139,43 @@ const moveImg = (x, y) => keyframes`
     }
     to{
         opacity: 1;
-        transform:translate(${x}px,${y}px);
+        transform: translate(${x}px,${y}px);
     }
 `;
 
 const rotateY = (x, y) => keyframes`
-    from{
+    /* from{
         transform: rotateY(0deg) translate(${x}px,${y}px);
     }
     to{
         transform: rotateY(360deg) translate(${x}px,${y}px);
+    } */
+    from{
+        transform:scale(1) translate(${x}px,${y}px);
+    }
+    33%{
+        transform:scale(0.98) translate(${x}px,${y}px);
+    }
+    66%{
+        transform:scale(1.02) translate(${x}px,${y}px);
+    }
+    to{
+        transform:scale(1) translate(${x}px,${y}px);
+
     }
 `;
 
 const ImgAnimation = styled.img`
-    /* animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear; */
+    /* animation:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} 1s linear;
+    animation-fill-mode: forwards; */
+    transform-origin:left;
     animation-name:${props => moveImg(props.playerPosition[0], props.playerPosition[1])} ,${props => rotateY(props.playerPosition[0], props.playerPosition[1])};
     animation-fill-mode: forwards;
     animation-delay: 0s, 1s;
-    animation-duration: 1s, 1.5s;
+    animation-duration: 1s, 1s;
     animation-iteration-count: 1,infinite;
     animation-timing-function: ease-in, ease-in;
+
 `;
 
 
@@ -171,8 +185,6 @@ const winnerModal = () => {
     // const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
     const [modalShow, setModalShow] = useState(true);
-
-    const [imgLoading, setImgLoading] = useState(false);
     const [playerPosition, setPlayerPosition] = useState([0, 0]);
 
 
@@ -185,23 +197,24 @@ const winnerModal = () => {
         setModalShow(false);
     }
 
+    const onLoadHandler = () => {
+        const posImg = imgRef.current.getBoundingClientRect();
+        const posPlayer = playerRef.current[0].getBoundingClientRect();
+        const top = posPlayer.top - posImg.top - posImg.height;
+        const left = posPlayer.left - posImg.left;
+        setPlayerPosition([left, top]);
+    }
+
     return (
         <>
             {
                 modalShow && playerData.length === winner.length && winner.length !== 0 && <Modal>
                     <ModalSection>
+                        <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
                         <ModalSectionHeader>
                             <DivHeader>
-                                <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} onLoad={() => {
-                                    const posImg = imgRef.current.getBoundingClientRect();
-                                    const posPlayer = playerRef.current[0].getBoundingClientRect();
+                                <ImgAnimation ref={imgRef} playerPosition={playerPosition} src={crown} onLoad={onLoadHandler} />
 
-                                    const top = posPlayer.top - posImg.top - posImg.height;
-                                    const left = posPlayer.left - posImg.left;
-
-                                    setPlayerPosition([left, top]);
-                                }} />
-                                <StyleExitButton onClick={modalShowOffHandler}> EXIT </StyleExitButton>
                             </DivHeader>
                             <WinnerSection>
                                 {
