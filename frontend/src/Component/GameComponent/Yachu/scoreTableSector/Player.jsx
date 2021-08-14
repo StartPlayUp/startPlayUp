@@ -78,11 +78,9 @@ const Player = () => {
             setLower(false)
         }, 4000)
     }
-    console.log(wordState)
-    console.log(lowerState)
     return (
         <PlayerData.Consumer>
-            {({ playerData, nowTurn, endGame, halt, selectData }) => (
+            {({ playerData, nowTurn, endGame, halt, selectData, rollCount }) => (
                 <Fragment>
                     <Div>
                         <Modal
@@ -105,7 +103,7 @@ const Player = () => {
                         />
                         <GameOverScreen playerData={playerData} endGame={endGame} />
                         {lowerState && <LowerWord>{wordState}</LowerWord>}
-                        <ScoreTable playerData={playerData} nowTurn={nowTurn} lowerState={lowerState} halt={halt} selectData={selectData} />
+                        <ScoreTable playerData={playerData} nowTurn={nowTurn} lowerState={lowerState} halt={halt} selectData={selectData} rollCount={rollCount} />
                     </Div>
                 </Fragment>
 

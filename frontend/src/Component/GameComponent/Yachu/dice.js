@@ -90,7 +90,6 @@ const RollButton=styled.button`
 `
 const Dice=()=>{
     const diceState=useContext(DiceStore);
-    const [second,setSecond]=useState(1);
     const [diceImage, setImage] = useState([dice1, dice1, dice1, dice1, dice1]);
     const box = useRef(null);
     const fromPosition = useRef(null);
@@ -105,28 +104,30 @@ const Dice=()=>{
             alert("니 턴 아님")
         }
     }
+
     const diceHold = (e) => {
-        const value = e.currentTarget.value;
-        if (!diceState.hold[value]) {
-            const { y } = box.current.getBoundingClientRect();
-            const { top,bottom } = fromPosition.current.getBoundingClientRect();
-            var height = y - bottom;
-            setBoxY(height);
-            console.log("y", y);
-            console.log("홀드 박스 높이-주사위 높이", height);
-            setPlaceY(bottom);           
-        }
-        diceState.diceHold(value);
-        /*
-        if (diceState.halt === true) {
+        if (diceState.halt === true && diceState.rollCount<3) {
+            const value = e.currentTarget.value;
+            if (!diceState.hold[value]) {
+                const { y } = box.current.getBoundingClientRect();
+                const { top,bottom } = fromPosition.current.getBoundingClientRect();
+                var height = y - bottom;
+                setBoxY(height);
+                console.log("y", y);
+                console.log("홀드 박스 높이-주사위 높이", height);
+                setPlaceY(bottom);           
+            }
+            diceState.diceHold(value);
         }
         else {
             alert("니 턴 아님")
-        }*/
+        }
     }
+
     const startGame=()=>{
         diceState.StartGame()
     }
+
     useEffect(()=>{
         if(diceState.rollCount===3){
             setImage([dice1,dice1,dice1,dice1,dice1]);
@@ -153,6 +154,7 @@ const Dice=()=>{
             }, 1000);
         }
     }, [diceState.rollCount])
+
     const setDiceRollImage = () => {
         let rollDiceImage = [...diceImage];
         for (var i = 0; i < 5; i++){
@@ -162,7 +164,9 @@ const Dice=()=>{
         }
         setImage(rollDiceImage);
     }
+
     const lst = [0, 1, 2, 3, 4];
+
     useEffect(() => {
         const { y } = box.current.getBoundingClientRect();
         const { top,bottom } = fromPosition.current.getBoundingClientRect();
@@ -171,7 +175,8 @@ const Dice=()=>{
         console.log("y", y);
         console.log("홀드 박스 높이-주사위 높이", height);
         setPlaceY(bottom);
-    },[])
+    }, [])
+    
     return (
         <DiceStore.Consumer>
             {({ dice, rollCount,hold})=>(
