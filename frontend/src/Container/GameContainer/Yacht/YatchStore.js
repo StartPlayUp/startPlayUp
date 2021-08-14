@@ -38,11 +38,11 @@ const initialState={
             largeStraight: [0, false],
             choice: [0, false],
             yahtzee: [0, false]
-        },
+            },
         result: 0,
         bonus: [0, false]
-    },
-    {
+        },
+        {
             nickname: "",
             selectPoint: {
                 ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -169,14 +169,6 @@ const YachuProvider=({children})=>{
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
         dispatch({ type: DICEHOLD, holding })
     }
-    /*
-    function diceHold(value) {
-        let holding = [...state.hold]
-        holding[value] = !holding[value];
-        sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
-        dispatch({ type: DICEHOLD, value })
-    }
-    */
     function selectData(name,value) {
         const player = [...state.playerData]
         player[nowTurn].selectPoint[name] = [value, true];
@@ -187,7 +179,6 @@ const YachuProvider=({children})=>{
                 player[nowTurn].selectPoint[i][0] = 0;
             }
         })
-        console.log(player);
         //result 구하기
         dispatch({ type: ROLLRESET });
         if (!player[nowTurn].bonus[1]) {
@@ -208,10 +199,8 @@ const YachuProvider=({children})=>{
                 player[nowTurn].bonus = [bonusTest, completeTest];
             }
             else if (bonusTest >= 63) {
-                console.log("hihi");
                 player[nowTurn].bonus = [bonusTest, true];
                 player[nowTurn].result += 35;
-                alert("보너스 획득")
             }
         }
         gameOver();
@@ -358,7 +347,7 @@ const YachuProvider=({children})=>{
         <DiceStore.Provider value={{
                 dice:state.dice,hold:state.hold,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
             <PlayerData.Provider value={//게임 데이터를 표시
-                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,endGame:endGame,selectData }}>
+                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,endGame:endGame,rollCount:state.rollCount,selectData }}>
                 <PlayerNickName.Provider value={{playerOne:state.playerData[0].nickname,playerTwo:state.playerData[1].nickname,nowTurn:nowTurn}}>
                     <TimerData.Provider value={{
                         nowTurn:nowTurn,timeOver}}>
