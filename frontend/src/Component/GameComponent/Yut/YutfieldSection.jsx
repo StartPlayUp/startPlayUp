@@ -121,6 +121,7 @@ const YutFiledSection = () => {
 
     const [positionOfHorseAnimation, setPositionOfHorseAnimation] = useState({
         color: '',
+        numberOfHorse: 0,
         startPosition: { x: 0, y: 0 },
         endPosition: { x: 0, y: 0 }
     })
@@ -203,6 +204,7 @@ const YutFiledSection = () => {
                 console.log(playerData, horsePosition, horsePosition[state.selectHorse]['player'])
                 setPositionOfHorseAnimation({
                     color: playerData[horsePosition[state.selectHorse]['player']].color,
+                    numberOfHorse: horsePosition[state.selectHorse]['horses'],
                     startPosition: startCenter,
                     endPosition: endCenter
                 });

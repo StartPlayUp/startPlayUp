@@ -26,7 +26,7 @@ const Horse = styled.div`
         border: solid 1px black;
         cursor:pointer;
         margin:10px;
-        z-index:${props => props.horseIndex !== undefined && props.horseIndex};
+        z-index:99;
         position:absolute;
         transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"};
 `;

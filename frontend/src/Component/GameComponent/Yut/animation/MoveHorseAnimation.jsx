@@ -37,38 +37,59 @@ const Horse = styled.div`
         left:0;
         right:0;
         position:absolute;
+        transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"};
         /* transform: ${props => props.translate !== undefined && "translateX(" + props.translate + "px)"}; */
-        ${props => console.log("asdfasdfasdf", props.position)}
-        animation: ${props => props.position !== undefined && MoveHorseFrame(props.position)} 0.5s;
-        animation-fill-mode: forwards;
+
+        /* animation: ${props => props.position !== undefined && MoveHorseFrame(props.position)} 0.5s;
+        animation-fill-mode: forwards; */
+`;
+
+const AnimationDiv = styled.div`
+    animation: ${props => props.position !== undefined && MoveHorseFrame(props.position)} 0.5s;
+    animation-fill-mode: forwards;
 `;
 
 const MoveHorseFrame = ({ startPosition, endPosition }) => keyframes`
     0%{
         opacity: 0;
+        z-index:100;
         transform: translate(${startPosition.x}px,${startPosition.y}px)
     }
     20%{
         opacity: 1;
+        z-index:100;
         transform: translate(${startPosition.x}px,${startPosition.y}px);
     }
     80%{
         opacity: 1;
+        z-index:100;
         transform: translate(${endPosition.x}px,${endPosition.y}px);
     }
     100%{
         opacity: 0;
+        z-index:0;
         transform: translate(${endPosition.x}px,${endPosition.y}px);
     }
 `;
 
 const MoveHorseAnimation = ({ position }) => {
     console.log("position : ", position)
+    const translate = [-45, -30, -15, 0];
     return (
-        <div>
-            {/* <Horse color={playerData[horsePosition[selectHorse]].color} position={{ startPosition: { x: 20, y: 20 }, endPosition: { x: 400, y: 200 } }}></Horse> */}
-            <Horse color={position.color} position={position}></Horse>
-        </div>
+        <AnimationDiv position={{
+            startPosition: {
+                x: position.startPosition.x + translate[0],
+                y: position.startPosition.y
+            },
+            endPosition: {
+                x: position.endPosition.x + translate[0],
+                y: position.endPosition.y,
+            }
+        }}>
+            {[...Array(position.numberOfHorse)].map((i, index) =>
+                <Horse key={index} translate={translate[index]} color={position.color} ></Horse>
+            )}
+        </AnimationDiv>
     )
 }
 export default memo(MoveHorseAnimation);
