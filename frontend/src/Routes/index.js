@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../LoginStore"
 import { Route, Switch, useHistory } from 'react-router-dom';
 import LoginPageContainer from "Container/LoginPageContainer";
@@ -45,6 +45,21 @@ const CHAT_STYLE = styled.div`
   justify-content: flex-end;
 `;
 
+const CHAT_SHOW_BUTTON_STYLE = styled.button`
+    width:32px;
+    height:32px;
+`;
+
+const CHAT_SHOW_DIV_STYLE = styled.div`
+    position:absolute;
+    z-index:100;
+    top:0;
+    right:0;
+    margin:10px;
+    width:32px;
+    height:32px;
+`;
+
 const TemporaryMain = () => {
     const history = useHistory();
     return (<div>
@@ -58,6 +73,12 @@ const TemporaryMain = () => {
 
 const app = () => {
     const { isAuthenticated } = useContext(UserContext);
+    const [chatShow, setChatShow] = useState(true);
+
+    const chatOnClickHandler = () => {
+        setChatShow(prev => !prev);
+    }
+
     return (
         <BrowserRouter>
             {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
@@ -78,7 +99,10 @@ const app = () => {
             {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
                 <PeerStore>
                     <Yut />
-                    <ChatComponent />
+                    {chatShow && <ChatComponent />}
+                    <CHAT_SHOW_DIV_STYLE>
+                        <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                    </CHAT_SHOW_DIV_STYLE>
                 </PeerStore>
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/Yacht" render={() => <GamePage>

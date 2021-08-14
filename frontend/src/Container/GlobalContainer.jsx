@@ -34,7 +34,6 @@ const Global = () => {
       {/* <Snow /> */}
       <GlobalStyles>
       </GlobalStyles>
-      <FOOTER />
     </>
   );
 }

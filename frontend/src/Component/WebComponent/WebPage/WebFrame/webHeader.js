@@ -5,6 +5,7 @@ import {
     HeadRight,
     HeadLeft
 } from "../Style/WebFrameStyle";
+import menu from 'images/white-menu.png';
 
 const HEADER = () => {
     return (
@@ -15,7 +16,7 @@ const HEADER = () => {
                         StartPlayUp
                     </HeadLeft>
                     <HeadRight>
-                        <img src="../../images/white-menu.png" alt="menu"/>
+                        <img src={menu} alt="menu" />
                     </HeadRight>
                 </HeadStyle>
             </HeadColor>

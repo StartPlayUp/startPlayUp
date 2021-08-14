@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const HeadStyle = styled.div`
     width: 75%;
     height: 100%;
+    padding:10px;
     margin : 0 auto;
     display: flex;
     justify-content: space-between;
