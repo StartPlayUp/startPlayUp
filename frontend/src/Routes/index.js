@@ -52,6 +52,7 @@ const CHAT_SHOW_BUTTON_STYLE = styled.button`
     background-color:rgb(0,0,0,0);
     background-size: contain;
     background-image: url(${messageButtonImage});
+    border-radius: 100%;
 `;
 
 const CHAT_SHOW_DIV_STYLE = styled.div`
@@ -59,10 +60,9 @@ const CHAT_SHOW_DIV_STYLE = styled.div`
     z-index:100;
     top:0;
     right:0;
-    margin:5px;
+    margin: 8px 20px 0px 0px; 
     width:32px;
     height:32px;
-    border-radius: 100%;
 `;
 
 const TemporaryMain = () => {
