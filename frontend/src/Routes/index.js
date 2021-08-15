@@ -12,6 +12,7 @@ import Yut from 'Container/GameContainer/Yut/Yut';
 import Yacht from 'Container/GameContainer/Yacht/Yacht';
 import { PeerStore } from './peerStore';
 import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
+import messageButtonImage from 'images/blue-message.png';
 import View from "../Component/GameComponent/AVALON_BETA/View";
 
 const GamePage = styled.div`
@@ -46,8 +47,11 @@ const CHAT_STYLE = styled.div`
 `;
 
 const CHAT_SHOW_BUTTON_STYLE = styled.button`
-    width:32px;
-    height:32px;
+    width:40px;
+    height:40px;
+    background-color:rgb(0,0,0,0);
+    background-size: contain;
+    background-image: url(${messageButtonImage});
 `;
 
 const CHAT_SHOW_DIV_STYLE = styled.div`
@@ -55,9 +59,10 @@ const CHAT_SHOW_DIV_STYLE = styled.div`
     z-index:100;
     top:0;
     right:0;
-    margin:10px;
+    margin:5px;
     width:32px;
     height:32px;
+    border-radius: 100%;
 `;
 
 const TemporaryMain = () => {
@@ -110,7 +115,10 @@ const app = () => {
                     <StyleDiv>
                         <Yacht />
                     </StyleDiv>
-                    <ChatComponent />
+                    {chatShow && <ChatComponent />}
+                    <CHAT_SHOW_DIV_STYLE>
+                        <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                    </CHAT_SHOW_DIV_STYLE>
                 </PeerStore>
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
