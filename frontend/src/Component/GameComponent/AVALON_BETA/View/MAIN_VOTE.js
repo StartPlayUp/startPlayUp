@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { GameContext, VOTE_FRAME } from "../Store";
-import { MAIN_VOTE_ONCLICK } from "../MVC/AVALON_Reducer";
+import { MAIN_VOTE_ONCLICK, VOTE_CHECK } from "../MVC/AVALON_Reducer";
 import * as S from "../Styled";
 import { PeersContext } from "Routes/peerStore";
+import AVALON_TIMER from "./Timer";
 
 function MAIN_VOTE() {
-  const { dispatch, gameState, buttonAnimation } = useContext(GameContext);
+  const { dispatch, gameState, buttonAnimation, timeOver } =
+    useContext(GameContext);
   const { peers } = useContext(PeersContext);
   const [playerCount, setPlayerCount] = useState(0);
   const gameData = { ...gameState };
@@ -30,6 +32,7 @@ function MAIN_VOTE() {
       buttonAnimation(e);
     }
   };
+
   return (
     <S.MainVote>
       <S.MAIN_VOTE_HEADER>
@@ -37,6 +40,7 @@ function MAIN_VOTE() {
           gameState.takeStage[gameState.expeditionStage] +
           "명"}
       </S.MAIN_VOTE_HEADER>
+      <AVALON_TIMER minutes={0} seconds={5} callDispatch={timeOver} />
       <S.SelectPlayer>
         {gameState.usingPlayers.map((user, index) => (
           <div>

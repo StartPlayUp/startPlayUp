@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useContext } from "react";
-import reducer, { GAME_CHECK } from "./MVC/AVALON_Reducer";
-import { PeerDataContext } from "../../../Routes/peerStore";
+import reducer, { GAME_CHECK, VOTE_CHECK } from "./MVC/AVALON_Reducer";
+import { PeerDataContext, PeersContext } from "../../../Routes/peerStore";
 import { AVALON, GAME } from "../../../Constants/peerDataTypes";
 import { GET_DATA_FROM_PEER } from "../../../Constants/actionTypes";
 
@@ -67,7 +67,7 @@ const GameContext = React.createContext("");
 const Store = ({ children }) => {
   const { peerData } = useContext(PeerDataContext);
   const [gameState, dispatch] = useReducer(reducer, initialData);
-
+  const { peers } = useContext(PeersContext);
   const selectedPlayers = () => {
     const temp = [];
     gameState.usingPlayers.map((user) => {
@@ -90,9 +90,10 @@ const Store = ({ children }) => {
 
     return Debounce();
   };
-
   console.log(gameState);
-
+  const timeOver = () => {
+    dispatch({ type: VOTE_CHECK, peers });
+  };
   useEffect(() => {
     console.log(`expedition useEffect`);
     const gameData = { ...gameState };
@@ -104,16 +105,19 @@ const Store = ({ children }) => {
     ).length;
     if (angelCount === 3) {
       gameData.component = ASSASSIN_FRAME;
+      gameState.usingPlayers.filter((element) => "Assassin" === element.role) &&
+        dispatch({ type: GAME_CHECK, gameData });
+    } else {
+      if (evilCount === 3) {
+        gameData.winner = "EVILS_WIN";
+        gameData.component = END_GAME_FRAME;
+      }
+      gameData.usingPlayers.map((user) => {
+        user.selected = false;
+        user.toGo = "";
+      });
+      dispatch({ type: GAME_CHECK, gameData });
     }
-    if (evilCount === 3) {
-      gameData.winner = "EVILS_WIN";
-      gameData.component = END_GAME_FRAME;
-    }
-    gameData.usingPlayers.map((user, index) => {
-      user.selected = false;
-      user.toGo = "";
-    });
-    dispatch({ type: GAME_CHECK, gameData });
   }, [gameState.expeditionStage]);
 
   useEffect(() => {
@@ -174,6 +178,7 @@ const Store = ({ children }) => {
         dispatch,
         selectedPlayers,
         buttonAnimation,
+        timeOver,
       }}
     >
       {children}
