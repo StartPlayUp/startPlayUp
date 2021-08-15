@@ -340,7 +340,8 @@ const stroll = keyframes`
 export const WalkContainer = styled.div`
   display: inline-block;
   position: relative;
-  width: 20%;
+  flex-direction: column;
+  width: 100%;
   padding-bottom: 30%;
   vertical-align: middle;
   overflow: hidden;

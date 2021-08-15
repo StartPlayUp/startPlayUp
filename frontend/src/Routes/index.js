@@ -32,7 +32,7 @@ const StyleDiv = styled.div`
 `;
 const AVALON_STYLE = styled.div`
   display: flex;
-  flex-basis: 70%;
+  flex-basis: 100%;
   flex-direction: column;
   justify-content: flex-start;
   flex-wrap: wrap;
