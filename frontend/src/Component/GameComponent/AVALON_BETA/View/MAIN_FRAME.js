@@ -27,12 +27,14 @@ function MAIN_FRAME() {
     opacity: isFlipped ? 1 : 0,
     transform: `rotateY(${isFlipped ? 0 : 180}deg)`,
   });
+
   const callDispatch = () => {
     dispatch({
       type: SET_COMPONENT,
       component: MAIN_VOTE,
     });
   };
+
   const onClick = () => {
     gameState.usingPlayers.map((user) => {
       user.nickname === nickname && setRole(user.role);
@@ -40,6 +42,7 @@ function MAIN_FRAME() {
     setIsFlipped((prevState) => !prevState);
     setClick(!click);
   };
+
   return (
     <S.RowFrame>
       <S.GameFrame>

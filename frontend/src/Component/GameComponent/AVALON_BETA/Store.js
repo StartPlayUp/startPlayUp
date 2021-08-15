@@ -68,6 +68,7 @@ const Store = ({ children }) => {
   const { peerData } = useContext(PeerDataContext);
   const [gameState, dispatch] = useReducer(reducer, initialData);
   const { peers } = useContext(PeersContext);
+
   const selectedPlayers = () => {
     const temp = [];
     gameState.usingPlayers.map((user) => {
@@ -75,6 +76,7 @@ const Store = ({ children }) => {
     });
     return temp;
   };
+
   const buttonAnimation = (e) => {
     let time;
     const { classList } = e.target;
@@ -90,10 +92,12 @@ const Store = ({ children }) => {
 
     return Debounce();
   };
+
   console.log(gameState);
   const timeOver = () => {
     dispatch({ type: VOTE_CHECK, peers });
   };
+
   useEffect(() => {
     console.log(`expedition useEffect`);
     const gameData = { ...gameState };
