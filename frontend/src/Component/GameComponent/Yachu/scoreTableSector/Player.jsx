@@ -6,7 +6,7 @@ import ScoreTable from "./scoreTable";
 import Modal from "react-modal";
 
 const Div = styled.div`
-    display: relative;
+    position: relative;
     width:400px;
     height:700px;
 `
@@ -29,9 +29,9 @@ const Notification = keyframes`
 const LowerWord = styled.div`
     position:absolute;
     opacity: 0;
-    top:40%;
-    left:28%;
-    margin:auto;
+    top:35%;
+    left:155%;
+    width:800px;
     font-size: 5vw;
     z-index: 99;
     stroke: black;
@@ -48,16 +48,16 @@ const Player = () => {
     useEffect(() => {
         const turn = dataState.nowTurn
         const copyData = [...dataState.playerData]
-        let lower = Object.keys(copyData[turn].selectPoint).map((i) => {
-            return copyData[turn].selectPoint[i][0]
+        let lower = Object.keys(copyData[turn].selectPoint.lowerRanking).map((i) => {
+            return copyData[turn].selectPoint.lowerRanking[i][0]
         })
-        let getPoint = Object.keys(copyData[turn].selectPoint).map((i) => {
-            return copyData[turn].selectPoint[i][1]
+        let getPoint = Object.keys(copyData[turn].selectPoint.lowerRanking).map((i) => {
+            return copyData[turn].selectPoint.lowerRanking[i][1]
         })
-        let copyLower = lower.slice(6, 11);
-        copyLower.push(lower[12]);
-        let copyGet = getPoint.slice(6, 11);
-        copyGet.push(getPoint[12]);
+        let copyLower = lower.slice(0, 5);
+        copyLower.push(lower[6]);
+        let copyGet = getPoint.slice(0, 5);
+        copyGet.push(getPoint[6]);
         for (var i = 5; i >= 0; i--) {
             if (copyGet[i]) {
                 continue;
@@ -67,11 +67,11 @@ const Player = () => {
                 setLower(true);
                 break;
             }
-            else if (copyLower[i] === 0) {
-                setWord('')
-            }
         }
+        console.log("copyData", copyData)
+        console.log(wordState)
     }, [dataState.playerData])
+
     if (wordState) {
         setTimeout(() => {
             setWord('')
@@ -112,67 +112,3 @@ const Player = () => {
     )
 }
 export default Player;
-//
-/*
-<Table>
-                                <thead>
-                                <tr>
-                                    <th>점수표</th>
-                                    {Object.keys(playerData).map((i, index) => (<th keys={index}>{playerData[i].nickname}</th>))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        {Object.keys(playerData[0].selectPoint).map((j, dex) => (
-                                            <tr key={dex}>
-                                                {dex === 5 ? <><tr><td>{j}</td></tr><tr><td>bonus</td></tr></> : <>{j}</>}
-                                            </tr>
-                                        ))}
-                                        <td>result</td>
-                                    </td>
-                                    {Object.keys(playerData).map((i, index) => (
-                                        <td key={index}>
-                                            {Object.keys(playerData[i].selectPoint).map((j, dex) => (
-                                                <tr key={dex}>
-                                                    {nowTurn == i ?
-                                                        (<>
-                                                            {dex === 5 ?
-                                                                (<>
-                                                                    <tr><td><button
-                                                                        disabled={playerData[i].selectPoint[j][1]}
-                                                                        name={j}
-                                                                        onClick={select}
-                                                                        value={playerData[i].selectPoint[j][0]}
-                                                                    >{playerData[i].selectPoint[j][0]}</button></td></tr>
-                                                                    <tr><td>{playerData[i].bonus[0]}</td></tr>
-                                                                </>
-                                                                )
-                                                                :
-                                                                (<td>
-                                                                    <button
-                                                                        disabled={playerData[i].selectPoint[j][1]}
-                                                                        name={j}
-                                                                        onClick={select}
-                                                                        value={playerData[i].selectPoint[j][0]}
-                                                                    >{playerData[i].selectPoint[j][0]}</button></td>)}</>)
-                                                        :
-                                                        (<>{dex === 5 ?
-                                                            (<><tr><td>{playerData[i].selectPoint[j][0]}</td></tr>
-                                                                <tr><td>{playerData[i].bonus[0]}</td></tr>
-                                                            </>
-                                                            )
-                                                            :
-                                                            (<>
-                                                                {playerData[i].selectPoint[j][0]}</>)}</>)}
-                                                </tr>
-                                            ))}
-                                            <tr>
-                                                <td>{playerData[i].result}</td>
-                                            </tr>
-                                        </td>
-                                    ))}
-                                </tr>
-                            </tbody>
-                    </Table>
-*/

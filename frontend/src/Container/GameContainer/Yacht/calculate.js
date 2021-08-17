@@ -5,14 +5,16 @@ function Calculate(diceArray, counter) {
         three: 0,
         four: 0,
         five: 0,
-        six: 0,
-        threeOfaKind: 0,
+        six: 0
+    }
+    let lowerPoint = {
+      threeOfaKind: 0,
         fourOfaKind: 0,
         fullHouse: 0,
         smallStraight: 0,
         largeStraight: 0,
         choice: 0,
-        yahtzee: 0
+        yahtzee: 0  
     };
     for (var n = 0; n < 5; n++) {
         if (diceArray[n] === 1) {
@@ -44,7 +46,7 @@ function Calculate(diceArray, counter) {
             largeOne = 0;
         }
         if (counter[i] >= 3) {
-            upperPoint["threeOfaKind"] = diceArray.reduce(function add(
+            lowerPoint["threeOfaKind"] = diceArray.reduce(function add(
                 sum,
                 currValue
             ) {
@@ -53,7 +55,7 @@ function Calculate(diceArray, counter) {
                 0);
         }
         if (counter[i] >= 4) {
-            upperPoint["fourOfaKind"] = diceArray.reduce(function add(
+            lowerPoint["fourOfaKind"] = diceArray.reduce(function add(
                 sum,
                 currValue
             ) {
@@ -62,25 +64,25 @@ function Calculate(diceArray, counter) {
                 0);
         }
         if (counter[i] === 5) {
-            upperPoint["yahtzee"] = 50;
+            lowerPoint["yahtzee"] = 50;
         }
     }
     if (counter.includes(3) && counter.includes(2)) {
-        upperPoint["fullHouse"] = diceArray.reduce(function add(sum, currValue) {
+        lowerPoint["fullHouse"] = diceArray.reduce(function add(sum, currValue) {
             return sum + currValue;
         }, 0);
     }
     if (smallOne >= 4) {
-        upperPoint["smallStraight"] = 15;
+        lowerPoint["smallStraight"] = 15;
     }
     if (largeOne === 5) {
-        upperPoint["largeStraight"] = 30;
+        lowerPoint["largeStraight"] = 30;
     }
-    upperPoint["choice"] = diceArray.reduce(function add(sum, currValue) {
+    lowerPoint["choice"] = diceArray.reduce(function add(sum, currValue) {
         return sum + currValue;
     }, 0);
 
-    return upperPoint;
+    return { upperPoint, lowerPoint};
 }
 //module.exports=Calculate;
 export default Calculate;

@@ -3,6 +3,7 @@ import Calculate from "Container/GameContainer/Yacht/calculate";
 import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YACHT } from 'Constants/peerDataTypes.js';
+import { map } from "lodash";
 
 const ROLLDICE = "RollDice";
 const SELECT = "SELECT";
@@ -25,32 +26,15 @@ const initialState={
     playerData: [{
         nickname,
         selectPoint: {
-            ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
-            two: [0, false],
-            three: [0, false],
-            four: [0, false],
-            five: [0, false],
-            six: [0, false],
-            threeOfaKind: [0, false],
-            fourOfaKind: [0, false],
-            fullHouse: [0, false],
-            smallStraight: [0, false],
-            largeStraight: [0, false],
-            choice: [0, false],
-            yahtzee: [0, false]
-            },
-        result: 0,
-        bonus: [0, false]
-        },
-        {
-            nickname: "",
-            selectPoint: {
+            highRanking:{
                 ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
                 two: [0, false],
                 three: [0, false],
                 four: [0, false],
                 five: [0, false],
-                six: [0, false],
+                six: [0, false]
+            },
+            lowerRanking: {
                 threeOfaKind: [0, false],
                 fourOfaKind: [0, false],
                 fullHouse: [0, false],
@@ -58,7 +42,32 @@ const initialState={
                 largeStraight: [0, false],
                 choice: [0, false],
                 yahtzee: [0, false]
+            }
+        },
+        result: 0,
+        bonus: [0, false]
+        },
+        {
+            nickname: "",
+            selectPoint: {
+                highRanking:{
+                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                    two: [0, false],
+                    three: [0, false],
+                    four: [0, false],
+                    five: [0, false],
+                    six: [0, false]
                 },
+                lowerRanking: {
+                    threeOfaKind: [0, false],
+                    fourOfaKind: [0, false],
+                    fullHouse: [0, false],
+                    smallStraight: [0, false],
+                    largeStraight: [0, false],
+                    choice: [0, false],
+                    yahtzee: [0, false]
+                }
+        },
             result: 0,
             bonus: [0, false]
         }]
@@ -134,18 +143,25 @@ const YachuProvider=({children})=>{
     function RollDice() {
         let diceArray = [0, 0, 0, 0, 0];
         let counter = [...state.count]
-        let pointCalculate = []
+        //let pointCalculate = []
         diceArray = Roll(state);
         let test = diceArray.filter((i) => { if (typeof (i) === "number" && (i > 0 && i < 7)) { return i } })//주사위 검사 1~6까지의 숫자만 있는지 확인
         if (test.length === 5 && diceArray.length === 5) {//5개를 굴리므로 5길이가 5인지 검사함
             counter = Count(diceArray);
             let test = counter.map((j) => { if (typeof (j) === "number" && (j >= 0 && j < 6)) { return j } })//주사위 개수의 검사 0개부터 5개까지만 있는지 검사
             if (test.length === 6 && counter.length === 6) {//1~6까지이므로 길이가 6인지 검사함
-                pointCalculate = Calculate(diceArray, counter);
+                //pointCalculate = Calculate(diceArray, counter);
+                const { upperPoint, lowerPoint} = Calculate(diceArray, counter);
+                console.log(upperPoint, lowerPoint);
                 const player = [...state.playerData]
-                Object.keys(player[nowTurn].selectPoint).map((i) => {
-                    if (!player[nowTurn].selectPoint[i][1]) {
-                        player[nowTurn].selectPoint[i][0] = pointCalculate[i];
+                Object.keys(upperPoint).map((i) => {
+                    if (!player[nowTurn].selectPoint.highRanking[i][1]) {
+                        player[nowTurn].selectPoint.highRanking[i][0] = upperPoint[i];
+                    }
+                })
+                Object.keys(lowerPoint).map((i) => {
+                    if (!player[nowTurn].selectPoint.lowerRanking[i][1]) {
+                        player[nowTurn].selectPoint.lowerRanking[i][0] = lowerPoint[i];
                     }
                 })
                 const verification = ROLLDICE;
@@ -171,34 +187,46 @@ const YachuProvider=({children})=>{
     }
     function selectData(name,value) {
         const player = [...state.playerData]
-        player[nowTurn].selectPoint[name] = [value, true];
+        const highRankings = ['ace', 'two', 'three', 'four', 'five', 'six'];
+        if (highRankings.includes(name)) {
+            player[nowTurn].selectPoint.highRanking[name] = [value, true];
+        }
+        else {
+            player[nowTurn].selectPoint.lowerRanking[name] = [value, true];
+        }
         player[nowTurn].result += parseInt(value, 10);
         //선택 후 값 리셋하기
-        Object.keys(player[nowTurn].selectPoint).map((i) => {
-            if (!player[nowTurn].selectPoint[i][1]) {
-                player[nowTurn].selectPoint[i][0] = 0;
+        Object.keys(player[nowTurn].selectPoint.highRanking).map((i) => {
+            if (!player[nowTurn].selectPoint.highRanking[i][1]) {
+                player[nowTurn].selectPoint.highRanking[i][0] = 0;
+            }
+        })
+        Object.keys(player[nowTurn].selectPoint.lowerRanking).map((i) => {
+            if (!player[nowTurn].selectPoint.lowerRanking[i][1]) {
+                player[nowTurn].selectPoint.lowerRanking[i][0] = 0;
             }
         })
         //result 구하기
         dispatch({ type: ROLLRESET });
         if (!player[nowTurn].bonus[1]) {
             //보나리 구하기
-            let bonusTemp = Object.keys(player[nowTurn].selectPoint).map((i) => {
-                return player[nowTurn].selectPoint[i][0];
+            let bonusTemp = Object.keys(player[nowTurn].selectPoint.highRanking).map((i) => {
+                return player[nowTurn].selectPoint.highRanking[i][0];
             });
             //1~6까지 쪼개기
-            var bonusTest = bonusTemp.slice(0, 6).reduce((total, num) => {
+            var bonusTest = bonusTemp.reduce((total, num) => {
                 return parseInt(total, 10) + parseInt(num, 10);
             });
+            /*
             if (bonusTest < 63) {
-                let complete = Object.keys(player[nowTurn].selectPoint).map((i) => {
-                    return player[nowTurn].selectPoint[i][1];
+                let complete = Object.keys(player[nowTurn].selectPoint.highRanking).map((i) => {
+                    return player[nowTurn].selectPoint.highRanking[i][1];
                 });
-                let completeTest = !complete.slice(0, 6).includes(false);
+                let completeTest = !complete.includes(false);
                 console.log("completeTest", completeTest);
                 player[nowTurn].bonus = [bonusTest, completeTest];
-            }
-            else if (bonusTest >= 63) {
+            }*/
+            if (bonusTest >= 63) {
                 player[nowTurn].bonus = [bonusTest, true];
                 player[nowTurn].result += 35;
             }
@@ -221,16 +249,19 @@ const YachuProvider=({children})=>{
             dispatch({ type: SELECT, player })
         }
     }
-    function gameOver(){
+    function gameOver() {
         const player = [...state.playerData]
         //선택 후 값 리셋하기
-        let complete =Object.keys(player[1].selectPoint).map((i) => {
-            return (player[1].selectPoint[i][1])
+        let completeHighRanking = Object.keys(player[1].selectPoint.highRanking).map((i) => {
+            return (player[1].selectPoint.highRanking[i][1])
+        })
+        let completeLowerRanking = Object.keys(player[1].selectPoint.lowerRanking).map((i) => {
+            return (player[1].selectPoint.lowerRanking[i][1])
         })
         //만약 2P가 먹지 못한 점수가 있는지 확인
-        let completeTest = !complete.includes(false);
-        console.log("끝났는가?", completeTest);
-        if (completeTest) {
+        let completeTestHighRanking = !completeHighRanking.includes(false);
+        let completeTestLowerRanking = !completeLowerRanking.includes(false);
+        if (completeTestHighRanking&&completeTestLowerRanking) {
             setGame(true);
             const verification="ENDGAME"
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification,endGame:true } })
@@ -244,19 +275,23 @@ const YachuProvider=({children})=>{
         playerData[1]=({
             nickname: peers[0].nickname,
             selectPoint: {
-                ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
-                two: [0, false],
-                three: [0, false],
-                four: [0, false],
-                five: [0, false],
-                six: [0, false],
-                threeOfaKind: [0, false],
-                fourOfaKind: [0, false],
-                fullHouse: [0, false],
-                smallStraight: [0, false],
-                largeStraight: [0, false],
-                choice: [0, false],
-                yahtzee: [0, false]
+                highRanking:{
+                    ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                    two: [0, false],
+                    three: [0, false],
+                    four: [0, false],
+                    five: [0, false],
+                    six: [0, false]
+                },
+                lowerRanking: {
+                    threeOfaKind: [0, false],
+                    fourOfaKind: [0, false],
+                    fullHouse: [0, false],
+                    smallStraight: [0, false],
+                    largeStraight: [0, false],
+                    choice: [0, false],
+                    yahtzee: [0, false]
+                }
             },
             result: 0,
             bonus: [0, false]
@@ -270,26 +305,54 @@ const YachuProvider=({children})=>{
     }
     function timeOver(){
         if (halt === true) {
-            let nameList = ["ace", "two", "three", "four", "five", "six", "threeOfaKind", "fourOfaKind", "fullHouse", "smallStraight", "largeStraight", "choice", "yahtzee"]
+            let upperNameList = ["ace", "two", "three", "four", "five", "six"]
+            let lowerNameList = ["threeOfaKind", "fourOfaKind", "fullHouse", "smallStraight", "largeStraight", "choice", "yahtzee"]
             const dice = [...state.dice]
+            let completeHighRanking = Object.keys(state.playerData[nowTurn].selectPoint.highRanking).map((i) => {
+                return (state.playerData[nowTurn].selectPoint.highRanking[i][1])
+            })
+            let completeLowerRanking = Object.keys(state.playerData[nowTurn].selectPoint.lowerRanking).map((i) => {
+                return (state.playerData[nowTurn].selectPoint.lowerRanking[i][1])
+            })
+            let completeTestHighRanking = completeHighRanking.includes(false);
+            let completeTestLowerRanking = completeLowerRanking.includes(false);
             if (dice.some((i) => i === 0) ) {
-                RollDice()            
-                for (var i = 0; i < nameList.length; i++) {
-                    if (!state.playerData[nowTurn].selectPoint[nameList[i]][1]) {
-                        selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
+                RollDice()
+                if (completeTestHighRanking) {
+                    for (var i = 0; i < upperNameList; i++) {
+                        if (!state.playerData[nowTurn].selectPoint.highRanking[upperNameList[i]][1]) {
+                            selectData(nameList[i], state.playerData[nowTurn].selectPoint[upperNameList[i]][0])
                         break;
+                        }
+                    }
+                }
+                else if (completeTestLowerRanking) {
+                    for (var i = 0; i < lowerNameList; i++) {
+                        if (!state.playerData[nowTurn].selectPoint.highRanking[lowerNameList[i]][1]) {
+                            selectData(nameList[i], state.playerData[nowTurn].selectPoint[lowerNameList[i]][0])
+                        break;
+                        }
                     }
                 }
             }else{
-                for (var i = 0; i < nameList.length; i++) {
-                    if (!state.playerData[nowTurn].selectPoint[nameList[i]][1]) {
-                        selectData(nameList[i], state.playerData[nowTurn].selectPoint[nameList[i]][0])
+                if (completeTestHighRanking) {
+                    for (var i = 0; i < upperNameList; i++) {
+                        if (!state.playerData[nowTurn].selectPoint.highRanking[upperNameList[i]][1]) {
+                            selectData(nameList[i], state.playerData[nowTurn].selectPoint[upperNameList[i]][0])
                         break;
+                        }
+                    }
+                }
+                else if (completeTestLowerRanking) {
+                    for (var i = 0; i < lowerNameList; i++) {
+                        if (!state.playerData[nowTurn].selectPoint.highRanking[lowerNameList[i]][1]) {
+                            selectData(nameList[i], state.playerData[nowTurn].selectPoint[lowerNameList[i]][0])
+                        break;
+                        }
                     }
                 }
             }
         }
-        else { }
     }
     useEffect(() => {
         dispatch({ type: UPDATE_PEERS, peers })

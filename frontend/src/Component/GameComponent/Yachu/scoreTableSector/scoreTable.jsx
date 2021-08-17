@@ -54,12 +54,6 @@ const Button = styled.button`
     }
 `
 function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCount }) {
-    const [p1high, setP1high] = useState([0, 0, 0, 0, 0, 0]);
-    const [p2high, setP2high] = useState([0, 0, 0, 0, 0, 0]);
-    const [p1low, setP1low] = useState([0, 0, 0, 0, 0, 0]);
-    const [p2low, setP2low] = useState([0, 0, 0, 0, 0, 0]);
-    const [p1Bonus, setP1Bonus] = useState('0');
-    const [p2Bonus, setP2Bonus] = useState('0');
     const highRankings = ['ace', 'two', 'three', 'four', 'five', 'six'];
     const lowerRankings = ['threeOfaKind', 'fourOfaKind', 'fullHouse', 'smallStraight', 'largeStraight', 'choice', 'yahtzee']
 
@@ -71,26 +65,6 @@ function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCou
             alert("니턴 아님")
         }
     }
-    useEffect(() => {
-        const copyData = [...playerData];
-        console.log(copyData)
-        let p1selectData = Object.keys(copyData[0].selectPoint).map((i) => {
-            return copyData[0].selectPoint[i][0]
-        })
-        let p2selectData = Object.keys(copyData[1].selectPoint).map((i) => {
-            return copyData[1].selectPoint[i][0]
-        })
-        if (copyData[0].bonus[0] >= 63 && copyData[0].bonus[1]) {
-            setP1Bonus('+35점 획득');
-        }
-        if (copyData[1].bonus[0] >= 63 && copyData[1].bonus[1]) {
-            setP2Bonus('+35점 획득');
-        }
-        setP1high(p1selectData.slice(0, 6));
-        setP1low(p1selectData.slice(6, 13));
-        setP2high(p2selectData.slice(0, 6));
-        setP2low(p2selectData.slice(6, 13));
-    }, [playerData])
     return (
         <Table check={lowerState}>
             <thead>
@@ -106,17 +80,17 @@ function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCou
                             <tr keys={index}>
                                 <td>{highRankings[i]}</td>
                                 <td><Button
-                                    disabled={playerData[0].selectPoint[highRankings[i]][1]}
+                                    disabled={playerData[0].selectPoint.highRanking[highRankings[i]][1]}
                                     name={highRankings[i]}
                                     onClick={select}
-                                    value={playerData[0].selectPoint[highRankings[i]][0]}
-                                >{p1high[i]}</Button></td>
-                                <td>{p2high[i]}</td>
+                                    value={playerData[0].selectPoint.highRanking[highRankings[i]][0]}
+                                >{playerData[0].selectPoint.highRanking[highRankings[i]][0]}</Button></td>
+                                <td>{playerData[1].selectPoint.highRanking[highRankings[i]][0]}</td>
                             </tr>)}
                         <tr>
                             <td>Bonus</td>
-                            <td>{p1Bonus}</td>
-                            <td>{p2Bonus}</td>
+                            <td>{playerData[0].bonus[1] ? "+35" : "0"}</td>
+                            <td>{playerData[1].bonus[1] ? "+35" : "0"}</td>
                         </tr>
                         <tr>
                             <td>Sum</td>
@@ -127,12 +101,12 @@ function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCou
                             <tr keys={index}>
                                 <td>{lowerRankings[i]}</td>
                                 <td><Button
-                                    disabled={playerData[0].selectPoint[lowerRankings[i]][1]}
+                                    disabled={playerData[0].selectPoint.lowerRanking[lowerRankings[i]][1]}
                                     name={lowerRankings[i]}
                                     onClick={select}
-                                    value={playerData[0].selectPoint[lowerRankings[i]][0]}
-                                >{p1low[i]}</Button></td>
-                                <td>{p2low[i]}</td>
+                                    value={playerData[0].selectPoint.lowerRanking[lowerRankings[i]][0]}
+                                >{playerData[0].selectPoint.lowerRanking[lowerRankings[i]][0]}</Button></td>
+                                <td>{playerData[1].selectPoint.lowerRanking[lowerRankings[i]][0]}</td>
                             </tr>)}
                         <tr>
                             <td>Result</td>
@@ -144,18 +118,18 @@ function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCou
                         {Object.keys(highRankings).map((i, index) =>
                             <tr keys={index}>
                                 <td>{highRankings[i]}</td>
-                                <td>{p1high[i]}</td>
+                                <td>{playerData[0].selectPoint.highRanking[highRankings[i]][0]}</td>
                                 <td><Button
-                                    disabled={playerData[1].selectPoint[highRankings[i]][1]}
+                                    disabled={playerData[1].selectPoint.highRanking[highRankings[i]][1]}
                                     name={highRankings[i]}
                                     onClick={select}
-                                    value={playerData[1].selectPoint[highRankings[i]][0]}
-                                >{p2high[i]}</Button></td>
+                                    value={playerData[1].selectPoint.highRanking[highRankings[i]][0]}
+                                >{playerData[1].selectPoint.highRanking[highRankings[i]][0]}</Button></td>
                             </tr>)}
                         <tr>
                             <td>Bonus</td>
-                            <td>{p1Bonus}</td>
-                            <td>{p2Bonus}</td>
+                            <td>{playerData[0].bonus[1] ? "+35" : "0"}</td>
+                            <td>{playerData[1].bonus[1] ? "+35" : "0"}</td>
                         </tr>
                         <tr>
                             <td>Sum</td>
@@ -165,13 +139,13 @@ function ScoreTable({ playerData, nowTurn, lowerState, halt, selectData, rollCou
                         {Object.keys(lowerRankings).map((i, index) =>
                             <tr keys={index}>
                                 <td>{lowerRankings[i]}</td>
-                                <td>{p1low[i]}</td>
+                                <td>{playerData[0].selectPoint.lowerRanking[lowerRankings[i]][0]}</td>
                                 <td><Button
-                                    disabled={playerData[1].selectPoint[lowerRankings[i]][1]}
+                                    disabled={playerData[1].selectPoint.lowerRanking[lowerRankings[i]][1]}
                                     name={lowerRankings[i]}
                                     onClick={select}
-                                    value={playerData[1].selectPoint[lowerRankings[i]][0]}
-                                >{p2low[i]}</Button></td>
+                                    value={playerData[1].selectPoint.lowerRanking[lowerRankings[i]][0]}
+                                >{playerData[1].selectPoint.lowerRanking[lowerRankings[i]][0]}</Button></td>
                             </tr>)}
                         <tr>
                             <td>Result</td>
