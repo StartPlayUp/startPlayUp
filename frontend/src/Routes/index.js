@@ -14,6 +14,7 @@ import { PeerStore } from "./peerStore";
 import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
 import messageButtonImage from "images/blue-message.png";
 import View from "../Component/GameComponent/AVALON_BETA/View";
+import { createGlobalStyle } from "styled-components";
 
 const GamePage = styled.div`
   display: flex;
@@ -37,7 +38,23 @@ const AVALON_STYLE = styled.div`
   flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
-  background-color: #ffffff;
+  background-color: inherit;
+`;
+const AVALON_Global = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #e0e3da;
+    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png');
+  }
+
+  div {
+    width:auto;
+    height:auto;
+    color: black;
+  }
 `;
 const AVALON_GAME = styled.div`
   display: flex;
@@ -196,6 +213,7 @@ const app = () => {
           path="/AVALON"
           render={() => (
             <GamePage>
+              <AVALON_Global />
               <PeerStore>
                 <AVALON_STYLE>
                   <AVALON_GAME>
