@@ -21,7 +21,7 @@ const Messages = styled.div`
   flex-direction: column;
   align-self:${props => props.who !== 'me' ? "flex-start" : "flex-end"};
   color:${props => props.who === 'me' && "white"};
-  margin:10px 40px 10px 40px;
+  margin:10px 10px 10px 10px;
   ${(props) =>
     props.who === "another" &&
     css`

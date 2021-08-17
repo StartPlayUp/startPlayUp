@@ -138,7 +138,7 @@ const app = () => {
             <GamePage>
               <PeerStore>
                 <Yut />
-                {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
+                {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} width={500} />}
                 <CHAT_SHOW_DIV_STYLE>
                   <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                 </CHAT_SHOW_DIV_STYLE>
