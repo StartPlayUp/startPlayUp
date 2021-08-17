@@ -1,5 +1,9 @@
 import React, { useEffect, useReducer, useContext } from "react";
-import reducer, { GAME_CHECK, VOTE_CHECK } from "./MVC/AVALON_Reducer";
+import reducer, {
+  GAME_CHECK,
+  SET_COMPONENT,
+  VOTE_CHECK,
+} from "./MVC/AVALON_Reducer";
 import { PeerDataContext, PeersContext } from "../../../Routes/peerStore";
 import { AVALON, GAME } from "../../../Constants/peerDataTypes";
 import { GET_DATA_FROM_PEER } from "../../../Constants/actionTypes";
@@ -13,6 +17,8 @@ export const EXPEDITION_FRAME = "EXPEDITION_FRAME";
 export const EXPEDITION_RESULT = "EXPEDITION_RESULT";
 export const ASSASSIN_FRAME = "ASSASSIN_FRAME";
 export const END_GAME_FRAME = "END_GAME_FRAME";
+export const WAITING_FRAME = "WAITING_FRAME";
+
 export const angels = ["Merlin", "Percival", "Citizen"]; // 천사팀
 export const evils = ["Morgana", "Assassin", "Heresy", "Modred"]; //악마팀
 export const merlinSight = ["Morgana", "Assassin", "Heresy"]; // 멀린이 볼 수 있는 직업군
@@ -27,6 +33,7 @@ export const needPlayers = {
   _8to10P: [3, 4, 4, 5, 5],
 };
 export const voteStageColor = ["white", "white", "white", "white", "red"];
+export const testRoles = ["Assassin", "Merlin"];
 export const mustHaveRoles = [
   "Merlin",
   "Percival",
@@ -68,7 +75,7 @@ const Store = ({ children }) => {
   const { peerData } = useContext(PeerDataContext);
   const [gameState, dispatch] = useReducer(reducer, initialData);
   const { peers } = useContext(PeersContext);
-
+  const nickname = localStorage.getItem("nickname");
   const selectedPlayers = () => {
     const temp = [];
     gameState.usingPlayers.map((user) => {
@@ -108,9 +115,13 @@ const Store = ({ children }) => {
       (element) => "x" === element
     ).length;
     if (angelCount === 3) {
-      gameData.component = ASSASSIN_FRAME;
-      gameState.usingPlayers.filter((element) => "Assassin" === element.role) &&
-        dispatch({ type: GAME_CHECK, gameData });
+      const playerRole = gameState.usingPlayers.find(
+        (user) => user.nickname === nickname
+      ).role;
+      dispatch({
+        type: SET_COMPONENT,
+        component: playerRole === "Assassin" ? ASSASSIN_FRAME : WAITING_FRAME,
+      });
     } else {
       if (evilCount === 3) {
         gameData.winner = "EVILS_WIN";

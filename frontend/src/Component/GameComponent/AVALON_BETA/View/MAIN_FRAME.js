@@ -1,10 +1,14 @@
 import React, { useContext, useState } from "react";
 import { animated, useSpring, config } from "react-spring";
-import { GameContext, MAIN_VOTE, voteStageColor } from "../Store";
+import { FRAME_MAIN, GameContext, MAIN_VOTE, voteStageColor } from "../Store";
 import * as S from "../Styled";
 import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
-import { SET_COMPONENT, VOTE_CHECK } from "../MVC/AVALON_Reducer";
+import {
+  SET_COMPONENT,
+  VOTE_CHECK,
+  WAITING_FRAME,
+} from "../MVC/AVALON_Reducer";
 import CoinFlip from "../animation/Coin_Flip";
 import PlayerRoles from "../animation/PlayerRoles";
 import AVALON_TIMER from "./Timer";
@@ -28,14 +32,17 @@ function MAIN_FRAME() {
     transform: `rotateY(${isFlipped ? 0 : 180}deg)`,
   });
 
-  const callDispatch = () => {
+  const representButtonOnClick = () => {
     dispatch({
       type: SET_COMPONENT,
-      component: MAIN_VOTE,
+      component:
+        gameState.usingPlayers[gameState.represent].nickname === nickname
+          ? MAIN_VOTE
+          : WAITING_FRAME,
     });
   };
 
-  const onClick = () => {
+  const UserInterFaceOnClick = () => {
     gameState.usingPlayers.map((user) => {
       user.nickname === nickname && setRole(user.role);
     });
@@ -46,6 +53,11 @@ function MAIN_FRAME() {
   return (
     <S.RowFrame>
       <S.GameFrame>
+        <AVALON_TIMER
+          minutes={0}
+          seconds={3}
+          callDispatch={representButtonOnClick}
+        />
         <S.StageFrame>
           {gameState.takeStage.map((stage, index) => (
             <S.Stage key={index}>
@@ -98,14 +110,7 @@ function MAIN_FRAME() {
                 {gameState.usingPlayers[gameState.represent].nickname ===
                   nickname && (
                   <div>
-                    <button
-                      onClick={() =>
-                        dispatch({
-                          type: SET_COMPONENT,
-                          component: MAIN_VOTE,
-                        })
-                      }
-                    >
+                    <button onClick={representButtonOnClick}>
                       원정 인원 정하기
                     </button>
                   </div>
@@ -119,7 +124,7 @@ function MAIN_FRAME() {
           </BackInformation>
         )}
         <S.ButtonAnimation />
-        <S.Button onClick={onClick}>플레이어 정보</S.Button>
+        <S.Button onClick={UserInterFaceOnClick}>플레이어 정보</S.Button>
       </S.PlayerFrame>
     </S.RowFrame>
   );

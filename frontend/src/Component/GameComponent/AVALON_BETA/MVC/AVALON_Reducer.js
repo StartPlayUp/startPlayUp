@@ -10,6 +10,7 @@ import {
   VOTE_RESULT,
   MINIMUM_PLAYER_NUMBER,
   MAXIMUM_PLAYER_NUMBER,
+  testRoles,
 } from "../Store";
 import { sendDataToPeers } from "../../../../Common/peerModule/sendToPeers";
 import { AVALON, GAME } from "../../../../Constants/peerDataTypes";
@@ -26,6 +27,7 @@ export const VOTE_ONCLICK = "VOTE_ONCLICK";
 export const VOTE_RESULT_CHECK = "VOTE_RESULT_CHECK";
 export const EXPEDITION_CLICK = "EXPEDITION_CLICK";
 export const ASSASSIN_KILL = "ASSASSIN_KILL";
+export const WAITING_FRAME = "WAITING_FRAME";
 
 const reducer = (state, { type, ...action }) => {
   const nickname = localStorage.getItem("nickname");
@@ -44,12 +46,11 @@ const reducer = (state, { type, ...action }) => {
       return { ...state, ...action.data };
     }
     case SET_COMPONENT: {
-      const gameData = { ...state };
       sendDataToPeers(GAME, {
         game: AVALON,
         nickname,
         peers: action.peers,
-        data: gameData,
+        data: action.gameData,
       });
       return { ...state, component: action.component };
     }
@@ -102,7 +103,7 @@ const reducer = (state, { type, ...action }) => {
           ...mustHaveRoles,
           ...expandRoles.slice(0, gameData.usingPlayers.length - 5),
         ];
-        const roles = shuffle(temp);
+        const roles = playersNumber === 2 ? testRoles : shuffle(temp);
         gameData.usingPlayers.map((user, index) => {
           user.role = roles[index];
         });

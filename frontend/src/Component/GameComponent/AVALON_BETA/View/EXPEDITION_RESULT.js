@@ -32,7 +32,7 @@ function EXPEDITION_RESULT() {
           dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
         }
         minutes={0}
-        seconds={5}
+        seconds={3}
       />
       <S.MAIN_VOTE_HEADER>{`${expeditionVoteResult()}`}</S.MAIN_VOTE_HEADER>
       <S.RowFrame>
@@ -43,7 +43,7 @@ function EXPEDITION_RESULT() {
           expeditionStage === "o" ? <S.SuccessImage /> : <S.FailImage />
         )}
       </S.RowFrame>
-      <S.RowFrame>
+      {/* <S.RowFrame>
         <button
           onClick={() =>
             dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
@@ -51,7 +51,7 @@ function EXPEDITION_RESULT() {
         >
           다음
         </button>
-      </S.RowFrame>
+      </S.RowFrame> */}
     </S.ColumnFrame>
   );
 }

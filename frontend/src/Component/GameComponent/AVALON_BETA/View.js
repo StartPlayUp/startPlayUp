@@ -21,6 +21,8 @@ import EXPEDITION from "./View/EXPEDITION_FRAME";
 import RESULT_EXPEDITION from "./View/EXPEDITION_RESULT";
 import ASSASSIN from "./View/ASSASSIN_FRAME";
 import END_GAME from "./View/END_GAME_FRAME";
+import { WAITING_FRAME } from "./MVC/AVALON_Reducer";
+import WaitingView from "./animation/WaitingView";
 
 function View() {
   const { gameState } = useContext(GameContext);
@@ -36,6 +38,7 @@ function View() {
       {gameState.component === EXPEDITION_RESULT && <RESULT_EXPEDITION />}
       {gameState.component === ASSASSIN_FRAME && <ASSASSIN />}
       {gameState.component === END_GAME_FRAME && <END_GAME />}
+      {gameState.component === WAITING_FRAME && <WaitingView />}
     </>
   );
 }

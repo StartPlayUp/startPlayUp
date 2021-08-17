@@ -40,7 +40,7 @@ function MAIN_VOTE() {
           gameState.takeStage[gameState.expeditionStage] +
           "명"}
       </S.MAIN_VOTE_HEADER>
-      <AVALON_TIMER minutes={0} seconds={5} callDispatch={timeOver} />
+      <AVALON_TIMER minutes={0} seconds={3} callDispatch={timeOver} />
       <S.SelectPlayer>
         {gameState.usingPlayers.map((user, index) => (
           <div>
