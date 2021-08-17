@@ -66,8 +66,8 @@ const CHAT_SHOW_DIV_STYLE = styled.div`
 `;
 
 const FLEX_DIV = styled.div`
-    display:flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const TemporaryMain = () => {
@@ -89,65 +89,6 @@ const app = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [chatShow, setChatShow] = useState(true);
 
-<<<<<<< HEAD
-    const chatOnClickHandler = () => {
-        setChatShow(prev => !prev);
-    }
-    const [chatList, setChatList] = useState([]);
-
-    return (
-        <BrowserRouter>
-            {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
-            <Route path="/" component={GlobalContainer} />
-            <Route exact path="/" component={LoginPageContainer} />
-            {isAuthenticated && <Route exact path="/main" component={TemporaryMain} />}
-            {isAuthenticated && <Route exact path="/RockPaperScissors" render={() => <GamePage>
-                <PeerStore>
-                    <RockPaperScissors />
-                    <ChatComponent />
-                </PeerStore>
-            </GamePage>} />}
-            {isAuthenticated && <Route exact path="/MineSearch" render={() => <GamePage>
-                <PeerStore>
-                    <MineSearch />
-                </PeerStore>
-            </GamePage>} />}
-            {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
-                <PeerStore>
-                    <FLEX_DIV>
-                        <Yut />
-                        {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
-                    </FLEX_DIV>
-                    <CHAT_SHOW_DIV_STYLE>
-                        <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                    </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-            </GamePage>} />}
-            {isAuthenticated && <Route exact path="/Yacht" render={() => <GamePage>
-                <PeerStore>
-                    <StyleDiv>
-                        <Yacht />
-                    </StyleDiv>
-                    {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
-                    <CHAT_SHOW_DIV_STYLE>
-                        <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                    </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-            </GamePage>} />}
-            {isAuthenticated && <Route exact path="/AVALON" render={() => <GamePage>
-                <PeerStore>
-                    <AVALON_STYLE>
-                        <AVALON_BETA />
-                    </AVALON_STYLE>
-                    <CHAT_STYLE>
-                        <ChatComponent />
-                    </CHAT_STYLE>
-                </PeerStore>
-            </GamePage>} />}
-        </BrowserRouter>
-    );
-}
-=======
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
@@ -244,6 +185,5 @@ const app = () => {
     </BrowserRouter>
   );
 };
->>>>>>> 463ae04580c06c5214abed3cda6502eb0e2dc32e
 
 export default app;
