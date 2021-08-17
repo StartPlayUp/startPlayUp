@@ -76,19 +76,15 @@ const YutPlayerSection = () => {
     const nickname = localStorage.getItem('nickname');
     const { setTime } = useContext(TimerContext);
     const { setTextModalHandler } = useContext(TextModal);
-
-
     const { yutData, playerData, } = state;
 
-    const [yutResultList, setYutresultList] = useState([0, 0, 0, 0, 0, 0])
-
-    useEffect(() => {
+    const yutResultList = () => {
         const yutList = [0, 0, 0, 0, 0, 0];
         yutData.forEach((i) => {
             yutList[i] += 1;
         })
-        setYutresultList(yutList);
-    }, [yutData])
+        return yutList
+    }
 
     const startGameHandler = () => {
         if (isFunction(dispatch)
@@ -115,7 +111,7 @@ const YutPlayerSection = () => {
         <StylePlayerWithYutData>
             <button onClick={startGameHandler}>게임 시작</button>
             <StyleDiv>
-                {yutResultList.map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_MATCH_KOREA_YUT_TYPE[index]} : {i}</div>))}
+                {yutResultList().map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_MATCH_KOREA_YUT_TYPE[index]} : {i}</div>))}
             </StyleDiv>
             {playerData.length > 0 && <PlayerSection>
                 {playerData.map((i, index) => <Player key={index} player={i}>
