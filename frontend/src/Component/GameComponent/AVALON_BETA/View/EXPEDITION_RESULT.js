@@ -27,8 +27,13 @@ function EXPEDITION_RESULT() {
   };
   return (
     <S.ColumnFrame>
-      <Timer_test component={FRAME_MAIN} minutes={0} seconds={5} />
-
+      <Timer_test
+        callDispatch={() =>
+          dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
+        }
+        minutes={0}
+        seconds={3}
+      />
       <S.MAIN_VOTE_HEADER>{`${expeditionVoteResult()}`}</S.MAIN_VOTE_HEADER>
       <S.RowFrame>
         <h3>{`성공 : ${expeditionSuccessCount} 실패 : ${expeditionFailCount}`}</h3>
@@ -38,7 +43,7 @@ function EXPEDITION_RESULT() {
           expeditionStage === "o" ? <S.SuccessImage /> : <S.FailImage />
         )}
       </S.RowFrame>
-      <S.RowFrame>
+      {/* <S.RowFrame>
         <button
           onClick={() =>
             dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
@@ -46,7 +51,7 @@ function EXPEDITION_RESULT() {
         >
           다음
         </button>
-      </S.RowFrame>
+      </S.RowFrame> */}
     </S.ColumnFrame>
   );
 }

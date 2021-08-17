@@ -1,18 +1,25 @@
 import React, { useContext, useState } from "react";
 import { animated, useSpring, config } from "react-spring";
-import { GameContext, MAIN_VOTE, voteStageColor } from "../Store";
+import { FRAME_MAIN, GameContext, MAIN_VOTE, voteStageColor } from "../Store";
 import * as S from "../Styled";
 import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
-import { SET_COMPONENT } from "../MVC/AVALON_Reducer";
+import {
+  SET_COMPONENT,
+  VOTE_CHECK,
+  WAITING_FRAME,
+} from "../MVC/AVALON_Reducer";
 import CoinFlip from "../animation/Coin_Flip";
 import PlayerRoles from "../animation/PlayerRoles";
+import AVALON_TIMER from "./Timer";
+import { PeersContext } from "../../../../Routes/peerStore";
 
 const FrontInformation = animated(S.StageFrame);
 const BackInformation = animated(S.Info);
 
 function MAIN_FRAME() {
-  const { gameState, dispatch } = useContext(GameContext);
+  const { gameState, dispatch, timeOver } = useContext(GameContext);
+  const { peers } = useContext(PeersContext);
   const [click, setClick] = useState(false);
   const [role, setRole] = useState("");
   const colors = voteStageColor.slice(gameState.voteStage, 5);
@@ -25,16 +32,32 @@ function MAIN_FRAME() {
     transform: `rotateY(${isFlipped ? 0 : 180}deg)`,
   });
 
-  const onClick = () => {
+  const representButtonOnClick = () => {
+    dispatch({
+      type: SET_COMPONENT,
+      component:
+        gameState.usingPlayers[gameState.represent].nickname === nickname
+          ? MAIN_VOTE
+          : WAITING_FRAME,
+    });
+  };
+
+  const UserInterFaceOnClick = () => {
     gameState.usingPlayers.map((user) => {
       user.nickname === nickname && setRole(user.role);
     });
     setIsFlipped((prevState) => !prevState);
     setClick(!click);
   };
+
   return (
     <S.RowFrame>
       <S.GameFrame>
+        <AVALON_TIMER
+          minutes={0}
+          seconds={3}
+          callDispatch={representButtonOnClick}
+        />
         <S.StageFrame>
           {gameState.takeStage.map((stage, index) => (
             <S.Stage key={index}>
@@ -67,33 +90,32 @@ function MAIN_FRAME() {
               ),
             }}
           >
-            {gameState.usingPlayers.map(
-              (user, index) =>
-                user.nickname === nickname && (
-                  <S.User key={index}>
-                    <ul>
-                      <li>{`nickname : ${user.nickname}`}</li>
-                      <li>{`role : ${user.role}`}</li>
-                      <br />
-                      {user.role === "Merlin" && <MerlinPlayer index={index} />}
-                      {user.role === "Percival" && (
-                        <PercivalPlayer index={index} />
-                      )}
-                    </ul>
-                    {index === gameState.represent && (
-                      <button
-                        onClick={() =>
-                          dispatch({
-                            type: SET_COMPONENT,
-                            component: MAIN_VOTE,
-                          })
-                        }
-                      >
-                        원정 인원 정하기
-                      </button>
-                    )}
-                  </S.User>
-                )
+            {gameState.usingPlayers.map((user, index) => (
+              <S.User key={index}>
+                <ul>
+                  <li>{`nickname : ${user.nickname}`}</li>
+                </ul>
+              </S.User>
+            ))}
+            {gameState.usingPlayers.filter(
+              (element) => nickname === element.nickname
+            ) && (
+              <S.User>
+                <ul>
+                  <li>{`nickname: ${nickname}`}</li>
+                  <br />
+                  {role === "Merlin" && <MerlinPlayer />}
+                  {role === "Percival" && <PercivalPlayer />}
+                </ul>
+                {gameState.usingPlayers[gameState.represent].nickname ===
+                  nickname && (
+                  <div>
+                    <button onClick={representButtonOnClick}>
+                      원정 인원 정하기
+                    </button>
+                  </div>
+                )}
+              </S.User>
             )}
           </FrontInformation>
         ) : (
@@ -102,7 +124,7 @@ function MAIN_FRAME() {
           </BackInformation>
         )}
         <S.ButtonAnimation />
-        <S.Button onClick={onClick}>플레이어 정보</S.Button>
+        <S.Button onClick={UserInterFaceOnClick}>플레이어 정보</S.Button>
       </S.PlayerFrame>
     </S.RowFrame>
   );

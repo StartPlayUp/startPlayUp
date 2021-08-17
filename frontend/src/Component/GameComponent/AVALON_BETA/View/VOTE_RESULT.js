@@ -6,7 +6,8 @@ import * as S from "../Styled";
 import Timer_test from "./Timer";
 
 function VOTE_RESULT() {
-  const { gameState, dispatch, selectedPlayers } = useContext(GameContext);
+  const { gameState, dispatch, selectedPlayers, timeOver } =
+    useContext(GameContext);
   const { peers } = useContext(PeersContext);
   const agreeVotedPlayers = () => {
     const players = [];
@@ -15,10 +16,6 @@ function VOTE_RESULT() {
     });
     return players;
   };
-
-  useEffect(() => {
-    console.log(`voteResult : ${peers}`);
-  }, [peers]);
 
   const opposeVotedPlayers = () => {
     const players = [];
@@ -34,7 +31,7 @@ function VOTE_RESULT() {
   return (
     <S.ColumnFrame>
       <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
-      <Timer_test component={EXPEDITION_FRAME} minutes={0} seconds={5} />
+      <Timer_test callDispatch={timeOver} minutes={0} seconds={3} />
       <S.VotePlayers>
         <S.AgreeVotePlayers>
           <h1>{`찬성 : ${agreeVotedPlayers().length}`}</h1>
@@ -46,9 +43,9 @@ function VOTE_RESULT() {
         </S.OpposeVotePlayers>
       </S.VotePlayers>
       <S.RowFrame>
-        <button onClick={() => dispatch({ type: VOTE_CHECK, peers })}>
+        {/* <button onClick={() => dispatch({ type: VOTE_CHECK, peers })}>
           다음
-        </button>
+        </button> */}
       </S.RowFrame>
     </S.ColumnFrame>
   );

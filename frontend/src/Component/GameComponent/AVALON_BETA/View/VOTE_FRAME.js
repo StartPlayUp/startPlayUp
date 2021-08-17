@@ -3,6 +3,8 @@ import { GameContext } from "../Store";
 import * as S from "../Styled";
 import { PeersContext } from "../../../../Routes/peerStore";
 import { GAME_CHECK } from "../MVC/AVALON_Reducer";
+import WaitingView from "../animation/WaitingView";
+import AVALON_TIMER from "./Timer";
 
 function VOTE_FRAME() {
   const { dispatch, gameState, selectedPlayers } = useContext(GameContext);
@@ -15,12 +17,7 @@ function VOTE_FRAME() {
   const onChange = (e) => {
     setVote(e.target.value);
   };
-  const onClick = (e) => {
-    if (e.target.value === "agree") {
-      setVote("agree");
-    } else if (e.target.value === "oppose") {
-      setVote("oppose");
-    }
+  const onClick = () => {
     setClick(true);
     gameData.usingPlayers[gameData.voteTurn].toGo = vote;
     gameData.voteTurn += 1;
@@ -36,43 +33,46 @@ function VOTE_FRAME() {
         </S.VoteImage>
         <S.Title>
           {gameData.voteTurn !== gameData.usingPlayers.length &&
-            gameData.usingPlayers[gameData.voteTurn].nickname === nickname && (
-              <S.PlayerVote>
-                {click ? (
-                  <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
-                ) : (
-                  <div>
-                    <S.PlayerVoteFrame>
-                      <label>
-                        찬성
-                        <S.MainVoteCheckbox
-                          type={"radio"}
-                          name={"vote"}
-                          value={"agree"}
-                          onChange={onChange}
-                        />
-                      </label>
-                      <label>
-                        반대
-                        <S.MainVoteCheckbox
-                          type="radio"
-                          name={"vote"}
-                          value={"oppose"}
-                          onChange={onChange}
-                        />
-                      </label>
-                    </S.PlayerVoteFrame>
-                    <S.MainVoteButton
-                      onClick={onClick}
-                      disabled={click}
-                      value={vote}
-                    >
-                      확인
-                    </S.MainVoteButton>
-                  </div>
-                )}
-              </S.PlayerVote>
-            )}
+          gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
+            <S.PlayerVote>
+              <AVALON_TIMER minutes={0} seconds={5} callDispatch={onClick} />
+              {click ? (
+                <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
+              ) : (
+                <div>
+                  <S.PlayerVoteFrame>
+                    <label>
+                      찬성
+                      <S.MainVoteCheckbox
+                        type={"radio"}
+                        name={"vote"}
+                        value={"agree"}
+                        onChange={onChange}
+                      />
+                    </label>
+                    <label>
+                      반대
+                      <S.MainVoteCheckbox
+                        type="radio"
+                        name={"vote"}
+                        value={"oppose"}
+                        onChange={onChange}
+                      />
+                    </label>
+                  </S.PlayerVoteFrame>
+                  <S.MainVoteButton
+                    onClick={onClick}
+                    disabled={click}
+                    value={vote}
+                  >
+                    확인
+                  </S.MainVoteButton>
+                </div>
+              )}
+            </S.PlayerVote>
+          ) : (
+            <WaitingView />
+          )}
         </S.Title>
       </S.VoteFrame>
     </>
