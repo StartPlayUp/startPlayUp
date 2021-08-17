@@ -32,11 +32,25 @@ const StyleDiv = styled.div`
 `;
 const AVALON_STYLE = styled.div`
   display: flex;
-  flex-basis: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-around;
   flex-wrap: wrap;
   background-color: #ffffff;
+`;
+const AVALON_GAME = styled.div`
+  display: flex;
+  width: 70%;
+  height: 90%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+const AVALON_CHAT = styled.div`
+  display: flex;
+  width: 30%;
+  height: 100%;
+  justify-content: flex-end;
 `;
 
 const CHAT_STYLE = styled.div`
@@ -183,18 +197,23 @@ const app = () => {
           render={() => (
             <GamePage>
               <PeerStore>
-                <StyleDiv>
-                  <AVALON_BETA />
-                </StyleDiv>
-                {chatShow && (
-                  <ChatComponent
-                    chatList={chatList}
-                    setChatList={setChatList}
-                  />
-                )}
-                <CHAT_SHOW_DIV_STYLE>
-                  <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                </CHAT_SHOW_DIV_STYLE>
+                <AVALON_STYLE>
+                  <AVALON_GAME>
+                    <AVALON_BETA />
+                  </AVALON_GAME>
+                  <AVALON_CHAT>
+                    {chatShow && (
+                      <ChatComponent
+                        chatList={chatList}
+                        setChatList={setChatList}
+                        width={300}
+                      />
+                    )}
+                    <CHAT_SHOW_DIV_STYLE>
+                      <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                    </CHAT_SHOW_DIV_STYLE>
+                  </AVALON_CHAT>
+                </AVALON_STYLE>
               </PeerStore>
             </GamePage>
           )}
