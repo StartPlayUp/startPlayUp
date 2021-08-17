@@ -90,10 +90,6 @@ const app = () => {
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
-<<<<<<< HEAD
-=======
-  // chatList={chatList} setChatList={setChatList} 
->>>>>>> 7aba283b4cc14ea0c24271ca9ede98f2d1215975
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
