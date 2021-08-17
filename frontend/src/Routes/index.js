@@ -90,10 +90,6 @@ const app = () => {
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
-<<<<<<< HEAD
-  // chatList={chatList} setChatList={setChatList}
-=======
->>>>>>> 8a2c9858aa7ba323320a81dc0f308691ef1b8b3a
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
@@ -141,16 +137,13 @@ const app = () => {
             <GamePage>
               <PeerStore>
                 <Yut />
-<<<<<<< HEAD
                 {chatShow && (
                   <ChatComponent
                     chatList={chatList}
                     setChatList={setChatList}
+                    width={500}
                   />
                 )}
-=======
-                {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} width={500} />}
->>>>>>> 8a2c9858aa7ba323320a81dc0f308691ef1b8b3a
                 <CHAT_SHOW_DIV_STYLE>
                   <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                 </CHAT_SHOW_DIV_STYLE>
@@ -190,15 +183,18 @@ const app = () => {
           render={() => (
             <GamePage>
               <PeerStore>
-                <AVALON_STYLE>
+                <StyleDiv>
                   <AVALON_BETA />
-                </AVALON_STYLE>
-                <CHAT_STYLE>
+                </StyleDiv>
+                {chatShow && (
                   <ChatComponent
                     chatList={chatList}
                     setChatList={setChatList}
                   />
-                </CHAT_STYLE>
+                )}
+                <CHAT_SHOW_DIV_STYLE>
+                  <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                </CHAT_SHOW_DIV_STYLE>
               </PeerStore>
             </GamePage>
           )}
