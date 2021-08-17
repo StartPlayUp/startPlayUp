@@ -14,6 +14,10 @@ import {
     GET_DATA_FROM_PEER,
     UPDATE_GOAL,
     START_GAME,
+    MOVE_HORSE_ON_PLAYER_SECTION,
+    MOVE_HORSE_ON_FIELD_SECTION,
+    TEXT_START_GAME,
+    TEXT_MOVE_HORSE,
 } from './Constants/yutActionType.js';
 import { TextModal } from './YutTextViewModal';
 
@@ -53,8 +57,11 @@ const YutStore = ({ children }) => {
                     setTextModalHandler(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
                 }
                 else if (reducerActionType === START_GAME) {
-                    setTextModalHandler("게임시작");
+                    setTextModalHandler(TEXT_START_GAME);
                 }
+                // else if (reducerActionType === MOVE_HORSE_ON_FIELD_SECTION || reducerActionType === MOVE_HORSE_ON_PLAYER_SECTION) {
+                //     setTextModalHandler(TEXT_MOVE_HORSE);
+                // }
             }
             else {
                 console.log(checkGetDataFromPeers(state))
@@ -70,35 +77,6 @@ const YutStore = ({ children }) => {
     //         dispatch({ type: NEXT_TURN })
     //     }    
     // }, [yutData, myThrowCount])
-
-    useEffect(() => {
-        // 말 위치 데이터가 변경이 되었다면 골인지점 에 있는 상태인지 확인,
-        // 골인지점에 있다면 점수 올리고 말 삭제
-        // if (state.horsePosition.hasOwnProperty(30)) {
-        //     dispatch({ type: UPDATE_GOAL })
-        // }
-        if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
-            if (isFunction(dispatch)
-                && isObject(state)
-                && isObject(peers)
-                && isString(nickname)) {
-                const newState = reducerAction.UPDATE_GOAL(state);
-                dispatch({ type: UPDATE_GOAL, state: newState });
-                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
-            }
-            else {
-                console.error("updateGoalHandler");
-            }
-        }
-    }, [playerHorsePosition]);
-
-
-    // useEffect(() => {
-    //     if (playerData.length > 0) {
-    //         const yutTypeIndex = sumYutArrayToMatchTypeIndex(yutView);
-    //         setTextModal(NUMBER_TO_MATCH_KOREA_YUT_TYPE[yutTypeIndex])
-    //     }
-    // }, [yutView])
 
     const value = useMemo(() => ({
         playerData,
@@ -133,10 +111,6 @@ const YutStore = ({ children }) => {
         yutView, setYutView
     }), [yutView]);
 
-    // const textModalValue = useMemo(() => (
-    //     { textModal, setTextModal }
-    // ), [textModal]);
-
     return (
         <div style={{
             userSelect: 'none', overflow: 'hidden'
@@ -144,9 +118,7 @@ const YutStore = ({ children }) => {
             <YutContext.Provider value={value}>
                 <YutViewContext.Provider value={yutViewValue}>
                     <TimerContext.Provider value={timeValue}>
-                        {/* <TextModal.Provider value={textModalValue}> */}
                         {children}
-                        {/* </TextModal.Provider> */}
                     </TimerContext.Provider>
                 </YutViewContext.Provider>
             </YutContext.Provider >

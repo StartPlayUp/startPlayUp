@@ -65,6 +65,11 @@ const CHAT_SHOW_DIV_STYLE = styled.div`
     height:32px;
 `;
 
+const FLEX_DIV = styled.div`
+    display:flex;
+    justify-content: space-around;
+`;
+
 const TemporaryMain = () => {
     const history = useHistory();
     return (<div>
@@ -83,6 +88,7 @@ const app = () => {
     const chatOnClickHandler = () => {
         setChatShow(prev => !prev);
     }
+    const [chatList, setChatList] = useState([]);
 
     return (
         <BrowserRouter>
@@ -103,8 +109,10 @@ const app = () => {
             </GamePage>} />}
             {isAuthenticated && <Route exact path="/Yut" render={() => <GamePage>
                 <PeerStore>
-                    <Yut />
-                    {chatShow && <ChatComponent />}
+                    <FLEX_DIV>
+                        <Yut />
+                        {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
+                    </FLEX_DIV>
                     <CHAT_SHOW_DIV_STYLE>
                         <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                     </CHAT_SHOW_DIV_STYLE>
@@ -115,7 +123,7 @@ const app = () => {
                     <StyleDiv>
                         <Yacht />
                     </StyleDiv>
-                    {chatShow && <ChatComponent />}
+                    {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
                     <CHAT_SHOW_DIV_STYLE>
                         <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                     </CHAT_SHOW_DIV_STYLE>

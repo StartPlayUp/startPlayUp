@@ -55,64 +55,13 @@ const StyledAudio = styled.audio`
 
 
 
-function Index({ backgroundColor, height, width, socketRef, peersRef, ...props }) {
-    // socket io.connect
-
-    // const socketRef = useRef();
-    // const myNickname = localStorage.getItem('nickname');
-    // const { peerData, setPeerData } = useContext(PeerDataContext);
-    // const { peers, setPeers } = useContext(PeersContext);
-    // const { voicePeers, setVoicePeers } = useContext(VoicePeersContext);
-
-    // let peersRef = useRef([]);
-    // let voicePeersRef = useRef([]);
-    // const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
-
-    // const peersDestory = (peers, voicePeers) => {
-    //     peers.forEach((peer) => {
-    //         console.log("return useEffect peer destroy")
-    //         // peer.peer.destroy()
-    //         peer.peer.on('close', () => console.log("delete"));
-    //     });
-    //     setPeerData([]);
-
-    //     voicePeers.forEach((voicePeer) => {
-    //         voicePeer.peer.destroy()
-    //     });
-    //     setVoicePeers([]);
-    // }
-    // useEffect(() => {
-    //     socketRef.current = io.connect("/");
-    //     if (Peer.WEBRTC_SUPPORT) {
-    //         connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
-    //         connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
-    //     } else {
-    //         console.log("webrtc not support!")
-    //     }
-
-    //     // 방법 1 테스트 해보기.
-    //     // return () => peersRef.current.forEach(i => {
-    //     //     console.log("destroy peer", i);
-    //     //     i.peer.removeAllListeners();
-    //     //     i.peer.destroy();
-    //     // })
-
-    //     // 방법 2 테스트 해보기.
-    //     // return () => {
-    //     //     setPeers({});
-    //     // }
-    //     return () => {
-    //         peersDestory(peers, voicePeers)
-    //     };
-    // }, []);
-
+function Index({ chatList, setChatList, backgroundColor, height, width, socketRef, peersRef, ...props }) {
     const myNickname = localStorage.getItem('nickname');
 
     const { peerData, setPeerData } = useContext(PeerDataContext);
     const { peers, setPeers } = useContext(PeersContext);
 
-
-    const [chatList, setChatList] = useState([]);
+    // const [chatList, setChatList] = useState([]);
     let chatListRef = useRef([...chatList]);
 
     // scroll ref;
@@ -130,7 +79,7 @@ function Index({ backgroundColor, height, width, socketRef, peersRef, ...props }
 
     useEffect(() => {
         if (peerData.type === PEER_CHAT) {
-            console.log("peerData : ", peerData)
+            console.log("peerData asdfdsafadsafsdsdafsdfa : ", peerData)
             chatAddMessage({ nickname: peerData.nickname, inputMessage: peerData.data, chatList, setChatList })
         }
     }, [peerData])

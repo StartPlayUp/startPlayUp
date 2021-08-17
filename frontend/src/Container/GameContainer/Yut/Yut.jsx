@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, memo } from 'react';
 import styled from 'styled-components';
 import Yutfield from 'Component/GameComponent/Yut/YutfieldSection'
 
@@ -67,4 +67,4 @@ const Yut = (props) => {
     )
 }
 
-export default Yut;
+export default memo(Yut);

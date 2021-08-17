@@ -22,6 +22,7 @@ import { TextModal } from 'Container/GameContainer/Yut/YutTextViewModal';
 
 import { GRID_TABLE, SHORTCUT_PLACE } from 'Container/GameContainer/Yut/Constants/yutGame';
 import MoveHorseAnimation from './animation/MoveHorseAnimation';
+import { isFunction, isObject, isString } from 'Container/GameContainer/Yut/YutFunctionModule';
 
 
 const Horse = styled.div`
@@ -126,7 +127,16 @@ const YutFiledSection = () => {
         endPosition: { x: 0, y: 0 }
     })
 
-    const [, forceUpdate] = useReducer((prev) => prev + 1, 0)
+    // const [forceUpdateCount, forceUpdate] = useReducer((prev) => prev + 1, 0)
+
+    const [forceUpdate, setForceUpdate] = useState(Array(35).fill(0));
+
+    const forUpdateHandler = (index) => {
+        setForceUpdate(prev => {
+            prev[index] += 1;
+            return prev
+        })
+    }
 
 
     useEffect(() => {
@@ -157,6 +167,7 @@ const YutFiledSection = () => {
                 if (catchEnemyHorse) {
                     setTextModalHandler("꺼-억");
                 }
+                forUpdateHandler(index);
                 dispatch({ type: MOVE_HORSE_ON_PLAYER_SECTION, state: newState });
                 sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_PLAYER_SECTION } });
             }
@@ -181,12 +192,11 @@ const YutFiledSection = () => {
             if (success) {
                 if (catchEnemyHorse) {
                     setTextModalHandler("꺼-억");
-                    forceUpdate();
                 }
                 // const testState = test(newState);
                 // dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: testState });
                 // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: testState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
-
+                forUpdateHandler(index);
                 console.log("x y 좌표 ", state.selectHorse, index)
                 const boxPos = boxPosition.current.getBoundingClientRect();
                 const start = fieldPlacePositions.current[state.selectHorse].getBoundingClientRect();
@@ -209,8 +219,12 @@ const YutFiledSection = () => {
                     endPosition: endCenter
                 });
 
-                dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: newState });
-                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
+                const newNewState = updateGoalHandler(newState);
+                dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: newNewState });
+                sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newNewState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
+
+                // dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: newState });
+                // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
             }
             else {
                 alert("본인 차례가 아닙니다.");
@@ -221,21 +235,23 @@ const YutFiledSection = () => {
         }
     }
 
-    // const test = (state) => {
-    //     if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
-    //         if (isFunction(dispatch)
-    //             && isObject(state)
-    //             && isObject(peers)
-    //             && isString(nickname)) {
-    //             return reducerAction.UPDATE_GOAL(state);
-    //             // dispatch({ type: UPDATE_GOAL, state: newState });
-    //             // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
-    //         }
-    //         else {
-    //             console.error("updateGoalHandler");
-    //         }
-    //     }
-    // }
+    const updateGoalHandler = (state) => {
+        if (state.playerHorsePosition.some((i) => i.hasOwnProperty(30))) {
+            if (isFunction(dispatch)
+                && isObject(state)
+                && isObject(peers)
+                && isString(nickname)) {
+                return reducerAction.UPDATE_GOAL(state);
+                // dispatch({ type: UPDATE_GOAL, state: newState });
+                // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: UPDATE_GOAL } });
+            }
+            else {
+                console.error("updateGoalHandler");
+            }
+        }
+        else
+            return state;
+    }
 
 
     const moveHorseHandler = (e, index) => {
@@ -284,7 +300,7 @@ const YutFiledSection = () => {
                                     </PlaceButton>
                                     {
                                         horsePosition[index] !== undefined &&
-                                        <Horses key={forceUpdate} player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
+                                        <Horses key={forceUpdate[index]} player={playerData[horsePosition[index]['player']]} index={index} horses={horsePosition[index]['horses']}>
                                             {index}
                                         </Horses>
                                     }

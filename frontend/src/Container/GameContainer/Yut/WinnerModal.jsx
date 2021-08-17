@@ -182,7 +182,6 @@ const ImgAnimation = styled.img`
 
 
 const winnerModal = () => {
-    // const dummyArray = ['player1', 'player2', 'player3', 'player4']
     const { winner, playerData } = useContext(YutContext);
     const [modalShow, setModalShow] = useState(true);
     const [playerPosition, setPlayerPosition] = useState([0, 0]);

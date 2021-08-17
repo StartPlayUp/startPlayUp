@@ -18,3 +18,10 @@ export const INIT_LAST_YUT_DATA = 'INIT_LAST_YUT_DATA';
 
 
 export const UPDATE_STATE = 'UPDATE_STATE';
+
+
+
+
+
+export const TEXT_MOVE_HORSE = "꺼 - 억";
+export const TEXT_START_GAME = '게임 시작';
