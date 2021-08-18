@@ -29,7 +29,7 @@ function VOTE_RESULT() {
   console.log(peers.peers);
 
   return (
-    <S.ColumnFrame>
+    <S.PublicColumn>
       <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
       <Timer_test callDispatch={timeOver} minutes={0} seconds={5} />
       <S.VotePlayers>
@@ -47,7 +47,7 @@ function VOTE_RESULT() {
           다음
         </button> */}
       </S.RowFrame>
-    </S.ColumnFrame>
+    </S.PublicColumn>
   );
 }
 export default VOTE_RESULT;

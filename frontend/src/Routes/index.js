@@ -214,7 +214,21 @@ const app = () => {
           render={() => (
             <GamePage>
               <PeerStore>
-                <AVALON_STYLE>
+                <StyleDiv>
+                  <AVALON_Global />
+                  <AVALON_BETA />
+                </StyleDiv>
+                {chatShow && (
+                  <ChatComponent
+                    chatList={chatList}
+                    setChatList={setChatList}
+                    width={320}
+                  />
+                )}
+                <CHAT_SHOW_DIV_STYLE>
+                  <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                </CHAT_SHOW_DIV_STYLE>
+                {/* <AVALON_STYLE>
                   <AVALON_Global />
                   <AVALON_GAME>
                     <AVALON_BETA />
@@ -231,7 +245,7 @@ const app = () => {
                       <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                     </CHAT_SHOW_DIV_STYLE>
                   </AVALON_CHAT>
-                </AVALON_STYLE>
+                </AVALON_STYLE> */}
               </PeerStore>
             </GamePage>
           )}

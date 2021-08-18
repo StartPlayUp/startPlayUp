@@ -25,7 +25,7 @@ function VOTE_FRAME() {
   };
   return (
     <>
-      <S.VoteFrame>
+      <S.PublicColumn>
         <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
         <S.VoteImage>
           <img src={"/img/vote_img.png"} alt={"img"} width={"30%"} />
@@ -74,7 +74,7 @@ function VOTE_FRAME() {
             <WaitingView />
           )}
         </S.Title>
-      </S.VoteFrame>
+      </S.PublicColumn>
     </>
   );
 }

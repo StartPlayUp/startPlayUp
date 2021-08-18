@@ -64,6 +64,7 @@ export const Players = styled.div`
 `;
 export const Info = styled.div`
   display: flex;
+  flex-direction: column;
   margin: 0 auto;
 `;
 export const StageFrame = styled.div`
@@ -130,11 +131,9 @@ export const PlayerVoteFrame = styled.form`
 `;
 export const RowFrame = styled.div`
   display: flex;
-  justify-content: center;
-  margin: 0 auto;
+  justify-content: space-around;
   flex-direction: row;
-  padding: 50px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 `;
 export const VotePlayers = styled.div`
   display: flex;
@@ -166,7 +165,7 @@ export const ColumnFrame = styled.div`
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   flex-direction: column;
   justify-content: center;
 `;
@@ -187,11 +186,13 @@ export const VoteStageFrame = styled.div`
   justify-content: flex-start;
 `;
 export const User = styled.div`
-  flex: 1 1 auto;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  border: 2px solid black;
 `;
 export const Button = styled.button`
-  margin: 20% auto;
+  margin: 30% auto;
   padding: 5px 36px 5px 36px;
   font-size: 18px;
   background-color: dimgray;
@@ -219,6 +220,18 @@ export const MainVoteCheckbox = styled.input`
   height: 32px;
   margin: 16px;
 `;
+export const PublicColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  height: 90vh;
+`;
+export const PublicRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 90vw;
+  height: 90vh;
+`;
 export const MainVoteButton = styled.button`
   width: 168px;
   height: 48px;
@@ -228,6 +241,11 @@ export const MainVoteButton = styled.button`
   font-size: 32px;
   margin-top: 5%;
   color: white;
+`;
+export const MAIN_FRAME_STYLE = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;
 export const MAIN_VOTE_HEADER = styled.div`
   background-color: dimgray;

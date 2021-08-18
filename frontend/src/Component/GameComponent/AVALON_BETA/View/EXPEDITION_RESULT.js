@@ -26,7 +26,7 @@ function EXPEDITION_RESULT() {
     return result;
   };
   return (
-    <S.ColumnFrame>
+    <S.PublicColumn>
       <Timer_test
         callDispatch={() =>
           dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
@@ -52,7 +52,7 @@ function EXPEDITION_RESULT() {
           다음
         </button>
       </S.RowFrame> */}
-    </S.ColumnFrame>
+    </S.PublicColumn>
   );
 }
 

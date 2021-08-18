@@ -34,7 +34,7 @@ function MAIN_VOTE() {
   };
 
   return (
-    <S.ColumnFrame>
+    <S.PublicColumn>
       <S.MAIN_VOTE_HEADER>
         {"원정에 참여하는 인원 수 : " +
           gameState.takeStage[gameState.expeditionStage] +
@@ -56,7 +56,7 @@ function MAIN_VOTE() {
       </S.SelectPlayer>
       <S.ButtonAnimation />
       <S.MainVoteButton onClick={onClick}>결정</S.MainVoteButton>
-    </S.ColumnFrame>
+    </S.PublicColumn>
   );
 }
 
