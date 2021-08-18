@@ -153,7 +153,13 @@ export const OpposeVotePlayers = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
-
+export const Timer = styled.div`
+  display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  justify-content: flex-start;
+  font-size: 32px;
+`;
 export const PlayerVoteResult = styled.div`
   display: flex;
   justify-content: center;
@@ -228,6 +234,7 @@ export const PublicColumn = styled.div`
 `;
 export const PublicRow = styled.div`
   display: flex;
+  margin: 0 auto;
   flex-direction: row;
   width: 90vw;
   height: 90vh;
@@ -358,8 +365,7 @@ const stroll = keyframes`
 export const WalkContainer = styled.div`
   display: inline-block;
   position: relative;
-  flex-direction: column;
-  width: 100%;
+  width: 20%;
   padding-bottom: 30%;
   vertical-align: middle;
   overflow: hidden;
@@ -387,6 +393,7 @@ export const Walk = styled.div`
   background-size: 800%;
   animation: ${walking} 1s infinite steps(7);
 `;
+
 export const ButtonAnimation = createGlobalStyle`
   body {
   font-family: sans-serif;

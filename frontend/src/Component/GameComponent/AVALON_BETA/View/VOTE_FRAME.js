@@ -26,20 +26,19 @@ function VOTE_FRAME() {
   return (
     <>
       <S.PublicColumn>
-        <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
-        <S.VoteImage>
-          <img src={"/img/vote_img.png"} alt={"img"} width={"30%"} />
-          <h1>동의 합니까?</h1>
-        </S.VoteImage>
         <S.Title>
           {gameData.voteTurn !== gameData.usingPlayers.length &&
           gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
             <S.PlayerVote>
               <AVALON_TIMER minutes={0} seconds={15} callDispatch={onClick} />
+              <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
+              <S.VoteImage>
+                <img src={"/img/vote_img.png"} alt={"img"} width={"300px"} />
+              </S.VoteImage>
               {click ? (
                 <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
               ) : (
-                <div>
+                <S.ColumnFrame>
                   <S.PlayerVoteFrame>
                     <label>
                       찬성
@@ -67,7 +66,7 @@ function VOTE_FRAME() {
                   >
                     확인
                   </S.MainVoteButton>
-                </div>
+                </S.ColumnFrame>
               )}
             </S.PlayerVote>
           ) : (

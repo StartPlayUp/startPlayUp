@@ -39,6 +39,8 @@ function MAIN_FRAME() {
   });
 
   const representButtonOnClick = () => {
+    console.log("sdlkfajasdlfjasdfjasldfkjadslkfj");
+    console.log(gameState.usingPlayers[gameState.represent].nickname);
     dispatch({
       type: SET_COMPONENT,
       component:
