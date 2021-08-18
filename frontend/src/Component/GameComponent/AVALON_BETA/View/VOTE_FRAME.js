@@ -35,7 +35,7 @@ function VOTE_FRAME() {
           {gameData.voteTurn !== gameData.usingPlayers.length &&
           gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
             <S.PlayerVote>
-              <AVALON_TIMER minutes={0} seconds={5} callDispatch={onClick} />
+              <AVALON_TIMER minutes={0} seconds={15} callDispatch={onClick} />
               {click ? (
                 <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
               ) : (

@@ -54,8 +54,8 @@ function MAIN_FRAME() {
     <S.RowFrame>
       <S.GameFrame>
         <AVALON_TIMER
-          minutes={0}
-          seconds={3}
+          minutes={1}
+          seconds={0}
           callDispatch={representButtonOnClick}
         />
         <S.StageFrame>

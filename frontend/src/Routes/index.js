@@ -213,9 +213,9 @@ const app = () => {
           path="/AVALON"
           render={() => (
             <GamePage>
-              <AVALON_Global />
               <PeerStore>
                 <AVALON_STYLE>
+                  <AVALON_Global />
                   <AVALON_GAME>
                     <AVALON_BETA />
                   </AVALON_GAME>
