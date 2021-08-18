@@ -33,7 +33,7 @@ function EXPEDITION_FRAME() {
   console.log(`playerRole : ${playerRole}`);
 
   return (
-    <S.PublicRow>
+    <S.RowFrame>
       {playerRole !== undefined ? (
         angels.includes(playerRole) ? (
           <AngelsVote />
@@ -61,10 +61,10 @@ function EXPEDITION_FRAME() {
             <WaitingView />
           )
         )} */}
-      <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
+      {/* <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
         결과
-      </button>
-    </S.PublicRow>
+      </button> */}
+    </S.RowFrame>
   );
 }
 

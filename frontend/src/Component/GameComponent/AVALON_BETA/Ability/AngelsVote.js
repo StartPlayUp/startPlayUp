@@ -5,7 +5,7 @@ import { GAME_CHECK } from "../MVC/AVALON_Reducer";
 import { GameContext } from "../Store";
 import { SuccessImage } from "../Styled";
 import AVALON_TIMER from "../View/Timer";
-
+import * as S from "../Styled";
 function AngelsVote() {
   const { gameState, dispatch } = useContext(GameContext);
   const { peers } = useContext(PeersContext);
@@ -18,10 +18,10 @@ function AngelsVote() {
     setIsClick(true);
   };
   return !isClick ? (
-    <div>
+    <S.ColumnFrame>
       <AVALON_TIMER minutes={0} seconds={5} callDispatch={onClick} />
       <SuccessImage onClick={onClick} value={"o"} disabled={isClick} />
-    </div>
+    </S.ColumnFrame>
   ) : (
     <WaitingView />
   );

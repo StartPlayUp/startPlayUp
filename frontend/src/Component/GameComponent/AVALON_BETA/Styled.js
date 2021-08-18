@@ -10,7 +10,7 @@ export const Title = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  border: 5px solid black;
+  /* border: 5px solid black; */
 `;
 export const VoteImage = styled.div`
   display: flex;
@@ -126,7 +126,7 @@ export const PlayerVote = styled.div`
 export const PlayerVoteFrame = styled.form`
   display: flex;
   font-size: 32px;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 30px;
 `;
 export const RowFrame = styled.div`
@@ -167,7 +167,7 @@ export const PlayerVoteResult = styled.div`
   flex-direction: column;
 `;
 export const ColumnFrame = styled.div`
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
@@ -229,14 +229,15 @@ export const MainVoteCheckbox = styled.input`
 export const PublicColumn = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90vw;
+  justify-content: center;
+  width: 85vw;
   height: 90vh;
 `;
 export const PublicRow = styled.div`
   display: flex;
-  margin: 0 auto;
   flex-direction: row;
-  width: 90vw;
+  justify-content: center;
+  width: 85vw;
   height: 90vh;
 `;
 export const MainVoteButton = styled.button`
@@ -358,7 +359,7 @@ const stroll = keyframes`
     transform: translateX(-200%);
   }
   to {
-    transform: translateX(300%);
+    transform: translateX(200%);
   }
 `;
 

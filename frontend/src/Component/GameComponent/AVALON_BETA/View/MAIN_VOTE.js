@@ -53,9 +53,9 @@ function MAIN_VOTE() {
             />
           </div>
         ))}
+        <S.ButtonAnimation />
+        <S.MainVoteButton onClick={onClick}>결정</S.MainVoteButton>
       </S.SelectPlayer>
-      <S.ButtonAnimation />
-      <S.MainVoteButton onClick={onClick}>결정</S.MainVoteButton>
     </S.PublicColumn>
   );
 }

@@ -14,8 +14,8 @@ function END_GAME_FRAME() {
   const { gameState } = useContext(GameContext);
 
   return (
-    <S.PublicColumn>
-      <h1>{gameState.winner}</h1>
+    <S.ColumnFrame>
+      <S.NicknameTag>{gameState.winner}</S.NicknameTag>
       <Box>
         {gameState.usingPlayers.map((player, index) => (
           <div key={index}>
@@ -26,7 +26,7 @@ function END_GAME_FRAME() {
           </div>
         ))}
       </Box>
-    </S.PublicColumn>
+    </S.ColumnFrame>
   );
 }
 
