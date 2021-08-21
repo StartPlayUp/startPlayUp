@@ -10,7 +10,7 @@ export const Title = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  border: 5px solid black;
+  /* border: 5px solid black; */
 `;
 export const VoteImage = styled.div`
   display: flex;
@@ -64,6 +64,7 @@ export const Players = styled.div`
 `;
 export const Info = styled.div`
   display: flex;
+  flex-direction: column;
   margin: 0 auto;
 `;
 export const StageFrame = styled.div`
@@ -125,16 +126,14 @@ export const PlayerVote = styled.div`
 export const PlayerVoteFrame = styled.form`
   display: flex;
   font-size: 32px;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 30px;
 `;
 export const RowFrame = styled.div`
   display: flex;
-  justify-content: center;
-  margin: 0 auto;
+  justify-content: space-around;
   flex-direction: row;
-  padding: 50px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 `;
 export const VotePlayers = styled.div`
   display: flex;
@@ -154,7 +153,13 @@ export const OpposeVotePlayers = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
-
+export const Timer = styled.div`
+  display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  justify-content: flex-start;
+  font-size: 32px;
+`;
 export const PlayerVoteResult = styled.div`
   display: flex;
   justify-content: center;
@@ -162,11 +167,11 @@ export const PlayerVoteResult = styled.div`
   flex-direction: column;
 `;
 export const ColumnFrame = styled.div`
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   flex-direction: column;
   justify-content: center;
 `;
@@ -187,11 +192,13 @@ export const VoteStageFrame = styled.div`
   justify-content: flex-start;
 `;
 export const User = styled.div`
-  flex: 1 1 auto;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  border: 2px solid black;
 `;
 export const Button = styled.button`
-  margin: 20% auto;
+  margin: 30% auto;
   padding: 5px 36px 5px 36px;
   font-size: 18px;
   background-color: dimgray;
@@ -219,6 +226,20 @@ export const MainVoteCheckbox = styled.input`
   height: 32px;
   margin: 16px;
 `;
+export const PublicColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 85vw;
+  height: 90vh;
+`;
+export const PublicRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 85vw;
+  height: 90vh;
+`;
 export const MainVoteButton = styled.button`
   width: 168px;
   height: 48px;
@@ -228,6 +249,11 @@ export const MainVoteButton = styled.button`
   font-size: 32px;
   margin-top: 5%;
   color: white;
+`;
+export const MAIN_FRAME_STYLE = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;
 export const MAIN_VOTE_HEADER = styled.div`
   background-color: dimgray;
@@ -333,15 +359,14 @@ const stroll = keyframes`
     transform: translateX(-200%);
   }
   to {
-    transform: translateX(300%);
+    transform: translateX(200%);
   }
 `;
 
 export const WalkContainer = styled.div`
   display: inline-block;
   position: relative;
-  flex-direction: column;
-  width: 100%;
+  width: 20%;
   padding-bottom: 30%;
   vertical-align: middle;
   overflow: hidden;
@@ -369,6 +394,7 @@ export const Walk = styled.div`
   background-size: 800%;
   animation: ${walking} 1s infinite steps(7);
 `;
+
 export const ButtonAnimation = createGlobalStyle`
   body {
   font-family: sans-serif;

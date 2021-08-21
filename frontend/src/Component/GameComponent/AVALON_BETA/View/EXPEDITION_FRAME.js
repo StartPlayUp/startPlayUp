@@ -61,9 +61,9 @@ function EXPEDITION_FRAME() {
             <WaitingView />
           )
         )} */}
-      <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
+      {/* <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
         결과
-      </button>
+      </button> */}
     </S.RowFrame>
   );
 }

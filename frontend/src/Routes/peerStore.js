@@ -28,12 +28,16 @@ const Audio = (props) => {
     );
 }
 
+const initialPeerData = { type: "", game: "", nickname: "", data: {} }
 
 export const PeerStore = ({ children }) => {
-    const [peerData, setPeerData] = useState({ type: "" }); //피어 데이터 받는곳
+    const [peerData, setPeerData] = useState(initialPeerData); //피어 데이터 받는곳
     const valuePeerData = useMemo(() => ({
         peerData,
-        setPeerData
+        setPeerData,
+        clearPeerData: () => {
+            setPeerData(initialPeerData);
+        }
     }), [peerData]);
 
 

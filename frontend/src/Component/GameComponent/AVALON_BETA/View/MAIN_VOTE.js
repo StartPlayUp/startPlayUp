@@ -34,13 +34,13 @@ function MAIN_VOTE() {
   };
 
   return (
-    <S.MainVote>
+    <S.PublicColumn>
       <S.MAIN_VOTE_HEADER>
         {"원정에 참여하는 인원 수 : " +
           gameState.takeStage[gameState.expeditionStage] +
           "명"}
       </S.MAIN_VOTE_HEADER>
-      <AVALON_TIMER minutes={0} seconds={3} callDispatch={timeOver} />
+      <AVALON_TIMER minutes={0} seconds={30} callDispatch={timeOver} />
       <S.SelectPlayer>
         {gameState.usingPlayers.map((user, index) => (
           <div>
@@ -53,10 +53,10 @@ function MAIN_VOTE() {
             />
           </div>
         ))}
+        <S.ButtonAnimation />
+        <S.MainVoteButton onClick={onClick}>결정</S.MainVoteButton>
       </S.SelectPlayer>
-      <S.ButtonAnimation />
-      <S.MainVoteButton onClick={onClick}>결정</S.MainVoteButton>
-    </S.MainVote>
+    </S.PublicColumn>
   );
 }
 

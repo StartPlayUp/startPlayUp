@@ -34,8 +34,9 @@ const Chat = styled.div`
 
     display:flex;
     flex-direction: column;
-    height:${props => props.width || 600}px;
-    width:${props => props.width || 600}px;
+    ${props => console.log(props.height, props.width)}
+    height:${props => props.height !== undefined ? props.height : 600}px;
+    width:${props => props.width !== undefined ? props.width : 600}px;
     border-radius: 10%;
 `;
 
@@ -86,7 +87,7 @@ function Index({ chatList, setChatList, backgroundColor, height, width, socketRe
 
 
     return (
-        <Chat width={height} height={width}>
+        <Chat width={width} height={height}>
             <Nav />
             <TextFieldWithVoiceUsers>
                 <TextField className="textField" ref={scrollRef}>

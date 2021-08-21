@@ -1,6 +1,12 @@
 import React, { useContext, useState } from "react";
 import { animated, useSpring, config } from "react-spring";
-import { FRAME_MAIN, GameContext, MAIN_VOTE, voteStageColor } from "../Store";
+import {
+  evils,
+  FRAME_MAIN,
+  GameContext,
+  MAIN_VOTE,
+  voteStageColor,
+} from "../Store";
 import * as S from "../Styled";
 import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
@@ -14,7 +20,7 @@ import PlayerRoles from "../animation/PlayerRoles";
 import AVALON_TIMER from "./Timer";
 import { PeersContext } from "../../../../Routes/peerStore";
 
-const FrontInformation = animated(S.StageFrame);
+const FrontInformation = animated(S.ColumnFrame);
 const BackInformation = animated(S.Info);
 
 function MAIN_FRAME() {
@@ -33,12 +39,15 @@ function MAIN_FRAME() {
   });
 
   const representButtonOnClick = () => {
+    console.log("sdlkfajasdlfjasdfjasldfkjadslkfj");
+    console.log(gameState.usingPlayers[gameState.represent].nickname);
     dispatch({
       type: SET_COMPONENT,
       component:
         gameState.usingPlayers[gameState.represent].nickname === nickname
           ? MAIN_VOTE
           : WAITING_FRAME,
+      peers,
     });
   };
 
@@ -51,13 +60,13 @@ function MAIN_FRAME() {
   };
 
   return (
-    <S.RowFrame>
-      <S.GameFrame>
-        <AVALON_TIMER
-          minutes={0}
-          seconds={3}
-          callDispatch={representButtonOnClick}
-        />
+    <S.PublicRow>
+      <AVALON_TIMER
+        minutes={1}
+        seconds={0}
+        callDispatch={representButtonOnClick}
+      />
+      <S.MAIN_FRAME_STYLE>
         <S.StageFrame>
           {gameState.takeStage.map((stage, index) => (
             <S.Stage key={index}>
@@ -79,8 +88,8 @@ function MAIN_FRAME() {
             </S.Circle>
           ))}
         </S.MainVoteFrame>
-      </S.GameFrame>
-      <S.PlayerFrame>
+      </S.MAIN_FRAME_STYLE>
+      <S.MAIN_FRAME_STYLE>
         {!click ? (
           <FrontInformation
             style={{
@@ -90,43 +99,46 @@ function MAIN_FRAME() {
               ),
             }}
           >
-            {gameState.usingPlayers.map((user, index) => (
-              <S.User key={index}>
-                <ul>
-                  <li>{`nickname : ${user.nickname}`}</li>
+            <S.User>
+              <h2>Players</h2>
+              <br />
+              {gameState.usingPlayers.map((user, index) => (
+                <ul key={index}>
+                  <li>{`${user.nickname}`}</li>
                 </ul>
-              </S.User>
-            ))}
-            {gameState.usingPlayers.filter(
-              (element) => nickname === element.nickname
-            ) && (
-              <S.User>
-                <ul>
-                  <li>{`nickname: ${nickname}`}</li>
-                  <br />
-                  {role === "Merlin" && <MerlinPlayer />}
-                  {role === "Percival" && <PercivalPlayer />}
-                </ul>
-                {gameState.usingPlayers[gameState.represent].nickname ===
-                  nickname && (
-                  <div>
-                    <button onClick={representButtonOnClick}>
-                      원정 인원 정하기
-                    </button>
-                  </div>
-                )}
-              </S.User>
-            )}
+              ))}
+            </S.User>
+
+            <S.User>
+              {gameState.usingPlayers[gameState.represent].nickname ===
+                nickname && (
+                <div>
+                  <button onClick={representButtonOnClick}>
+                    원정 인원 정하기
+                  </button>
+                </div>
+              )}
+            </S.User>
           </FrontInformation>
         ) : (
           <BackInformation style={{ opacity, transform }}>
             <PlayerRoles nickname={nickname} role={role} />
+            <S.ColumnFrame>
+              {role === "Merlin" && <MerlinPlayer />}
+              {role === "Percival" && <PercivalPlayer />}
+              {evils.includes(role) &&
+                gameState.usingPlayers.map((user, index) => (
+                  <div key={index}>
+                    {evils.includes(user.role) && <b>{user.nickname}</b>}
+                  </div>
+                ))}
+            </S.ColumnFrame>
           </BackInformation>
         )}
         <S.ButtonAnimation />
         <S.Button onClick={UserInterFaceOnClick}>플레이어 정보</S.Button>
-      </S.PlayerFrame>
-    </S.RowFrame>
+      </S.MAIN_FRAME_STYLE>
+    </S.PublicRow>
   );
 }
 

@@ -14,6 +14,7 @@ import { PeerStore } from "./peerStore";
 import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
 import messageButtonImage from "images/blue-message.png";
 import View from "../Component/GameComponent/AVALON_BETA/View";
+import { createGlobalStyle } from "styled-components";
 
 const GamePage = styled.div`
   display: flex;
@@ -32,11 +33,41 @@ const StyleDiv = styled.div`
 `;
 const AVALON_STYLE = styled.div`
   display: flex;
-  flex-basis: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-around;
   flex-wrap: wrap;
-  background-color: #ffffff;
+  background-color: inherit;
+`;
+const AVALON_Global = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #e0e3da;
+    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png');
+  }
+
+  div {
+    width:auto;
+    height:auto;
+    color: black;
+  }
+`;
+const AVALON_GAME = styled.div`
+  display: flex;
+  width: 70%;
+  height: 90%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+const AVALON_CHAT = styled.div`
+  display: flex;
+  width: 30%;
+  height: 100%;
+  justify-content: flex-end;
 `;
 
 const CHAT_STYLE = styled.div`
@@ -66,8 +97,8 @@ const CHAT_SHOW_DIV_STYLE = styled.div`
 `;
 
 const FLEX_DIV = styled.div`
-    display:flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const TemporaryMain = () => {
@@ -90,7 +121,6 @@ const app = () => {
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
-  // chatList={chatList} setChatList={setChatList} 
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
@@ -138,7 +168,13 @@ const app = () => {
             <GamePage>
               <PeerStore>
                 <Yut />
-                {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
+                {chatShow && (
+                  <ChatComponent
+                    chatList={chatList}
+                    setChatList={setChatList}
+                    width={500}
+                  />
+                )}
                 <CHAT_SHOW_DIV_STYLE>
                   <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                 </CHAT_SHOW_DIV_STYLE>
@@ -157,7 +193,12 @@ const app = () => {
                 <StyleDiv>
                   <Yacht />
                 </StyleDiv>
-                {chatShow && <ChatComponent chatList={chatList} setChatList={setChatList} />}
+                {chatShow && (
+                  <ChatComponent
+                    chatList={chatList}
+                    setChatList={setChatList}
+                  />
+                )}
                 <CHAT_SHOW_DIV_STYLE>
                   <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                 </CHAT_SHOW_DIV_STYLE>
@@ -173,12 +214,38 @@ const app = () => {
           render={() => (
             <GamePage>
               <PeerStore>
-                <AVALON_STYLE>
+                <StyleDiv>
+                  <AVALON_Global />
                   <AVALON_BETA />
-                </AVALON_STYLE>
-                <CHAT_STYLE>
-                  <ChatComponent chatList={chatList} setChatList={setChatList} />
-                </CHAT_STYLE>
+                </StyleDiv>
+                {chatShow && (
+                  <ChatComponent
+                    chatList={chatList}
+                    setChatList={setChatList}
+                    width={320}
+                  />
+                )}
+                <CHAT_SHOW_DIV_STYLE>
+                  <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                </CHAT_SHOW_DIV_STYLE>
+                {/* <AVALON_STYLE>
+                  <AVALON_Global />
+                  <AVALON_GAME>
+                    <AVALON_BETA />
+                  </AVALON_GAME>
+                  <AVALON_CHAT>
+                    {chatShow && (
+                      <ChatComponent
+                        chatList={chatList}
+                        setChatList={setChatList}
+                        width={300}
+                      />
+                    )}
+                    <CHAT_SHOW_DIV_STYLE>
+                      <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                    </CHAT_SHOW_DIV_STYLE>
+                  </AVALON_CHAT>
+                </AVALON_STYLE> */}
               </PeerStore>
             </GamePage>
           )}
@@ -187,5 +254,4 @@ const app = () => {
     </BrowserRouter>
   );
 };
-
 export default app;

@@ -1,23 +1,18 @@
-import React from "react";
 import { createGlobalStyle } from "styled-components";
 import WalkAnimation from "./WalkAnimation";
-import * as S from "../Styled";
 const GlobalStyle = createGlobalStyle`
+
 html, body {
 	background: #FFFFFF;
-}
-body{
-  width : 100%;
-  height : 100%;
 }
 
 .column {
   position: relative;
 	display: flex;
-  width:100%;
-  height:100%;
+  width:90vw;
+  height:50vh;
 	flex-direction: column;
-  margin : 10% auto;
+  margin : 0 auto;
   align-items: center;
 
   & p {
@@ -65,21 +60,19 @@ body{
 
 const WaitingView = () => {
   return (
-    <S.ColumnFrame className="column">
+    <div className="column">
       <WalkAnimation />
       <GlobalStyle />
-      <S.ColumnFrame>
-        <div className="row">
-          <div className="animate box1" />
-          <div className="animate box2" />
-        </div>
-        <div className="row">
-          <div className="animate box3" />
-          <div className="animate box4" />
-        </div>
-      </S.ColumnFrame>
-      <S.ColumnFrame>투표 대기 중.....</S.ColumnFrame>
-    </S.ColumnFrame>
+      <div className="row">
+        <div className="animate box1" />
+        <div className="animate box2" />
+      </div>
+      <div className="row">
+        <div className="animate box3" />
+        <div className="animate box4" />
+      </div>
+      <p>투표 대기 중.....</p>
+    </div>
   );
 };
 export default WaitingView;

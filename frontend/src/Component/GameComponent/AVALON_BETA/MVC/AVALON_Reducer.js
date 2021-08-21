@@ -46,11 +46,11 @@ const reducer = (state, { type, ...action }) => {
       return { ...state, ...action.data };
     }
     case SET_COMPONENT: {
+      const gameData = { ...state };
       sendDataToPeers(GAME, {
         game: AVALON,
         nickname,
         peers: action.peers,
-        data: action.gameData,
       });
       return { ...state, component: action.component };
     }

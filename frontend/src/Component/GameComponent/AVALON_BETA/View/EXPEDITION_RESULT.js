@@ -27,6 +27,7 @@ function EXPEDITION_RESULT() {
   };
   return (
     <S.ColumnFrame>
+      <S.MAIN_VOTE_HEADER>{`${expeditionVoteResult()}`}</S.MAIN_VOTE_HEADER>
       <Timer_test
         callDispatch={() =>
           dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
@@ -34,7 +35,6 @@ function EXPEDITION_RESULT() {
         minutes={0}
         seconds={3}
       />
-      <S.MAIN_VOTE_HEADER>{`${expeditionVoteResult()}`}</S.MAIN_VOTE_HEADER>
       <S.RowFrame>
         <h3>{`성공 : ${expeditionSuccessCount} 실패 : ${expeditionFailCount}`}</h3>
       </S.RowFrame>
@@ -43,15 +43,6 @@ function EXPEDITION_RESULT() {
           expeditionStage === "o" ? <S.SuccessImage /> : <S.FailImage />
         )}
       </S.RowFrame>
-      {/* <S.RowFrame>
-        <button
-          onClick={() =>
-            dispatch({ type: SET_COMPONENT, component: FRAME_MAIN })
-          }
-        >
-          다음
-        </button>
-      </S.RowFrame> */}
     </S.ColumnFrame>
   );
 }

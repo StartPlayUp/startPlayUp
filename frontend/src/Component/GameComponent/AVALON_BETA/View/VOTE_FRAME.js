@@ -24,58 +24,49 @@ function VOTE_FRAME() {
     dispatch({ type: GAME_CHECK, gameData, peers });
   };
   return (
-    <>
-      <S.VoteFrame>
-        <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
-        <S.VoteImage>
-          <img src={"/img/vote_img.png"} alt={"img"} width={"30%"} />
-          <h1>동의 합니까?</h1>
-        </S.VoteImage>
-        <S.Title>
-          {gameData.voteTurn !== gameData.usingPlayers.length &&
-          gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
-            <S.PlayerVote>
-              <AVALON_TIMER minutes={0} seconds={5} callDispatch={onClick} />
-              {click ? (
-                <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
-              ) : (
-                <div>
-                  <S.PlayerVoteFrame>
-                    <label>
-                      찬성
-                      <S.MainVoteCheckbox
-                        type={"radio"}
-                        name={"vote"}
-                        value={"agree"}
-                        onChange={onChange}
-                      />
-                    </label>
-                    <label>
-                      반대
-                      <S.MainVoteCheckbox
-                        type="radio"
-                        name={"vote"}
-                        value={"oppose"}
-                        onChange={onChange}
-                      />
-                    </label>
-                  </S.PlayerVoteFrame>
-                  <S.MainVoteButton
-                    onClick={onClick}
-                    disabled={click}
-                    value={vote}
-                  >
-                    확인
-                  </S.MainVoteButton>
-                </div>
-              )}
-            </S.PlayerVote>
+    <S.PublicColumn>
+      {gameData.voteTurn !== gameData.usingPlayers.length &&
+      gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
+        <S.ColumnFrame>
+          <AVALON_TIMER minutes={0} seconds={15} callDispatch={onClick} />
+          <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
+          <S.VoteImage>
+            <img src={"/img/vote_img.png"} alt={"img"} width={"300px"} />
+          </S.VoteImage>
+          {click ? (
+            <h3>{vote === "agree" ? "찬성" : "반대"}</h3>
           ) : (
-            <WaitingView />
+            <S.ColumnFrame>
+              <S.PlayerVoteFrame>
+                <label>
+                  찬성
+                  <S.MainVoteCheckbox
+                    type={"radio"}
+                    name={"vote"}
+                    value={"agree"}
+                    onChange={onChange}
+                  />
+                </label>
+                <label>
+                  반대
+                  <S.MainVoteCheckbox
+                    type={"radio"}
+                    name={"vote"}
+                    value={"oppose"}
+                    onChange={onChange}
+                  />
+                </label>
+              </S.PlayerVoteFrame>
+              <S.MainVoteButton onClick={onClick} disabled={click} value={vote}>
+                확인
+              </S.MainVoteButton>
+            </S.ColumnFrame>
           )}
-        </S.Title>
-      </S.VoteFrame>
-    </>
+        </S.ColumnFrame>
+      ) : (
+        <WaitingView />
+      )}
+    </S.PublicColumn>
   );
 }
 
