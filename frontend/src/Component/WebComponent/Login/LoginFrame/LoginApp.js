@@ -3,17 +3,7 @@ import LoginWrapper from './LoginWrapper';
 import styled, {createGlobalStyle} from 'styled-components';
 import LogoWrapper from './Logo';
 import LoginForm from './LoginForm';
-import {AuthProvider} from './Auth/AuthContext';
-
-const GlobalStyle = createGlobalStyle`
-    #root,html,body{
-        background: #E0E3DA;
-        width:100vw;
-        height:100vh;
-        margin : 0;
-        padding : 0;
-    }
-`
+//import {AuthProvider} from './Auth/AuthContext';
 
 const Frame = styled.div`
     display : flex;
@@ -24,12 +14,11 @@ const Frame = styled.div`
 function LoginApp() {
     return (
         <Frame>
-            <GlobalStyle/>
-            <AuthProvider>
+            {/* <AuthProvider> */}
                 <LoginWrapper>
                     <LoginForm/>
                 </LoginWrapper>
-            </AuthProvider>
+            {/* </AuthProvider> */}
         </Frame>
     )
 }

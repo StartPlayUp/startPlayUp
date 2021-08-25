@@ -2,8 +2,8 @@ import React from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
-import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
-import {Store} from '../../ChatFrame/frontend/src/store'
+//import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
+//import {Store} from '../../ChatFrame/frontend/src/store'
 import {
     BodyFrame,
     Button,
@@ -48,9 +48,9 @@ const WaitingRoom = ({history}) => {
                            <h3>유저 목록 입니다.</h3>
                         </UserList>
                         <ChattingList>
-                            <Store>
-                                <ChatComponent/>
-                            </Store>
+                            {/* <Store>
+                                { <ChatComponent/> }
+                            </Store> */}
                         </ChattingList>
                     </MainList>
                 </Room>

@@ -67,7 +67,7 @@ export const Input = styled.input`
 
 export const SelectGame = styled.div`
     display : flex;
-    justify-content = center;
+    justify-content: center;
     flex-direction : column;
 `
 

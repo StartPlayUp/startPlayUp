@@ -15,6 +15,8 @@ import AVALON_BETA from "../Component/GameComponent/AVALON_BETA/AVALON_BETA";
 import messageButtonImage from "images/blue-message.png";
 import View from "../Component/GameComponent/AVALON_BETA/View";
 import { createGlobalStyle } from "styled-components";
+import { LoginApp } from "Component/WebComponent/WebPage";
+import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 
 const GamePage = styled.div`
   display: flex;
@@ -117,7 +119,8 @@ const TemporaryMain = () => {
 };
 
 const app = () => {
-  const { isAuthenticated } = useContext(UserContext);
+  //const { isAuthenticated } = useContext(UserContext);
+  const {checkAuth}=useContext(AuthStore)
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
@@ -129,11 +132,12 @@ const app = () => {
     <BrowserRouter>
       {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
       <Route path="/" component={GlobalContainer} />
-      <Route exact path="/" component={LoginPageContainer} />
-      {isAuthenticated && (
+      {/* <Route exact path="/" component={LoginPageContainer} /> */}
+      <Route exact path="/" component={LoginApp} />
+      {checkAuth && (
         <Route exact path="/main" component={TemporaryMain} />
       )}
-      {isAuthenticated && (
+      {checkAuth && (
         <Route
           exact
           path="/RockPaperScissors"
@@ -147,7 +151,7 @@ const app = () => {
           )}
         />
       )}
-      {isAuthenticated && (
+      {checkAuth && (
         <Route
           exact
           path="/MineSearch"
@@ -160,7 +164,7 @@ const app = () => {
           )}
         />
       )}
-      {isAuthenticated && (
+      {checkAuth && (
         <Route
           exact
           path="/Yut"
@@ -183,7 +187,7 @@ const app = () => {
           )}
         />
       )}
-      {isAuthenticated && (
+      {checkAuth && (
         <Route
           exact
           path="/Yacht"
@@ -207,7 +211,7 @@ const app = () => {
           )}
         />
       )}
-      {isAuthenticated && (
+      {checkAuth && (
         <Route
           exact
           path="/AVALON"

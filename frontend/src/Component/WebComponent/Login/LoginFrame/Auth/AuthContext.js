@@ -30,7 +30,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                     error: false
                 }
             );
-            history.push('/Home');
+            history.push('/main');
         } else {
             setContextState({
                 checkAuth: false,//전달 받은 이메일 비밀번호가 같지 않은 경우입니다.
@@ -58,7 +58,6 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                         user_id: NaverID,
                         user_email: NaverEmail,
                         user_nickName: NaverNickname
-
                     })
                         .then(() => {
                             console.log("성공적으로 회원가입!") //데이터 베이스에 사용자 정보가 추가 되었으므로 회원가입이 되었다고 알려줍니다.
@@ -67,13 +66,13 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                                 checkAuth: true,
                                 error: false
                             });
-                            history.push('/Home');//메인 페이지로 넘어가게 됩니다.
+                            history.push('/main');//메인 페이지로 넘어가게 됩니다.
                         })
                         .catch((error) => {
                             console.error("Error", error);
                         });
                 } else {
-                    querySnapshot.forEach((doc) => {//조건에 맞는 카카오ID가 있는 경우
+                    querySnapshot.forEach((doc) => {//조건에 맞는 네이버ID가 있는 경우
                         console.log(NaverID);
                         console.log(doc.id, "=>", doc.data());
                         setContextState({
@@ -84,12 +83,11 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                         localStorage.setItem('email', NaverEmail)
                         localStorage.setItem('nick', NaverNickname)
                         localStorage.setItem('id', NaverID)
-                        history.push('/Home');//메인 페이지로 넘어가게 됩니다.
+                        history.push('/main');//메인 페이지로 넘어가게 됩니다.
 
                         console.log("네이버 아이디를 찾았다.");
                     });
                 }
-
             });
     }
     const onKakaoLogin = (res, history) => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.

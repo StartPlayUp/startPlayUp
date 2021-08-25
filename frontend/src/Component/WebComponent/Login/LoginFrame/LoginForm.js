@@ -9,7 +9,7 @@ import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
 
 const Frame = styled.div`
     display : flex;
-    justify-contents : center;
+    justify-content : center;
     flex-direction : column;
 `
 
@@ -54,8 +54,9 @@ const Input = styled.input`
     border-bottom-width:medium solid;
     border-style:none;
     background-color : inherit;
-    placeholder : ${props => props.placeholder}
-    input:focus outline:none;
+    placeholder : ${props => props.placeholder};
+    input:focus;
+    outline:none;
     font-style: italic;
     font-size : 14px;
     border-bottom:solid 3px #E0E3DA;
@@ -65,7 +66,7 @@ const Input = styled.input`
 const InputFrame = styled.div`
     display : flex;
     flex-wrap : nowrap;
-    align-item : center;
+    align-items : center;
 `
 const InputInfo = styled.div`
     width : 100vw;
@@ -74,7 +75,7 @@ const LoginButtonArea = styled.div`
     width : 30vw;
     margin : 0 atuo;
     justify-content: center;
-    align-item : center;
+    align-items : center;
 `
 
 const Image = styled.img`
