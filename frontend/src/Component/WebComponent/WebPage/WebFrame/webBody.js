@@ -51,7 +51,6 @@ const BODY = ({ location, history }) => {
             <hr />
           </RoomFrame>
         </BodyCenter>
-        <FOOTER />
       </BodyFrame>
     </>
   );
