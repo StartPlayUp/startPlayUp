@@ -29,5 +29,6 @@ frontend/backup
 backend/node_modules
 backend/testf
 backend/testServerFile
-.env
+frontend\.env
 node_modules
+frontend\src\Component\WebComponent\Login\LoginFrame\Naver.js

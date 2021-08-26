@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import {useHistory} from 'react-router-dom';
 import {AuthStore} from './Auth/AuthContext';
 import KakaoLogin from "react-kakao-login";
-import NaverLogin from "react-login-by-naver";
+import NaverLogin from "react-naver-login";
 import NaverImage from '../../images/naverGreenLogin.PNG'
 import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
+require('dotenv').config();
 
 const Frame = styled.div`
     display : flex;
@@ -107,7 +108,7 @@ function LoginForm() {
         <AuthStore.Consumer>
             {({checkAuth}) => (
                 (checkAuth ? <div/> :
-                        <Frame>
+                    <Frame>
                             <Title>StartPlayUp</Title>
                             <InputFrame>
                                 <InputInfo>
@@ -130,7 +131,7 @@ function LoginForm() {
                             </InputFrame>
                             <LoginConnectArea>
                                 <NaverLogin //네이버 로그인 모듈 사용
-                                    clientId={'HI9KL4ilNF_j6vWKWQ8P'} //발급 받은 클라이언트 ID
+                                    clientId={process.env.REACT_APP_naverClientID} //발급 받은 클라이언트 ID
                                     callbackUrl="http://localhost:3000"    //콜백 URL
                                     render={(props) =>
                                         <Image
@@ -139,12 +140,11 @@ function LoginForm() {
                                             alt='NaverLoginImage'
                                         />
                                     }  //로그인 버튼 생성
-
-                                    onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}   //성공시
+                                    onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}  //성공시
                                     onFailure={() => console.error(result)} //실패한 경우
                                 />
                                 <KakaoLogin
-                                    jsKey={'ff442cfe2e882d30f4a2d95cb616a8cd'}
+                                    token={process.env.REACT_APP_kakaoJsKey}
                                     onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
                                     onFailure={(res) => console.log(res)}
                                     getProfile={true}
