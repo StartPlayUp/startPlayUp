@@ -2,14 +2,13 @@ import firebase from 'firebase'
 import 'firebase/auth'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDKfGhfG2WutaUsqpxQl7nm88DIP-ehLv8",
-    authDomain: "startplayup-ac7ee.firebaseapp.com",
-    databaseURL: "https://startplayup-ac7ee-default-rtdb.firebaseio.com",
-    projectId: "startplayup-ac7ee",
-    storageBucket: "startplayup-ac7ee.appspot.com",
-    messagingSenderId: "922265546085",
-    appId: "1:922265546085:web:e6882d6e2e0b55edacc58c",
-    measurementId: "G-BBD31DL3C7"
+  apiKey: "AIzaSyAmxF3pBLMX0APFtZeKDAflJTCzpjnG9ak",
+  authDomain: "startplayup.firebaseapp.com",
+  databaseURL: "https://startplayup-default-rtdb.firebaseio.com",
+  projectId: "startplayup",
+  storageBucket: "startplayup.appspot.com",
+  messagingSenderId: "970113103940",
+  appId: "1:970113103940:web:f58f955eda34902c72a411"
 };
 //파이어 베이스 설치
 firebase.initializeApp(firebaseConfig)

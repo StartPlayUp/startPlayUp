@@ -34,8 +34,6 @@ const reducer = (state, action) => {
     }
 };
 export const UserContext = createContext();
-
-
 export const LoginStore = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { user, isAuthenticated } = state;
