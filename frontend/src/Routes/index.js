@@ -17,7 +17,8 @@ import View from "../Component/GameComponent/AVALON_BETA/View";
 import { createGlobalStyle } from "styled-components";
 import { LoginApp } from "Component/WebComponent/WebPage";
 import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
-
+import WebMain from '../Component/WebComponent/WebPage/WebFrame/webBody'
+import WaitingRoom from "../Component/WebComponent/WebPage/WebFrame/waitingRoom";
 const GamePage = styled.div`
   display: flex;
   flex-direction: row;
@@ -79,7 +80,7 @@ const CHAT_STYLE = styled.div`
   justify-content: flex-end;
 `;
 
-const CHAT_SHOW_BUTTON_STYLE = styled.button`
+export const CHAT_SHOW_BUTTON_STYLE = styled.button`
   width: 40px;
   height: 40px;
   background-color: rgb(0, 0, 0, 0);
@@ -88,7 +89,7 @@ const CHAT_SHOW_BUTTON_STYLE = styled.button`
   border-radius: 100%;
 `;
 
-const CHAT_SHOW_DIV_STYLE = styled.div`
+export const CHAT_SHOW_DIV_STYLE = styled.div`
   position: absolute;
   z-index: 100;
   top: 0;
@@ -120,7 +121,7 @@ const TemporaryMain = () => {
 
 const app = () => {
   //const { isAuthenticated } = useContext(UserContext);
-  const { checkAuth } = useContext(AuthStore)
+  const {checkAuth}=useContext(AuthStore)
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
@@ -135,8 +136,19 @@ const app = () => {
       {/* <Route exact path="/" component={LoginPageContainer} /> */}
       <Route exact path="/" component={LoginApp} />
       {checkAuth && (
-        <Route exact path="/main" component={TemporaryMain} />
+          <Switch>
+              <Route exact path="/main" component={WebMain} />
+              <Route path={'/waitingRoom'} render={()=>(
+                      <WaitingRoom
+                          chatList={chatList}
+                          chatShow={chatShow}
+                          setChatList={setChatList}
+                          handler = {chatOnClickHandler}
+                      />
+              )}/>
+          </Switch>
       )}
+
       {checkAuth && (
         <Route
           exact

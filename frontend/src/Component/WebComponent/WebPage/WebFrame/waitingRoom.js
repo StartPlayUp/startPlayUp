@@ -17,8 +17,12 @@ import {
     LeftButtonsArea,
     RightButtonsArea
 } from "../Style/WaitingRoomStyle";
+import ChatComponent from "../../../ChatComponent";
+import {PeerStore} from "../../../../Routes/peerStore";
+import {CHAT_SHOW_BUTTON_STYLE, CHAT_SHOW_DIV_STYLE} from "../../../../Routes";
 
-const WaitingRoom = ({history}) => {
+
+const WaitingRoom = ({history,chatList,chatShow,setChatList,chatOnClickHandler}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
@@ -26,7 +30,6 @@ const WaitingRoom = ({history}) => {
     return (
         <div>
             <BodyFrame>
-                <WebHeader/>
                 <Room>
                     <Title>
                         <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
@@ -37,24 +40,32 @@ const WaitingRoom = ({history}) => {
                         <LeftButtonsArea>
                             <Button>시작</Button>
                             <Button>준비</Button>
-                            <Button>관전</Button>
                         </LeftButtonsArea>
                         <RightButtonsArea>
-                            <Button margin={'0'} onClick={() => history.push('/Home')}>나가기</Button>
+                            <Button margin={'0'} onClick={()=>history.push('/main')}>나가기</Button>
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>
                         <UserList>
-                           <h3>유저 목록 입니다.</h3>
+                            <h3>유저 목록 입니다.</h3>
                         </UserList>
                         <ChattingList>
-                            {/* <Store>
-                                { <ChatComponent/> }
-                            </Store> */}
+                            <PeerStore>
+                                {chatShow && (
+                                    <ChatComponent
+                                        chatList={chatList}
+                                        setChatList={setChatList}
+                                        width={500}
+                                    />
+                                )}
+                                <CHAT_SHOW_DIV_STYLE>
+                                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                                </CHAT_SHOW_DIV_STYLE>
+                            </PeerStore>
                         </ChattingList>
                     </MainList>
                 </Room>
-                <FOOTER/>
+                {/*<FOOTER/>*/}
             </BodyFrame>
         </div>
     )
