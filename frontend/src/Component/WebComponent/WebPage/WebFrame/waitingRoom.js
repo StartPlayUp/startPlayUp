@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
@@ -19,18 +19,38 @@ import {
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
 import {PeerStore} from "../../../../Routes/peerStore";
-import {CHAT_SHOW_BUTTON_STYLE, CHAT_SHOW_DIV_STYLE} from "../../../../Routes";
+import {buttonGlobalHover, CHAT_SHOW_BUTTON_STYLE, CHAT_SHOW_DIV_STYLE} from "../../../../Routes";
 import {useHistory} from "react-router";
 
 
-const WaitingRoom = ({chatList,chatShow,setChatList}) => {
+const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
     const history = useHistory()
+    const gameStart = () => {
+        switch (game) {
+            case 'Yut':
+                history.push('/Yut');
+                break;
+            case 'YachtDice':
+                history.push('/Yacht');
+                break;
+            case 'AVALON':
+                history.push('/AVALON');
+                break;
+            case 'MineSearch':
+                history.push('/MineSearch');
+                break;
+            default:
+                alert('error');
+        }
+    }
+    const [user, setUsers] = useState([]);
     return (
         <div>
             <BodyFrame>
+                {/*<buttonGlobalHover/>*/}
                 <Room>
                     <Title>
                         <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
@@ -39,11 +59,11 @@ const WaitingRoom = ({chatList,chatShow,setChatList}) => {
                     <hr/>
                     <ButtonArea>
                         <LeftButtonsArea>
-                            <Button>시작</Button>
+                            <Button onClick={gameStart}>시작</Button>
                             <Button>준비</Button>
                         </LeftButtonsArea>
                         <RightButtonsArea>
-                            <Button margin={'0'} onClick={()=>history.push('/main')}>나가기</Button>
+                            <Button margin={'0'} onClick={() => history.push('/main')}>나가기</Button>
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>

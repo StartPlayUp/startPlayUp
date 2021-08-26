@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^0.21.1",
     "lodash.shuffle": "^4.2.0",
     "react-motion": "^0.5.2"
   },

@@ -17,6 +17,7 @@ import {
   Footer,
   ResultButton,
 } from "../Style/CreateRoomStyle";
+import {buttonGlobalHover} from "../../../../Routes";
 
 const CreateRoom = ({ isOpen, close }) => {
   let history = useHistory();
@@ -40,6 +41,7 @@ const CreateRoom = ({ isOpen, close }) => {
     <>
       {isOpen ? (
         <Modal>
+          {/*<buttonGlobalHover/>*/}
           <LoginMid>
             <LoginModal>
               <Close onClick={close}>&times;</Close>
@@ -68,15 +70,16 @@ const CreateRoom = ({ isOpen, close }) => {
                 </RoomTitle>
                 <SelectGame>
                   <Select value={game} onChange={onGameChange}>
-                    <Games value={"Yutnori"}>윷놀이</Games>
+                    <Games value={"Yut"}>윷놀이</Games>
                     <Games value={"YachtDice"}>요트 다이스</Games>
-                    <Games value={"Mafia"}>마피아</Games>
+                    <Games value={"AVALON"}>아발론</Games>
+                    <Games value={"MineSearch"}>지뢰 찾기</Games>
                   </Select>
                 </SelectGame>
-                <SelectPrivate>
-                  <span>관전허용 : </span>
-                  <input type="checkbox" />
-                </SelectPrivate>
+                {/*<SelectPrivate>*/}
+                {/*  <span>관전허용 : </span>*/}
+                {/*  <input type="checkbox" />*/}
+                {/*</SelectPrivate>*/}
               </ModalContents>
               <Footer>
                 {/*<ResultButton color='#B8B8B0'>취소</ResultButton>*/}
