@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import FOOTER from "./webFooter";
 import HEADER from "./webHeader";
 import CreateButton from "./CreateButton";
@@ -11,24 +11,24 @@ import {
   Users,
   ButtonArea,
 } from "../Style/WebFrameStyle";
-import {buttonGlobalHover} from "../../../../Routes";
+import { buttonGlobalHover } from "../../../../Routes";
 import axios from "axios";
 
 const BODY = ({ location, history }) => {
   console.log(location);
   console.log(history);
-  const [gameList,setGameList] = useState([])
+  const [gameList, setGameList] = useState([])
 
   useEffect(() => {
-    axios.post('localhost:4000/getRooms')
-        .then(function (result) {
-          console.log('get useEffect')
-          const {roomList,success} = result.data
-          success && setGameList(roomList)
-        })
-        .catch(function (error) {
-          console.error("error : ", error);
-        });
+    axios.post('http://localhost:4000/getRooms')
+      .then(function (result) {
+        console.log('get useEffect')
+        const { roomList, success } = result.data
+        success && setGameList(roomList)
+      })
+      .catch(function (error) {
+        console.error("error : ", error);
+      });
   }, []);
 
   return (
@@ -66,7 +66,7 @@ const BODY = ({ location, history }) => {
             </UserList>
             <UserList>
               {
-                gameList.map(function(rooms,index){
+                gameList.map(function (rooms, index) {
                   console.log('rooms' + rooms)
                 })
               }
