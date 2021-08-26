@@ -47,6 +47,7 @@ const StyleDiv = styled.div`
 
 
 const Yut = (props) => {
+
     return (
         <YutTextView>
             <YutStore >
