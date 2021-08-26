@@ -58,9 +58,9 @@ const WaitingRoom = ({history,chatList,chatShow,setChatList,chatOnClickHandler})
                                         width={500}
                                     />
                                 )}
-                                <CHAT_SHOW_DIV_STYLE>
-                                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                                </CHAT_SHOW_DIV_STYLE>
+                                {/*<CHAT_SHOW_DIV_STYLE>*/}
+                                {/*    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />*/}
+                                {/*</CHAT_SHOW_DIV_STYLE>*/}
                             </PeerStore>
                         </ChattingList>
                     </MainList>
