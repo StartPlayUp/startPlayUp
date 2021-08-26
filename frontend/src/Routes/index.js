@@ -124,7 +124,6 @@ const app = () => {
   const {checkAuth}=useContext(AuthStore)
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
-
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
@@ -144,6 +143,7 @@ const app = () => {
                           chatShow={chatShow}
                           setChatList={setChatList}
                           handler = {chatOnClickHandler}
+                          history={history}
                       />
               )}/>
           </Switch>

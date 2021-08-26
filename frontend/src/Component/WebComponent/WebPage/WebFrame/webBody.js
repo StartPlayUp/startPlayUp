@@ -48,6 +48,11 @@ const BODY = ({ location, history }) => {
               <Users width={"15vw"}>Jang</Users>
               <Users width={"5vw"}>3</Users>
             </UserList>
+            <UserList>
+              {
+
+              }
+            </UserList>
             <hr />
           </RoomFrame>
         </BodyCenter>
