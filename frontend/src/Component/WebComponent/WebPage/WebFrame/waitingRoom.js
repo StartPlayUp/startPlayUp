@@ -20,13 +20,14 @@ import {
 import ChatComponent from "../../../ChatComponent";
 import {PeerStore} from "../../../../Routes/peerStore";
 import {CHAT_SHOW_BUTTON_STYLE, CHAT_SHOW_DIV_STYLE} from "../../../../Routes";
+import {useHistory} from "react-router";
 
 
-const WaitingRoom = ({history,chatList,chatShow,setChatList,chatOnClickHandler}) => {
+const WaitingRoom = ({chatList,chatShow,setChatList}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
-
+    const history = useHistory()
     return (
         <div>
             <BodyFrame>
