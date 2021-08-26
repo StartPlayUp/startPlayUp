@@ -1,6 +1,7 @@
-import React, {Component, useLayoutEffect, useState} from 'react';
+import React, { Component, useLayoutEffect, useState } from 'react';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import { testDB } from 'Common/TestDB/index2';
 
 const AuthStore = React.createContext(); //context 객체 생성
 
@@ -10,9 +11,9 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         error: false
     });
 
-    const {children} = props; //children에게 값을 전달합니다.
-    const testDB = [{email: "test1", password: "test1"},
-        {email: "test2", password: "test2"}]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
+    const { children } = props; //children에게 값을 전달합니다.
+    // const testDB = [{ email: "test1", password: "test1" },
+    // { email: "test2", password: "test2" }]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
     const onLogin = (model, history) => {
         setContextState({
             ...contextState, //
@@ -21,14 +22,17 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         console.log("비밀번호" + model.password)
 
         const res = testDB.filter((i) => i.email === model.email && i.password === model.password);
+        console.log(res)
         if (res.length > 0) {
             localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
             localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
+            localStorage.setItem('nickname', res[0].nickname); // 관련 닉네임을 찾아 저장합니다.
+
             setContextState({
-                    ...contextState,
-                    checkAuth: true,
-                    error: false
-                }
+                ...contextState,
+                checkAuth: true,
+                error: false
+            }
             );
             history.push('/main');
         } else {
@@ -208,4 +212,4 @@ const AuthRoute=({ component: Component, ...rest})=>(//다른 페이지를 띄�
 
 export { AuthContext,AuthProvider,AuthRoute };
 */
-export {AuthStore, AuthProvider};
+export { AuthStore, AuthProvider };
