@@ -120,7 +120,7 @@ const TemporaryMain = () => {
 
 const app = () => {
   //const { isAuthenticated } = useContext(UserContext);
-  const {checkAuth}=useContext(AuthStore)
+  const { checkAuth } = useContext(AuthStore)
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
 
