@@ -104,22 +104,7 @@ const FLEX_DIV = styled.div`
   display: flex;
   justify-content: space-around;
 `;
-export const buttonGlobalHover = createGlobalStyle`
-  button {
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #a593e0;
-    border-radius: 2px;
-    border: 0;
-    padding: 10px;
-    text-decoration: none;
-    transition: all 0.5s;
 
-    &:hover {
-      background-color: green;
-    }
-  }
-`
 const TemporaryMain = () => {
     const history = useHistory();
     return (

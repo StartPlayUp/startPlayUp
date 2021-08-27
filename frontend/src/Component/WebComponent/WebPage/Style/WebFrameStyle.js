@@ -38,7 +38,7 @@ export const BodyCenter = styled.div`
     height: 90%;
     margin: 0 auto;
     flex: 1 1 auto;
-    background-color = gray;
+    
     flex-direction: column;
 `;
 
@@ -50,15 +50,17 @@ export const RoomFrame = styled.div`
 `;
 
 export const UserList = styled.div`
-    display :fix;
+    display :flex;
     padding: 5px;
     color : ${props => props.color};
-    background-color : ${props => props.background};
+    background : ${props => props.background};
+    border-bottom: 2px solid gray;
 `;
 
 export const Users = styled.span`
     font-size : 14px;
     width : ${props => props.width};
+    text-align: ${props => props.align};
     float : left;
     
 `;
