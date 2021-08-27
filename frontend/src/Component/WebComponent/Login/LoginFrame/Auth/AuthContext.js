@@ -3,6 +3,7 @@ import React, { Component, useLayoutEffect, useState } from 'react';
 //import 'firebase/firestore';
 import { testDB } from 'Common/TestDB/index2';
 
+const axios = require('axios');
 const AuthStore = React.createContext(); //context 객체 생성
 
 const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
@@ -10,7 +11,6 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         checkAuth: false, //로그인 상태를 기록합니다. false는 로그아웃 되어있는 상태입니다.
         error: false
     });
-
     const { children } = props; //children에게 값을 전달합니다.
     // const testDB = [{ email: "test1", password: "test1" },
     // { email: "test2", password: "test2" }]; //테스트를 위한 하드코딩 된 이메일과 비밀번호 입니다.
@@ -43,15 +43,32 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         }
         console.log(contextState.checkAuth)
     };
+
+
     const onNaverLogin = (naverUser, history) => {
-            setContextState({
+        setContextState({
             ...contextState,//로그인이 성공 했음을 알립니다.
             checkAuth: true,
             error: false
-                        });
+        });
         const NaverID = naverUser.id
+        const NaverEmail = naverUser.email
+        const checkUserEmailConfig = {
+            method: 'get',
+            url: 'http://localhost::4000/checkUser?email=' + NaverEmail
+        }
+            const checkUserEmail = () => {
+        axios(checkUserEmailConfig)
+        .then(function (response) {
+            console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+        checkUserEmail()
         history.push('/main');//메인 페이지로 넘어가게 됩니다.
-        console.log(naverUser);
+            //console.log(naverUser);
     }
     const onKakaoLogin = (res, history) => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
         setContextState({
