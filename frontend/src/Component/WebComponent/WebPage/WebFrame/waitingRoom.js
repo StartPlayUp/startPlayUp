@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
@@ -19,8 +19,9 @@ import {
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
 import {PeerStore} from "../../../../Routes/peerStore";
-import {buttonGlobalHover, CHAT_SHOW_BUTTON_STYLE, CHAT_SHOW_DIV_STYLE} from "../../../../Routes";
 import {useHistory} from "react-router";
+import axios from "axios";
+import {Users} from "../Style/WebFrameStyle";
 
 
 const WaitingRoom = ({chatList, chatShow, setChatList}) => {
@@ -47,10 +48,20 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         }
     }
     const [user, setUsers] = useState([]);
+    useEffect(() => {
+        axios.post('http://localhost:4000/checkUser?email=test2@gmail.com')
+            .then(function (result) {
+                console.log('checkUser get useEffect')
+                const {userList, success} = result.data
+                success && setUsers(userList)
+            })
+            .catch(function (error) {
+                console.error('error : ', error)
+            });
+    })
     return (
         <div>
             <BodyFrame>
-                {/*<buttonGlobalHover/>*/}
                 <Room>
                     <Title>
                         <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
@@ -67,9 +78,17 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                         </RightButtonsArea>
                     </ButtonArea>
                     <MainList>
-                        <UserList>
-                            <h3>유저 목록 입니다.</h3>
-                        </UserList>
+                        {
+                            user.map(function (user, index) {
+                                return (
+                                    <UserList key={index}>
+                                        <Users width={'5vw'}>
+                                            {user.nickname}
+                                        </Users>
+                                    </UserList>
+                                )
+                            })
+                        }
                         <ChattingList>
                             <PeerStore>
                                 {chatShow && (
@@ -86,9 +105,8 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                         </ChattingList>
                     </MainList>
                 </Room>
-                {/*<FOOTER/>*/}
             </BodyFrame>
         </div>
-    )
+    );
 }
 export default WaitingRoom;
