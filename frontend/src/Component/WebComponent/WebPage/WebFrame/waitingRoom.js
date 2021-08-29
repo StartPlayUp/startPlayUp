@@ -28,19 +28,20 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
+    const guests = location.list.guestList;
     const history = useHistory()
     const gameStart = () => {
         switch (game) {
-            case 'Yut':
+            case 'YUT':
                 history.push('/Yut');
                 break;
-            case 'YachtDice':
+            case 'YACHT':
                 history.push('/Yacht');
                 break;
             case 'AVALON':
                 history.push('/AVALON');
                 break;
-            case 'MineSearch':
+            case 'MINE_SEARCH':
                 history.push('/MineSearch');
                 break;
             default:
@@ -49,7 +50,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     }
     const [user, setUsers] = useState([]);
     useEffect(() => {
-        axios.post('http://localhost:4000/checkUser?email=test2@gmail.com')
+        axios.post('http://localhost:4000/api/room/accessRoom')
             .then(function (result) {
                 console.log('checkUser get useEffect')
                 const {userList, success} = result.data
@@ -58,7 +59,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
             .catch(function (error) {
                 console.error('error : ', error)
             });
-    })
+    },[])
     return (
         <div>
             <BodyFrame>
@@ -80,6 +81,8 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                     <MainList>
                         {
                             user.map(function (user, index) {
+                                console.log('-----------------')
+                                console.log(user)
                                 return (
                                     <UserList key={index}>
                                         <Users width={'5vw'}>
@@ -89,6 +92,21 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                                 )
                             })
                         }
+                        <MainList>
+                            {
+                                guests.map(function (user,index){
+                                    console.log('---------------')
+                                    console.log(user)
+                                    return(
+                                        <UserList key={index}>
+                                            <Users width={'5vw'}>
+                                                {user}
+                                            </Users>
+                                        </UserList>
+                                    )
+                                })
+                            }
+                        </MainList>
                         <ChattingList>
                             <PeerStore>
                                 {chatShow && (
@@ -98,9 +116,6 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                                         width={500}
                                     />
                                 )}
-                                {/*<CHAT_SHOW_DIV_STYLE>*/}
-                                {/*    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />*/}
-                                {/*</CHAT_SHOW_DIV_STYLE>*/}
                             </PeerStore>
                         </ChattingList>
                     </MainList>
