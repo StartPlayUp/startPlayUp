@@ -72,7 +72,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         console.log(contextState.checkAuth)
     };
     const onNaverLogin = (naverUser, history) => {
-        const NaverID = naverUser.id
+        console.log(naverUser)
         const NaverEmail = naverUser.email
         const checkUserEmailConfig = {
             method: 'post',

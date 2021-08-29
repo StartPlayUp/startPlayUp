@@ -6,6 +6,7 @@ import KakaoLogin from "react-kakao-login";
 import NaverLogin from "react-naver-login";
 import NaverImage from '../../images/naverGreenLogin.PNG'
 import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
+import Naver from './naverLogin.jsx'
 require('dotenv').config();
 
 const Frame = styled.div`
@@ -129,8 +130,9 @@ function LoginForm() {
                                     <Button onClick={logOn}>Login</Button>
                                 </LoginButtonArea>
                             </InputFrame>
-                            <LoginConnectArea>
-                                <NaverLogin //네이버 로그인 모듈 사용
+                        <LoginConnectArea>
+                            <Naver></Naver>
+                                {/* <NaverLogin //네이버 로그인 모듈 사용
                                     clientId={process.env.REACT_APP_naverClientID} //발급 받은 클라이언트 ID
                                     callbackUrl="http://localhost:3000"    //콜백 URL
                                     render={(props) =>
@@ -142,7 +144,7 @@ function LoginForm() {
                                     }  //로그인 버튼 생성
                                     onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}  //성공시
                                     onFailure={() => console.error(result)} //실패한 경우
-                                />
+                                /> */}
                                 <KakaoLogin
                                     token={process.env.REACT_APP_kakaoJsKey}
                                     onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
