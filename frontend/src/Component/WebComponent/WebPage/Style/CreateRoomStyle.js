@@ -43,7 +43,7 @@ export const ModalContents = styled.div`
 `
 
 export const Title = styled.div`
-  font-size: 24px;
+  font-size: ${props=>props.size};
   text-align: center;
   margin-bottom: 20px;
   letter-spacing: 3px;

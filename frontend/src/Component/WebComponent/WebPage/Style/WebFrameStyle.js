@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {createGlobalStyle} from "styled-components";
 
 export const HeadStyle = styled.div`
     width: 75%;
@@ -27,12 +27,17 @@ export const HeadRight = styled.div`
     justify-content: flex-end;
 `
 export const BodyFrame = styled.div`
-    width: 100%;
-    height: 100%;
-    background-color : #E0E3DA;
+    width: 100vw;
+    height: 100vh;
+    background : #E0E3DA;
     margin : 0 auto;
     position : absolute;
 `;
+export const Background = createGlobalStyle`
+    body {
+      background-color : #E0E3DA;
+    }
+`
 export const BodyCenter = styled.div`
     width: 75%;
     height: 90%;
@@ -58,11 +63,10 @@ export const UserList = styled.div`
 `;
 
 export const Users = styled.span`
-    font-size : 14px;
+    font-size : 16px;
     width : ${props => props.width};
     text-align: ${props => props.align};
     float : left;
-    
 `;
 
 export const ButtonArea = styled.div`

@@ -93,7 +93,7 @@ const CreateRoom = ({ isOpen, close }) => {
             <LoginModal>
               <Close onClick={close}>&times;</Close>
               <ModalContents onClick={isOpen}>
-                <Title>StartPlayUp</Title>
+                <Title size={'28px'}>StartPlayUp</Title>
                 <RoomTitle>
                   <span>제목 : &nbsp; </span>
                   <Input
