@@ -7,6 +7,8 @@ import NaverLogin from "react-naver-login";
 import NaverImage from '../../images/naverGreenLogin.PNG'
 import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
 import Naver from './naverLogin.jsx'
+import SignUp from './signUp.jsx'
+
 require('dotenv').config();
 
 const Frame = styled.div`
@@ -89,6 +91,7 @@ const Image = styled.img`
 function LoginForm() {
     const AuthCon = useContext(AuthStore);
     let history = useHistory();
+    const [signUpButton,setSignUpButton] = useState(false) //false 인경우 로그인하기 true인 경우 회원가입하기 창이 뜸
     const [inputs, setInputs] = useState({
         email: '',
         password: ''
@@ -105,56 +108,68 @@ function LoginForm() {
         e.preventDefault();
         AuthCon.onLogin(inputs, history)
     };
+    const onClick = () => {
+        setSignUpButton(!signUpButton);
+    }
     return (
         <AuthStore.Consumer>
             {({checkAuth}) => (
                 (checkAuth ? <div/> :
                     <Frame>
-                            <Title>StartPlayUp</Title>
-                            <InputFrame>
-                                <InputInfo>
-                                    <Input
-                                        type={'text'}
-                                        name="email"
-                                        onChange={onChange}
-                                        placeholder={'Email'}
-                                        value={email}/>
-                                    <Input
-                                        type={'password'}
-                                        name="password"
-                                        onChange={onChange}
-                                        placeholder={'Password'}
-                                        value={password}/>
-                                </InputInfo>
-                                <LoginButtonArea>
-                                    <Button onClick={logOn}>Login</Button>
-                                </LoginButtonArea>
-                            </InputFrame>
-                        <LoginConnectArea>
-                            <Naver></Naver>
-                                {/* <NaverLogin //네이버 로그인 모듈 사용
-                                    clientId={process.env.REACT_APP_naverClientID} //발급 받은 클라이언트 ID
-                                    callbackUrl="http://localhost:3000"    //콜백 URL
-                                    render={(props) =>
-                                        <Image
-                                            src={NaverImage}
-                                            onClick={props.onClick}
-                                            alt='NaverLoginImage'
-                                        />
-                                    }  //로그인 버튼 생성
-                                    onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}  //성공시
-                                    onFailure={() => console.error(result)} //실패한 경우
-                                /> */}
-                                <KakaoLogin
-                                    token={process.env.REACT_APP_kakaoJsKey}
-                                    onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
-                                    onFailure={(res) => console.log(res)}
-                                    getProfile={true}
-                                >
-                                    <Image src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"/>
-                                </KakaoLogin>
-                            </LoginConnectArea>
-                        </Frame>
+                        <Title>StartPlayUp</Title>
+                        {signUpButton ?
+                            <>
+                                <div>회원가입하기</div>
+                                <SignUp></SignUp>
+                            </> :
+                            <>
+                                <div>로그인 하기</div>
+                                <InputFrame>
+                                    <InputInfo>
+                                        <Input
+                                            type={'text'}
+                                            name="email"
+                                            onChange={onChange}
+                                            placeholder={'Email'}
+                                            value={email} />
+                                        <Input
+                                            type={'password'}
+                                            name="password"
+                                            onChange={onChange}
+                                            placeholder={'Password'}
+                                            value={password} />
+                                    </InputInfo>
+                                    <LoginButtonArea>
+                                        <Button onClick={logOn}>Login</Button>
+                                    </LoginButtonArea>
+                                </InputFrame>
+                                <LoginConnectArea>
+                                    <Naver></Naver>
+                                    {/* <NaverLogin //네이버 로그인 모듈 사용
+                                        clientId={process.env.REACT_APP_naverClientID} //발급 받은 클라이언트 ID
+                                        callbackUrl="http://localhost:3000"    //콜백 URL
+                                        render={(props) =>
+                                            <Image
+                                                src={NaverImage}
+                                                onClick={props.onClick}
+                                                alt='NaverLoginImage'
+                                            />
+                                        }  //로그인 버튼 생성
+                                        onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}  //성공시
+                                        onFailure={() => console.error(result)} //실패한 경우
+                                    /> */}
+                                    <KakaoLogin
+                                        token={process.env.REACT_APP_kakaoJsKey}
+                                        onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
+                                        onFailure={(res) => console.log(res)}
+                                        getProfile={true}
+                                    >
+                                        <Image src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
+                                    </KakaoLogin>
+                                </LoginConnectArea>
+                            </>}
+                        <button onClick={ onClick}>{signUpButton ? <div>로그인 하기</div>:<div>회원가입 하기</div> }</button>
+                    </Frame>
                 )
             )
             }

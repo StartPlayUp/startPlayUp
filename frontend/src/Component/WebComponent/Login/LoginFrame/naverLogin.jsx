@@ -16,7 +16,7 @@ function Naver() {
             callbackUrl: "http://localhost:3000",
             isPopup: false,
             loginButton: {
-                color: 'white', type: 1, height: '47'
+                color: 'green', type: 3, height: '60'
             },
         });
         naverLogin.init();
