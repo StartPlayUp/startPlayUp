@@ -15,13 +15,13 @@ import {
     TitleSpan,
     UserList,
     LeftButtonsArea,
-    RightButtonsArea
+    RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
 import {PeerStore} from "../../../../Routes/peerStore";
 import {useHistory} from "react-router";
 import axios from "axios";
-import {Users} from "../Style/WebFrameStyle";
+import {Background, Users} from "../Style/WebFrameStyle";
 
 
 const WaitingRoom = ({chatList, chatShow, setChatList}) => {
@@ -59,69 +59,56 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
             .catch(function (error) {
                 console.error('error : ', error)
             });
-    },[])
+    }, [])
     return (
-        <div>
-            <BodyFrame>
-                <Room>
-                    <Title>
-                        <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
-                        <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
-                    </Title>
-                    <hr/>
-                    <ButtonArea>
-                        <LeftButtonsArea>
-                            <Button onClick={gameStart}>시작</Button>
-                            <Button>준비</Button>
-                        </LeftButtonsArea>
-                        <RightButtonsArea>
-                            <Button margin={'0'} onClick={() => history.push('/main')}>나가기</Button>
-                        </RightButtonsArea>
-                    </ButtonArea>
-                    <MainList>
+        <BodyFrame>
+            <Background/>
+            <Room>
+                <Title>
+                    <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
+                    <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
+                </Title>
+                <hr/>
+                <ButtonArea>
+                    <LeftButtonsArea>
+                        <Button onClick={gameStart}>시작</Button>
+                        <Button>준비</Button>
+                    </LeftButtonsArea>
+                    <RightButtonsArea>
+                        <Button margin={'0'} onClick={() => history.push('/main')}>나가기</Button>
+                    </RightButtonsArea>
+                </ButtonArea>
+                <MainList>
+                    <WaitingUsers>
                         {
-                            user.map(function (user, index) {
-                                console.log('-----------------')
+                            guests.map(function (user, index) {
+                                console.log('---------------')
                                 console.log(user)
                                 return (
                                     <UserList key={index}>
                                         <Users width={'5vw'}>
-                                            {user.nickname}
+                                            {user}
                                         </Users>
                                     </UserList>
                                 )
                             })
                         }
-                        <MainList>
-                            {
-                                guests.map(function (user,index){
-                                    console.log('---------------')
-                                    console.log(user)
-                                    return(
-                                        <UserList key={index}>
-                                            <Users width={'5vw'}>
-                                                {user}
-                                            </Users>
-                                        </UserList>
-                                    )
-                                })
-                            }
-                        </MainList>
-                        <ChattingList>
-                            <PeerStore>
-                                {chatShow && (
-                                    <ChatComponent
-                                        chatList={chatList}
-                                        setChatList={setChatList}
-                                        width={500}
-                                    />
-                                )}
-                            </PeerStore>
-                        </ChattingList>
-                    </MainList>
-                </Room>
-            </BodyFrame>
-        </div>
+                    </WaitingUsers>
+                    <ChattingList>
+                        <PeerStore>
+                            {chatShow && (
+                                <ChatComponent
+                                    chatList={chatList}
+                                    setChatList={setChatList}
+                                    width={550}
+                                    height={300}
+                                />
+                            )}
+                        </PeerStore>
+                    </ChattingList>
+                </MainList>
+            </Room>
+        </BodyFrame>
     );
 }
 export default WaitingRoom;
