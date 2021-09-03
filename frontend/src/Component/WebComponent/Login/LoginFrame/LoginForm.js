@@ -58,8 +58,6 @@ const Input = styled.input`
     border-bottom-width:medium solid;
     border-style:none;
     background-color : inherit;
-    placeholder : ${props => props.placeholder};
-    input:focus;
     outline:none;
     font-style: italic;
     font-size : 14px;
@@ -113,17 +111,17 @@ function LoginForm() {
     }
     return (
         <AuthStore.Consumer>
-            {({checkAuth}) => (
+            {({checkAuth,onSignUp}) => (
                 (checkAuth ? <div/> :
                     <Frame>
                         <Title>StartPlayUp</Title>
                         {signUpButton ?
                             <>
-                                <div>회원가입하기</div>
-                                <SignUp></SignUp>
+                                <InputInfo>
+                                    <SignUp onSignUp={onSignUp} history={history}></SignUp>
+                                </InputInfo>
                             </> :
                             <>
-                                <div>로그인 하기</div>
                                 <InputFrame>
                                     <InputInfo>
                                         <Input

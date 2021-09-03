@@ -112,11 +112,60 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         console.log(res)
         history.push('/main');//메인 페이지로 넘어가게 됩니다.
     }
+    const onSignUp = (profile,history) => {
+        const checkUserEmailConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/user/createUser',
+            data: {
+                usingSns: false,
+                nickname: profile.nickname,
+                snsUserAttributes: {
+                    type: "",
+                    email: "",
+                    id: ""
+                },
+                localUserAttributes: {
+                    email: profile.email,
+                    password: profile.password,
+                },
+                numberOfGames: {
+                    win: 0,
+                    lose: 0,
+                },
+                report: {
+                    time: 123123123,
+                    count: 0
+                }
+            },
+        }
+        axios(checkUserEmailConfig)
+            .then(function (response) {
+                console.log("createUser check : ", response.data);
+                if (response.data.success) {
+                    setContextState({
+                        ...contextState,//로그인이 성공 했음을 알립니다.
+                        checkAuth: true,
+                        error: false
+                    });
+                    localStorage.setItem('email', profile.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
+                    localStorage.setItem('password', profile.password); //마찬가지로 비밀번호도 저장합니다.
+                    localStorage.setItem('nickname', profile.nickname); // 관련 닉네임을 찾아 저장합니다.
+                    history.push('/main');
+                }
+                else {
+                    alert("가입된 아이디가 없습니다.")
+                }
+            })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
             onKakaoLogin,
             onNaverLogin,
+            onSignUp,
             checkAuth: contextState.checkAuth
         }}>
             {children}
