@@ -30,7 +30,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         }
         axios(userLogin)
         .then(function (response) {
-/*             console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
+             console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
             if (response.data.success) {
                 setContextState({
                     ...contextState,//로그인이 성공 했음을 알립니다.
@@ -39,11 +39,11 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                 });
                 localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
                 localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
-                //history.push('/main');
+                history.push(response.data.redirectPath);
             }
             else {
                 alert("가입된 아이디가 없습니다.")
-            } */
+            } 
         })
         .catch(function (error) {
             console.log("에러메세지:",error);
