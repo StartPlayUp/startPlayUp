@@ -7,32 +7,12 @@ router.get('/login/naver',
     passport.authenticate('naver')
 );
 
-// naver 로그인 연동 콜백
-// router.get('/login/naver/callback',
-//     passport.authenticate('naver', {
-//         successRedirect: '/',
-//         failureRedirect: '/api/auth/login',
-//     })
-// );
+//naver 로그인 연동 콜백
 router.get('/login/naver/callback',
-    passport.authenticate('naver'),
-    (req, res, next) => {
-        if (req.isAuthenticated()) {
-            res.cookie('nickname', req.user.nickname, { maxAge: 900000, httpOnly: true })
-            const SendData = JSON.stringify({
-                redirectPath: "/main",
-                success: true
-            });
-            res.send(SendData)
-            // res.redirect("/main")
-        }
-        const SendData = JSON.stringify({
-            redirectPath: "/",
-            success: false
-        });
-        res.send(SendData)
-        // res.redirect("/api/auth/login")
-    }
+    passport.authenticate('naver', {
+        successRedirect: '/main',
+        failureRedirect: '/',
+    })
 );
 //api/auth/login/kakao
 // kakao 로그인
@@ -42,19 +22,13 @@ router.get('/login/kakao',
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback',
     passport.authenticate('kakao', {
-        successRedirect: '/',
-        failureRedirect: '/api/auth/login'
+        successRedirect: '/main',
+        failureRedirect: '/'
     })
 );
 
 
 // 로컬 로그인
-// router.post('/login/local',
-//     passport.authenticate('local', {
-//         successRedirect: '/',
-//         failureRedirect: '/api/auth/login',
-//     })
-// );
 
 router.post('/login/local',
     passport.authenticate('local'),

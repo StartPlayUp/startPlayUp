@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {AuthStore} from './Auth/AuthContext';
 import KakaoLogin from "react-kakao-login";
 import NaverLogin from "react-naver-login";
-import NaverImage from '../../images/naverGreenLogin.PNG'
+import naverGreenLogin from '../../images/naverGreenLogin.PNG'
 import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
 import Naver from './naverLogin.jsx'
 import SignUp from './signUp.jsx'
@@ -85,7 +85,6 @@ const Image = styled.img`
     height : 6vh;
     margin-bottom : 20px;
 `
-
 function LoginForm() {
     const AuthCon = useContext(AuthStore);
     let history = useHistory();
@@ -108,6 +107,12 @@ function LoginForm() {
     };
     const onClick = () => {
         setSignUpButton(!signUpButton);
+    }
+    const naverLoginButton = () => {
+        AuthCon.onNaverLogin();
+    }
+    const KakaoLoginButton = () => {
+        AuthCon.onKakaoLogin();
     }
     return (
         <AuthStore.Consumer>
@@ -142,15 +147,8 @@ function LoginForm() {
                                     </LoginButtonArea>
                                 </InputFrame>
                                 <LoginConnectArea>
-                                    <Naver></Naver>
-                                    <KakaoLogin
-                                        token={process.env.REACT_APP_kakaoJsKey}
-                                        onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
-                                        onFailure={(res) => console.log(res)}
-                                        getProfile={true}
-                                    >
-                                        <Image src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
-                                    </KakaoLogin>
+                                    <Image onClick={naverLoginButton } src={ naverGreenLogin}></Image>
+                                    <Image onClick={KakaoLoginButton}  src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
                                 </LoginConnectArea>
                             </>}
                         <button onClick={ onClick}>{signUpButton ? <div>로그인 하기</div>:<div>회원가입 하기</div> }</button>
@@ -164,18 +162,3 @@ function LoginForm() {
 }
 
 export default LoginForm;
-//(res)=>DBUpload(res)
-/*
-                        (naverUser) => console.log(naverUser)
-const DBUpload = (res) => {
-    firestore
-        .Collection("User")
-        .get()
-        .then(res => res.json())
-        .then((res) => {
-
-        })
-
-}
-*/
-//<button onClick={signInWithGoogle}>구글로 로그인하기</button>

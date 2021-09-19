@@ -15,16 +15,11 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
     const cookies = new Cookies();
     const { children } = props; //children에게 값을 전달합니다.
     const onLogin = (model, history) => {
-        /* setContextState({
-            ...contextState, //
-        }); */
-        console.log("이메일" + model.email)
-        console.log("비밀번호" + model.password)
         const userLogin = {
             method: 'post',
             url: 'http://localhost:4000/api/auth/login/local',
             data: {
-                email: model.email,
+                nickname: model.email,
                 password:model.password
             }
         }
@@ -48,48 +43,13 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         .catch(function (error) {
             console.log("에러메세지:",error);
         });
-        console.log(contextState.checkAuth)
     };
-    const onNaverLogin = (naverUser, history) => {
-        console.log(naverUser)
-        const NaverEmail = naverUser.email
-        const checkUserEmailConfig = {
-            method: 'post',
-            url: 'http://localhost:4000/api/user/checkUser',
-            data: {
-                email: NaverEmail
-            }
-        }
-        axios(checkUserEmailConfig)
-        .then(function (response) {
-            console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
-            if (response.data.success) {
-                setContextState({
-                    ...contextState,//로그인이 성공 했음을 알립니다.
-                    checkAuth: true,
-                    error: false
-                });
-                history.push('/main');
-            }
-            else {
-                alert("가입된 아이디가 없습니다.")
-            }
-        })
-        .catch(function (error) {
-            console.log("에러메세지:",error);
-        });
+    const onNaverLogin = () => {
+        window.location.href = 'http://localhost:4000/api/auth/login/naver'
         
-            //console.log(naverUser);
     }
-    const onKakaoLogin = (res, history) => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
-        setContextState({
-            ...contextState,//로그인이 성공 했음을 알립니다.
-            checkAuth: true,
-            error: false
-                        });
-        const KakaoID = res.profile.id  //res 객체 중 id 배열에 접근합니다.
-        console.log(res)
-        history.push('/main');//메인 페이지로 넘어가게 됩니다.
+    const onKakaoLogin = () => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
+        window.location.href="http://localhost:4000/api/auth/login/kakao"
     }
     const onSignUp = (profile,history) => {
         const checkUserEmailConfig = {
@@ -146,7 +106,7 @@ useEffect(() => {
                 checkAuth: true,
                 error: false
             });
-            
+            history.push('/main');
         } else {
             
         }
@@ -154,9 +114,9 @@ useEffect(() => {
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
-            onKakaoLogin,
-            onNaverLogin,
             onSignUp,
+            onNaverLogin,
+            onKakaoLogin,
             checkAuth: contextState.checkAuth
         }}>
             {children}
