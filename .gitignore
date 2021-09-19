@@ -1,7 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# common
+node_modules
+
 # dependencies
 frontend/node_modules
+frontend/build
 frontend/.pnp
 frontend/.pnp.js
 frontend/.idea
@@ -26,9 +30,14 @@ frontend/yarn-error.log*
 frontend/src/Common/firebase/config.js
 frontend/backup
 
+frontend\.env
+frontend\src\Component\WebComponent\Login\LoginFrame\Naver.js
+
+# backend
+backend/backup
 backend/node_modules
 backend/testf
 backend/testServerFile
-frontend\.env
-node_modules
-frontend\src\Component\WebComponent\Login\LoginFrame\Naver.js
+backend/key.json
+backend/config.js
+backendnode_modules

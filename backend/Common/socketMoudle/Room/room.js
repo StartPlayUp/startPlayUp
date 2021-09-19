@@ -1,6 +1,10 @@
-module.exports = ({ io, socket, roomMatchingUsers }) => {
+const fireBaseRoom = require('../../fireBaseDB/room');
+
+module.exports = ({ io, db, socket, roomMatchingUsers }) => {
     socket.on("join room", ({ roomID, myNickname }) => {
         if (roomMatchingUsers[roomID] === undefined || !roomMatchingUsers[roomID].some((i) => i === myNickname)) {
+            // room에 사용자 추가
+            fireBaseRoom.joinRoom({ roomId: roomID, nickname: myNickname });
             socket.roomID = roomID;
             socket.nickname = myNickname;
             let setUsersInThisRoom = io.sockets.adapter.rooms.get(roomID);

@@ -59,7 +59,7 @@ const StyledAudio = styled.audio`
 function Index({ chatList, setChatList, backgroundColor, height, width, socketRef, peersRef, ...props }) {
     const myNickname = localStorage.getItem('nickname');
 
-    const { peerData, setPeerData } = useContext(PeerDataContext);
+    const { peerData, setPeerData, clearPeerData } = useContext(PeerDataContext);
     const { peers, setPeers } = useContext(PeersContext);
 
     // const [chatList, setChatList] = useState([]);
@@ -82,6 +82,7 @@ function Index({ chatList, setChatList, backgroundColor, height, width, socketRe
         if (peerData.type === PEER_CHAT) {
             console.log("peerData asdfdsafadsafsdsdafsdfa : ", peerData)
             chatAddMessage({ nickname: peerData.nickname, inputMessage: peerData.data, chatList, setChatList })
+            clearPeerData();
         }
     }, [peerData])
 
