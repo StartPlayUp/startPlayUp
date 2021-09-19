@@ -1,7 +1,7 @@
 const passport = require('passport');
 const { isLoggedIn } = require('../../middleWare');
 const router = require('express').Router()
-
+//api/auth/login/naver
 router.get('/login/naver',
     passport.authenticate('naver')
 );
@@ -13,7 +13,7 @@ router.get('/login/naver/callback',
         failureRedirect: '/api/auth/login',
     })
 );
-
+//api/auth/login/kakao
 // kakao 로그인
 router.get('/login/kakao',
     passport.authenticate('kakao')
@@ -30,7 +30,7 @@ router.get('/login/kakao/callback',
 // 로컬 로그인
 router.post('/login/local',
     passport.authenticate('local', {
-        successRedirect: '/',
+        successRedirect: '/main',
         failureRedirect: '/api/auth/login',
     })
 );

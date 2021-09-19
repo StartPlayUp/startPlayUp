@@ -143,19 +143,6 @@ function LoginForm() {
                                 </InputFrame>
                                 <LoginConnectArea>
                                     <Naver></Naver>
-                                    {/* <NaverLogin //네이버 로그인 모듈 사용
-                                        clientId={process.env.REACT_APP_naverClientID} //발급 받은 클라이언트 ID
-                                        callbackUrl="http://localhost:3000"    //콜백 URL
-                                        render={(props) =>
-                                            <Image
-                                                src={NaverImage}
-                                                onClick={props.onClick}
-                                                alt='NaverLoginImage'
-                                            />
-                                        }  //로그인 버튼 생성
-                                        onSuccess={(naverUser) => AuthCon.onNaverLogin(naverUser, history)}  //성공시
-                                        onFailure={() => console.error(result)} //실패한 경우
-                                    /> */}
                                     <KakaoLogin
                                         token={process.env.REACT_APP_kakaoJsKey}
                                         onSuccess={(res) => AuthCon.onKakaoLogin(res, history)}   //AuthContext에 있는 카카오 로그인 함수를 실행 하도록 합니다.
