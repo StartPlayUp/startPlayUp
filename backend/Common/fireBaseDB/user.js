@@ -36,22 +36,6 @@ exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
     return { userList, duplicate };
 }
 
-// exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
-//     let duplicate = false;
-//     let userList = [];
-//     if (isString(nickname) &&
-//         isString(email)) {
-
-
-
-//     }
-//     else {
-//         console.error("isDuplicateNicknameAndEmail error");
-//     }
-//     return { userList, duplicate };
-
-// }
-
 exports.isDuplicateNickname = async ({ nickname }) => {
     let duplicate = false;
     let userList = [];
@@ -116,7 +100,8 @@ exports.createUser = async ({ user }) => {
                 email,
                 password,
             } = user;
-            if (!(await this.isDuplicateNicknameAndEmail({ nickname, email })).duplicate) {
+            // if (!(await this.isDuplicateNicknameAndEmail({ nickname, email })).duplicate) { // 둘다 체크할 때
+            if (!(await this.isDuplicateEmail({ email })).duplicate) {
                 // const res = db.collection("users").doc(nickname);
                 const res = db.collection("users");
                 const setReturn = await res.add({
@@ -153,6 +138,7 @@ exports.createUser = async ({ user }) => {
 exports.createUserForSns = async ({ user }) => {
     try {
         // console.log(user)
+        let docId = undefined;
         const usingSns = true;
         const report = {
             const: 0,
@@ -162,25 +148,34 @@ exports.createUserForSns = async ({ user }) => {
             win: 0,
             lose: 0,
         }
-        if (isString(user.email) &&
-            isObject(user.sns)) {
+        const {
+            nickname,
+            email,
+            sns,
+        } = user;
+        if (isString(email) &&
+            isObject(sns) &&
+            isString(nickname)) {
             if (!(await this.isDuplicateEmail({ email: user.email })).duplicate) {
                 // const res = db.collection("users").doc(nickname);
                 const res = db.collection("users");
                 const setReturn = await res.add({
-                    nickname: "",
-                    email: user.email,
+                    // nickname: "",
+                    nickname,
+                    email,
                     password: false,
                     usingSns,
-                    sns: user.sns,
+                    sns,
                     numberOfGames,
                     report,
                     timestamp: FieldValue.serverTimestamp(),
                 });
-                return { success: true }
+                docId = setReturn.id
+                // console.log("아이디 만들때 ", setReturn.id)
+                return { success: true, docId }
             }
             else {
-                return { success: false }
+                return { success: false, docId }
             }
         }
         else {
@@ -246,6 +241,26 @@ exports.deleteUserFromNickname = async ({ nickname }) => {
 }
 
 
+// exports.getUserFromEmail = async ({ email }) => {
+//     let success = false;
+//     let userList = [];
+//     if (isString(email)) {
+//         const userRef = db.collection('users');
+//         const result = await userRef.where('email', "==", email).get();
+//         if (!result.empty && result._size === 1) {
+//             success = true;
+//             result.forEach((doc) => {
+//                 const { report, numberOfGames, nickname, email, sns } = doc.data()
+//                 userList.push({ report, numberOfGames, nickname, email, sns })
+//             });
+//         }
+//     }
+//     else {
+//         console.error("getUserFromEmail error");
+//     }
+//     return { user: userList[0], success };
+// }
+
 exports.getUserFromEmail = async ({ email }) => {
     let success = false;
     let userList = [];
@@ -256,7 +271,9 @@ exports.getUserFromEmail = async ({ email }) => {
             success = true;
             result.forEach((doc) => {
                 const { report, numberOfGames, nickname, email, sns } = doc.data()
-                userList.push({ report, numberOfGames, nickname, email, sns })
+                if (nickname !== undefined && nickname !== "") {
+                    userList.push({ report, numberOfGames, nickname, email, sns, docId: doc.id })
+                }
             });
         }
     }
@@ -322,6 +339,7 @@ exports.checkEmailDuplication = async ({ email }) => {
 exports.checkLocalLogin = async ({ nickname, password }) => {
     let success = false;
     let user = {}
+    let docId = undefined;
     try {
         console.log("checkLocalLogin function");
         if (isString(nickname) &&
@@ -336,6 +354,7 @@ exports.checkLocalLogin = async ({ nickname, password }) => {
                     success = true;
                     const { password, sns, ...userForSend } = doc.data();
                     user = userForSend;
+                    docId = doc.id;
                 });
             }
         }
@@ -343,10 +362,10 @@ exports.checkLocalLogin = async ({ nickname, password }) => {
             console.error("checkLocalLogin argument error");
         }
         console.log("user", user)
-        return { user, success };
+        return { user, success, docId };
     }
     catch (err) {
-        return { user, success: false };
+        return { user, success: false, docId };
     }
 }
 

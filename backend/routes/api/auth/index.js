@@ -29,8 +29,9 @@ router.get('/login/kakao/callback',
 router.post('/login/local',
     passport.authenticate('local'),
     (req, res, next) => {
+        console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
         if (req.isAuthenticated()) {
-            res.cookie('nickname', req.user.nickname, { maxAge: 900000, httpOnly: true })
             const SendData = JSON.stringify({
                 redirectPath: "/main",
                 success: true

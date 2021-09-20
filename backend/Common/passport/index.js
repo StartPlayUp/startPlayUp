@@ -21,6 +21,7 @@ module.exports = (passport) => {
         // }
         // const returnValueFromDb = await getUserFromNickname({ nickname });
         const returnValueFromDb = await getUserFromEmail({ email });
+        console.log("returnValueFromDb", returnValueFromDb)
         done(null, returnValueFromDb.user)
     });
 
@@ -39,30 +40,31 @@ module.exports = (passport) => {
                 console.log(req.protocol + '://' + req.get('host') + "||||" + req.originalUrl)
                 var _profile = profile._json;
                 const { provider } = profile;
-                const { id, email } = profile._json;
+                const { id, email, nickname } = profile._json;
                 console.log(provider, id, email);
                 if (isString(provider) &&
                     isString(id) &&
                     isString(email)) {
-                    const { user, success } = await getSnsInUser({ id, provider });
+                    const { user, success, docId } = await getSnsInUser({ id, provider });
                     const { duplicate } = await isDuplicateEmail({ email })
                     if (success) {
                         // sns로 가입된 계정이 있을 때
-                        done(null, { nickname: user.nickname, email: user.email });
+                        done(null, { nickname: user.nickname, email: user.email, docId });
                     }
                     else {
                         // sns로 가입된 계정이 없을 때
                         if (!duplicate) {
                             // 이메일이 중복되지 않았다면 가입한다.
-                            const { success } = await createUserForSns({
+                            const { success, docId } = await createUserForSns({
                                 user: {
                                     email,
-                                    sns: { provider, id }
+                                    sns: { provider, id },
+                                    nickname,
                                 }
                             })
                             if (success) {
                                 // 회원가입 성공이면
-                                done(null, { nickname: "", email })
+                                done(null, { nickname, email, docId })
                             }
                             else {
                                 // 회원가입 실패이면
@@ -114,31 +116,32 @@ module.exports = (passport) => {
                 const email = String(_profile.kakao_account.email);
                 const provider = String(profile.provider);
                 const id = String(profile.id);
-                // const { id, email } = profile._json;
-                console.log(provider, id, email);
+                const nickname = String(profile.username);
+                // console.log(provider, id, email);
                 if (isString(provider) &&
                     isString(id) &&
                     _profile.kakao_account.has_email &&
                     isString(email)) {
-                    const { user, success } = await getSnsInUser({ id, provider });
+                    const { user, success, docId } = await getSnsInUser({ id, provider });
                     if (success) {
                         // sns로 가입된 계정이 있을 때
-                        done(null, { nickname: user.nickname, email: user.email });
+                        done(null, { nickname: user.nickname, email: user.email, docId });
                     }
                     else {
                         // sns로 가입된 계정이 없을 때
                         const { duplicate } = await isDuplicateEmail({ email })
                         if (!duplicate) {
                             // 이메일이 중복되지 않았다면 가입한다.
-                            const { success } = await createUserForSns({
+                            const { success, docId } = await createUserForSns({
                                 user: {
                                     email,
-                                    sns: { provider, id }
+                                    sns: { provider, id },
+                                    nickname,
                                 }
                             })
                             if (success) {
                                 // 회원가입 성공이면
-                                done(null, { nickname: "", email })
+                                done(null, { nickname, email, docId })
                             }
                             else {
                                 // 회원가입 실패이면
@@ -167,10 +170,10 @@ module.exports = (passport) => {
                 passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
             },
             async (req, nickname, password, done) => {
-                const { user, success } = await checkLocalLogin({ nickname, password });
+                const { user, success, docId } = await checkLocalLogin({ nickname, password });
                 if (success) {
                     console.log("로컬 로그인 성공");
-                    done(null, user);
+                    done(null, { ...user, docId });
                 }
                 else {
                     console.log("로컬 로그인 실패");
