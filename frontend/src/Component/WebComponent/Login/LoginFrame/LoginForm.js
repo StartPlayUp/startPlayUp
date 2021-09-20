@@ -8,7 +8,8 @@ import naverGreenLogin from '../../images/naverGreenLogin.PNG'
 import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
 import Naver from './naverLogin.jsx'
 import SignUp from './signUp.jsx'
-
+import Cookies from 'universal-cookie';
+import Modal from "react-modal"
 require('dotenv').config();
 
 const Frame = styled.div`
@@ -88,7 +89,7 @@ const Image = styled.img`
 function LoginForm() {
     const AuthCon = useContext(AuthStore);
     let history = useHistory();
-    const [signUpButton,setSignUpButton] = useState(false) //false 인경우 로그인하기 true인 경우 회원가입하기 창이 뜸
+    const [signUpButton, setSignUpButton] = useState(false) //false 인경우 로그인하기 true인 경우 회원가입하기 창이 뜸
     const [inputs, setInputs] = useState({
         email: '',
         password: ''

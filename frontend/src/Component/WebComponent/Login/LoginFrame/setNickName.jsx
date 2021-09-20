@@ -51,7 +51,7 @@ const SingUpButton = styled.button`
     }
 `
 
-const GetNickName = () => {
+const SetNickName = () => {
     const [state, setState] = useState('')
     const onChange = (e) => {
         setState(e.target.value)
@@ -100,4 +100,4 @@ const GetNickName = () => {
     )
 }
 
-export default GetNickName;
+export default SetNickName;

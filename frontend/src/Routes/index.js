@@ -19,7 +19,9 @@ import { LoginApp } from "Component/WebComponent/WebPage";
 import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 import WebMain from "../Component/WebComponent/WebPage/WebFrame/webBody";
 import WaitingRoom from "../Component/WebComponent/WebPage/WebFrame/waitingRoom";
-
+import SetNickName from "Component/WebComponent/Login/LoginFrame/setNickName";
+import { Modal } from "react-modal";
+import { CookiesProvider } from "react-cookie";
 const GamePage = styled.div`
   display: flex;
   flex-direction: row;
@@ -144,17 +146,19 @@ const app = () => {
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
-
+  
   return (
     <>
       <BrowserRouter>
         <>
+          
           <ButtonGlobalHover />
           {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
           <Route path="/" component={GlobalContainer} />
           {/* <Route exact path="/" component={LoginPageContainer} /> */}
-          <Route exact path="/" component={LoginApp} />
-
+          <CookiesProvider>
+            <Route exact path="/" component={LoginApp} />
+          </CookiesProvider>
           {checkAuth && (
             <>
               <Switch>
@@ -188,6 +192,9 @@ const app = () => {
               </GamePage>
             )}
           />
+        )}
+        {checkAuth && (
+          <Route exact path="/setNickname" component={SetNickName}/>
         )}
         {checkAuth && (
           <Route
