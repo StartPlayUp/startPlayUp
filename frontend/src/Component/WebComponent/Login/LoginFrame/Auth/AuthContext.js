@@ -51,53 +51,37 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
     const onKakaoLogin = () => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
         window.location.href="http://localhost:4000/api/auth/login/kakao"
     }
-    const onSignUp = (profile,history) => {
-        const checkUserEmailConfig = {
+    const createUser = (user ) => {
+        const createUserConfig = {
             method: 'post',
             url: 'http://localhost:4000/api/user/createUser',
-            data: {
-                usingSns: false,
-                nickname: profile.nickname,
-                snsUserAttributes: {
-                    type: "",
-                    email: "",
-                    id: ""
-                },
-                localUserAttributes: {
-                    email: profile.email,
-                    password: profile.password,
-                },
-                numberOfGames: {
-                    win: 0,
-                    lose: 0,
-                },
-                report: {
-                    time: 123123123,
-                    count: 0
-                }
-            },
+            data: user
         }
-        axios(checkUserEmailConfig)
+        axios(createUserConfig)
             .then(function (response) {
-                console.log("createUser check : ", response.data);
                 if (response.data.success) {
-                    setContextState({
-                        ...contextState,//로그인이 성공 했음을 알립니다.
-                        checkAuth: true,
-                        error: false
-                    });
-                    localStorage.setItem('email', profile.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
-                    localStorage.setItem('password', profile.password); //마찬가지로 비밀번호도 저장합니다.
-                    localStorage.setItem('nickname', profile.nickname); // 관련 닉네임을 찾아 저장합니다.
-                    history.push('/main');
+                    console.log("createUser check : ", response.data);
+                    alert("회원가입에 성공하였습니다. 다시 로그인 해")
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000); 
                 }
                 else {
-                    alert("가입된 아이디가 없습니다.")
+                    alert("회원가입에 실패하였습니다.")
                 }
             })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .catch(function (error) {
+                console.log(error);
+                alert("회원가입에 실패하였습니다.")
+            });
+        }
+    const onSignUp = (profile, history) => {
+        const user = {
+            email: profile.email,
+            password: profile.password,
+            nickname: profile.nickname
+        }
+        createUser(user);
     }
 useEffect(() => {
         if (cookies.get('nickname') !==undefined) {
