@@ -100,16 +100,14 @@ exports.setNickname = async (req, res, next) => {
         const nickname = req.body['nickname'];
         console.log(req.user)
         const { id, provider } = req.user.sns;
-        const deleteUserResult = await fireBaseUser.setNickname({ nickname, id, provider })
-        // const deleteUserResultJson = JSON.stringify(deleteUserResult);
-        // res.send(deleteUserResultJson)
-        if (deleteUserResult.success) {
-            console.log("asdf123123")
-            res.redirect('/')
+        const setNicknameResult = await fireBaseUser.setNickname({ nickname, id, provider })
+        if (setNicknameResult.success) {
+            const resReturnObject = JSON.stringify({ success: true });
+            res.send(resReturnObject)
         }
         else {
-            console.log("qwer123123")
-            res.redirect('/api/setNickname')
+            const resReturnObject = JSON.stringify({ redirectPath: "/setNickname", success: false });
+            res.send(resReturnObject)
         }
     } catch (error) {
         next(error)

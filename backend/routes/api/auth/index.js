@@ -2,7 +2,7 @@ const passport = require('passport');
 const { isLoggedIn } = require('../../middleWare');
 const router = require('express').Router()
 
-// http://127.0.0.1:4000/api/auth/login/naver
+// http://localhost:4000/api/auth/login/naver
 router.get('/login/naver',
     passport.authenticate('naver')
 );
@@ -40,14 +40,12 @@ router.post('/login/local',
                 success: true
             });
             res.send(SendData)
-            // res.redirect("/main")
         }
         const SendData = JSON.stringify({
             redirectPath: "/",
             success: false
         });
         res.send(SendData)
-        // res.redirect("/api/auth/login")
     }
 );
 
@@ -55,7 +53,11 @@ router.post('/login/local',
 
 router.get('/logout', isLoggedIn, (req, res) => {
     req.logout();
-    res.redirect('/');
+    const sendData = JSON.stringify({
+        redirectPath: "/",
+        success: true
+    });
+    res.send(sendData);
 });
 
 
