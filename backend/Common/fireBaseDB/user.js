@@ -330,6 +330,7 @@ exports.checkLocalLogin = async ({ nickname, password }) => {
                 .where("nickname", "==", nickname)
                 .where('password', '==', password)
                 .get();
+            console.log("asddafsafsdafsd", nickname, password)
             if (!snapshot.empty && snapshot._size === 1) {
                 snapshot.forEach(async doc => {
                     success = true;

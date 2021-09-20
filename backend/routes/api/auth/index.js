@@ -1,6 +1,6 @@
 const passport = require('passport');
-const { isLoggedIn } = require('../../middleWare');
-const router = require('express').Router()
+const { isLoggedIn, haveNickname, insertNicknameWithRedirect } = require('../../middleWare');
+const router = require('express').Router();
 
 // http://localhost:4000/api/auth/login/naver
 router.get('/login/naver',
@@ -9,10 +9,8 @@ router.get('/login/naver',
 
 //naver 로그인 연동 콜백
 router.get('/login/naver/callback',
-    passport.authenticate('naver', {
-        successRedirect: '/main',
-        failureRedirect: '/',
-    })
+    passport.authenticate('naver'),
+    insertNicknameWithRedirect,
 );
 //api/auth/login/kakao
 // kakao 로그인
@@ -21,10 +19,8 @@ router.get('/login/kakao',
 );
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback',
-    passport.authenticate('kakao', {
-        successRedirect: '/main',
-        failureRedirect: '/'
-    })
+    passport.authenticate('kakao'),
+    insertNicknameWithRedirect,
 );
 
 
@@ -41,11 +37,13 @@ router.post('/login/local',
             });
             res.send(SendData)
         }
-        const SendData = JSON.stringify({
-            redirectPath: "/",
-            success: false
-        });
-        res.send(SendData)
+        else {
+            const SendData = JSON.stringify({
+                redirectPath: "/",
+                success: false
+            });
+            res.send(SendData)
+        }
     }
 );
 
