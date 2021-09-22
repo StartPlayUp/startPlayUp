@@ -3,8 +3,7 @@ import React, { Component, useEffect, useLayoutEffect, useState } from 'react';
 //import 'firebase/firestore';
 import { testDB } from 'Common/TestDB/index2';
 import axios from "axios";
-import { Cookies } from 'react-cookie';
-
+import Cookies, { CookiesGetOptions } from 'universal-cookie';
 const AuthStore = React.createContext(); //context 객체 생성
 
 const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
@@ -12,7 +11,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         checkAuth: false, //로그인 상태를 기록합니다. false는 로그아웃 되어있는 상태입니다.
         error: false
     });
-    const cookies = new Cookies();
+
     const { children } = props; //children에게 값을 전달합니다.
     const onLogin = (model, history) => {
         const userLogin = {
@@ -84,17 +83,12 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         createUser(user);
     }
     useEffect(() => {
-        if (cookies.get('nickname') !== undefined) {
-            setContextState({
-                ...contextState,//로그인이 성공 했음을 알립니다.
-                checkAuth: true,
-                error: false
-            });
-            history.push('/main');
-        } else {
+        setTimeout(() => {
+            console.log(document.cookie)
+        },3000)
+        
+    }, []) 
 
-        }
-    }, [])
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,

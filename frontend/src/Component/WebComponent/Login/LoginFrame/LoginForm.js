@@ -115,10 +115,13 @@ function LoginForm() {
     const KakaoLoginButton = () => {
         AuthCon.onKakaoLogin();
     }
+    const gotomainPage = () => {
+        history.push('main')
+    }
     return (
         <AuthStore.Consumer>
             {({checkAuth,onSignUp}) => (
-                (checkAuth ? <div/> :
+                (checkAuth ? <></> :
                     <Frame>
                         <Title>StartPlayUp</Title>
                         {signUpButton ?
