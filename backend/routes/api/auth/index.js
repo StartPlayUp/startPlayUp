@@ -31,7 +31,9 @@ router.post('/login/local',
     (req, res, next) => {
         if (req.isAuthenticated()) {
             console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
-            res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
+            res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+            res.cookie('test', "asdf", { maxAge: 900000, httpOnly: true })
+
             const SendData = JSON.stringify({
                 redirectPath: "/main",
                 success: true

@@ -14,13 +14,15 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
 
     const { children } = props; //children에게 값을 전달합니다.
     const onLogin = (model, history) => {
+        axios.defaults.withCredentials = true;
         const userLogin = {
             method: 'post',
             url: 'http://localhost:4000/api/auth/login/local',
             data: {
                 email: model.email,
                 password: model.password
-            }
+            },
+            WithCredentials: true
         }
         axios(userLogin)
             .then(function (response) {
@@ -82,20 +84,36 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         }
         createUser(user);
     }
-    useEffect(() => {
-        setTimeout(() => {
-            console.log(document.cookie)
-        },3000)
-        
-    }, []) 
 
+
+    const alreadyLogged = (history) => {
+        setContextState({
+            ...contextState,//로그인이 성공 했음을 알립니다.
+            checkAuth: true,
+            error: false
+        });
+        history.push('/main');
+    }
+    // useEffect(() => {
+    //     if (cookies.get('nickname') !== undefined) {
+    //         setContextState({
+    //             ...contextState,//로그인이 성공 했음을 알립니다.
+    //             checkAuth: true,
+    //             error: false
+    //         });
+    //         history.push('/main');
+    //     } else {
+
+    //     }
+    // }, [])
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
             onSignUp,
             onNaverLogin,
             onKakaoLogin,
-            checkAuth: contextState.checkAuth
+            checkAuth: contextState.checkAuth,
+            alreadyLogged,
         }}>
             {children}
         </AuthStore.Provider>

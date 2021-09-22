@@ -1,6 +1,12 @@
+
+const insertNickname = ({ res, nickname, docId }) => {
+    res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+}
+
+
 exports.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
         next();
     }
     else {
@@ -12,38 +18,16 @@ exports.isLoggedIn = function (req, res, next) {
 };
 
 exports.haveNickname = function (req, res, next) {
-    // if (req.user.nickname === "") {
-    //     // res.redirect("/setNickname");
-    //     const sendData = JSON.stringify({ redirectPath: "/setNickname" });
-    //     res.send(sendData);
-    // }
-    // else {
-    //     console.log("req.user.docId : ", req.user.docId)
-
-    //     res.cookie('nickname', req.user.nickname + "#" + req.user.docId, { maxAge: 900000, httpOnly: true })
-    //     next();
-    // }
     console.log("req.user.docId : ", req.user)
-    res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
+    res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
     next();
 };
 
 
-// exports.haveNicknameWithRedirect = function (req, res, next) {
-//     if (req.user.nickname === "") {
-//         res.redirect("/setNickname");
-//     }
-//     else {
-//         res.cookie('nickname', req.user.nickname, { maxAge: 900000, httpOnly: true })
-//         res.redirect("/");
-//         next();
-//     }
-// };
-
 exports.insertNicknameWithRedirectForSns = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("req.user.docId : ", req.user)
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
     }
     res.redirect("http://localhost:3000/");
 };
@@ -55,7 +39,27 @@ exports.isNotLoggedIn = function (req, res, next) {
     else {
         // res.redirect("/");
         const sendData = JSON.stringify({ redirectPath: "/" });
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
         res.send(sendData);
+    }
+};
+
+
+exports.afterLocalLoginSendData = function (req, res, next) {
+    if (req.isAuthenticated()) {
+        console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+        const SendData = JSON.stringify({
+            redirectPath: "/main",
+            success: true
+        });
+        res.send(SendData)
+    }
+    else {
+        const SendData = JSON.stringify({
+            redirectPath: "/",
+            success: false
+        });
+        res.send(SendData)
     }
 };

@@ -146,12 +146,12 @@ const app = () => {
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
-  
+
   return (
     <>
       <BrowserRouter>
         <>
-          
+
           <ButtonGlobalHover />
           {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
           <Route path="/" component={GlobalContainer} />
@@ -194,7 +194,7 @@ const app = () => {
           />
         )}
         {checkAuth && (
-          <Route exact path="/setNickname" component={SetNickName}/>
+          <Route exact path="/setNickname" component={SetNickName} />
         )}
         {checkAuth && (
           <Route
