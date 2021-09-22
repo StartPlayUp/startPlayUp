@@ -84,8 +84,6 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         }
         createUser(user);
     }
-
-
     const alreadyLogged = (history) => {
         
         setContextState({
@@ -95,18 +93,6 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         });
         history.push('/main');
     }
-    // useEffect(() => {
-    //     if (cookies.get('nickname') !== undefined) {
-    //         setContextState({
-    //             ...contextState,//로그인이 성공 했음을 알립니다.
-    //             checkAuth: true,
-    //             error: false
-    //         });
-    //         history.push('/main');
-    //     } else {
-
-    //     }
-    // }, [])
     return (
         <AuthStore.Provider value={{  //Provider 태그 안에서 쓸 수 있도록 합니다.
             onLogin,
