@@ -40,12 +40,12 @@ exports.haveNickname = function (req, res, next) {
 //     }
 // };
 
-exports.insertNicknameWithRedirect = function (req, res, next) {
+exports.insertNicknameWithRedirectForSns = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("req.user.docId : ", req.user)
         res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: true })
     }
-    res.redirect("/");
+    res.redirect("http://localhost:3000/");
 };
 
 exports.isNotLoggedIn = function (req, res, next) {

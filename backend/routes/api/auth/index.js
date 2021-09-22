@@ -1,5 +1,5 @@
 const passport = require('passport');
-const { isLoggedIn, haveNickname, insertNicknameWithRedirect } = require('../../middleWare');
+const { isLoggedIn, insertNicknameWithRedirectForSns } = require('../../middleWare');
 const router = require('express').Router();
 
 // http://localhost:4000/api/auth/login/naver
@@ -10,7 +10,7 @@ router.get('/login/naver',
 //naver 로그인 연동 콜백
 router.get('/login/naver/callback',
     passport.authenticate('naver'),
-    insertNicknameWithRedirect,
+    insertNicknameWithRedirectForSns,
 );
 //api/auth/login/kakao
 // kakao 로그인
@@ -20,7 +20,7 @@ router.get('/login/kakao',
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback',
     passport.authenticate('kakao'),
-    insertNicknameWithRedirect,
+    insertNicknameWithRedirectForSns,
 );
 
 
