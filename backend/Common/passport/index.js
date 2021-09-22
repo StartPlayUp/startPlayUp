@@ -165,12 +165,13 @@ module.exports = (passport) => {
     passport.use(
         new LocalStrategy(
             {
-                usernameField: 'nickname',
+                usernameField: 'email',
                 passwordField: 'password',
                 passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
             },
-            async (req, nickname, password, done) => {
-                const { user, success, docId } = await checkLocalLogin({ nickname, password });
+            async (req, email, password, done) => {
+                console.log("asdf", email, password)
+                const { user, success, docId } = await checkLocalLogin({ email, password });
                 if (success) {
                     console.log("로컬 로그인 성공");
                     done(null, { ...user, docId });

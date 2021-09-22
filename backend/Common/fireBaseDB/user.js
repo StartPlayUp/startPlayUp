@@ -336,19 +336,19 @@ exports.checkEmailDuplication = async ({ email }) => {
     return { duplicateEmail };
 }
 
-exports.checkLocalLogin = async ({ nickname, password }) => {
+exports.checkLocalLogin = async ({ email, password }) => {
     let success = false;
     let user = {}
     let docId = undefined;
     try {
         console.log("checkLocalLogin function");
-        if (isString(nickname) &&
+        if (isString(email) &&
             isString(password)) {
             const snapshot = await db.collection('users')
-                .where("nickname", "==", nickname)
+                .where("email", "==", email)
                 .where('password', '==', password)
                 .get();
-            console.log("asddafsafsdafsd", nickname, password)
+            console.log("snapshot.empty && snapshot._size", snapshot.empty, snapshot._size)
             if (!snapshot.empty && snapshot._size === 1) {
                 snapshot.forEach(async doc => {
                     success = true;

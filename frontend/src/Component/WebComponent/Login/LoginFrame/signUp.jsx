@@ -49,36 +49,34 @@ const SingUpButton = styled.button`
         background:#b10202;
     }
 `
+const StyleCheckDiv = styled.div`
+    color: ${props => props.check === false && 'red'};
+`
+
 function SignUp(props) {
     const [inputs, setInputs] = useState({
         email: '',
-        id: '',
         password: '',
+        verifyPassword: '',
         nickname: ''
     })
-    const [verifyPasswordState, setVerifyPasswordState] = useState({
-        verifyPassword: ''
-    })
-    //const [correctPassword,setCorrectPassword]=useState(false)
-    const { email, id, password, nickname } = inputs;
+    const [correctPassword, setCorrectPassword] = useState(false);
+    const { email, password, verifyPassword, nickname } = inputs;
     const onChange = (e) => {
         const { value, name } = e.target;
         setInputs({
             ...inputs,
             [name]: value
         });
+        console.log(inputs.password, inputs.verifyPassword)
+        if (name === 'verifyPassword') {
+            setCorrectPassword(inputs.password === value);
+        }
+        else if (name === 'password') {
+            setCorrectPassword(inputs.verifyPassword === value);
+        }
     };
-    const { verifyPassword } = verifyPasswordState
-    const verify = (e) => {
-        const { value, name } = e.target;
-        setVerifyPasswordState({
-            ...verifyPasswordState,
-            [name]: value
-        })
-    }
-    /*     if (verifyPassword === password) {
-            setCorrectPassword(true)
-        } */
+
     const onClick = () => {
         if (verifyPassword === password) {
             props.onSignUp(inputs, props.history)
@@ -100,13 +98,6 @@ function SignUp(props) {
                         value={email}
                     >
                     </Input>
-                    아이디
-                    <Input
-                        type={'text'}
-                        name="id"
-                        onChange={onChange}
-                        value={id}
-                    ></Input>
                     비밀번호
                     <Input
                         type={'password'}
@@ -114,11 +105,11 @@ function SignUp(props) {
                         onChange={onChange}
                         value={password}
                     ></Input>
-                    비밀번호 확인
+                    <StyleCheckDiv check={correctPassword}>비밀번호 확인</StyleCheckDiv>
                     <Input
                         type={'password'}
                         name="verifyPassword"
-                        onChange={verify}
+                        onChange={onChange}
                         value={verifyPassword}
                     ></Input>
                     닉네임
