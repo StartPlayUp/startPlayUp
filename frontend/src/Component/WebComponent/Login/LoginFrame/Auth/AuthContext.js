@@ -87,6 +87,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
 
 
     const alreadyLogged = (history) => {
+        
         setContextState({
             ...contextState,//로그인이 성공 했음을 알립니다.
             checkAuth: true,

@@ -1,15 +1,9 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import styled from 'styled-components';
 import {useHistory} from 'react-router-dom';
 import {AuthStore} from './Auth/AuthContext';
-import KakaoLogin from "react-kakao-login";
-import NaverLogin from "react-naver-login";
 import naverGreenLogin from '../../images/naverGreenLogin.PNG'
-import KakaoImage from './LoginLogo/ko/kakao_login_large_narrow.png'
-import Naver from './naverLogin.jsx'
 import SignUp from './signUp.jsx'
-import Cookies from 'universal-cookie';
-import Modal from "react-modal"
 require('dotenv').config();
 
 const Frame = styled.div`
@@ -114,9 +108,6 @@ function LoginForm() {
     }
     const KakaoLoginButton = () => {
         AuthCon.onKakaoLogin();
-    }
-    const gotomainPage = () => {
-        history.push('main')
     }
     return (
         <AuthStore.Consumer>

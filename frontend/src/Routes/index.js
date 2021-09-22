@@ -19,9 +19,9 @@ import { LoginApp } from "Component/WebComponent/WebPage";
 import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 import WebMain from "../Component/WebComponent/WebPage/WebFrame/webBody";
 import WaitingRoom from "../Component/WebComponent/WebPage/WebFrame/waitingRoom";
-import SetNickName from "Component/WebComponent/Login/LoginFrame/setNickName";
 import { Modal } from "react-modal";
 import { CookiesProvider } from "react-cookie";
+
 const GamePage = styled.div`
   display: flex;
   flex-direction: row;
@@ -139,7 +139,6 @@ const TemporaryMain = () => {
 };
 
 const app = () => {
-  //const { isAuthenticated } = useContext(UserContext);
   const { checkAuth } = useContext(AuthStore);
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
@@ -155,7 +154,6 @@ const app = () => {
           <ButtonGlobalHover />
           {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
           <Route path="/" component={GlobalContainer} />
-          {/* <Route exact path="/" component={LoginPageContainer} /> */}
           <CookiesProvider>
             <Route exact path="/" component={LoginApp} />
           </CookiesProvider>
@@ -192,9 +190,6 @@ const app = () => {
               </GamePage>
             )}
           />
-        )}
-        {checkAuth && (
-          <Route exact path="/setNickname" component={SetNickName} />
         )}
         {checkAuth && (
           <Route
@@ -277,24 +272,6 @@ const app = () => {
                   <CHAT_SHOW_DIV_STYLE>
                     <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                   </CHAT_SHOW_DIV_STYLE>
-                  {/* <AVALON_STYLE>
-                  <AVALON_Global />
-                  <AVALON_GAME>
-                    <AVALON_BETA />
-                  </AVALON_GAME>
-                  <AVALON_CHAT>
-                    {chatShow && (
-                      <ChatComponent
-                        chatList={chatList}
-                        setChatList={setChatList}
-                        width={300}
-                      />
-                    )}
-                    <CHAT_SHOW_DIV_STYLE>
-                      <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                    </CHAT_SHOW_DIV_STYLE>
-                  </AVALON_CHAT>
-                </AVALON_STYLE> */}
                 </PeerStore>
               </GamePage>
             )}
