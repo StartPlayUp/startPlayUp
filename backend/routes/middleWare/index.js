@@ -1,12 +1,12 @@
 
-const insertNickname = ({ req, res, nickname, docId }) => {
+const insertNickname = ({ res, nickname, docId }) => {
     res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
 }
 
 
 exports.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
-        insertNickname({ req, res, nickname, docId });
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
         next();
     }
     else {
@@ -19,16 +19,15 @@ exports.isLoggedIn = function (req, res, next) {
 
 exports.haveNickname = function (req, res, next) {
     console.log("req.user.docId : ", req.user)
-    insertNickname({ req, res, nickname, docId });
-
+    res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
     next();
 };
 
 
 exports.insertNicknameWithRedirectForSns = function (req, res, next) {
     if (req.isAuthenticated()) {
-        insertNickname({ req, res, nickname, docId });
-
+        console.log("req.user.docId : ", req.user)
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
     }
     res.redirect("http://localhost:3000/");
 };
@@ -40,8 +39,7 @@ exports.isNotLoggedIn = function (req, res, next) {
     else {
         // res.redirect("/");
         const sendData = JSON.stringify({ redirectPath: "/" });
-        insertNickname({ req, res, nickname, docId });
-
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
         res.send(sendData);
     }
 };
@@ -50,8 +48,7 @@ exports.isNotLoggedIn = function (req, res, next) {
 exports.afterLocalLoginSendData = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
-        insertNickname({ req, res, nickname, docId });
-
+        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
         const SendData = JSON.stringify({
             redirectPath: "/main",
             success: true

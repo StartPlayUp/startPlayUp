@@ -50,7 +50,10 @@ passportModule(passport);
 app.use(morgan('dev'))
 
 // cors exception
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
 
 // using json parse
 app.use(jsonParser)

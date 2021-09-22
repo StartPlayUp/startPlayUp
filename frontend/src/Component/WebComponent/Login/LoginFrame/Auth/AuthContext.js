@@ -15,13 +15,15 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
     const cookies = new Cookies();
     const { children } = props; //children에게 값을 전달합니다.
     const onLogin = (model, history) => {
+        axios.defaults.withCredentials = true;
         const userLogin = {
             method: 'post',
             url: 'http://localhost:4000/api/auth/login/local',
             data: {
                 email: model.email,
                 password: model.password
-            }
+            },
+            WithCredentials: true
         }
         axios(userLogin)
             .then(function (response) {
