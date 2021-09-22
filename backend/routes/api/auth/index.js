@@ -32,7 +32,6 @@ router.post('/login/local',
         if (req.isAuthenticated()) {
             console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
             res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
-            res.cookie('test', "asdf", { maxAge: 900000, httpOnly: true })
 
             const SendData = JSON.stringify({
                 redirectPath: "/main",
@@ -52,8 +51,10 @@ router.post('/login/local',
 
 
 
-router.get('/logout', isLoggedIn, (req, res) => {
+router.get('/logout', (req, res) => {
     req.logout();
+    res.clearCookie("nickname");
+    res.clearCookie("connect.sid");
     const sendData = JSON.stringify({
         redirectPath: "/",
         success: true

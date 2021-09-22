@@ -47,7 +47,7 @@ const CreateRoom = ({ isOpen, close }) => {
   const onCLick = async () => {
     const createRoomConfig = {
       method: "post",
-      url: "http://localhost:4000/createRoom",
+      url: "http://localhost:4000/api/room/createRoom",
       data: {
         hostname: localStorage.getItem("nickname"),
         guestList: [],
@@ -60,7 +60,7 @@ const CreateRoom = ({ isOpen, close }) => {
       },
     };
     axios
-      .post("http://localhost:4000/createRoom")
+      .post("http://localhost:4000/api/room/createRoom")
       .then(function (response) {
         console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
         history.push({
