@@ -1,7 +1,5 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../LoginStore";
 import { Route, Switch, useHistory } from "react-router-dom";
-import LoginPageContainer from "Container/LoginPageContainer";
 import GlobalContainer from "Container/GlobalContainer";
 import ChatComponent from "Component/ChatComponent";
 import RockPaperScissors from "Component/GameComponent/RockPaperScissors";
