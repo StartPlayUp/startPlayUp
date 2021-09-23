@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        fontSize : "14px"
+        // fontSize : "14px"
     },
     listItem: {
         // textTransform: "capitalize",
@@ -46,6 +46,7 @@ function Sidebar({routes}) {
 
     return (
         <List>
+
             <div className={classes.list}>
                 <div>
                     {topMenu.map(({key, name, route}) => (

@@ -9,16 +9,10 @@ import {createGlobalStyle} from "styled-components";
 const Home = React.lazy(() => import("./modules/Home"));
 
 const Setting = React.lazy(() => import("./modules/Setting"));
-const Theme = createGlobalStyle`
-    *{
-      text-decoration: none;
-    }
-`
 
 function NavigationBar({open,setOpen,logout}) {
     return (
         <Router>
-            <Theme/>
             <Dashboard isOpen={open} isSetOpen={setOpen}  routes={routes}>
                 <Switch>
                     <Route exact path={routes.home.route}>
@@ -26,6 +20,9 @@ function NavigationBar({open,setOpen,logout}) {
                     </Route>
                     <Route path={routes.setting.route}>
                         <Setting />
+                    </Route>
+                    <Route path={routes.signout.route}>
+                        {logout}
                     </Route>
                 </Switch>
             </Dashboard>

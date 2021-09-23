@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
     root: {
         // display: "flex",
         position:'absolute',
+        textDecoration:'none',
+        fontSize : 14
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -56,7 +58,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "flex-end"
     },
     content: {
-        // flexGrow: 1,
+        flexGrow: 1,
         padding: theme.spacing(3),
         transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
@@ -88,29 +90,29 @@ export default function PersistentDrawerLeft({ isOpen,isSetOpen,routes, children
 
     return (
         <div className={classes.root}>
-            <CssBaseline />
+            {/*<CssBaseline />*/}
             {/*<AppBar*/}
             {/*    position="inherit"*/}
             {/*    className={clsx(classes.appBar, {*/}
             {/*        [classes.appBarShift]: open*/}
             {/*    })}*/}
             {/*>*/}
-            {/*    /!*<Toolbar>*!/*/}
+            {/*    <Toolbar>*/}
 
-            {/*    /!*    /!*<Typography variant="h6" noWrap>*!/*!/*/}
-            {/*    /!*    /!*    Lazy loading demo*!/*!/*/}
-            {/*    /!*    /!*</Typography>*!/*!/*/}
-            {/*    /!*</Toolbar>*!/*/}
+            {/*        <Typography variant="h6" noWrap>*/}
+            {/*            Lazy loading demo*/}
+            {/*        </Typography>*/}
+            {/*    </Toolbar>*/}
             {/*</AppBar>*/}
-            {/*<IconButton*/}
-            {/*    color="inherit"*/}
-            {/*    aria-label="open drawer"*/}
-            {/*    onClick={handleDrawerOpen}*/}
-            {/*    edge="start"*/}
-            {/*    className={clsx(classes.menuButton, open && classes.hide)}*/}
-            {/*>*/}
-            {/*    /!*<MenuIcon />*!/*/}
-            {/*</IconButton>*/}
+            <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, open && classes.hide)}
+            >
+                <MenuIcon />
+            </IconButton>
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
