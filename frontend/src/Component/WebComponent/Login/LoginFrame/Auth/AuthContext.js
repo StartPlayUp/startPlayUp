@@ -33,8 +33,8 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                         checkAuth: true,
                         error: false
                     });
-                    localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
-                    localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
+                    // localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
+                    // localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
                     history.push(response.data.redirectPath);
                 }
                 else {

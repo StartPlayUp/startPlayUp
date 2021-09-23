@@ -157,25 +157,107 @@ const app = () => {
           </CookiesProvider>
           {checkAuth && (
             <>
+              <Route exact path="/main" component={WebMain} />
               <Switch>
-                <Route exact path="/main" component={WebMain} />
-                <Route
-                  path={"/waitingRoom"}
-                  render={() => (
-                    <WaitingRoom
-                      chatList={chatList}
-                      chatShow={chatShow}
-                      setChatList={setChatList}
-                      handler={chatOnClickHandler}
-                      history={history}
-                    />
-                  )}
-                />
+                <PeerStore>
+                  <Route
+                    path={"/waitingRoom"}
+                    render={() => (
+                      <WaitingRoom
+                        chatList={chatList}
+                        chatShow={chatShow}
+                        setChatList={setChatList}
+                        handler={chatOnClickHandler}
+                        history={history}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/RockPaperScissors"
+                    render={() => (
+                      <GamePage>
+                        <RockPaperScissors />
+                        <ChatComponent />
+                      </GamePage>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/MineSearch"
+                    render={() => (
+                      <GamePage>
+                        <MineSearch />
+                      </GamePage>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/Yut"
+                    render={() => (
+                      <GamePage>
+                        <Yut />
+                        {chatShow && (
+                          <ChatComponent
+                            chatList={chatList}
+                            setChatList={setChatList}
+                            width={500}
+                          />
+                        )}
+                        <CHAT_SHOW_DIV_STYLE>
+                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                        </CHAT_SHOW_DIV_STYLE>
+                      </GamePage>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/Yacht"
+                    render={() => (
+                      <GamePage>
+                        <StyleDiv>
+                          <Yacht />
+                        </StyleDiv>
+                        {chatShow && (
+                          <ChatComponent
+                            chatList={chatList}
+                            setChatList={setChatList}
+                          />
+                        )}
+                        <CHAT_SHOW_DIV_STYLE>
+                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                        </CHAT_SHOW_DIV_STYLE>
+                      </GamePage>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/AVALON"
+                    render={() => (
+                      <GamePage>
+                        <StyleDiv>
+                          <AVALON_Global />
+                          <AVALON_BETA />
+                        </StyleDiv>
+                        {chatShow && (
+                          <ChatComponent
+                            chatList={chatList}
+                            setChatList={setChatList}
+                            width={320}
+                          />
+                        )}
+                        <CHAT_SHOW_DIV_STYLE>
+                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                        </CHAT_SHOW_DIV_STYLE>
+                      </GamePage>
+                    )}
+                  />
+                </PeerStore>
               </Switch>
             </>
           )}
         </>
-        {checkAuth && (
+        {/* {checkAuth && (
           <Route
             exact
             path="/RockPaperScissors"
@@ -188,8 +270,8 @@ const app = () => {
               </GamePage>
             )}
           />
-        )}
-        {checkAuth && (
+        )} */}
+        {/* {checkAuth && (
           <Route
             exact
             path="/MineSearch"
@@ -201,8 +283,8 @@ const app = () => {
               </GamePage>
             )}
           />
-        )}
-        {checkAuth && (
+        )} */}
+        {/* {checkAuth && (
           <Route
             exact
             path="/Yut"
@@ -274,7 +356,7 @@ const app = () => {
               </GamePage>
             )}
           />
-        )}
+        )} */}
       </BrowserRouter>
     </>
   );

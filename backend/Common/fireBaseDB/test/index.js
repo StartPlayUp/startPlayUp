@@ -7,8 +7,8 @@ const fireBaseRoom = require('../room');
 
 exports.test = ({ db }) => {
     // 방에 참석한 사람 추가 제거 (테스트 코드)
-    fireBaseRoom.joinRoom({ db, roomId: 'Lz4HdeBKmedo7CB2eAIh', nickname: 'asdfafdsafds' });
-    fireBaseRoom.disconnectRoom({ db, roomId: "Lz4HdeBKmedo7CB2eAIh", nickname: '장석찬' })
+    // fireBaseRoom.joinRoom({ db, roomId: 'Lz4HdeBKmedo7CB2eAIh', nickname: 'asdfafdsafds' });
+    // fireBaseRoom.disconnectRoom({ db, roomId: "Lz4HdeBKmedo7CB2eAIh", nickname: '장석찬' })
 
     // test 데이터로 user 4명 생성 (테스트 코드)
     users.forEach(async user => {

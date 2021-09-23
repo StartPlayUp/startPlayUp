@@ -27,6 +27,7 @@ function LoginApp() {
     console.log(cookie['nickname']);
     if (cookie['nickname'] !== undefined) {
       alreadyLogged(history);
+      localStorage.setItem('nickname', cookie['nickname'])
     }
   }, []);
   return (

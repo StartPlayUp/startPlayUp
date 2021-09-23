@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 //import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
 //import {Store} from '../../ChatFrame/frontend/src/store'
 import {
@@ -18,21 +18,22 @@ import {
     RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
-import {PeerStore} from "../../../../Routes/peerStore";
-import {useHistory} from "react-router";
+import { PeerStore } from "../../../../Routes/peerStore";
+import { useHistory } from "react-router";
 import axios from "axios";
-import {Background, Users} from "../Style/WebFrameStyle";
+import { Background, Users } from "../Style/WebFrameStyle";
 
 
-const WaitingRoom = ({chatList, chatShow, setChatList}) => {
+const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
     const guests = location.list.guestList;
     const history = useHistory()
     const gameStart = () => {
+        console.log(game);
         switch (game) {
-            case 'YUT':
+            case 'Yutnori':
                 history.push('/Yut');
                 break;
             case 'YACHT':
@@ -53,7 +54,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         axios.post('http://localhost:4000/api/room/accessRoom')
             .then(function (result) {
                 console.log('checkUser get useEffect')
-                const {userList, success} = result.data
+                const { userList, success } = result.data
                 success && setUsers(userList)
             })
             .catch(function (error) {
@@ -62,13 +63,13 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     }, [])
     return (
         <BodyFrame>
-            <Background/>
+            <Background />
             <Room>
                 <Title>
                     <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
                     <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
                 </Title>
-                <hr/>
+                <hr />
                 <ButtonArea>
                     <LeftButtonsArea>
                         <Button onClick={gameStart}>시작</Button>
@@ -95,16 +96,14 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                         }
                     </WaitingUsers>
                     <ChattingList>
-                        <PeerStore>
-                            {chatShow && (
-                                <ChatComponent
-                                    chatList={chatList}
-                                    setChatList={setChatList}
-                                    width={550}
-                                    height={300}
-                                />
-                            )}
-                        </PeerStore>
+                        {chatShow && (
+                            <ChatComponent
+                                chatList={chatList}
+                                setChatList={setChatList}
+                                width={550}
+                                height={300}
+                            />
+                        )}
                     </ChattingList>
                 </MainList>
             </Room>
