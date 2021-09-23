@@ -52,7 +52,7 @@ const HEADER = () => {
                         </Link>
                     </HeadLeft>
                     <HeadRight>
-                        {checkAuth && <StyledMenuAttribute onClick={logoutHandler}>로그아웃</StyledMenuAttribute>}
+                        {/*{checkAuth && <StyledMenuAttribute onClick={logoutHandler}>로그아웃</StyledMenuAttribute>}*/}
                         <img
                             src={menu}
                             alt="menu"
