@@ -41,6 +41,7 @@ const HEADER = () => {
             .catch(function (error) {
                 console.log(error);
             });
+        setOpen(false)
     }
     return (
         <div>
