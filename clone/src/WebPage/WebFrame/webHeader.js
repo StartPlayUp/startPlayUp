@@ -1,12 +1,8 @@
-import React from "react";
-import {
-    HeadColor,
-    HeadStyle,
-    HeadRight,
-    HeadLeft
-} from "../Style/WebFrameStyle";
+import React, {useState} from "react";
+import {HeadColor, HeadLeft, HeadRight, HeadStyle} from "../Style/WebFrameStyle";
 
-const HEADER = () => {
+const HEADER = ({isClick}) => {
+
     return (
         <div>
             <HeadColor>
@@ -15,7 +11,11 @@ const HEADER = () => {
                         StartPlayUp
                     </HeadLeft>
                     <HeadRight>
-                        <img src="../../images/white-menu.png" alt="menu"/>
+                        <img
+                            src="../../images/white-menu.png"
+                            alt="menu"
+                            onClick={isClick}
+                        />
                     </HeadRight>
                 </HeadStyle>
             </HeadColor>

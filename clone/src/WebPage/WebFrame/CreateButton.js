@@ -1,35 +1,38 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import CreateRoom from "./createRoom";
-import styled from 'styled-components';
-
+import styled from "styled-components";
 const Button = styled.button`
-    font-size: 14px;
-    color: #FFFFFF;
-    background-color: #A593E0;
-    border-radius: 2px;
-    border: 0;
-    padding: 10px;
-    text-decoration : none;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #a593e0;
+  border-radius: 2px;
+  border: 0;
+  padding: 10px;
+  text-decoration: none;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: green;
+  }
 `;
 
 function CreateButton() {
+  const [open, setOpen] = useState(false);
 
-    const [open, setOpen] = useState(false);
+  const openState = () => {
+    setOpen(true);
+  };
 
-    const openState = () => {
-        setOpen(true);
-    }
+  const closeState = () => {
+    setOpen(false);
+  };
 
-    const closeState = () => {
-        setOpen(false);
-    }
-
-    return (
-        <>
-            <Button onClick={openState}>Create Room</Button>
-            {open && <CreateRoom isOpen={openState} close={closeState}/>}
-        </>
-    );
+  return (
+    <>
+      <Button onClick={openState}>Create Room</Button>
+      {open && <CreateRoom isOpen={openState} close={closeState} />}
+    </>
+  );
 }
 
 // class CreateButton extends Component {
