@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext} from "react";
 import {
     HeadColor,
     HeadStyle,
@@ -6,29 +6,34 @@ import {
     HeadLeft
 } from "../Style/WebFrameStyle";
 import menu from 'images/white-menu.png';
-import { Link, useHistory, Redirect } from "react-router-dom";
+import {Link, useHistory, Redirect} from "react-router-dom";
 import styled from "styled-components";
-import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
+import {AuthStore} from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
+import Modal from 'react-modal'
+import UserInformationModal from "./UserInformationModal";
+import NavigationBar from "./index";
+
 const axios = require('axios');
 
 
 const StyledMainLogo = styled.div`
-    color:black;
+  color: white;
 `;
 const StyledMenuAttribute = styled.button`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin : 0px 10px 0px 10px;
-    border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px 0px 10px;
+  border-radius: 25px;
 `;
 
 const HEADER = () => {
     const history = useHistory();
-    const { checkAuth, logout } = useContext(AuthStore)
+    const {checkAuth, logout} = useContext(AuthStore)
     const [redirect, setRedirect] = useState(false);
+    const [open, setOpen] = useState(false)
     const logoutHandler = () => {
-        axios.get(`http://localhost:4000/api/auth/logout`, { withCredentials: true })
+        axios.get(`http://localhost:4000/api/auth/logout`, {withCredentials: true})
             .then(function (response) {
                 logout(history)
                 // setRedirect(true);
@@ -42,17 +47,28 @@ const HEADER = () => {
             <HeadColor>
                 <HeadStyle>
                     <HeadLeft fontSize={"32px"}>
-                        <Link to="/" style={{ textDecoration: 'none' }}>
+                        <Link to="/" style={{textDecoration: 'none'}}>
                             <StyledMainLogo>StartPlayUp</StyledMainLogo>
                         </Link>
                     </HeadLeft>
                     <HeadRight>
-                        {checkAuth && <StyledMenuAttribute onClick={logoutHandler} >로그아웃</StyledMenuAttribute>}
-                        <img src={menu} alt="menu" />
+                        {checkAuth && <StyledMenuAttribute onClick={logoutHandler}>로그아웃</StyledMenuAttribute>}
+                        <img
+                            src={menu}
+                            alt="menu"
+                            onClick={() => setOpen(true)}
+                        />
                     </HeadRight>
+                    {/*{open && <UserInformationModal open={open} setOpen={setOpen}/>}*/}
+                    {open&& <NavigationBar
+                        open={open}
+                        setOpen={setOpen}
+                        logout={logoutHandler}
+                        // onRequestClose={() => setOpen(false)}
+                    />}
                 </HeadStyle>
             </HeadColor>
-            {redirect ? (<Redirect push to="/" />) : null}
+            {redirect ? (<Redirect push to="/"/>) : null}
         </div>
     )
 }

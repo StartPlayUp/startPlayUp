@@ -21,6 +21,7 @@ import {
     ResultButton,
     Title
 } from "../Style/CreateRoomStyle";
+import HEADER from "./webHeader";
 
 const BODY = ({location, history}) => {
     console.log(location);
@@ -29,7 +30,6 @@ const BODY = ({location, history}) => {
     const [isSecret, setIsSecret] = useState(false);
     const [password, setPassword] = useState("");
     const [room, setRoom] = useState();
-
     const historyPush = (rooms) => {
         console.log('history.push rooms : ')
         console.log(rooms)
@@ -90,7 +90,7 @@ const BODY = ({location, history}) => {
     }, []);
     return (
         <>
-            {/* <HEADER/> */}
+             {/*<HEADER/>*/}
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>

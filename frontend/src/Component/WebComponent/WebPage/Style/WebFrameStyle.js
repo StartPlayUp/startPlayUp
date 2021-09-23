@@ -6,6 +6,7 @@ export const HeadStyle = styled.div`
     padding:10px;
     margin : 0 auto;
     display: flex;
+    //position: absolute;
     justify-content: space-between;
     align-items: center;
 `;
