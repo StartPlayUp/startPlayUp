@@ -10,6 +10,8 @@ export const PeerDataContext = createContext();
 export const PeersContext = createContext();
 export const VoicePeersContext = createContext();
 export const RefContext = createContext();
+export const RoomIdContext = createContext();
+
 
 
 const StyledAudio = styled.audio`
@@ -55,13 +57,17 @@ export const PeerStore = ({ children }) => {
 
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
 
-
+    const [roomID, setRoomID] = useState("9a06eb80-9fd4-11eb-a3e2-377a237cffe7");//음성
+    const valueRoomID = useMemo(() => ({
+        roomID,
+        setRoomID
+    }), [roomID]);
 
     const socketRef = useRef();
     const myNickname = localStorage.getItem('nickname');
     let peersRef = useRef([]);
     let voicePeersRef = useRef([]);
-    const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
+    // const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
 
     const peersDestory = (peers, voicePeers) => {
         peers.forEach((peer) => {
@@ -112,7 +118,9 @@ export const PeerStore = ({ children }) => {
             <PeerDataContext.Provider value={valuePeerData}>
                 <PeersContext.Provider value={valuePeers}>
                     <VoicePeersContext.Provider value={valueVoicePeers}>
-                        {children}
+                        <RoomIdContext.provider value={valueRoomID}>
+                            {children}
+                        </RoomIdContext.provider >
                     </VoicePeersContext.Provider>
                 </PeersContext.Provider>
             </PeerDataContext.Provider>
