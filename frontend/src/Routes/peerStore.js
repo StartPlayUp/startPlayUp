@@ -84,14 +84,12 @@ export const PeerStore = ({ children }) => {
         setVoicePeers([]);
     }
     useEffect(() => {
-        if (roomID !== "") {
-            socketRef.current = io.connect("/");
-            if (Peer.WEBRTC_SUPPORT) {
-                connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
-                connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
-            } else {
-                console.log("webrtc not support!")
-            }
+        socketRef.current = io.connect("/");
+        if (Peer.WEBRTC_SUPPORT) {
+            connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
+            connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
+        } else {
+            console.log("webrtc not support!")
         }
         // 방법 1 테스트 해보기.
         // return () => peersRef.current.forEach(i => {
@@ -107,7 +105,7 @@ export const PeerStore = ({ children }) => {
         return () => {
             peersDestory(peers, voicePeers)
         };
-    }, [roomID]);
+    }, []);
     return (
         <>
             {
