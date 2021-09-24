@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, createContext, useMemo } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import GlobalContainer from "Container/GlobalContainer";
 import ChatComponent from "Component/ChatComponent";
@@ -136,228 +136,141 @@ const TemporaryMain = () => {
   );
 };
 
+export const RoomIdContext = createContext();
+
 const app = () => {
   const { checkAuth } = useContext(AuthStore);
   const [chatShow, setChatShow] = useState(true);
   const [chatList, setChatList] = useState([]);
+
+  const [roomIdState, setRoomIdState] = useState(false);
+  const valueRoomIdState = useMemo(() => ({
+    roomIdState,
+    setRoomIdState,
+  }), [roomIdState]);
+
   const chatOnClickHandler = () => {
     setChatShow((prev) => !prev);
   };
 
   return (
     <>
-      <BrowserRouter>
-        <>
-
-          <ButtonGlobalHover />
-          {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
-          <Route path="/" component={GlobalContainer} />
-          <CookiesProvider>
-            <Route exact path="/" component={LoginApp} />
-          </CookiesProvider>
-          {checkAuth && (
-            <>
-              <Route exact path="/main" component={WebMain} />
-              <Switch>
-                <PeerStore>
-                  <Route
-                    path={"/waitingRoom"}
-                    render={() => (
-                      <WaitingRoom
-                        chatList={chatList}
-                        chatShow={chatShow}
-                        setChatList={setChatList}
-                        handler={chatOnClickHandler}
-                        history={history}
+      <RoomIdContext.Provider value={valueRoomIdState}>
+        <BrowserRouter>
+          <>
+            <ButtonGlobalHover />
+            {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
+            <Route path="/" component={GlobalContainer} />
+            <CookiesProvider>
+              <Route exact path="/" component={LoginApp} />
+            </CookiesProvider>
+            {checkAuth && (
+              <>
+                <Route exact path="/main" render={() => (
+                  <WebMain setRoomIdState={setRoomIdState} />
+                )} />
+                <Switch>
+                  {roomIdState &&
+                    <PeerStore>
+                      <Route
+                        path={"/waitingRoom"}
+                        render={() => (
+                          <WaitingRoom
+                            chatList={chatList}
+                            chatShow={chatShow}
+                            setChatList={setChatList}
+                            handler={chatOnClickHandler}
+                            history={history}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/RockPaperScissors"
-                    render={() => (
-                      <GamePage>
-                        <RockPaperScissors />
-                        <ChatComponent />
-                      </GamePage>
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/MineSearch"
-                    render={() => (
-                      <GamePage>
-                        <MineSearch />
-                      </GamePage>
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/Yut"
-                    render={() => (
-                      <GamePage>
-                        <Yut />
-                        {chatShow && (
-                          <ChatComponent
-                            chatList={chatList}
-                            setChatList={setChatList}
-                            width={500}
-                          />
+                      <Route
+                        exact
+                        path="/RockPaperScissors"
+                        render={() => (
+                          <GamePage>
+                            <RockPaperScissors />
+                            <ChatComponent />
+                          </GamePage>
                         )}
-                        <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                        </CHAT_SHOW_DIV_STYLE>
-                      </GamePage>
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/Yacht"
-                    render={() => (
-                      <GamePage>
-                        <StyleDiv>
-                          <Yacht />
-                        </StyleDiv>
-                        {chatShow && (
-                          <ChatComponent
-                            chatList={chatList}
-                            setChatList={setChatList}
-                          />
+                      />
+                      <Route
+                        exact
+                        path="/MineSearch"
+                        render={() => (
+                          <GamePage>
+                            <MineSearch />
+                          </GamePage>
                         )}
-                        <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                        </CHAT_SHOW_DIV_STYLE>
-                      </GamePage>
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/AVALON"
-                    render={() => (
-                      <GamePage>
-                        <StyleDiv>
-                          <AVALON_Global />
-                          <AVALON_BETA />
-                        </StyleDiv>
-                        {chatShow && (
-                          <ChatComponent
-                            chatList={chatList}
-                            setChatList={setChatList}
-                            width={320}
-                          />
+                      />
+                      <Route
+                        exact
+                        path="/Yut"
+                        render={() => (
+                          <GamePage>
+                            <Yut />
+                            {chatShow && (
+                              <ChatComponent
+                                chatList={chatList}
+                                setChatList={setChatList}
+                                width={500}
+                              />
+                            )}
+                            <CHAT_SHOW_DIV_STYLE>
+                              <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                            </CHAT_SHOW_DIV_STYLE>
+                          </GamePage>
                         )}
-                        <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                        </CHAT_SHOW_DIV_STYLE>
-                      </GamePage>
-                    )}
-                  />
-                </PeerStore>
-              </Switch>
-            </>
-          )}
-        </>
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/RockPaperScissors"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <RockPaperScissors />
-                  <ChatComponent />
-                </PeerStore>
-              </GamePage>
+                      />
+                      <Route
+                        exact
+                        path="/Yacht"
+                        render={() => (
+                          <GamePage>
+                            <StyleDiv>
+                              <Yacht />
+                            </StyleDiv>
+                            {chatShow && (
+                              <ChatComponent
+                                chatList={chatList}
+                                setChatList={setChatList}
+                              />
+                            )}
+                            <CHAT_SHOW_DIV_STYLE>
+                              <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                            </CHAT_SHOW_DIV_STYLE>
+                          </GamePage>
+                        )}
+                      />
+                      <Route
+                        exact
+                        path="/AVALON"
+                        render={() => (
+                          <GamePage>
+                            <StyleDiv>
+                              <AVALON_Global />
+                              <AVALON_BETA />
+                            </StyleDiv>
+                            {chatShow && (
+                              <ChatComponent
+                                chatList={chatList}
+                                setChatList={setChatList}
+                                width={320}
+                              />
+                            )}
+                            <CHAT_SHOW_DIV_STYLE>
+                              <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                            </CHAT_SHOW_DIV_STYLE>
+                          </GamePage>
+                        )}
+                      />
+                    </PeerStore>}
+                </Switch>
+              </>
             )}
-          />
-        )} */}
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/MineSearch"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <MineSearch />
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )} */}
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/Yut"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <Yut />
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                      width={500}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )}
-        {checkAuth && (
-          <Route
-            exact
-            path="/Yacht"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <StyleDiv>
-                    <Yacht />
-                  </StyleDiv>
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )}
-        {checkAuth && (
-          <Route
-            exact
-            path="/AVALON"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <StyleDiv>
-                    <AVALON_Global />
-                    <AVALON_BETA />
-                  </StyleDiv>
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                      width={320}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )} */}
-      </BrowserRouter>
+          </>
+        </BrowserRouter>
+      </RoomIdContext.Provider>
     </>
   );
 };
