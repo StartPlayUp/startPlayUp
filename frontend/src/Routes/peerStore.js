@@ -57,18 +57,21 @@ export const PeerStore = ({ children }) => {
 
     // dispatch는 실행중 변경하지 않기에 useMemo를 통해 제함.
 
-    // const [roomID, setRoomID] = useState("");//음성
-    // const valueRoomID = useMemo(() => ({
-    //     roomID,
-    //     setRoomID
-    // }), [roomID]);
-    const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
+    const [roomID, setRoomID] = useState({
+        id: "",
+        state: false,
+    });//음성
+    const valueRoomID = useMemo(() => ({
+        roomID,
+        setRoomID
+    }), [roomID]);
+
+    // const roomID = "9a06eb80-9fd4-11eb-a3e2-377a237cffe7";
 
     const socketRef = useRef();
     const myNickname = localStorage.getItem('nickname');
     let peersRef = useRef([]);
     let voicePeersRef = useRef([]);
-
 
     const peersDestory = (peers, voicePeers) => {
         peers.forEach((peer) => {
@@ -77,19 +80,21 @@ export const PeerStore = ({ children }) => {
             peer.peer.on('close', () => console.log("delete"));
         });
         setPeerData([]);
-
         voicePeers.forEach((voicePeer) => {
             voicePeer.peer.destroy()
         });
         setVoicePeers([]);
     }
+
     useEffect(() => {
-        socketRef.current = io.connect("/");
-        if (Peer.WEBRTC_SUPPORT) {
-            connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
-            connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
-        } else {
-            console.log("webrtc not support!")
+        if (roomID.id !== "" && roomID.state) {
+            socketRef.current = io.connect("/");
+            if (Peer.WEBRTC_SUPPORT) {
+                connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
+                connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
+            } else {
+                console.log("webrtc not support!")
+            }
         }
 
         // 방법 1 테스트 해보기.
@@ -106,7 +111,7 @@ export const PeerStore = ({ children }) => {
         return () => {
             peersDestory(peers, voicePeers)
         };
-    }, []);
+    }, [roomID]);
     return (
         <>
             {
@@ -119,9 +124,9 @@ export const PeerStore = ({ children }) => {
             <PeerDataContext.Provider value={valuePeerData}>
                 <PeersContext.Provider value={valuePeers}>
                     <VoicePeersContext.Provider value={valueVoicePeers}>
-                        {/* <RoomIdContext.provider value={valueRoomID}> */}
-                        {children}
-                        {/* </RoomIdContext.provider > */}
+                        <RoomIdContext.Provider value={valueRoomID}>
+                            {children}
+                        </RoomIdContext.Provider >
                     </VoicePeersContext.Provider>
                 </PeersContext.Provider>
             </PeerDataContext.Provider>
