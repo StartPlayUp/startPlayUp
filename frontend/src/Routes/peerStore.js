@@ -91,6 +91,7 @@ export const PeerStore = ({ children }) => {
         } else {
             console.log("webrtc not support!")
         }
+
         // 방법 1 테스트 해보기.
         // return () => peersRef.current.forEach(i => {
         //     console.log("destroy peer", i);
