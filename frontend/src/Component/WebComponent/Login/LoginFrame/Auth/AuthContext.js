@@ -3,6 +3,7 @@ import React, { Component, useEffect, useLayoutEffect, useState } from 'react';
 //import 'firebase/firestore';
 import { testDB } from 'Common/TestDB/index2';
 import axios from "axios";
+import { useCookies } from 'react-cookie';
 import Cookies, { CookiesGetOptions } from 'universal-cookie';
 const AuthStore = React.createContext(); //context 객체 생성
 
@@ -11,6 +12,9 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         checkAuth: false, //로그인 상태를 기록합니다. false는 로그아웃 되어있는 상태입니다.
         error: false
     });
+
+    const [cookie, setCookie, removeCookie] = useCookies(['nickname']);
+
 
     const { children } = props; //children에게 값을 전달합니다.
     const onLogin = (model, history) => {
@@ -35,6 +39,9 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                     });
                     // localStorage.setItem('email', model.email); //새로고침 하더라도 계속 유지 될 수 있도록 웹 스토리지에 저장합니다.
                     // localStorage.setItem('password', model.password); //마찬가지로 비밀번호도 저장합니다.
+
+                    console.log("asdafdsafds", response.data.nickname, response.data.redirectPath)
+                    localStorage.setItem("nickname", response.data.nickname);
                     history.push(response.data.redirectPath);
                 }
                 else {
@@ -98,6 +105,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
             checkAuth: false,
             error: false
         });
+        localStorage.removeItem('nickname')
         history.push('/');
     }
     return (

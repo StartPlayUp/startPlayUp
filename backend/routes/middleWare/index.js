@@ -49,17 +49,18 @@ exports.afterLocalLoginSendData = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
         res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
-        const SendData = JSON.stringify({
+        const sendData = JSON.stringify({
+            nickname: req.user.nickname + " " + req.user.docId,
             redirectPath: "/main",
             success: true
         });
-        res.send(SendData)
+        res.send(sendData)
     }
     else {
-        const SendData = JSON.stringify({
+        const sendData = JSON.stringify({
             redirectPath: "/",
             success: false
         });
-        res.send(SendData)
+        res.send(sendData)
     }
 };

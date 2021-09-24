@@ -34,6 +34,7 @@ router.post('/login/local',
             res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
 
             const SendData = JSON.stringify({
+                nickname: req.user.nickname + " " + req.user.docId,
                 redirectPath: "/main",
                 success: true
             });

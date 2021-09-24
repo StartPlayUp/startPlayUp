@@ -90,8 +90,8 @@ export const PeerStore = ({ children }) => {
         if (roomID.id !== "" && roomID.state) {
             socketRef.current = io.connect("/");
             if (Peer.WEBRTC_SUPPORT) {
-                connectDataPeer({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
-                connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
+                connectDataPeer({ socketRef, roomID: roomID.id, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성
+                connectVoicePeer({ socketRef, voicePeersRef, roomID: roomID.id + "-Voice", setVoicePeers, myNickname });//보이스 피어 생성
             } else {
                 console.log("webrtc not support!")
             }
