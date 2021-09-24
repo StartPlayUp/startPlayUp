@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import CreateButton from "./CreateButton";
 
 import {
@@ -22,6 +22,7 @@ import {
     Title
 } from "../Style/CreateRoomStyle";
 import HEADER from "./webHeader";
+import {RoomIdContext} from "../../../../Routes/peerStore";
 
 const BODY = ({location, history}) => {
     console.log(location);
@@ -31,10 +32,11 @@ const BODY = ({location, history}) => {
     const [isSecret, setIsSecret] = useState(false);
     const [password, setPassword] = useState("");
     const [room, setRoom] = useState();
-
+    const {roomID, setRoomID} = useContext(RoomIdContext)
     const historyPush = (room) => {
         console.log('history.push rooms : ')
         console.log(room)
+        setRoomID({id: room.roomId, state: true})
         history.push({
             pathname: "/waitingRoom",
             state: {
@@ -63,9 +65,8 @@ const BODY = ({location, history}) => {
         console.log(room);
         console.log(room.hostname);
         console.log(password);
-        console.log(`password : ${password.toString()}`)
+        console.log(`${password}`)
         console.log('-------------------------------end')
-
         // if (room.password === password.toString()) {
         //     accessRoom(room)
         //     historyPush(room);
@@ -74,6 +75,7 @@ const BODY = ({location, history}) => {
         //     setPassword("");
         //     setRoom("");
         // }
+        accessRoom(room)
     };
     const accessRoom = (rooms) => {
         console.log('accessRoom')
@@ -83,7 +85,7 @@ const BODY = ({location, history}) => {
             url: 'http://localhost:4000/api/room/accessRoom',
             data: {
                 roomId: rooms.roomId,
-                password: rooms.password,
+                password: password,
             }
         }
         axios(accessRoomConfig)
@@ -91,7 +93,7 @@ const BODY = ({location, history}) => {
                 console.log("roomId and RoomPassword check : ", response.data);
                 if (response.data.success && response.data.correct) {
                     historyPush(room)
-                }else{
+                } else {
                     alert('error')
                 }
             })
@@ -117,7 +119,7 @@ const BODY = ({location, history}) => {
     }, []);
     return (
         <>
-             {/*<HEADER/>*/}
+            {/*<HEADER/>*/}
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
