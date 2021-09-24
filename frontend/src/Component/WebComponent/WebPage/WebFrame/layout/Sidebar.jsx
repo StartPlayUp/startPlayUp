@@ -69,7 +69,7 @@ function Sidebar({routes}) {
                             </ListItemIcon>
                             <ListItemText
                                 primary={name}
-                                // classes={{root: clsx(classes.listItem)}}
+                                classes={{root: clsx(classes.listItem)}}
                             />
                         </ListItem>
                     ))}

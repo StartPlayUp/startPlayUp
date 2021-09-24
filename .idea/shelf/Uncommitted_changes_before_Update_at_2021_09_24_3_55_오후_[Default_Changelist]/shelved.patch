@@ -1,0 +1,63 @@
+Index: frontend/src/Routes/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useContext, useState } from \"react\";\nimport { Route, Switch, useHistory } from \"react-router-dom\";\nimport GlobalContainer from \"Container/GlobalContainer\";\nimport ChatComponent from \"Component/ChatComponent\";\nimport RockPaperScissors from \"Component/GameComponent/RockPaperScissors\";\nimport { BrowserRouter } from \"react-router-dom\";\nimport styled from \"styled-components\";\nimport MineSearch from \"Container/GameContainer/MineSearch\";\nimport Yut from \"Container/GameContainer/Yut/Yut\";\nimport Yacht from \"Container/GameContainer/Yacht/Yacht\";\nimport { PeerStore } from \"./peerStore\";\nimport AVALON_BETA from \"../Component/GameComponent/AVALON_BETA/AVALON_BETA\";\nimport messageButtonImage from \"images/blue-message.png\";\nimport View from \"../Component/GameComponent/AVALON_BETA/View\";\nimport { createGlobalStyle } from \"styled-components\";\nimport { LoginApp } from \"Component/WebComponent/WebPage\";\nimport { AuthStore } from \"Component/WebComponent/Login/LoginFrame/Auth/AuthContext\";\nimport WebMain from \"../Component/WebComponent/WebPage/WebFrame/webBody\";\nimport WaitingRoom from \"../Component/WebComponent/WebPage/WebFrame/waitingRoom\";\nimport { Modal } from \"react-modal\";\nimport { CookiesProvider } from \"react-cookie\";\n\nconst GamePage = styled.div`\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  margin: 10px;\n`;\n\nconst StyleDiv = styled.div`\n  display: flex;\n  background-color: #e0e3da;\n  justify-content: center;\n  flex-direction: row;\n  width: 100%;\n  min-height: 100vh;\n`;\nconst AVALON_STYLE = styled.div`\n  display: flex;\n  width: 100%;\n  height: 100%;\n  flex-direction: row;\n  justify-content: space-around;\n  flex-wrap: wrap;\n  background-color: inherit;\n`;\nconst AVALON_Global = createGlobalStyle`\n  body {\n    margin: 0;\n    padding: 0;\n    width: 100%;\n    height: 100%;\n    background-color: #e0e3da;\n    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png');\n  }\n  div {\n    width: auto;\n    height: auto;\n    color: black;\n  }\n`;\nconst AVALON_GAME = styled.div`\n  display: flex;\n  width: 70%;\n  height: 90%;\n  flex-wrap: wrap;\n  justify-content: flex-start;\n`;\nconst AVALON_CHAT = styled.div`\n  display: flex;\n  width: 30%;\n  height: 100%;\n  justify-content: flex-end;\n`;\n\nconst CHAT_STYLE = styled.div`\n  display: flex;\n  flex-basis: 30%;\n  flex-direction: row;\n  justify-content: flex-end;\n`;\n\nexport const CHAT_SHOW_BUTTON_STYLE = styled.button`\n  width: 40px;\n  height: 40px;\n  background-color: rgb(0, 0, 0, 0);\n  background-size: contain;\n  background-image: url(${messageButtonImage});\n  border-radius: 100%;\n`;\n\nexport const ButtonGlobalHover = createGlobalStyle`\n  button{\n    font-size: 14px;\n    color: #ffffff;\n    background-color: #a593e0;\n    border-radius: 2px;\n    border: 0;\n    padding: 10px;\n    text-decoration: none;\n    transition: all 0.5s;\n\n    &:hover {\n      background-color: green;\n    }\n  }\n`;\n\nexport const CHAT_SHOW_DIV_STYLE = styled.div`\n  position: absolute;\n  z-index: 100;\n  top: 0;\n  right: 0;\n  margin: 8px 20px 0px 0px;\n  width: 32px;\n  height: 32px;\n`;\n\nconst FLEX_DIV = styled.div`\n  display: flex;\n  justify-content: space-around;\n`;\n\nconst TemporaryMain = () => {\n  const history = useHistory();\n  return (\n    <div>\n      <button onClick={() => history.push(\"/RockPaperScissors\")}>\n        RockPaperScissors\n      </button>\n      <button onClick={() => history.push(\"/MineSearch\")}>MineSearch</button>\n      <button onClick={() => history.push(\"/Yut\")}>Yut</button>\n      <button onClick={() => history.push(\"/Yacht\")}>Yacht</button>\n      <button onClick={() => history.push(\"/AVALON\")}>AVALON</button>\n    </div>\n  );\n};\n\nconst app = () => {\n  const { checkAuth } = useContext(AuthStore);\n  const [chatShow, setChatShow] = useState(true);\n  const [chatList, setChatList] = useState([]);\n  const chatOnClickHandler = () => {\n    setChatShow((prev) => !prev);\n  };\n\n  return (\n    <>\n      <BrowserRouter>\n        <>\n\n          <ButtonGlobalHover />\n          {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}\n          <Route path=\"/\" component={GlobalContainer} />\n          <CookiesProvider>\n            <Route exact path=\"/\" component={LoginApp} />\n          </CookiesProvider>\n          {checkAuth && (\n            <>\n              <Switch>\n                <Route exact path=\"/main\" component={WebMain} />\n                <Route\n                  path={\"/waitingRoom\"}\n                  render={() => (\n                    <WaitingRoom\n                      chatList={chatList}\n                      chatShow={chatShow}\n                      setChatList={setChatList}\n                      handler={chatOnClickHandler}\n                      history={history}\n                    />\n                  )}\n                />\n              </Switch>\n            </>\n          )}\n        </>\n        {checkAuth && (\n          <Route\n            exact\n            path=\"/RockPaperScissors\"\n            render={() => (\n              <GamePage>\n                <PeerStore>\n                  <RockPaperScissors />\n                  <ChatComponent />\n                </PeerStore>\n              </GamePage>\n            )}\n          />\n        )}\n        {checkAuth && (\n          <Route\n            exact\n            path=\"/MineSearch\"\n            render={() => (\n              <GamePage>\n                <PeerStore>\n                  <MineSearch />\n                </PeerStore>\n              </GamePage>\n            )}\n          />\n        )}\n        {checkAuth && (\n          <Route\n            exact\n            path=\"/Yut\"\n            render={() => (\n              <GamePage>\n                <PeerStore>\n                  <Yut />\n                  {chatShow && (\n                    <ChatComponent\n                      chatList={chatList}\n                      setChatList={setChatList}\n                      width={500}\n                    />\n                  )}\n                  <CHAT_SHOW_DIV_STYLE>\n                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />\n                  </CHAT_SHOW_DIV_STYLE>\n                </PeerStore>\n              </GamePage>\n            )}\n          />\n        )}\n        {checkAuth && (\n          <Route\n            exact\n            path=\"/Yacht\"\n            render={() => (\n              <GamePage>\n                <PeerStore>\n                  <StyleDiv>\n                    <Yacht />\n                  </StyleDiv>\n                  {chatShow && (\n                    <ChatComponent\n                      chatList={chatList}\n                      setChatList={setChatList}\n                    />\n                  )}\n                  <CHAT_SHOW_DIV_STYLE>\n                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />\n                  </CHAT_SHOW_DIV_STYLE>\n                </PeerStore>\n              </GamePage>\n            )}\n          />\n        )}\n        {checkAuth && (\n          <Route\n            exact\n            path=\"/AVALON\"\n            render={() => (\n              <GamePage>\n                <PeerStore>\n                  <StyleDiv>\n                    <AVALON_Global />\n                    <AVALON_BETA />\n                  </StyleDiv>\n                  {chatShow && (\n                    <ChatComponent\n                      chatList={chatList}\n                      setChatList={setChatList}\n                      width={320}\n                    />\n                  )}\n                  <CHAT_SHOW_DIV_STYLE>\n                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />\n                  </CHAT_SHOW_DIV_STYLE>\n                </PeerStore>\n              </GamePage>\n            )}\n          />\n        )}\n      </BrowserRouter>\n    </>\n  );\n};\nexport default app;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Routes/index.js b/frontend/src/Routes/index.js
+--- a/frontend/src/Routes/index.js	(revision 7583c90d440160cb813172181e077db2a11249e1)
++++ b/frontend/src/Routes/index.js	(date 1632398604278)
+@@ -148,7 +148,6 @@
+     <>
+       <BrowserRouter>
+         <>
+-
+           <ButtonGlobalHover />
+           {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
+           <Route path="/" component={GlobalContainer} />
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport { BrowserRouter as Router, Switch, Route } from \"react-router-dom\";\n// dashboad layout\nimport routes from \"./modules/modules.routes\";\nimport Dashboard from \"./layout/Dashboard\";\nimport {createGlobalStyle} from \"styled-components\";\n// modules\nconst Home = React.lazy(() => import(\"./modules/Home\"));\nconst Setting = React.lazy(() => import(\"./modules/Setting\"));\n\nfunction NavigationBar({open,setOpen,logout}) {\n    return (\n        <Router>\n            <Dashboard isOpen={open} isSetOpen={setOpen}  routes={routes}>\n                <Switch>\n                    <Route exact path={routes.home.route}>\n                        <Home />\n                    </Route>\n                    <Route path={routes.setting.route}>\n                        <Setting />\n                    </Route>\n                    <Route path={routes.signout.route}>\n                        {logout}\n                    </Route>\n                </Switch>\n            </Dashboard>\n        </Router>\n    );\n}\nexport default NavigationBar
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js	(revision 7583c90d440160cb813172181e077db2a11249e1)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js	(date 1632399616661)
+@@ -13,9 +13,7 @@
+         <Router>
+             <Dashboard isOpen={open} isSetOpen={setOpen}  routes={routes}>
+                 <Switch>
+-                    <Route exact path={routes.home.route}>
+-                        <Home />
+-                    </Route>
++                    <Route exact path={routes.home.route}/>
+                     <Route path={routes.setting.route}>
+                         <Setting />
+                     </Route>
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>export default {\n    home: {\n        name: \"home\",\n        route: \"/\"\n    },\n    assets: {\n        name: \"assets\",\n        route: \"/assets\"\n    },\n    users: {\n        name: \"user\",\n        route: \"/user\"\n    },\n    // will not show in sidebar menu\n    \"user-profile__hidden\": {\n        name: \"\",\n        route: \"/user/:id\"\n    },\n    setting: {\n        name: \"Setting\",\n        route: \"/setting\",\n        bottom: true\n    },\n    signout: {\n        name: \"Signout\",\n        route: \"/logout\",\n        bottom: true\n    },\n    // will not show in sidebar menu\n    \"not-found__hidden\": {\n        name: \"\",\n        route: \"*\"\n    }\n};\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js	(revision 7583c90d440160cb813172181e077db2a11249e1)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js	(date 1632399655729)
+@@ -1,11 +1,7 @@
+ export default {
+     home: {
+-        name: "home",
+-        route: "/"
+-    },
+-    assets: {
+-        name: "assets",
+-        route: "/assets"
++        name: "main",
++        route: "/main"
+     },
+     users: {
+         name: "user",

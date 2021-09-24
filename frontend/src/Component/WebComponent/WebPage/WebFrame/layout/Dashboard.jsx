@@ -1,6 +1,6 @@
-import React from "react";
+import React, {Component} from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import {makeStyles, useTheme} from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,15 +13,18 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 // Internal components
 import Sidebar from "./Sidebar";
+import {useHistory} from "react-router-dom";
+import * as S from '../../Style/WebFrameStyle'
+import transitions from "@material-ui/core/styles/transitions";
+import Animated from "animated/lib/targets/react-dom";
+import Easing from "animated/lib/Easing";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // display: "flex",
-        position:'absolute',
-        textDecoration:'none',
-        fontSize : 14
+        position: 'absolute',
+        textDecoration: 'none',
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -41,7 +44,8 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(2)
     },
     hide: {
-        display: "none"
+        display: "none",
+
     },
     drawer: {
         width: drawerWidth,
@@ -74,23 +78,61 @@ const useStyles = makeStyles(theme => ({
         marginRight: 0
     }
 }));
-
-export default function PersistentDrawerLeft({ isOpen,isSetOpen,routes, children }) {
+class SlideBar extends Component {
+    animatedValue = new Animated.Value(0)
+    animate = () => {
+        this.animatedValue.setValue(0)
+        Animated.timing(
+            this.animatedValue,
+            {
+                toValue: 1,
+                duration: 1000,
+                easing: Easing.elastic(1)
+            }
+        ).start();
+    }
+    render() {
+        const marginLeft = this.animatedValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-120, 0],
+        })
+        return (
+            <div className="App">
+                <div
+                    // style={styles.button}
+                    onClick={this.animate}>Animate</div>
+                <Animated.div
+                    style={
+                        Object.assign(
+                            {},
+                            // styles.box,
+                            { opacity: this.animatedValue, marginLeft })}>
+                </Animated.div>
+            </div>
+        );
+    }
+}
+export default function PersistentDrawerLeft({isOpen, isSetOpen, routes, children}) {
     const classes = useStyles();
+    const history = useHistory()
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
+        // isSetOpen(tu)
         setOpen(true);
     };
 
     const handleDrawerClose = () => {
+        isSetOpen(false)
         setOpen(false);
+        history.push({
+            pathname: '/main'
+        })
     };
 
     return (
         <div className={classes.root}>
-            {/*<CssBaseline />*/}
             {/*<AppBar*/}
             {/*    position="inherit"*/}
             {/*    className={clsx(classes.appBar, {*/}
@@ -98,7 +140,6 @@ export default function PersistentDrawerLeft({ isOpen,isSetOpen,routes, children
             {/*    })}*/}
             {/*>*/}
             {/*    <Toolbar>*/}
-
             {/*        <Typography variant="h6" noWrap>*/}
             {/*            Lazy loading demo*/}
             {/*        </Typography>*/}
@@ -111,7 +152,7 @@ export default function PersistentDrawerLeft({ isOpen,isSetOpen,routes, children
                 edge="start"
                 className={clsx(classes.menuButton, open && classes.hide)}
             >
-                <MenuIcon />
+                <MenuIcon/>
             </IconButton>
             <Drawer
                 className={classes.drawer}
@@ -123,26 +164,39 @@ export default function PersistentDrawerLeft({ isOpen,isSetOpen,routes, children
                 }}
             >
                 <div className={classes.drawerHeader}>
-                    {/*<IconButton onClick={handleDrawerClose}>*/}
-                    <IconButton onClick={()=>isSetOpen(false)}>
+                    <IconButton onClick={handleDrawerClose}>
+                        {/*<IconButton onClick={()=>isSetOpen(false)}>*/}
                         {theme.direction === "ltr" ? (
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon/>
                         ) : (
-                            <ChevronRightIcon />
+                            <ChevronRightIcon/>
                         )}
                     </IconButton>
                 </div>
-                <Divider />
-                <Sidebar routes={routes} />
+                <Divider/>
+                <Sidebar routes={routes}/>
             </Drawer>
             <main
                 className={clsx(classes.content, {
                     [classes.contentShift]: open
                 })}
             >
-                <div className={classes.drawerHeader} />
+                <div className={classes.drawerHeader}/>
                 <React.Suspense fallback="loading ..">{children}</React.Suspense>
             </main>
         </div>
     );
 }
+{/*<CssBaseline />*/}
+{/*<AppBar*/}
+{/*    position="inherit"*/}
+{/*    className={clsx(classes.appBar, {*/}
+{/*        [classes.appBarShift]: open*/}
+{/*    })}*/}
+{/*>*/}
+{/*    <Toolbar>*/}
+{/*        <Typography variant="h6" noWrap>*/}
+{/*            Lazy loading demo*/}
+{/*        </Typography>*/}
+{/*    </Toolbar>*/}
+{/*</AppBar>*/}

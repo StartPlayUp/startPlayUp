@@ -75,3 +75,12 @@ export const ButtonArea = styled.div`
     justify-content: flex-end;
     margin-top: 30px;
 `;
+export const SideAnimation = styled.div`
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 6s ease-in-out;
+  left: 0;
+  width: 50%;
+  z-index: 2;
+`

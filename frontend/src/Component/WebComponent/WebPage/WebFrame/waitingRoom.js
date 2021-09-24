@@ -28,7 +28,7 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
-    const guests = location.list.guestList;
+    // const guests = location.list.guestList;
     const history = useHistory()
     const gameStart = () => {
         console.log(game);
@@ -81,19 +81,19 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                 </ButtonArea>
                 <MainList>
                     <WaitingUsers>
-                        {
-                            guests.map(function (user, index) {
-                                console.log('---------------')
-                                console.log(user)
-                                return (
-                                    <UserList key={index}>
-                                        <Users width={'5vw'}>
-                                            {user}
-                                        </Users>
-                                    </UserList>
-                                )
-                            })
-                        }
+                        {/*{*/}
+                        {/*    guests.map(function (user, index) {*/}
+                        {/*        console.log('---------------')*/}
+                        {/*        console.log(user)*/}
+                        {/*        return (*/}
+                        {/*            <UserList key={index}>*/}
+                        {/*                <Users width={'5vw'}>*/}
+                        {/*                    {user}*/}
+                        {/*                </Users>*/}
+                        {/*            </UserList>*/}
+                        {/*        )*/}
+                        {/*    })*/}
+                        {/*}*/}
                     </WaitingUsers>
                     <ChattingList>
                         {chatShow && (

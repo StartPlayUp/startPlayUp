@@ -3,7 +3,7 @@ import React from "react";
 const Settings = () => {
     return (
         <div>
-            {/*<p>I am a Settings modules</p>*/}
+            <p>I am a Settings modules</p>
         </div>
     );
 };

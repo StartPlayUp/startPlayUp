@@ -1,11 +1,7 @@
 export default {
-    home: {
-        name: "home",
-        route: "/"
-    },
-    assets: {
-        name: "assets",
-        route: "/assets"
+    main: {
+        name: "main",
+        route: "/main",
     },
     users: {
         name: "user",
@@ -18,7 +14,7 @@ export default {
     },
     setting: {
         name: "Setting",
-        route: "/setting",
+        route: "/main",
         bottom: true
     },
     signout: {

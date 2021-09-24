@@ -1,11 +1,18 @@
 import Modal from 'react-modal'
-import React from "react";
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 
-const UserInformationModal=({open,setOpen})=>{
-    return(
+const UserInformationModal = ({setOpen}) => {
+    const history = useHistory()
+    const onClick = () => {
+        setOpen(false)
+        history.push({
+            pathname: '/main'
+        })
+    }
+    return (
         <Modal
             isOpen={open}
-            onRequestClose={() => setOpen(false)}
             style={{
                 overlay: {
                     position: 'inherit',
@@ -15,7 +22,8 @@ const UserInformationModal=({open,setOpen})=>{
                     bottom: 0,
                     backgroundColor: 'rgba(54, 54, 54, 0.75)',
                     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                    zIndex: '99'
+                    zIndex: '99',
+                    transition: 'all 0.6 ease-in-out'
                 },
                 content: {
                     display: 'flex',
@@ -34,9 +42,9 @@ const UserInformationModal=({open,setOpen})=>{
                     fontSize: '14sp',
                     alignItems: 'left',
                     flexDirection: 'column',
-                    color: 'white'
+                    color: 'white',
+                    transition: 'all 0.6 ease-in-out'
                 }
-
             }}
         >
             <h3>사용자 정보</h3>
@@ -45,14 +53,14 @@ const UserInformationModal=({open,setOpen})=>{
             <p>승 : </p>
             <p>패 : </p>
             <p>승률 : </p>
-            <div onClick={() => setOpen(false)}>
+            <h3 onClick={onClick}>
                 X
-            </div>
+            </h3>
             <div>
                 ff
             </div>
         </Modal>
-
     )
 }
+UserInformationModal.propTypes = {};
 export default UserInformationModal

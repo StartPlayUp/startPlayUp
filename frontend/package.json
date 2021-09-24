@@ -79,6 +79,7 @@
     "@material-ui/icons": "^4.11.2",
     "@types/react": "^17.0.5",
     "@types/styled-components": "^5.1.9",
+    "animated": "^0.2.2",
     "clsx": "^1.1.1",
     "eslint-config-prettier": "^8.3.0",
     "prop-types": "^15.7.2"

@@ -26,22 +26,24 @@ import HEADER from "./webHeader";
 const BODY = ({location, history}) => {
     console.log(location);
     console.log(history);
+
     const [gameList, setGameList] = useState([]);
     const [isSecret, setIsSecret] = useState(false);
     const [password, setPassword] = useState("");
     const [room, setRoom] = useState();
-    const historyPush = (rooms) => {
+
+    const historyPush = (room) => {
         console.log('history.push rooms : ')
-        console.log(rooms)
+        console.log(room)
         history.push({
             pathname: "/waitingRoom",
             state: {
-                input: rooms.roomTitle,
-                game: rooms.gameType,
+                input: room.roomTitle,
+                game: room.gameType,
             },
-            list: {
-                guestList: rooms.guestList,
-            },
+            // list: {
+            //     guestList: rooms.guestList,
+            // },
         });
     };
 
@@ -60,18 +62,43 @@ const BODY = ({location, history}) => {
         console.log("----------------------start");
         console.log(room);
         console.log(room.hostname);
-        console.log(room.password);
+        console.log(password);
         console.log(`password : ${password.toString()}`)
         console.log('-------------------------------end')
-        if (room.password === password.toString()) {
-            historyPush(room);
-        } else {
-            setIsSecret(false);
-            setPassword("");
-            setRoom("");
-        }
-    };
 
+        // if (room.password === password.toString()) {
+        //     accessRoom(room)
+        //     historyPush(room);
+        // } else {
+        //     setIsSecret(false);
+        //     setPassword("");
+        //     setRoom("");
+        // }
+    };
+    const accessRoom = (rooms) => {
+        console.log('accessRoom')
+        console.log(rooms)
+        const accessRoomConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/room/accessRoom',
+            data: {
+                roomId: rooms.roomId,
+                password: rooms.password,
+            }
+        }
+        axios(accessRoomConfig)
+            .then(function (response) {
+                console.log("roomId and RoomPassword check : ", response.data);
+                if (response.data.success && response.data.correct) {
+                    historyPush(room)
+                }else{
+                    alert('error')
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     const onPasswordChange = (e) => {
         setPassword(e.target.value);
     };
