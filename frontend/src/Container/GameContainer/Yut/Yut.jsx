@@ -1,4 +1,4 @@
-import React, { useReducer, memo } from 'react';
+import React, { useReducer, memo, useEffect } from 'react';
 import styled from 'styled-components';
 import Yutfield from 'Component/GameComponent/Yut/YutfieldSection'
 
@@ -10,6 +10,8 @@ import YutAnimation from 'Component/GameComponent/Yut/YutAnimationSection';
 import WinnerModal from './WinnerModal';
 import Timer from './Timer';
 import YutTextView from './YutTextViewModal';
+import { useLocation } from "react-router-dom";
+
 
 
 const FieldAnimationSection = styled.div`
@@ -47,7 +49,10 @@ const StyleDiv = styled.div`
 
 
 const Yut = (props) => {
-
+    // const location = useLocation();
+    // useEffect(() => {
+    //     console.log("asdf", location.state.hostname)
+    // }, [])
     return (
         <YutTextView>
             <YutStore >

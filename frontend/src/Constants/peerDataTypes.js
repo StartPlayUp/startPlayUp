@@ -6,6 +6,8 @@ export const YUT = 'YUT';
 export const YACHT = 'YACHT';
 export const AVALON = 'AVALON'
 
+export const GAME_START_SIGN = 'GAME_START_SIGN';
+
 //CHAT
 export const PEER_CHAT = 'PEER_CHAT';
 

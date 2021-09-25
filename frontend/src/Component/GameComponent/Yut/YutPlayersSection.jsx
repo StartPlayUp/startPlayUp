@@ -4,6 +4,7 @@ import Horses from 'Component/GameComponent/Yut/ButtonComponents/Horses';
 import {
     YutContext
 } from "Container/GameContainer/Yut/YutStore"
+import { useLocation } from 'react-router-dom';
 import { PeersContext } from 'Routes/peerStore';
 import { GAME, YUT } from 'Constants/peerDataTypes';
 import { DEFAULT_TIME_VALUE, NUMBER_TO_MATCH_KOREA_YUT_TYPE } from 'Container/GameContainer/Yut/Constants/yutGame';
@@ -73,6 +74,8 @@ const YutPlayerSection = () => {
     const { dispatch, ...state } = useContext(YutContext);
     const { peers } = useContext(PeersContext);
     // const halted = false;
+    const location = useLocation();
+    const hostname = location.state.hostname;
     const nickname = localStorage.getItem('nickname');
     const { setTime } = useContext(TimerContext);
     const { setTextModalHandler } = useContext(TextModal);
@@ -105,11 +108,17 @@ const YutPlayerSection = () => {
             console.log(typeof (dispatch))
         }
     }
+    useEffect(() => {
+        console.log(hostname, localStorage.getItem('nickname'))
+        if (hostname === localStorage.getItem('nickname')) {
+            setTimeout(startGameHandler(), 5000);
+        }
+    }, [])
 
 
     return (
         <StylePlayerWithYutData>
-            <button onClick={startGameHandler}>게임 시작</button>
+            {/* <button onClick={startGameHandler}>게임 시작</button> */}
             <StyleDiv>
                 {yutResultList().map((i, index) => (<div key={"yutResultList" + index}>{NUMBER_TO_MATCH_KOREA_YUT_TYPE[index]} : {i}</div>))}
             </StyleDiv>

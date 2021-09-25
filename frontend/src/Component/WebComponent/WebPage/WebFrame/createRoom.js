@@ -50,13 +50,13 @@ const CreateRoom = ({ isOpen, close }) => {
       url: "http://localhost:4000/api/room/createRoom",
       data: {
         hostname: localStorage.getItem("nickname"),
-        guestList: [],
+        guestList: [localStorage.getItem("nickname")], // 게임 만들때 자기 자신도 들어가야 하나? 일단 추가함. 테스트후 삭제 요망
         roomTitle: input,
         gameType: game,
         play: false,
         secret: password !== "",
         password: password,
-        roomLimit: 0,
+        roomLimit: roomLimit,
       },
     };
     // axios
@@ -84,6 +84,7 @@ const CreateRoom = ({ isOpen, close }) => {
           input: input,
           game: game,
           roomLimit: roomLimit,
+          hostname: localStorage.getItem("nickname"),
         },
       });
     } catch (error) {

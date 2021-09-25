@@ -18,26 +18,42 @@ import {
     RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
-import { PeerStore, RoomIdContext } from "../../../../Routes/peerStore";
+import { RoomIdContext, PeersContext, PeerDataContext } from "../../../../Routes/peerStore";
 import { useHistory } from "react-router";
 import axios from "axios";
 import { Background, Users } from "../Style/WebFrameStyle";
+import { sendDataToPeers } from "Common/peerModule/sendToPeers"
+import { GAME_START_SIGN } from 'Constants/peerDataTypes';
 
 
 const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
     const input = location.state.input;
     const game = location.state.game;
+    const hostname = location.state.hostname;
     // const guests = location.list.guestList;
     const { roomID, setRoomID } = useContext(RoomIdContext);
     const history = useHistory()
+    const { peers } = useContext(PeersContext);
+    const { peerData } = useContext(PeerDataContext);
+
+
+
     const gameStart = () => {
         console.log(game);
+        sendDataToPeers(GAME_START_SIGN, {
+            game: null,
+            nickname: localStorage.getItem('nickname'),
+            peers,
+            data: null,
+        });
+        console.log("waiting room hostname : ", hostname)
         switch (game) {
             case 'Yutnori':
                 history.push({
                     pathname: "/YUT",
                     state: {
+                        hostname,
                         input: input,
                         game: game,
                     },
@@ -56,6 +72,35 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                 alert('error');
         }
     }
+
+    useEffect(() => {
+        if (peerData.type === GAME_START_SIGN) {
+            console.log("waiting room hostname : ", hostname)
+            switch (game) {
+                case 'Yutnori':
+                    history.push({
+                        pathname: "/YUT",
+                        state: {
+                            hostname,
+                            input: input,
+                            game: game,
+                        },
+                    });
+                    break;
+                case 'YACHT':
+                    history.push('/Yacht');
+                    break;
+                case 'AVALON':
+                    history.push('/AVALON');
+                    break;
+                case 'MINE_SEARCH':
+                    history.push('/MineSearch');
+                    break;
+                default:
+                    alert('error');
+            }
+        }
+    }, [peerData])
 
     const [user, setUsers] = useState([]);
     useEffect(() => {

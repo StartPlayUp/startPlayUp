@@ -42,6 +42,7 @@ const BODY = ({ location, history }) => {
             state: {
                 input: room.roomTitle,
                 game: room.gameType,
+                hostname: room.hostname,
             },
             // list: {
             //     guestList: rooms.guestList,
