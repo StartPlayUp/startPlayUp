@@ -1,5 +1,5 @@
 const passport = require('passport');
-const { isLoggedIn, insertNicknameWithRedirectForSns } = require('../../middleWare');
+const { isLoggedIn, insertNicknameWithRedirectForSns, afterLocalLoginSendData } = require('../../middleWare');
 const router = require('express').Router();
 
 // http://localhost:4000/api/auth/login/naver
@@ -28,26 +28,7 @@ router.get('/login/kakao/callback',
 
 router.post('/login/local',
     passport.authenticate('local'),
-    (req, res, next) => {
-        if (req.isAuthenticated()) {
-            console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
-            res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
-
-            const SendData = JSON.stringify({
-                nickname: req.user.nickname + " " + req.user.docId,
-                redirectPath: "/main",
-                success: true
-            });
-            res.send(SendData)
-        }
-        else {
-            const SendData = JSON.stringify({
-                redirectPath: "/",
-                success: false
-            });
-            res.send(SendData)
-        }
-    }
+    afterLocalLoginSendData
 );
 
 

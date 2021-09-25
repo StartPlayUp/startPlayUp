@@ -23,6 +23,8 @@ const cookieParser = require('cookie-parser');
 const LocalStrategy = require('passport-local').Strategy;
 const routerApp = require('./routes/app');
 const path = require('path');
+const nodemailer = require("nodemailer");
+const mailConfig = require('./config').mailConfig;
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -61,6 +63,15 @@ app.use(jsonParser)
 // use socket IO
 socketModule({ io });
 
+// const transporter = nodemailer.createTransport(mailConfig);
+
+// transporter.sendMail({
+//     from: '"Fred Foo 👻" <StartPlayUp@gmail.com>', // sender address
+//     to: "gbs04087@gmail.com", // list of receivers
+//     subject: "Hello ✔", // Subject line
+//     text: "Hello world?", // plain text body
+//     html: "<b>Hello world?</b>", // html body
+// })
 
 //  react에서 빌드한 기본 파일 추가
 app.use(express.static(path.join(__dirname, "..", "frontend", "build")));

@@ -47,6 +47,7 @@ exports.accessRoom = async (req, res, next) => {
     try {
         const roomId = req.body['roomId'];
         const password = req.body['password'];
+        console.log(roomId, password)
         const { correct, success } = await fireBaseRoom.accessRoom({ roomId, password });
         const accessResult = JSON.stringify({ correct, success });
         res.send(accessResult)

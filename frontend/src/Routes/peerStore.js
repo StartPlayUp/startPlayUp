@@ -73,7 +73,11 @@ export const PeerStore = ({ children }) => {
     let peersRef = useRef([]);
     let voicePeersRef = useRef([]);
 
-    const peersDestory = (peers, voicePeers) => {
+    const peersDestory = (socketRef, peers, voicePeers) => {
+        if (socketRef.current) {
+            socketRef.current.disconnect();
+            socketRef.current = undefined;
+        }
         peers.forEach((peer) => {
             console.log("return useEffect peer destroy")
             // peer.peer.destroy()
@@ -96,6 +100,9 @@ export const PeerStore = ({ children }) => {
                 console.log("webrtc not support!")
             }
         }
+        else {
+            peersDestory(socketRef, peers, voicePeers)
+        }
 
         // 방법 1 테스트 해보기.
         // return () => peersRef.current.forEach(i => {
@@ -109,7 +116,7 @@ export const PeerStore = ({ children }) => {
         //     setPeers({});
         // }
         return () => {
-            peersDestory(peers, voicePeers)
+            peersDestory(socketRef, peers, voicePeers)
         };
     }, [roomID]);
     return (

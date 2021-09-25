@@ -1,17 +1,17 @@
 
-const insertNickname = ({ res, nickname, docId }) => {
+const insertNicknameAtCookies = (req, res) => {
     res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
 }
 
 
 exports.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+        console.log("is Authenticated");
+        insertNicknameAtCookies(req, res);
         next();
     }
     else {
-        // res.status(403).send('로그인 필요');
-        // res.redirect("/api/auth/login");
+        console.log("is not Authenticated");
         const sendData = JSON.stringify({ redirectPath: "/" });
         res.send(sendData);
     }
@@ -19,7 +19,7 @@ exports.isLoggedIn = function (req, res, next) {
 
 exports.haveNickname = function (req, res, next) {
     console.log("req.user.docId : ", req.user)
-    res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+    insertNicknameAtCookies(req, res);
     next();
 };
 
@@ -27,7 +27,7 @@ exports.haveNickname = function (req, res, next) {
 exports.insertNicknameWithRedirectForSns = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("req.user.docId : ", req.user)
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+        insertNicknameAtCookies(req, res);
     }
     res.redirect("http://localhost:3000/");
 };
@@ -39,7 +39,7 @@ exports.isNotLoggedIn = function (req, res, next) {
     else {
         // res.redirect("/");
         const sendData = JSON.stringify({ redirectPath: "/" });
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+        insertNicknameAtCookies(req, res);
         res.send(sendData);
     }
 };
@@ -48,19 +48,19 @@ exports.isNotLoggedIn = function (req, res, next) {
 exports.afterLocalLoginSendData = function (req, res, next) {
     if (req.isAuthenticated()) {
         console.log("로컬로그인 : ", req.user.nickname + " " + req.user.docId)
-        res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
-        const sendData = JSON.stringify({
+        insertNicknameAtCookies(req, res);
+        const SendData = JSON.stringify({
             nickname: req.user.nickname + " " + req.user.docId,
             redirectPath: "/main",
             success: true
         });
-        res.send(sendData)
+        res.send(SendData)
     }
     else {
-        const sendData = JSON.stringify({
+        const SendData = JSON.stringify({
             redirectPath: "/",
             success: false
         });
-        res.send(sendData)
+        res.send(SendData)
     }
 };

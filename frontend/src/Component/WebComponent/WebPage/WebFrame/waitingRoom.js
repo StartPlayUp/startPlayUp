@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import { useLocation } from 'react-router-dom';
@@ -18,7 +18,7 @@ import {
     RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
-import { PeerStore } from "../../../../Routes/peerStore";
+import { PeerStore, RoomIdContext } from "../../../../Routes/peerStore";
 import { useHistory } from "react-router";
 import axios from "axios";
 import { Background, Users } from "../Style/WebFrameStyle";
@@ -29,12 +29,19 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const input = location.state.input;
     const game = location.state.game;
     // const guests = location.list.guestList;
+    const { roomID, setRoomID } = useContext(RoomIdContext);
     const history = useHistory()
     const gameStart = () => {
         console.log(game);
         switch (game) {
             case 'Yutnori':
-                history.push('/Yut');
+                history.push({
+                    pathname: "/YUT",
+                    state: {
+                        input: input,
+                        game: game,
+                    },
+                });
                 break;
             case 'YACHT':
                 history.push('/Yacht');
@@ -49,6 +56,7 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                 alert('error');
         }
     }
+
     const [user, setUsers] = useState([]);
     useEffect(() => {
         axios.post('http://localhost:4000/api/room/accessRoom')
@@ -61,6 +69,7 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                 console.error('error : ', error)
             });
     }, [])
+
     return (
         <BodyFrame>
             <Background />
@@ -76,7 +85,10 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                         <Button>준비</Button>
                     </LeftButtonsArea>
                     <RightButtonsArea>
-                        <Button margin={'0'} onClick={() => history.push('/main')}>나가기</Button>
+                        <Button margin={'0'} onClick={() => {
+                            setRoomID({ ...roomID, id: "", state: false });
+                            history.push('/main')
+                        }}>나가기</Button>
                     </RightButtonsArea>
                 </ButtonArea>
                 <MainList>
@@ -100,8 +112,6 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                             <ChatComponent
                                 chatList={chatList}
                                 setChatList={setChatList}
-                                width={550}
-                                height={300}
                             />
                         )}
                     </ChattingList>
