@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import CreateButton from "./CreateButton";
 
 import {
@@ -22,9 +22,9 @@ import {
     Title
 } from "../Style/CreateRoomStyle";
 import HEADER from "./webHeader";
-import { RoomIdContext } from "../../../../Routes/peerStore";
+import {RoomIdContext} from "../../../../Routes/peerStore";
 
-const BODY = ({ location, history }) => {
+const BODY = ({location, history}) => {
     console.log(location);
     console.log(history);
 
@@ -32,21 +32,19 @@ const BODY = ({ location, history }) => {
     const [isSecret, setIsSecret] = useState(false);
     const [password, setPassword] = useState("");
     const [room, setRoom] = useState();
-    const { roomID, setRoomID } = useContext(RoomIdContext)
+    const {roomID, setRoomID} = useContext(RoomIdContext)
     const historyPush = (room) => {
         console.log('history.push rooms : ')
         console.log(room)
-        setRoomID({ id: room.roomId, state: true })
+        setRoomID({id: room.roomId, state: true})
         history.push({
             pathname: "/waitingRoom",
             state: {
-                input: room.roomTitle,
-                game: room.gameType,
+                room: room,
                 hostname: room.hostname,
+                gameType : room.gameType,
+                roomTitle : room.roomTitle,
             },
-            // list: {
-            //     guestList: rooms.guestList,
-            // },
         });
     };
 
@@ -68,14 +66,6 @@ const BODY = ({ location, history }) => {
         console.log(password);
         console.log(`${password}`)
         console.log('-------------------------------end')
-        // if (room.password === password.toString()) {
-        //     accessRoom(room)
-        //     historyPush(room);
-        // } else {
-        //     setIsSecret(false);
-        //     setPassword("");
-        //     setRoom("");
-        // }
         accessRoom(room)
     };
     const accessRoom = (rooms) => {
@@ -111,7 +101,7 @@ const BODY = ({ location, history }) => {
             .post('http://localhost:4000/api/room/getRooms')
             .then(function (result) {
                 console.log("getRooms post useEffect");
-                const { roomList, success } = result.data;
+                const {roomList, success} = result.data;
                 success && setGameList(roomList);
             })
             .catch(function (error) {
@@ -124,7 +114,7 @@ const BODY = ({ location, history }) => {
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <CreateButton type={"submit"} />
+                        <CreateButton type={"submit"}/>
                     </ButtonArea>
                     <RoomFrame>
                         <UserList background={"white"}>
@@ -150,7 +140,7 @@ const BODY = ({ location, history }) => {
                                     </Users>
                                     <Users width={"15vw"}>{rooms.gameType}</Users>
                                     <Users width={"30vw"}>{`${rooms.roomTitle}  ${rooms.secret ? "🔐" : ""
-                                        }`}</Users>
+                                    }`}</Users>
                                     <Users width={"15vw"}>{rooms.hostname}</Users>
                                     <Users width={"5vw"} align={"center"}>
                                         {rooms.roomLimit}

@@ -7,7 +7,9 @@ import Dashboard from "./layout/Dashboard";
 const Home = React.lazy(() => import("./modules/Home"));
 const Setting = React.lazy(() => import("./modules/Setting"));
 const User = React.lazy(()=> import("./modules/UserInformationModal"))
+const Logout = React.lazy(()=>import('./modules/Signout'))
 import * as S from '../Style/WebFrameStyle'
+import Signout from "./modules/Signout";
 function NavigationBar({open,setOpen,logout}) {
     return (
         <Router>

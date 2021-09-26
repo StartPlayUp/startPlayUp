@@ -19,7 +19,7 @@ export default {
     },
     signout: {
         name: "Signout",
-        route: "/logout",
+        route: "/signout",
         bottom: true
     },
     // will not show in sidebar menu

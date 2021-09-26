@@ -73,8 +73,8 @@ const GameContext = React.createContext("");
 
 const Store = ({ children }) => {
   const { peerData } = useContext(PeerDataContext);
-  const [gameState, dispatch] = useReducer(reducer, initialData);
   const { peers } = useContext(PeersContext);
+  const [gameState, dispatch] = useReducer(reducer, initialData);
   const nickname = localStorage.getItem("nickname");
   const selectedPlayers = () => {
     const temp = [];

@@ -1,0 +1,385 @@
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/waitingRoom.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useEffect, useState, useContext } from 'react';\nimport WebHeader from './webHeader';\nimport FOOTER from \"./webFooter\";\nimport { useLocation } from 'react-router-dom';\n//import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'\n//import {Store} from '../../ChatFrame/frontend/src/store'\nimport {\n    BodyFrame,\n    Button,\n    ButtonArea,\n    ChattingList,\n    MainList,\n    Room,\n    Title,\n    TitleSpan,\n    UserList,\n    LeftButtonsArea,\n    RightButtonsArea, WaitingUsers\n} from \"../Style/WaitingRoomStyle\";\nimport ChatComponent from \"../../../ChatComponent\";\nimport { PeerStore, RoomIdContext } from \"../../../../Routes/peerStore\";\nimport { useHistory } from \"react-router\";\nimport axios from \"axios\";\nimport { Background, Users } from \"../Style/WebFrameStyle\";\n\n\nconst WaitingRoom = ({ chatList, chatShow, setChatList }) => {\n    const location = useLocation();\n    const input = location.state.input;\n    const game = location.state.game;\n    // const guests = location.list.guestList;\n    const { roomID, setRoomID } = useContext(RoomIdContext);\n    const history = useHistory()\n    const gameStart = () => {\n        console.log(game);\n        switch (game) {\n            case 'Yutnori':\n                history.push({\n                    pathname: \"/YUT\",\n                    state: {\n                        input: input,\n                        game: game,\n                    },\n                });\n                break;\n            case 'YACHT':\n                history.push('/Yacht');\n                break;\n            case 'AVALON':\n                history.push('/AVALON');\n                break;\n            case 'MINE_SEARCH':\n                history.push('/MineSearch');\n                break;\n            default:\n                alert('error');\n        }\n    }\n\n    const [user, setUsers] = useState([]);\n    useEffect(() => {\n        axios.post('http://localhost:4000/api/room/accessRoom')\n            .then(function (result) {\n                console.log('checkUser get useEffect')\n                const { userList, success } = result.data\n                success && setUsers(userList)\n            })\n            .catch(function (error) {\n                console.error('error : ', error)\n            });\n    }, [])\n\n    return (\n        <BodyFrame>\n            <Background />\n            <Room>\n                <Title>\n                    <TitleSpan fontSize={\"18px\"} color={\"red\"}>{game}</TitleSpan>\n                    <TitleSpan fontSize={\"22px\"} color={\"black\"}>{input}</TitleSpan>\n                </Title>\n                <hr />\n                <ButtonArea>\n                    <LeftButtonsArea>\n                        <Button onClick={gameStart}>시작</Button>\n                        <Button>준비</Button>\n                    </LeftButtonsArea>\n                    <RightButtonsArea>\n                        <Button margin={'0'} onClick={() => {\n                            setRoomID({ ...roomID, id: \"\", state: false });\n                            history.push('/main')\n                        }}>나가기</Button>\n                    </RightButtonsArea>\n                </ButtonArea>\n                <MainList>\n                    <WaitingUsers>\n                        {/*{*/}\n                        {/*    guests.map(function (user, index) {*/}\n                        {/*        console.log('---------------')*/}\n                        {/*        console.log(user)*/}\n                        {/*        return (*/}\n                        {/*            <UserList key={index}>*/}\n                        {/*                <Users width={'5vw'}>*/}\n                        {/*                    {user}*/}\n                        {/*                </Users>*/}\n                        {/*            </UserList>*/}\n                        {/*        )*/}\n                        {/*    })*/}\n                        {/*}*/}\n                    </WaitingUsers>\n                    <ChattingList>\n                        {chatShow && (\n                            <ChatComponent\n                                chatList={chatList}\n                                setChatList={setChatList}\n                            />\n                        )}\n                    </ChattingList>\n                </MainList>\n            </Room>\n        </BodyFrame>\n    );\n}\nexport default WaitingRoom;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/waitingRoom.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/waitingRoom.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/waitingRoom.js	(revision e925240675eddc5e852ab9eb14bf0ca0572d8e7e)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/waitingRoom.js	(date 1632646199339)
+@@ -1,7 +1,7 @@
+-import React, { useEffect, useState, useContext } from 'react';
++import React, {useEffect, useState, useContext} from 'react';
+ import WebHeader from './webHeader';
+ import FOOTER from "./webFooter";
+-import { useLocation } from 'react-router-dom';
++import {useLocation} from 'react-router-dom';
+ //import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
+ //import {Store} from '../../ChatFrame/frontend/src/store'
+ import {
+@@ -18,25 +18,33 @@
+     RightButtonsArea, WaitingUsers
+ } from "../Style/WaitingRoomStyle";
+ import ChatComponent from "../../../ChatComponent";
+-import { PeerStore, RoomIdContext } from "../../../../Routes/peerStore";
+-import { useHistory } from "react-router";
++import {PeerDataContext, PeersContext, PeerStore, RoomIdContext} from "../../../../Routes/peerStore";
++import {useHistory} from "react-router";
+ import axios from "axios";
+-import { Background, Users } from "../Style/WebFrameStyle";
++import {Background, Users} from "../Style/WebFrameStyle";
++import {sendDataToPeers} from "../../../../Common/peerModule/sendToPeers";
++import {AVALON, GAME} from "../../../../Constants/peerDataTypes";
++import PlayerList from "./PlayerList";
+ 
+ 
+-const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
++const WaitingRoom = ({chatList, chatShow, setChatList}) => {
+     const location = useLocation();
+-    const input = location.state.input;
+-    const game = location.state.game;
++    const [ready, setReady] = useState()
++    const input = location.state.room.roomTitle
++    const game = location.state.room.gameType
++    let guestList = location.state.room.guestList;
++    const nickname = localStorage.getItem('nickname')
+     // const guests = location.list.guestList;
+-    const { roomID, setRoomID } = useContext(RoomIdContext);
++    const {roomID, setRoomID} = useContext(RoomIdContext);
++    const {peerData} = useContext(PeerDataContext);
++    const {peers} = useContext(PeersContext);
+     const history = useHistory()
+     const gameStart = () => {
+         console.log(game);
+         switch (game) {
+             case 'Yutnori':
+                 history.push({
+-                    pathname: "/YUT",
++                    pathname: "/Yut",
+                     state: {
+                         input: input,
+                         game: game,
+@@ -56,13 +64,13 @@
+                 alert('error');
+         }
+     }
+-
+-    const [user, setUsers] = useState([]);
++    //useEffect를 사용하여
++    const [user, setUsers] = useState(guestList);
+     useEffect(() => {
+         axios.post('http://localhost:4000/api/room/accessRoom')
+             .then(function (result) {
+                 console.log('checkUser get useEffect')
+-                const { userList, success } = result.data
++                const {userList, success} = result.data
+                 success && setUsers(userList)
+             })
+             .catch(function (error) {
+@@ -70,54 +78,55 @@
+             });
+     }, [])
+ 
+-    return (
+-        <BodyFrame>
+-            <Background />
+-            <Room>
+-                <Title>
+-                    <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
+-                    <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
+-                </Title>
+-                <hr />
+-                <ButtonArea>
+-                    <LeftButtonsArea>
+-                        <Button onClick={gameStart}>시작</Button>
+-                        <Button>준비</Button>
+-                    </LeftButtonsArea>
+-                    <RightButtonsArea>
+-                        <Button margin={'0'} onClick={() => {
+-                            setRoomID({ ...roomID, id: "", state: false });
+-                            history.push('/main')
+-                        }}>나가기</Button>
+-                    </RightButtonsArea>
+-                </ButtonArea>
+-                <MainList>
+-                    <WaitingUsers>
+-                        {/*{*/}
+-                        {/*    guests.map(function (user, index) {*/}
+-                        {/*        console.log('---------------')*/}
+-                        {/*        console.log(user)*/}
+-                        {/*        return (*/}
+-                        {/*            <UserList key={index}>*/}
+-                        {/*                <Users width={'5vw'}>*/}
+-                        {/*                    {user}*/}
+-                        {/*                </Users>*/}
+-                        {/*            </UserList>*/}
+-                        {/*        )*/}
+-                        {/*    })*/}
+-                        {/*}*/}
+-                    </WaitingUsers>
+-                    <ChattingList>
+-                        {chatShow && (
+-                            <ChatComponent
+-                                chatList={chatList}
+-                                setChatList={setChatList}
+-                            />
+-                        )}
+-                    </ChattingList>
+-                </MainList>
+-            </Room>
+-        </BodyFrame>
+-    );
++return (
++    <BodyFrame>
++        <Background/>
++        <Room>
++            <Title>
++                <TitleSpan fontSize={"18px"} color={"red"}>{game}</TitleSpan>
++                <TitleSpan fontSize={"22px"} color={"black"}>{input}</TitleSpan>
++            </Title>
++            <hr/>
++            <ButtonArea>
++                <LeftButtonsArea>
++                    <Button onClick={gameStart}>시작</Button>
++                    <Button>준비</Button>
++                </LeftButtonsArea>
++                <RightButtonsArea>
++                    <Button margin={'0'} onClick={() => {
++                        setRoomID({...roomID, id: "", state: false});
++                        history.push('/main')
++                    }}>나가기</Button>
++                </RightButtonsArea>
++            </ButtonArea>
++            <MainList>
++                <WaitingUsers>
++                    <PlayerList guestList={guestList}/>
++                    {/*{*/}
++                    {/*    guestList.map(function (user, index) {*/}
++                    {/*        console.log('---------------')*/}
++                    {/*        console.log(user)*/}
++                    {/*        return (*/}
++                    {/*            <UserList key={index}>*/}
++                    {/*                <Users width={'5vw'}>*/}
++                    {/*                    {user}*/}
++                    {/*                </Users>*/}
++                    {/*            </UserList>*/}
++                    {/*        )*/}
++                    {/*    })*/}
++                    {/*}*/}
++                </WaitingUsers>
++                <ChattingList>
++                    {chatShow && (
++                        <ChatComponent
++                            chatList={chatList}
++                            setChatList={setChatList}
++                        />
++                    )}
++                </ChattingList>
++            </MainList>
++        </Room>
++    </BodyFrame>
++);
+ }
+ export default WaitingRoom;
+\ No newline at end of file
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/webBody.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useContext, useEffect, useState } from \"react\";\nimport CreateButton from \"./CreateButton\";\n\nimport {\n    BodyFrame,\n    BodyCenter,\n    RoomFrame,\n    UserList,\n    Users,\n    ButtonArea,\n} from \"../Style/WebFrameStyle\";\nimport axios from \"axios\";\nimport {\n    Close,\n    Footer,\n    Input,\n    LoginMid,\n    LoginModal,\n    Modal,\n    ModalContents,\n    ResultButton,\n    Title\n} from \"../Style/CreateRoomStyle\";\nimport HEADER from \"./webHeader\";\nimport { RoomIdContext } from \"../../../../Routes/peerStore\";\n\nconst BODY = ({ location, history }) => {\n    console.log(location);\n    console.log(history);\n\n    const [gameList, setGameList] = useState([]);\n    const [isSecret, setIsSecret] = useState(false);\n    const [password, setPassword] = useState(\"\");\n    const [room, setRoom] = useState();\n    const { roomID, setRoomID } = useContext(RoomIdContext)\n    const historyPush = (room) => {\n        console.log('history.push rooms : ')\n        console.log(room)\n        setRoomID({ id: room.roomId, state: true })\n        history.push({\n            pathname: \"/waitingRoom\",\n            state: {\n                input: room.roomTitle,\n                game: room.gameType,\n            },\n            // list: {\n            //     guestList: rooms.guestList,\n            // },\n        });\n    };\n\n    const onClick = (rooms) => {\n        if (rooms.secret) {\n            setIsSecret(true);\n            setRoom(rooms);\n        } else {\n            console.log('onClick rooms')\n            console.log(rooms)\n            historyPush(rooms);\n        }\n    };\n\n    const passwordChecker = () => {\n        console.log(\"----------------------start\");\n        console.log(room);\n        console.log(room.hostname);\n        console.log(password);\n        console.log(`${password}`)\n        console.log('-------------------------------end')\n        // if (room.password === password.toString()) {\n        //     accessRoom(room)\n        //     historyPush(room);\n        // } else {\n        //     setIsSecret(false);\n        //     setPassword(\"\");\n        //     setRoom(\"\");\n        // }\n        accessRoom(room)\n    };\n    const accessRoom = (rooms) => {\n        console.log('accessRoom')\n        console.log(rooms.roomId, password)\n        const accessRoomConfig = {\n            method: 'post',\n            url: 'http://localhost:4000/api/room/accessRoom',\n            data: {\n                roomId: rooms.roomId,\n                password: password,\n            }\n        }\n        axios(accessRoomConfig)\n            .then(function (response) {\n                console.log(\"roomId and RoomPassword check : \", response.data);\n                if (response.data.success && response.data.correct) {\n                    historyPush(room)\n                } else {\n                    alert('error')\n                }\n            })\n            .catch(function (error) {\n                console.log(error);\n            });\n    }\n    const onPasswordChange = (e) => {\n        setPassword(e.target.value);\n    };\n\n    useEffect(() => {\n        axios\n            .post('http://localhost:4000/api/room/getRooms')\n            .then(function (result) {\n                console.log(\"getRooms post useEffect\");\n                const { roomList, success } = result.data;\n                success && setGameList(roomList);\n            })\n            .catch(function (error) {\n                console.error(\"error : \", error);\n            });\n    }, []);\n    return (\n        <>\n            {/*<HEADER/>*/}\n            <BodyFrame>\n                <BodyCenter>\n                    <ButtonArea>\n                        <CreateButton type={\"submit\"} />\n                    </ButtonArea>\n                    <RoomFrame>\n                        <UserList background={\"white\"}>\n                            <Users width={\"5vw\"} align={\"center\"}>\n                                방 번호\n                            </Users>\n                            <Users width={\"15vw\"}>게임 이름</Users>\n                            <Users width={\"30vw\"}>방 제목</Users>\n                            <Users width={\"15vw\"}>방 사용자</Users>\n                            <Users width={\"5vw\"} align={\"center\"}>\n                                인원\n                            </Users>\n                        </UserList>\n                        {gameList.map(function (rooms, index) {\n                            return (\n                                <UserList\n                                    key={index}\n                                    background={\"#FFFFF3\"}\n                                    onClick={() => onClick(rooms, index)}\n                                >\n                                    <Users width={\"5vw\"} align={\"center\"}>\n                                        {index + 1}\n                                    </Users>\n                                    <Users width={\"15vw\"}>{rooms.gameType}</Users>\n                                    <Users width={\"30vw\"}>{`${rooms.roomTitle}  ${rooms.secret ? \"\uD83D\uDD10\" : \"\"\n                                        }`}</Users>\n                                    <Users width={\"15vw\"}>{rooms.hostname}</Users>\n                                    <Users width={\"5vw\"} align={\"center\"}>\n                                        {rooms.roomLimit}\n                                    </Users>\n                                </UserList>\n                            );\n                        })}\n                    </RoomFrame>\n                    {isSecret && (\n                        <Modal>\n                            <LoginMid>\n                                <LoginModal>\n                                    <Close onClick={() => setIsSecret(false)}>x</Close>\n                                    <ModalContents>\n                                        <Title size={'24px'}>StartPlayUp</Title>\n                                        <Title size={'32px'}>\uD83D\uDD10</Title>\n                                        <label>\n                                            <span>암호 : &nbsp; </span>\n                                            <Input\n                                                type=\"password\"\n                                                onChange={onPasswordChange}\n                                                placeholder={'암호를 입력하세요.'}\n                                                width={'200px'}\n                                            />\n                                        </label>\n                                    </ModalContents>\n                                    <Footer>\n                                        <ResultButton onClick={passwordChecker}>\n                                            확인\n                                        </ResultButton>\n                                    </Footer>\n                                </LoginModal>\n                            </LoginMid>\n                        </Modal>\n                    )}\n                </BodyCenter>\n            </BodyFrame>\n        </>\n    );\n};\n\nexport default BODY;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/webBody.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/webBody.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/webBody.js	(revision e925240675eddc5e852ab9eb14bf0ca0572d8e7e)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/webBody.js	(date 1632643872491)
+@@ -1,4 +1,4 @@
+-import React, { useContext, useEffect, useState } from "react";
++import React, {useContext, useEffect, useState} from "react";
+ import CreateButton from "./CreateButton";
+ 
+ import {
+@@ -22,9 +22,9 @@
+     Title
+ } from "../Style/CreateRoomStyle";
+ import HEADER from "./webHeader";
+-import { RoomIdContext } from "../../../../Routes/peerStore";
++import {RoomIdContext} from "../../../../Routes/peerStore";
+ 
+-const BODY = ({ location, history }) => {
++const BODY = ({location, history}) => {
+     console.log(location);
+     console.log(history);
+ 
+@@ -32,16 +32,15 @@
+     const [isSecret, setIsSecret] = useState(false);
+     const [password, setPassword] = useState("");
+     const [room, setRoom] = useState();
+-    const { roomID, setRoomID } = useContext(RoomIdContext)
++    const {roomID, setRoomID} = useContext(RoomIdContext)
+     const historyPush = (room) => {
+         console.log('history.push rooms : ')
+         console.log(room)
+-        setRoomID({ id: room.roomId, state: true })
++        setRoomID({id: room.roomId, state: true})
+         history.push({
+             pathname: "/waitingRoom",
+             state: {
+-                input: room.roomTitle,
+-                game: room.gameType,
++                room: room,
+             },
+             // list: {
+             //     guestList: rooms.guestList,
+@@ -110,7 +109,7 @@
+             .post('http://localhost:4000/api/room/getRooms')
+             .then(function (result) {
+                 console.log("getRooms post useEffect");
+-                const { roomList, success } = result.data;
++                const {roomList, success} = result.data;
+                 success && setGameList(roomList);
+             })
+             .catch(function (error) {
+@@ -123,7 +122,7 @@
+             <BodyFrame>
+                 <BodyCenter>
+                     <ButtonArea>
+-                        <CreateButton type={"submit"} />
++                        <CreateButton type={"submit"}/>
+                     </ButtonArea>
+                     <RoomFrame>
+                         <UserList background={"white"}>
+@@ -149,7 +148,7 @@
+                                     </Users>
+                                     <Users width={"15vw"}>{rooms.gameType}</Users>
+                                     <Users width={"30vw"}>{`${rooms.roomTitle}  ${rooms.secret ? "🔐" : ""
+-                                        }`}</Users>
++                                    }`}</Users>
+                                     <Users width={"15vw"}>{rooms.hostname}</Users>
+                                     <Users width={"5vw"} align={"center"}>
+                                         {rooms.roomLimit}
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/modules/Signout.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/Signout.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/Signout.js
+new file mode 100644
+--- /dev/null	(date 1632639369664)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/Signout.js	(date 1632639369664)
+@@ -0,0 +1,14 @@
++import React from "react";
++
++const Signout = ({logout})=>{
++    const signout=()=>{
++        logout()
++        alert('로그아웃 되었습니다.')
++    }
++    return(
++        <div>
++            dd
++        </div>
++    )
++}
++export default Signout
+\ No newline at end of file
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\nimport { BrowserRouter as Router, Switch, Route } from \"react-router-dom\";\n// dashboad layout\nimport routes from \"./modules/modules.routes\";\nimport Dashboard from \"./layout/Dashboard\";\n// modules\nconst Home = React.lazy(() => import(\"./modules/Home\"));\nconst Setting = React.lazy(() => import(\"./modules/Setting\"));\nconst User = React.lazy(()=> import(\"./modules/UserInformationModal\"))\nimport * as S from '../Style/WebFrameStyle'\nfunction NavigationBar({open,setOpen,logout}) {\n    return (\n        <Router>\n                <Dashboard isOpen={open} isSetOpen={setOpen} routes={routes}>\n                    <Switch>\n                        <Route exact path={routes.main.route}/>\n                        <Route path={routes.setting.route}>\n                            <Setting />\n                        </Route>\n                        <Route path={routes.users.route}>\n                            <User open={false} setOpen={setOpen}/>\n                        </Route>\n                        <Route path={routes.signout.route}>\n                            {logout}\n                        </Route>\n                    </Switch>\n                </Dashboard>\n        </Router>\n    );\n}\nexport default NavigationBar
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js	(revision e925240675eddc5e852ab9eb14bf0ca0572d8e7e)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/index.js	(date 1632639383276)
+@@ -7,7 +7,9 @@
+ const Home = React.lazy(() => import("./modules/Home"));
+ const Setting = React.lazy(() => import("./modules/Setting"));
+ const User = React.lazy(()=> import("./modules/UserInformationModal"))
++const Logout = React.lazy(()=>import('./modules/Signout'))
+ import * as S from '../Style/WebFrameStyle'
++import Signout from "./modules/Signout";
+ function NavigationBar({open,setOpen,logout}) {
+     return (
+         <Router>
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/PlayerList.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/PlayerList.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/PlayerList.js
+new file mode 100644
+--- /dev/null	(date 1632645846716)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/PlayerList.js	(date 1632645846716)
+@@ -0,0 +1,30 @@
++import React, {useEffect} from "react";
++import * as S from '../Style/WebFrameStyle'
++import axios from "axios";
++import {useLocation} from "react-router";
++const PlayerList=()=>{
++    const location = useLocation()
++    const room = location.state.room
++    console.log(`room : ${room}`)
++    useEffect(() => {
++        const getUserConfig = {
++            method: 'get',
++            url: `http://localhost:4000/api/user/getUser?email=${room.email}`,
++        }
++        axios(getUserConfig)
++            .then(function (response) {
++                console.log(`해당 이메일로 가입한 사용자 데이터 가져오기: ${room.email} : `, response.data);
++            })
++            .catch(function (error) {
++                console.log(error);
++            });
++    },[])
++    return(
++        room.guestList.map((user, index)=>(
++            <S.UserList>
++                <S.Users width={'5vw'}>{`${index+1} : ${user.substring(0,user.indexOf(' '))}`}</S.Users>
++            </S.UserList>
++        ))
++    )
++}
++export default PlayerList
+\ No newline at end of file
+Index: frontend/src/Component/GameComponent/AVALON_BETA/Store.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useEffect, useReducer, useContext } from \"react\";\nimport reducer, {\n  GAME_CHECK,\n  SET_COMPONENT,\n  VOTE_CHECK,\n} from \"./MVC/AVALON_Reducer\";\nimport { PeerDataContext, PeersContext } from \"../../../Routes/peerStore\";\nimport { AVALON, GAME } from \"../../../Constants/peerDataTypes\";\nimport { GET_DATA_FROM_PEER } from \"../../../Constants/actionTypes\";\n\nexport const START_FRAME = \"START_FRAME\";\nexport const FRAME_MAIN = \"FRAME_MAIN\";\nexport const MAIN_VOTE = \"MAIN_VOTE\";\nexport const VOTE_FRAME = \"VOTE_FRAME\";\nexport const VOTE_RESULT = \"VOTE_RESULT\";\nexport const EXPEDITION_FRAME = \"EXPEDITION_FRAME\";\nexport const EXPEDITION_RESULT = \"EXPEDITION_RESULT\";\nexport const ASSASSIN_FRAME = \"ASSASSIN_FRAME\";\nexport const END_GAME_FRAME = \"END_GAME_FRAME\";\nexport const WAITING_FRAME = \"WAITING_FRAME\";\n\nexport const angels = [\"Merlin\", \"Percival\", \"Citizen\"]; // 천사팀\nexport const evils = [\"Morgana\", \"Assassin\", \"Heresy\", \"Modred\"]; //악마팀\nexport const merlinSight = [\"Morgana\", \"Assassin\", \"Heresy\"]; // 멀린이 볼 수 있는 직업군\nexport const percivalSight = [\"Morgana\", \"Merlin\"];\nexport const MINIMUM_PLAYER_NUMBER = 2;\nexport const MAXIMUM_PLAYER_NUMBER = 10;\nexport const needPlayers = {\n  _2P: [1, 1, 1, 1, 1],\n  _5P: [2, 3, 2, 3, 3],\n  _6P: [2, 3, 4, 3, 4],\n  _7P: [2, 3, 3, 4, 4],\n  _8to10P: [3, 4, 4, 5, 5],\n};\nexport const voteStageColor = [\"white\", \"white\", \"white\", \"white\", \"red\"];\nexport const testRoles = [\"Assassin\", \"Merlin\"];\nexport const mustHaveRoles = [\n  \"Merlin\",\n  \"Percival\",\n  \"Citizen\",\n  \"Morgana\",\n  \"Assassin\",\n];\nexport const expandRoles = [\n  \"Citizen\",\n  \"Heresy\",\n  \"Citizen\",\n  \"Modred\",\n  \"Citizen\",\n];\n\nexport const initialData = {\n  usingPlayers: [\n    // { nickname: \"user1\", role: \"\", vote: \"\", toGo: \"\", selected: false },\n    // { nickname: \"user2\", role: \"\", vote: \"\", toGo: \"\", selected: false },\n    // { nickname: \"user3\", role: \"\", vote: \"\", toGo: \"\", selected: false },\n    // { nickname: \"user4\", role: \"\", vote: \"\", toGo: \"\", selected: false },\n    // {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},\n  ],\n  voteStage: 0, //5-voteStage 재투표 가능횟수\n  expeditionStage: 0, //게임 expedition 진행 상황\n  represent: 0, //원정 인원 정하는 대표자 index\n  vote: [], //원정 성공 여부 투표함\n  takeStage: [], //인원에 맞는 게임 스테이지 설정\n  playerCount: 0, // 대표자가 원정에 보낼 인원 수\n  winner: \"\",\n  voteTurn: 0,\n  component: START_FRAME,\n  checked: false,\n};\n\nconst GameContext = React.createContext(\"\");\n\nconst Store = ({ children }) => {\n  const { peerData } = useContext(PeerDataContext);\n  const [gameState, dispatch] = useReducer(reducer, initialData);\n  const { peers } = useContext(PeersContext);\n  const nickname = localStorage.getItem(\"nickname\");\n  const selectedPlayers = () => {\n    const temp = [];\n    gameState.usingPlayers.map((user) => {\n      user.selected && temp.push(user.nickname);\n    });\n    return temp;\n  };\n\n  const buttonAnimation = (e) => {\n    let time;\n    const { classList } = e.target;\n    if (!classList.contains(\"animate\")) {\n      classList.add(\"animate\");\n    }\n    function Debounce() {\n      clearTimeout(time);\n      time = setTimeout(() => {\n        classList.remove(\"animate\");\n      }, 500);\n    }\n\n    return Debounce();\n  };\n\n  console.log(gameState);\n  const timeOver = () => {\n    dispatch({ type: VOTE_CHECK, peers });\n  };\n\n  useEffect(() => {\n    console.log(`expedition useEffect`);\n    const gameData = { ...gameState };\n    const angelCount = gameData.takeStage.filter(\n      (element) => \"o\" === element\n    ).length;\n    const evilCount = gameData.takeStage.filter(\n      (element) => \"x\" === element\n    ).length;\n    if (angelCount === 3) {\n      const playerRole = gameState.usingPlayers.find(\n        (user) => user.nickname === nickname\n      ).role;\n      dispatch({\n        type: SET_COMPONENT,\n        component: playerRole === \"Assassin\" ? ASSASSIN_FRAME : WAITING_FRAME,\n      });\n    } else {\n      if (evilCount === 3) {\n        gameData.winner = \"EVILS_WIN\";\n        gameData.component = END_GAME_FRAME;\n      }\n      gameData.usingPlayers.map((user) => {\n        user.selected = false;\n        user.toGo = \"\";\n      });\n      dispatch({ type: GAME_CHECK, gameData });\n    }\n  }, [gameState.expeditionStage]);\n\n  useEffect(() => {\n    console.log(\"voteTurn useEffect\");\n    const gameData = { ...gameState };\n    const players = gameState.usingPlayers.length;\n    if (gameState.voteTurn === players && players >= MINIMUM_PLAYER_NUMBER) {\n      gameData.voteTurn = 0;\n      gameData.component = VOTE_RESULT;\n      dispatch({ type: GAME_CHECK, gameData });\n    }\n  }, [gameState.voteTurn]);\n\n  useEffect(() => {\n    const gameData = { ...gameState };\n    console.log(`useEffect_원정 종료 조건`);\n    console.log(`gameData.vote.length : ${gameData.vote.length}`);\n\n    if (gameData.vote.length === gameData.takeStage[gameData.expeditionStage]) {\n      if (gameData.expeditionStage === 4 && gameData.usingPlayers.length >= 7) {\n        //게임 스테이지가 4이며 7명 이상인지 체크\n        if (gameData.vote.filter((element) => \"x\" === element).length >= 2) {\n          //원정실패가 2개 이상인 경우 원정 실패\n          gameData.takeStage[gameData.expeditionStage] = \"x\";\n        } else {\n          // 원정 실패가 1개 이하인 경우 성공\n          gameData.takeStage[gameData.expeditionStage] = \"o\";\n        }\n      } else {\n        //원정 실패가 있는 경우 원정실패 , 그렇지 않으면 성공\n        gameData.vote.includes(\"x\")\n          ? (gameData.takeStage[gameData.expeditionStage] = \"x\")\n          : (gameData.takeStage[gameData.expeditionStage] = \"o\");\n      }\n      gameData.expeditionStage += 1;\n      gameData.component = EXPEDITION_RESULT;\n      gameData.voteStage = 0;\n      gameData.usingPlayers.map((user) => {\n        user.selected = false;\n      });\n      dispatch({ type: GAME_CHECK, gameData });\n    }\n  }, [gameState.vote.length]);\n\n  useEffect(() => {\n    console.log(\"peerData useEffect\");\n    if (peerData.type === GAME && peerData.game === AVALON) {\n      const data = peerData.data;\n      console.log(data);\n      dispatch({ type: GET_DATA_FROM_PEER, data });\n    }\n  }, [peerData]);\n\n  return (\n    <GameContext.Provider\n      value={{\n        gameState,\n        dispatch,\n        selectedPlayers,\n        buttonAnimation,\n        timeOver,\n      }}\n    >\n      {children}\n    </GameContext.Provider>\n  );\n};\nexport { Store, GameContext };\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/GameComponent/AVALON_BETA/Store.js b/frontend/src/Component/GameComponent/AVALON_BETA/Store.js
+--- a/frontend/src/Component/GameComponent/AVALON_BETA/Store.js	(revision e925240675eddc5e852ab9eb14bf0ca0572d8e7e)
++++ b/frontend/src/Component/GameComponent/AVALON_BETA/Store.js	(date 1632578268106)
+@@ -73,8 +73,8 @@
+ 
+ const Store = ({ children }) => {
+   const { peerData } = useContext(PeerDataContext);
+-  const [gameState, dispatch] = useReducer(reducer, initialData);
+   const { peers } = useContext(PeersContext);
++  const [gameState, dispatch] = useReducer(reducer, initialData);
+   const nickname = localStorage.getItem("nickname");
+   const selectedPlayers = () => {
+     const temp = [];
+Index: frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>export default {\n    main: {\n        name: \"main\",\n        route: \"/main\",\n    },\n    users: {\n        name: \"user\",\n        route: \"/user\"\n    },\n    // will not show in sidebar menu\n    \"user-profile__hidden\": {\n        name: \"\",\n        route: \"/user/:id\"\n    },\n    setting: {\n        name: \"Setting\",\n        route: \"/main\",\n        bottom: true\n    },\n    signout: {\n        name: \"Signout\",\n        route: \"/logout\",\n        bottom: true\n    },\n    // will not show in sidebar menu\n    \"not-found__hidden\": {\n        name: \"\",\n        route: \"*\"\n    }\n};\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js
+--- a/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js	(revision e925240675eddc5e852ab9eb14bf0ca0572d8e7e)
++++ b/frontend/src/Component/WebComponent/WebPage/WebFrame/modules/modules.routes.js	(date 1632639486449)
+@@ -19,7 +19,7 @@
+     },
+     signout: {
+         name: "Signout",
+-        route: "/logout",
++        route: "/signout",
+         bottom: true
+     },
+     // will not show in sidebar menu
