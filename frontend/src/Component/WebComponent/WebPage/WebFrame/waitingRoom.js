@@ -34,8 +34,8 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const {roomID, setRoomID} = useContext(RoomIdContext);
     const history = useHistory()
     const gameStart = () => {
-        console.log(game);
-        switch (game) {
+        console.log(gameType);
+        switch (gameType) {
             case 'Yutnori':
                 history.push({
                     pathname: "/YUT",
