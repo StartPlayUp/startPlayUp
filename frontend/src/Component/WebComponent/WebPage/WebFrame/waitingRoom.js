@@ -26,6 +26,10 @@ import PlayerList from "./PlayerList";
 import { sendDataToPeers } from "Common/peerModule/sendToPeers"
 import { GAME_START_SIGN } from 'Constants/peerDataTypes';
 
+const Yutnori = 'Yutnori'
+const AVALON = 'AVALON'
+const YACHT ='YATCH'
+const MINE_SEARCH = 'MINE_SEARCH'
 
 const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
@@ -37,17 +41,9 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
     const history = useHistory()
-    const gameStart = () => {
-        console.log(gameType);
-        sendDataToPeers(GAME_START_SIGN, {
-            game: null,
-            nickname: localStorage.getItem('nickname'),
-            peers,
-            data: null,
-        });
-        console.log("waiting room hostname : ", hostname)
+    const gameTypeChecker=()=>{
         switch (gameType) {
-            case 'Yutnori':
+            case Yutnori:
                 history.push({
                     pathname: "/YUT",
                     state: {
@@ -57,18 +53,29 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                     },
                 });
                 break;
-            case 'YACHT':
+            case YACHT:
                 history.push('/Yacht');
                 break;
-            case 'AVALON':
+            case AVALON:
                 history.push('/AVALON');
                 break;
-            case 'MINE_SEARCH':
+            case MINE_SEARCH:
                 history.push('/MineSearch');
                 break;
             default:
                 alert('error');
         }
+    }
+    const gameStart = () => {
+        console.log(gameType);
+        sendDataToPeers(GAME_START_SIGN, {
+            game: null,
+            nickname: localStorage.getItem('nickname'),
+            peers,
+            data: null,
+        });
+        console.log("waiting room hostname : ", hostname)
+        gameTypeChecker()
     }
 
     const [user, setUsers] = useState([]);
@@ -87,29 +94,7 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     useEffect(() => {
         if (peerData.type === GAME_START_SIGN) {
             console.log("waiting room hostname : ", hostname)
-            switch (gameType) {
-                case 'Yutnori':
-                    history.push({
-                        pathname: "/YUT",
-                        state: {
-                            hostname,
-                            roomTitle: roomTitle,
-                            gameType: gameType,
-                        },
-                    });
-                    break;
-                case 'YACHT':
-                    history.push('/Yacht');
-                    break;
-                case 'AVALON':
-                    history.push('/AVALON');
-                    break;
-                case 'MINE_SEARCH':
-                    history.push('/MineSearch');
-                    break;
-                default:
-                    alert('error');
-            }
+            gameTypeChecker()
         }
     }, [peerData])
 

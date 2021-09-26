@@ -33,7 +33,7 @@ const UserInformationModal = ({setOpen}) => {
                     width: '20%',
                     height: '30%',
                     border: 'none',
-                    background: 'lightgreen',
+                    background: '#FFFFF3',
                     overflow: 'auto',
                     WebkitOverflowScrolling: 'touch',
                     borderRadius: '15px',
@@ -42,7 +42,7 @@ const UserInformationModal = ({setOpen}) => {
                     fontSize: '14sp',
                     alignItems: 'left',
                     flexDirection: 'column',
-                    color: 'white',
+                    color: 'black',
                     transition: 'all 0.6 ease-in-out'
                 }
             }}

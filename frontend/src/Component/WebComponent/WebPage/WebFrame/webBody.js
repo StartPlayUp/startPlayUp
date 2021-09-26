@@ -42,8 +42,8 @@ const BODY = ({location, history}) => {
             state: {
                 room: room,
                 hostname: room.hostname,
-                gameType : room.gameType,
-                roomTitle : room.roomTitle,
+                gameType: room.gameType,
+                roomTitle: room.roomTitle,
             },
         });
     };
