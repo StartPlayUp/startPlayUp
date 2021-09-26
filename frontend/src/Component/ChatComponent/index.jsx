@@ -35,8 +35,11 @@ const Chat = styled.div`
     display:flex;
     flex-direction: column;
     ${props => console.log(props.height, props.width)}
-    height:${props => props.height !== undefined ? props.height : 600}px;
-    width:${props => props.width !== undefined ? props.width : 600}px;
+    /* height:${props => props.height !== undefined ? props.height : 600}px;
+    width:${props => props.width !== undefined ? props.width : 600}px; */
+    ${props => (props.width !== undefined && { width: `${props.width}px` })}
+    ${props => (props.width !== undefined && { height: `${props.height}px` })}
+
     border-radius: 10%;
 `;
 
