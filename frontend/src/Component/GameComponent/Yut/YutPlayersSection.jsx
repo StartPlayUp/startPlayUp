@@ -124,7 +124,7 @@ const YutPlayerSection = () => {
             </StyleDiv>
             {playerData.length > 0 && <PlayerSection>
                 {playerData.map((i, index) => <Player key={index} player={i}>
-                    player{index + 1}<div>{i.nickname}</div>
+                    player{index + 1}<div>{i.nickname.split(' ')[0]}</div>
                     <div style={{ "height": "60px" }} >
                         <Horses player={i} index={0} horses={i.horses} />
                     </div>

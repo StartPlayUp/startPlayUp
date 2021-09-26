@@ -17,12 +17,13 @@ const TextField = styled.div`
   padding:10px;
   border: rgb(0, 0, 0);
   flex-direction: column;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   height:${props => props.width || 600}px;
   width:inherit;
   border-right:3px solid #ececec;
   background-color: white;
   flex-grow:1;
+  
   
   &::-webkit-scrollbar{
     width: 100%;
@@ -31,16 +32,14 @@ const TextField = styled.div`
 `;
 
 const Chat = styled.div`
-
     display:flex;
     flex-direction: column;
-    ${props => console.log(props.height, props.width)}
-    /* height:${props => props.height !== undefined ? props.height : 600}px;
-    width:${props => props.width !== undefined ? props.width : 600}px; */
+    ${props => (props.position !== undefined && props.position === 'absolute' && { position: "absolute", right: '0' })}
     ${props => (props.width !== undefined && { width: `${props.width}px` })}
-    ${props => (props.width !== undefined && { height: `${props.height}px` })}
-
-    border-radius: 10%;
+    ${props => (props.height !== undefined && { height: `${props.height}px` })}
+    ${props => (props.chatShow !== undefined && props.chatShow === false && { display: "none" })}
+    overflow:hidden;
+    border-radius: 20px;
 `;
 
 const TextFieldWithVoiceUsers = styled.div`
@@ -59,7 +58,7 @@ const StyledAudio = styled.audio`
 
 
 
-function Index({ chatList, setChatList, backgroundColor, height, width, socketRef, peersRef, ...props }) {
+function Index({ chatList, setChatList, backgroundColor, height, width, socketRef, peersRef, chatShow, position, style, ...props }) {
     const myNickname = localStorage.getItem('nickname');
 
     const { peerData, setPeerData, clearPeerData } = useContext(PeerDataContext);
@@ -91,8 +90,8 @@ function Index({ chatList, setChatList, backgroundColor, height, width, socketRe
 
 
     return (
-        <Chat width={width} height={height}>
-            <Nav />
+        <Chat style={style !== undefined ? style : {}} width={width} height={height} chatShow={chatShow} position={position}>
+            {/* <Nav /> */}
             <TextFieldWithVoiceUsers>
                 <TextField className="textField" ref={scrollRef}>
                     {chatList.map((i, index) => <Message key={"chat" + index}

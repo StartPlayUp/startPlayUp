@@ -173,7 +173,7 @@ const YutButtonSection = () => {
             <NowPlayerNickname player={playerData[nowTurn.index]}>
                 <StyleCenterDiv>시간 초 : {time}</StyleCenterDiv>
                 <StyleCenterDiv>윷 횟수 : {myThrowCount}</StyleCenterDiv>
-                <StyleCenterDiv>현재 턴 : {nowTurn.nickname}</StyleCenterDiv>
+                <StyleCenterDiv>현재 턴 : {nowTurn.nickname.split(' ')[0]}</StyleCenterDiv>
             </NowPlayerNickname>
             <HatledButtonSection>
                 <div style={{ margin: '5px' }} className="App">

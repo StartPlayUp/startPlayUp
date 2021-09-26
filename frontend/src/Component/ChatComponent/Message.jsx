@@ -74,7 +74,7 @@ function App({ chatObject, who }) {
     <>
       <MessageContainer who={who}>
         <Messages className="text" who={who}>
-          {who === "me" || <NickName className="nickName">{chatObject.nickname}</NickName>}
+          {who === "me" || <NickName className="nickName">{chatObject.nickname.split(' ')[0]}</NickName>}
           {chatObject.textList.map((i, index) => <Message who={who} key={"" + chatObject.nickname + index}>{i}</Message>)}
           <Time>{chatObject.chatTime.toString().slice(4, 25)}</Time>
         </Messages>

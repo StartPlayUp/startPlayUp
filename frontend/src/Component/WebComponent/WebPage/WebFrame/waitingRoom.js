@@ -28,7 +28,7 @@ import { GAME_START_SIGN } from 'Constants/peerDataTypes';
 
 const Yutnori = 'Yutnori'
 const AVALON = 'AVALON'
-const YACHT ='YATCH'
+const YACHT = 'YATCH'
 const MINE_SEARCH = 'MINE_SEARCH'
 
 const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
@@ -41,7 +41,7 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const { peers } = useContext(PeersContext);
     const { peerData } = useContext(PeerDataContext);
     const history = useHistory()
-    const gameTypeChecker=()=>{
+    const gameTypeChecker = () => {
         switch (gameType) {
             case Yutnori:
                 history.push({
@@ -124,12 +124,10 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                         <PlayerList />
                     </WaitingUsers>
                     <ChattingList>
-                        {chatShow && (
-                            <ChatComponent
-                                chatList={chatList}
-                                setChatList={setChatList}
-                            />
-                        )}
+                        <ChatComponent
+                            chatList={chatList}
+                            setChatList={setChatList}
+                        />
                     </ChattingList>
                 </MainList>
             </Room>

@@ -166,7 +166,6 @@ const app = () => {
                     render={() => (
                       <WaitingRoom
                         chatList={chatList}
-                        chatShow={chatShow}
                         setChatList={setChatList}
                         handler={chatOnClickHandler}
                         history={history}
@@ -179,7 +178,13 @@ const app = () => {
                     render={() => (
                       <GamePage>
                         <RockPaperScissors />
-                        <ChatComponent />
+                        <ChatComponent
+                          chatList={chatList}
+                          setChatList={setChatList}
+                          width={500}
+                          chatShow={chatShow}
+                          position={'absolute'}
+                        />
                       </GamePage>
                     )}
                   />
@@ -188,7 +193,13 @@ const app = () => {
                     path="/MineSearch"
                     render={() => (
                       <GamePage>
-                        <MineSearch />
+                        <ChatComponent
+                          chatList={chatList}
+                          setChatList={setChatList}
+                          width={500}
+                          chatShow={chatShow}
+                          position={'absolute'}
+                        />
                       </GamePage>
                     )}
                   />
@@ -198,13 +209,14 @@ const app = () => {
                     render={() => (
                       <GamePage>
                         <Yut />
-                        {chatShow && (
-                          <ChatComponent
-                            chatList={chatList}
-                            setChatList={setChatList}
-                            width={500}
-                          />
-                        )}
+                        <ChatComponent
+                          chatList={chatList}
+                          setChatList={setChatList}
+                          width={450}
+                          chatShow={chatShow}
+                          position={'absolute'}
+                          style={{ border: "3px solid gray" }}
+                        />
                         <CHAT_SHOW_DIV_STYLE>
                           <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                         </CHAT_SHOW_DIV_STYLE>

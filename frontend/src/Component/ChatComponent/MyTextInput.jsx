@@ -9,7 +9,7 @@ import { PEER_CHAT } from "../../Constants/peerDataTypes";
 
 const SendChat = styled.div`
    border-top: 3px solid #ececec;
-   height:75px;
+   /* height:75px; */
    width:inherit;
    background-color: rgb(255, 255, 255);
 `;

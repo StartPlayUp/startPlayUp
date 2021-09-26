@@ -12,12 +12,14 @@ const ConnectUsers = styled.div`
 const PeersList = styled.div`
     overflow:hidden;
     text-overflow:ellipsis;
+    border:1px solid gray;
+    margin:1px;
 `;
 
 const App = ({ peers }) => {
     return (
         <ConnectUsers>
-            {peers.map((i) => <PeersList key={i.peer}>{i.nickname}</PeersList>)}
+            {peers.map((i) => <PeersList key={i.peer}>{i.nickname.split(' ')[0]}</PeersList>)}
         </ConnectUsers>
     )
 }
