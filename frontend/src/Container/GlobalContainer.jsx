@@ -23,7 +23,7 @@ const GlobalStyles = createGlobalStyle`
      html{
       //overflow:hidden;
      }
-     button {
+     /* button {
        font-size: 14px;
        color: #ffffff;
        background-color: #a593e0;
@@ -36,7 +36,7 @@ const GlobalStyles = createGlobalStyle`
        button:hover {
          background-color: green;
        }
-     }
+     } */
  `;
 
 

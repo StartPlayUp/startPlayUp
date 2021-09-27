@@ -2,10 +2,8 @@ const fireBaseUser = require('../../../Common/fireBaseDB/user');
 
 exports.getUser = async (req, res, next) => {
     try {
-        console.log("getUser Session : ", req.session);
-        // console.log("getUser from db data  : ", req);
-        const email = req.query['email'];
-        console.log("getUser email ", email)
+        console.log("getUser passport of session: ", req.session.passport);
+        const email = req.session.passport.user;
         const { user, success } = await fireBaseUser.getUserFromEmail({ email });
         const jsonUser = JSON.stringify({ user, success });
         res.send(jsonUser)
@@ -29,6 +27,30 @@ exports.getUserFromNickname = async (req, res, next) => {
     }
 };
 
+exports.report = async (req, res, next) => {
+    try {
+        const nickname = req.query['nickname'];
+        const { success } = await fireBaseUser.updateUserReportCount({ nickname });
+        const jsonUser = JSON.stringify({ success });
+        res.send(jsonUser)
+    } catch (error) {
+        const jsonUser = JSON.stringify({ success: false });
+        res.send(jsonUser)
+    }
+};
+
+exports.updateGameResult = async (req, res, next) => {
+    try {
+        const userList = req.body['userList'];
+        const { success } = await fireBaseUser.updateGameResult({ userList });
+        const jsonUser = JSON.stringify({ success });
+        res.send(jsonUser)
+    } catch (error) {
+        const jsonUser = JSON.stringify({ success: false });
+        res.send(jsonUser)
+    }
+};
+
 exports.checkNicknameDuplication = async (req, res, next) => {
     try {
         const nickname = req.query.nickname;
@@ -39,6 +61,7 @@ exports.checkNicknameDuplication = async (req, res, next) => {
         next(error)
     }
 }
+
 exports.checkEmailDuplication = async (req, res, next) => {
     try {
         const email = req.query.email;
@@ -56,6 +79,23 @@ exports.register = async (req, res, next) => {
         const result = await fireBaseUser.createUser({ user: userConfig })
         const jsonResult = JSON.stringify(result);
         res.send(jsonResult)
+    } catch (error) {
+        next(error)
+    }
+};
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const email = req.session.passport.user;
+        const { success } = await fireBaseUser.deleteUserFromEmail({ email })
+        req.logout();
+        res.clearCookie("nickname");
+        res.clearCookie("connect.sid");
+        const sendData = JSON.stringify({
+            redirectPath: "/",
+            success
+        });
+        res.send(sendData);
     } catch (error) {
         next(error)
     }

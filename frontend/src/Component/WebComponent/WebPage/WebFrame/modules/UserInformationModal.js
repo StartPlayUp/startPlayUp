@@ -1,36 +1,35 @@
 import Modal from 'react-modal'
-import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
-import {Button} from "../../Style/WaitingRoomStyle";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Button } from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
 
-const UserInformationModal = ({setOpen}) => {
+const UserInformationModal = ({ setOpen }) => {
     const history = useHistory()
-    const fullNickname = localStorage.getItem('nickname')
-    const nickname = fullNickname.substring(0, fullNickname.indexOf(' '))
-    const [information, setInformation] = useState([])
+    const [information, setInformation] = useState(undefined)
     const onClick = () => {
         setOpen(false)
         history.push({
             pathname: '/main'
         })
     }
-    // useEffect(() => {
-    //     const getUserFromNicknameConfig = {
-    //         method: 'get',
-    //         url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname}`,
-    //     }
-    //     axios(getUserFromNicknameConfig)
-    //         .then(function (response) {
-    //             console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname} : `, response.data);
-    //             const userInfo = response.data.user;
-    //             setInformation(userInfo);
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }, [])
+
+    useEffect(() => {
+        const getUserConfig = {
+            method: 'get',
+            url: `http://localhost:4000/api/user/getUser`,
+        }
+        axios(getUserConfig)
+            .then(function (response) {
+                console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : `, response.data);
+                const userInfo = response.data.user;
+                setInformation(userInfo);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [])
 
     //cookie 기준으로 가져오기
 
@@ -74,18 +73,19 @@ const UserInformationModal = ({setOpen}) => {
         >
             <S.ModalColumn>
                 <S.ModalTitle>사용자 정보</S.ModalTitle>
-                <S.RowFrame>
-                    <S.ColumnFrame>
-                        <p>{`nickname : ${nickname}`}</p>
-                        <p>{`win : ${information.numberOfGames.win}`}</p>
-                        <p>{`lose : ${information.numberOfGames.lose}`}</p>
-                        <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
-                    </S.ColumnFrame>
-                    <S.ColumnFrame>
-                        <p>{`const: ${information.report.const}`}</p>
-                        <p>{`time : ${information.report.time}`}</p>
-                    </S.ColumnFrame>
-                </S.RowFrame>
+                {information !== undefined &&
+                    <S.RowFrame>
+                        <S.ColumnFrame>
+                            <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
+                            <p>{`win : ${information.numberOfGames.win}`}</p>
+                            <p>{`lose : ${information.numberOfGames.lose}`}</p>
+                            <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
+                        </S.ColumnFrame>
+                        <S.ColumnFrame>
+                            <p>{`const: ${information.report.count}`}</p>
+                            <p>{`time : ${Date(information.report.time.second)}`}</p>
+                        </S.ColumnFrame>
+                    </S.RowFrame>}
             </S.ModalColumn>
             <Button onClick={onClick}>
                 닫기

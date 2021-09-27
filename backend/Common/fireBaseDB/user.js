@@ -87,7 +87,7 @@ exports.createUser = async ({ user }) => {
             id: "",
         }
         const report = {
-            const: 0,
+            count: 0,
             time: 0,
         }
         const numberOfGames = {
@@ -272,7 +272,7 @@ exports.getUserFromEmail = async ({ email }) => {
             result.forEach((doc) => {
                 const { report, numberOfGames, nickname, email, sns } = doc.data()
                 if (nickname !== undefined && nickname !== "") {
-                    userList.push({ report, numberOfGames, nickname, email, sns, docId: doc.id })
+                    userList.push({ report, numberOfGames, nickname: nickname + " " + doc.id, email })
                 }
             });
         }
@@ -301,6 +301,67 @@ exports.getUserFromNickname = async ({ nickname }) => {
         console.error("getUserFromNickname error");
     }
     return { user: userList[0], success };
+}
+
+exports.updateUserReportCount = async ({ nickname }) => {
+    let success = false;
+    try {
+        console.log(isString(nickname))
+        if (isString(nickname) &&
+            nickname.split(' ').length === 2) {
+            const userRef = db.collection('users').doc(nickname.split(' ')[1]);
+            const result = await userRef.update({
+                ["report.count"]: FieldValue.increment(1),
+                ["report.time"]: FieldValue.serverTimestamp()
+            });
+            success = true;
+        }
+        else {
+            success = false;
+            console.error("updateUserReportCount error");
+        }
+        return { success };
+    }
+    catch (error) {
+        return { success };
+    }
+}
+
+// 1. 회원 탈퇴 ??? 테스트해야하는데 front 만들어줘
+// 2. 전적 갱신 체크 
+// 3. getUser 세션기준 (입력값 없음) 체크
+// 4. peer 본인 삭제 불가 해결해보기. ???
+
+exports.updateGameResult = async ({ userList }) => {
+    let success = false;
+    const checkUserList = (user) => {
+        return isString(user.nickname) !== undefined && isBoolean(user.winner) !== undefined
+    }
+    try {
+        console.log(userList)
+        const newUserList = JSON.parse(userList)
+        if (isObject(newUserList) &&
+            newUserList.length > 0 &&
+            newUserList.some(checkUserList)) {
+            const batch = db.batch();
+            const userRef = db.collection('users')
+            newUserList.forEach(async ({ nickname, winner }) => {
+                batch.update(userRef.doc(nickname.split(' ')[1]), {
+                    [`numberOfGames.${winner === true ? "win" : "lose"}`]: FieldValue.increment(1),
+                });
+            })
+            await batch.commit();
+            success = true;
+        }
+        else {
+            success = false;
+            console.error("updateNumberOfGames error");
+        }
+        return { success };
+    }
+    catch (error) {
+        return { success };
+    }
 }
 
 exports.checkNicknameDuplication = async ({ nickname }) => {
