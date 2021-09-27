@@ -84,3 +84,19 @@ export const SideAnimation = styled.div`
   width: 50%;
   z-index: 2;
 `
+export const ButtonGlobalHover = createGlobalStyle`
+  button {
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #a593e0;
+    border-radius: 2px;
+    border: 0;
+    padding: 10px;
+    text-decoration: none;
+    transition: all 0.5s;
+
+    &:hover {
+      background-color: green;
+    }
+  }
+`;

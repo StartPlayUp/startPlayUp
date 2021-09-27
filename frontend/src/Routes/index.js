@@ -91,22 +91,7 @@ export const CHAT_SHOW_BUTTON_STYLE = styled.button`
   border-radius: 100%;
 `;
 
-export const ButtonGlobalHover = createGlobalStyle`
-  button {
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #a593e0;
-    border-radius: 2px;
-    border: 0;
-    padding: 10px;
-    text-decoration: none;
-    transition: all 0.5s;
 
-    &:hover {
-      background-color: green;
-    }
-  }
-`;
 
 export const CHAT_SHOW_DIV_STYLE = styled.div`
   position: absolute;
@@ -151,7 +136,6 @@ const app = () => {
       <BrowserRouter>
         <>
           <PeerStore>
-            <ButtonGlobalHover />
             {/* 원래 코드 주석 처리 ( 로그인 표시 X) */}
             <Route path="/" component={GlobalContainer} />
             <CookiesProvider>
