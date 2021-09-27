@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
-import { useLocation } from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 //import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
 //import {Store} from '../../ChatFrame/frontend/src/store'
 import {
@@ -18,28 +18,29 @@ import {
     RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
-import { PeersContext, PeerDataContext, RoomIdContext } from "../../../../Routes/peerStore";
-import { useHistory } from "react-router";
+import {PeersContext, PeerDataContext, RoomIdContext} from "../../../../Routes/peerStore";
+import {useHistory} from "react-router";
 import axios from "axios";
-import { Background, Users } from "../Style/WebFrameStyle";
+import {Background, Users} from "../Style/WebFrameStyle";
 import PlayerList from "./PlayerList";
-import { sendDataToPeers } from "Common/peerModule/sendToPeers"
-import { GAME_START_SIGN } from 'Constants/peerDataTypes';
+import {sendDataToPeers} from "Common/peerModule/sendToPeers"
+import {GAME_START_SIGN} from 'Constants/peerDataTypes';
 
 const Yutnori = 'Yutnori'
 const AVALON = 'AVALON'
 const YACHT = 'YATCH'
 const MINE_SEARCH = 'MINE_SEARCH'
 
-const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
+const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const location = useLocation();
     const gameType = location.state.gameType
     const roomTitle = location.state.roomTitle
     const hostname = location.state.hostname
-    // const guests = location.list.guestList;
-    const { roomID, setRoomID } = useContext(RoomIdContext);
-    const { peers } = useContext(PeersContext);
-    const { peerData } = useContext(PeerDataContext);
+    const guestList = location.state.guestList
+    const [players, setPlayers] = useState([])
+    const {roomID, setRoomID} = useContext(RoomIdContext);
+    const {peers} = useContext(PeersContext);
+    const {peerData} = useContext(PeerDataContext);
     const history = useHistory()
     const gameTypeChecker = () => {
         switch (gameType) {
@@ -77,36 +78,46 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
         console.log("waiting room hostname : ", hostname)
         gameTypeChecker()
     }
-
-    const [user, setUsers] = useState([]);
-    useEffect(() => {
-        axios.post('http://localhost:4000/api/room/accessRoom')
-            .then(function (result) {
-                console.log('checkUser get useEffect')
-                const { userList, success } = result.data
-                success && setUsers(userList)
-            })
-            .catch(function (error) {
-                console.error('error : ', error)
-            });
+    useEffect(async (roomID) => {
+        const getRoomConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/room/getRoom',
+            data: {
+                roomID,
+            }
+        }
+        try {
+            const roomObject = await axios(getRoomConfig);
+            console.log('roomObject')
+            console.log(roomObject.data)
+            setPlayers(roomObject.data)
+            return roomObject.data;
+        } catch (error) {
+            console.error(error)
+            return {}
+        }
     }, [])
 
+    //게임 시작 버튼
     useEffect(() => {
         if (peerData.type === GAME_START_SIGN) {
             console.log("waiting room hostname : ", hostname)
             gameTypeChecker()
         }
     }, [peerData])
-
+    console.log(guestList)
+    useEffect(()=>{
+            console.log(guestList)
+    },guestList)
     return (
         <BodyFrame>
-            <Background />
+            <Background/>
             <Room>
                 <Title>
                     <TitleSpan fontSize={"18px"} color={"red"}>{gameType}</TitleSpan>
                     <TitleSpan fontSize={"22px"} color={"black"}>{roomTitle}</TitleSpan>
                 </Title>
-                <hr />
+                <hr/>
                 <ButtonArea>
                     <LeftButtonsArea>
                         <Button onClick={gameStart}>시작</Button>
@@ -114,14 +125,18 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
                     </LeftButtonsArea>
                     <RightButtonsArea>
                         <Button margin={'0'} onClick={() => {
-                            setRoomID({ ...roomID, id: "", state: false });
+                            setRoomID({...roomID, id: "", state: false});
                             history.push('/main')
                         }}>나가기</Button>
                     </RightButtonsArea>
                 </ButtonArea>
                 <MainList>
                     <WaitingUsers>
-                        <PlayerList />
+                        {guestList.map((user,index)=>(
+                            <UserList key={index}>
+                                <Users>{user}</Users>
+                            </UserList>
+                        ))}
                     </WaitingUsers>
                     <ChattingList>
                         <ChatComponent
@@ -135,3 +150,23 @@ const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     );
 }
 export default WaitingRoom;
+
+// useEffect(async (roomID) => {
+//     const getRoomConfig = {
+//         method: 'post',
+//         url: 'http://localhost:4000/api/room/getRoom',
+//         data: {
+//             roomID,
+//         }
+//     }
+//     try {
+//         const roomObject = await axios(getRoomConfig);
+//         console.log('roomObject')
+//         console.log(roomObject)
+//         setPlayers(roomObject)
+//         return roomObject.data;
+//     } catch (error) {
+//         console.error(error)
+//         return {}
+//     }
+// },[])

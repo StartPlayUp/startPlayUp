@@ -1,21 +1,43 @@
 import Modal from 'react-modal'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
+import {Button} from "../../Style/WaitingRoomStyle";
+import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
+import axios from "axios";
 
 const UserInformationModal = ({setOpen}) => {
     const history = useHistory()
+    const fullNickname = localStorage.getItem('nickname')
+    const nickname = fullNickname.substring(0, fullNickname.indexOf(' '))
+    const [information, setInformation] = useState([])
     const onClick = () => {
         setOpen(false)
         history.push({
             pathname: '/main'
         })
     }
+    useEffect(() => {
+        const getUserFromNicknameConfig = {
+            method: 'get',
+            url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname}`,
+        }
+        axios(getUserFromNicknameConfig)
+            .then(function (response) {
+                console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname} : `, response.data);
+                const userInfo = response.data.user;
+                setInformation(userInfo);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [])
+    console.log('information : ' + information)
     return (
         <Modal
             isOpen={open}
             style={{
                 overlay: {
-                    position: 'inherit',
+                    position: 'flex',
                     top: 0,
                     left: 0,
                     right: 0,
@@ -31,8 +53,8 @@ const UserInformationModal = ({setOpen}) => {
                     top: '15%',
                     left: '60%',
                     width: '20%',
-                    height: '30%',
-                    border: 'none',
+                    height: '25%',
+                    border: '2px solid purple',
                     background: '#FFFFF3',
                     overflow: 'auto',
                     WebkitOverflowScrolling: 'touch',
@@ -47,18 +69,24 @@ const UserInformationModal = ({setOpen}) => {
                 }
             }}
         >
-            <h3>사용자 정보</h3>
-            <p>닉네임 : oxix</p>
-            <p>게임 수 : 10</p>
-            <p>승 : </p>
-            <p>패 : </p>
-            <p>승률 : </p>
-            <h3 onClick={onClick}>
-                X
-            </h3>
-            <div>
-                ff
-            </div>
+            <S.ModalColumn>
+                <S.ModalTitle>사용자 정보</S.ModalTitle>
+                <S.RowFrame>
+                    <S.ColumnFrame>
+                        <p>{`nickname : ${nickname}`}</p>
+                        <p>{`win : ${information.numberOfGames.win}`}</p>
+                        <p>{`lose : ${information.numberOfGames.lose}`}</p>
+                        <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
+                    </S.ColumnFrame>
+                    <S.ColumnFrame>
+                        <p>{`const: ${information.report.const}`}</p>
+                        <p>{`time : ${information.report.time}`}</p>
+                    </S.ColumnFrame>
+                </S.RowFrame>
+            </S.ModalColumn>
+            <Button onClick={onClick}>
+                닫기
+            </Button>
         </Modal>
     )
 }

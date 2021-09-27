@@ -1,28 +1,31 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import * as S from '../Style/WebFrameStyle'
 import axios from "axios";
 import {useLocation} from "react-router";
-const PlayerList=()=>{
-    const location = useLocation()
-    const room = location.state.room
-    console.log(`room : ${room}`)
-    useEffect(() => {
-        const getUserConfig = {
-            method: 'get',
-            url: `http://localhost:4000/api/user/getUser?email=${room.email}`,
+
+const PlayerList = ({roomId}) => {
+    const [users,setUsers] = useState([])
+    const nickname = localStorage.getItem('nickname')
+    useEffect(async ({roomId}) => {
+        const getRoomConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/room/getRoom',
+            data: {
+                roomId,
+            }
         }
-        axios(getUserConfig)
-            .then(function (response) {
-                console.log(`해당 이메일로 가입한 사용자 데이터 가져오기: ${room.email} : `, response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        try {
+            const roomObject = await axios(getRoomConfig);
+            return roomObject.data;
+        } catch (error) {
+            console.error(error)
+            return {}
+        }
     },[])
-    return(
-        room.guestList.map((user, index)=>(
+    return (
+        users.map((user, index) => (
             <S.UserList>
-                <S.Users width={'5vw'}>{`${index+1} : ${user.substring(0,user.indexOf(' '))}`}</S.Users>
+                <S.Users width={'5vw'}>{`${index + 1} : ${user.nickname.substring(0, user.indexOf(' '))}`}</S.Users>
             </S.UserList>
         ))
     )

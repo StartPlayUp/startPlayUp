@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import CreateButton from "./CreateButton";
 
 import {
@@ -32,6 +32,7 @@ const BODY = ({location, history}) => {
     const [isSecret, setIsSecret] = useState(false);
     const [password, setPassword] = useState("");
     const [room, setRoom] = useState();
+
     const {roomID, setRoomID} = useContext(RoomIdContext)
     const historyPush = (room) => {
         console.log('history.push rooms : ')
@@ -40,7 +41,7 @@ const BODY = ({location, history}) => {
         history.push({
             pathname: "/waitingRoom",
             state: {
-                room: room,
+                guestList: room.guestList,
                 hostname: room.hostname,
                 gameType: room.gameType,
                 roomTitle: room.roomTitle,
@@ -96,6 +97,7 @@ const BODY = ({location, history}) => {
         setPassword(e.target.value);
     };
 
+    //메인 페이지 방들
     useEffect(() => {
         axios
             .post('http://localhost:4000/api/room/getRooms')
@@ -108,6 +110,7 @@ const BODY = ({location, history}) => {
                 console.error("error : ", error);
             });
     }, []);
+
     return (
         <>
             {/*<HEADER/>*/}

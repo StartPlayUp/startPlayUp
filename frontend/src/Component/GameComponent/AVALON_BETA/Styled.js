@@ -362,7 +362,22 @@ const stroll = keyframes`
     transform: translateX(200%);
   }
 `;
-
+export const ModalTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 24px;
+  margin: 10px;
+`
+export const ModalColumn = styled.div`
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  /* margin: 0 auto; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
 export const WalkContainer = styled.div`
   display: inline-block;
   position: relative;
