@@ -231,12 +231,14 @@ const app = () => {
                         <StyleDiv>
                           <Yacht />
                         </StyleDiv>
-                        {chatShow && (
-                          <ChatComponent
-                            chatList={chatList}
-                            setChatList={setChatList}
-                          />
-                        )}
+                        <ChatComponent
+                          chatList={chatList}
+                          setChatList={setChatList}
+                          width={450}
+                          chatShow={chatShow}
+                          position={'absolute'}
+                          style={{ border: "3px solid gray" }}
+                        />
                         <CHAT_SHOW_DIV_STYLE>
                           <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
                         </CHAT_SHOW_DIV_STYLE>
