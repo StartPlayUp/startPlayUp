@@ -16,21 +16,24 @@ const UserInformationModal = ({setOpen}) => {
             pathname: '/main'
         })
     }
-    useEffect(() => {
-        const getUserFromNicknameConfig = {
-            method: 'get',
-            url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname}`,
-        }
-        axios(getUserFromNicknameConfig)
-            .then(function (response) {
-                console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname} : `, response.data);
-                const userInfo = response.data.user;
-                setInformation(userInfo);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }, [])
+    // useEffect(() => {
+    //     const getUserFromNicknameConfig = {
+    //         method: 'get',
+    //         url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname}`,
+    //     }
+    //     axios(getUserFromNicknameConfig)
+    //         .then(function (response) {
+    //             console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname} : `, response.data);
+    //             const userInfo = response.data.user;
+    //             setInformation(userInfo);
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         });
+    // }, [])
+
+    //cookie 기준으로 가져오기
+
     console.log('information : ' + information)
     return (
         <Modal
