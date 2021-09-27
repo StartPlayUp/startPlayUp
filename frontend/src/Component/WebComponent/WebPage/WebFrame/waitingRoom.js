@@ -98,6 +98,8 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         }
     }, [])
 
+    //peer 통신으로 연결된 사람들 확인하기
+
     //게임 시작 버튼
     useEffect(() => {
         if (peerData.type === GAME_START_SIGN) {
@@ -106,9 +108,11 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         }
     }, [peerData])
     console.log(guestList)
-    useEffect(()=>{
-            console.log(guestList)
-    },guestList)
+
+    useEffect(() => {
+        console.log(guestList)
+    }, guestList)
+
     return (
         <BodyFrame>
             <Background/>
@@ -132,11 +136,11 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                 </ButtonArea>
                 <MainList>
                     <WaitingUsers>
-                        {guestList.map((user,index)=>(
-                            <UserList key={index}>
-                                <Users>{user}</Users>
-                            </UserList>
-                        ))}
+                        {/*{guestList.map((user, index) => (*/}
+                        {/*    <UserList key={index}>*/}
+                        {/*        <Users>{user}</Users>*/}
+                        {/*    </UserList>*/}
+                        {/*))}*/}
                     </WaitingUsers>
                     <ChattingList>
                         <ChatComponent
