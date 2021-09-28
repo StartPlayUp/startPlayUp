@@ -1,18 +1,46 @@
 import Modal from 'react-modal'
 import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {Button} from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
+import {Route} from "react-router";
+import { LoginApp } from "Component/WebComponent/WebPage";
+import {useCookies} from "react-cookie";
 
 const UserInformationModal = ({setOpen}) => {
     const history = useHistory()
     const [information, setInformation] = useState(undefined)
+    const fullNickname = localStorage.getItem('nickname')
+    const [cookies,removeCookies] = useCookies()
+    const nickname = fullNickname.substring(0, fullNickname.indexOf(' '))
     const onClick = () => {
         setOpen(false)
         history.push({
             pathname: '/main'
         })
+    }
+    //회원탈퇴 시키기
+    const deleteUserFromNickname = () => {
+        const deleteUserFromNicknameConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/user/deleteUser',
+            data: {
+                nickname,
+            }
+        }
+        console.log(deleteUserFromNicknameConfig)
+        axios(deleteUserFromNicknameConfig)
+            .then(function (response) {
+                console.log("해당 닉네임으로 가입한 계정 삭제 : ", response.data);
+                removeCookies(cookies)
+                localStorage.removeItem('nickname')
+                setOpen(false)
+                window.location.replace('/')
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     useEffect(() => {
@@ -30,10 +58,6 @@ const UserInformationModal = ({setOpen}) => {
                 console.log(error);
             });
     }, [])
-
-    const onDeletePlayer = () => {
-
-    }
 
     console.log('information : ' + information)
     return (
@@ -79,7 +103,7 @@ const UserInformationModal = ({setOpen}) => {
                 {information !== undefined &&
                 <S.RowFrame>
                     <S.ColumnFrame>
-                        <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
+                        <p>{`nickname : ${nickname}`}</p>
                         <p>{`win : ${information.numberOfGames.win}`}</p>
                         <p>{`lose : ${information.numberOfGames.lose}`}</p>
                         <p>{`rate : ${information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose)}`}</p>
@@ -91,14 +115,13 @@ const UserInformationModal = ({setOpen}) => {
 
                 </S.RowFrame>
                 }
-                <Button onClick={onDeletePlayer}>
+                <Button onClick={deleteUserFromNickname}>
                     회원 탈퇴
                 </Button>
                 <Button onClick={onClick}>
                     닫기
                 </Button>
             </S.ModalColumn>
-
         </Modal>
     )
 }

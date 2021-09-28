@@ -127,7 +127,7 @@ export default function PersistentDrawerLeft({isOpen, isSetOpen, routes, childre
         isSetOpen(false)
         setOpen(false);
         history.push({
-            pathname: '/main'
+            pathname: '/'
         })
     };
 

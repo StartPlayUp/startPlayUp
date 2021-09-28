@@ -24,7 +24,7 @@ import {
 import HEADER from "./webHeader";
 import {RoomIdContext} from "../../../../Routes/peerStore";
 
-const BODY = ({location, history}) => {
+const BODY = ({location,history}) => {
     const [gameList, setGameList] = useState([])
     const [isSecret, setIsSecret] = useState(false)
     const [password, setPassword] = useState("")
@@ -54,7 +54,9 @@ const BODY = ({location, history}) => {
             setRoom(rooms);
         } else {
             console.log('onClick rooms')
-            console.log(rooms)
+            getRoom(roomID)
+                .then(rooms.guestList.length < rooms.roomLimit)
+                .catch(false)
             historyPush(rooms);
         }
     };
@@ -68,6 +70,11 @@ const BODY = ({location, history}) => {
         console.log('-------------------------------end')
         accessRoom(room)
     };
+
+    const onPasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
+
     const accessRoom = (rooms) => {
         console.log('accessRoom')
         console.log(rooms.roomId, password)
@@ -92,10 +99,26 @@ const BODY = ({location, history}) => {
                 console.log(error);
             });
     }
-    const onPasswordChange = (e) => {
-        setPassword(e.target.value);
-    };
 
+    const getRoom = async (roomId) => {
+        const getRoomConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/api/room/getRoom',
+            data: {
+                roomId
+            }
+        }
+        try {
+            const roomObject = await axios(getRoomConfig);
+            console.log('getRoom')
+            console.log(roomObject.data)
+            return roomObject.data;
+        }
+        catch (error) {
+            console.error(error)
+            return {}
+        }
+    }
     //메인 페이지 방들
     useEffect(() => {
         axios
@@ -146,7 +169,6 @@ const BODY = ({location, history}) => {
                                     <Users width={"15vw"}>{nickname(rooms.hostname)}</Users>
                                     <Users width={"5vw"} align={"center"}>
                                         {`${rooms.guestList.length} / ${rooms.roomLimit}`}
-
                                     </Users>
                                 </UserList>
                             );

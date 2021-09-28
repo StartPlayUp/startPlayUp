@@ -40,6 +40,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const nickname = (fullNickname)=>{
         return fullNickname.substring(0,fullNickname.indexOf(' '))
     }
+
     const gameTypeChecker = () => {
         const state = {
             roomTitle: roomTitle,

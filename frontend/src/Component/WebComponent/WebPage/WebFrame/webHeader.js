@@ -12,6 +12,7 @@ import {AuthStore} from "Component/WebComponent/Login/LoginFrame/Auth/AuthContex
 import Modal from 'react-modal'
 import NavigationBar from "./index";
 import SlideBar from "./layout/SlideBar";
+import {useCookies} from "react-cookie";
 
 const axios = require('axios');
 
@@ -33,7 +34,9 @@ const HEADER = () => {
     const [redirect, setRedirect] = useState(false);
     const [open, setOpen] = useState(false)
     const nickname = localStorage.getItem('nickname')
+    const [cookies,removeCookies] = useCookies()
 
+    console.log(nickname)
     const logoutHandler = () => {
         axios.get(`http://localhost:4000/api/auth/logout`, {withCredentials: true})
             .then(function (response) {
@@ -44,6 +47,7 @@ const HEADER = () => {
                 console.log(error);
             });
         setOpen(false)
+        removeCookies(cookies)
     }
     const onClick = () => {
         nickname === null ? setOpen(false) : setOpen(true)

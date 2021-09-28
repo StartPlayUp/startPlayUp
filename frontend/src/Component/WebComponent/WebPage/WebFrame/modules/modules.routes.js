@@ -1,7 +1,7 @@
 export default {
     main: {
         name: "main",
-        route: "/main",
+        route: "/",
     },
     users: {
         name: "user",
