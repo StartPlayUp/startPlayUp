@@ -70,6 +70,7 @@ exports.getListOfRooms = async () => {
 
 exports.getObjectOfRoom = async ({ roomId }) => {
     let success = false;
+    let vacancy = false;
     let room = {};
     if (isString(roomId)) {
         const result = await db.collection('rooms').doc(roomId).get();
@@ -78,12 +79,12 @@ exports.getObjectOfRoom = async ({ roomId }) => {
         if (!result.empty) {
             success = true;
         }
-        // console.log("get Object Of Room : ", result)
+        vacancy = roomWithoutPassword.roomLimit > roomWithoutPassword.guestList.length
     }
     else {
         console.error("getObjectOfRoom error");
     }
-    return { roomObject: room, success };
+    return { roomObject: room, success, vacancy };
 }
 
 

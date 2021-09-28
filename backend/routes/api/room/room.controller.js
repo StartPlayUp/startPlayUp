@@ -15,10 +15,10 @@ exports.getRoom = async (req, res, next) => {
     try {
         const roomId = req.body['roomId'];
         console.log("getRoom - get room id from request : ", roomId)
-        const { roomObject, success } = await fireBaseRoom.getObjectOfRoom({ roomId });
+        const { roomObject, success, vacancy } = await fireBaseRoom.getObjectOfRoom({ roomId });
         console.log("getRoom - get room id from request : ", roomObject)
 
-        const roomObjectWithSuccess = JSON.stringify({ roomObject, success });
+        const roomObjectWithSuccess = JSON.stringify({ roomObject, success, vacancy });
         res.send(roomObjectWithSuccess)
     } catch (error) {
         next(error)
