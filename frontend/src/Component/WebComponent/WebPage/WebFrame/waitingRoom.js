@@ -22,13 +22,9 @@ import axios from "axios";
 import {Background, Users} from "../Style/WebFrameStyle";
 import PlayerList from "./PlayerList";
 import {sendDataToPeers} from "Common/peerModule/sendToPeers"
-import {GAME_START_SIGN} from 'Constants/peerDataTypes';
+import {GAME_START_SIGN, mappingTable} from 'Constants/peerDataTypes';
 
 
-const Yutnori = 'Yutnori'
-const AVALON = 'AVALON'
-const YachtDice = 'YachtDice'
-const MINE_SEARCH = 'MINE_SEARCH'
 
 const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const location = useLocation();
@@ -50,27 +46,31 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
             gameType: gameType,
             hostname,
         }
+        console.log('gameType : ' + gameType)
         switch (gameType) {
-            case Yutnori:
+            case mappingTable.YUT.game:
                 history.push({
-                    pathname: "/YUT",
+                    pathname: mappingTable.YUT.path,
                     state,
                 });
                 break;
-            case YachtDice:
+            case mappingTable.YACHT.game:
                 history.push({
-                    pathname:'/YachtDice',
+                    pathname:mappingTable.YACHT.path,
                     state,
                 })
                 break;
-            case AVALON:
+            case mappingTable.AVALON.game:
                 history.push({
-                    pathname:'/AVALON',
+                    pathname: mappingTable.AVALON.path,
                     state,
                 })
                 break;
-            case MINE_SEARCH:
-                history.push('/MineSearch');
+            case mappingTable.MINE_SEARCH.game:
+                history.push({
+                    pathname: mappingTable.MINE_SEARCH.path,
+                    state,
+                })
                 break;
             default:
                 alert('error');
