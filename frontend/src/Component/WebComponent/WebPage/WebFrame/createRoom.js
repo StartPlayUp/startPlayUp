@@ -59,22 +59,6 @@ const CreateRoom = ({ isOpen, close }) => {
         roomLimit: roomLimit,
       },
     };
-    // axios
-    //   .post("http://localhost:4000/api/room/createRoom")
-    //   .then(function (response) {
-    //     console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
-    //     history.push({
-    //       pathname: "/waitingRoom",
-    //       state: {
-    //         input: input,
-    //         game: game,
-    //         roomLimit: roomLimit,
-    //       },
-    //     });
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
     try {
       const roomId = await axios(createRoomConfig);
       console.log("생성 id: ", roomId.data);
