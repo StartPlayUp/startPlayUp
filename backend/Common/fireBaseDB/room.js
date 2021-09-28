@@ -144,7 +144,11 @@ exports.accessRoom = async ({ roomId, password }) => {
             if (encrypted === roomPassword) {
                 correct = true;
             }
-            vacancy = roomLimit >= guestList.length
+            console.log('------------accessroom start')
+            console.log(roomLimit)
+            console.log(guestList.length)
+            console.log('------------ accessroom end')
+            vacancy = roomLimit > guestList.length
         }
         // console.log("get Object Of Room : ", result)
     }

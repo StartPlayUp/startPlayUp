@@ -54,9 +54,6 @@ const BODY = ({location,history}) => {
             setRoom(rooms);
         } else {
             console.log('onClick rooms')
-            getRoom(roomID)
-                .then(rooms.guestList.length < rooms.roomLimit)
-                .catch(false)
             historyPush(rooms);
         }
     };
@@ -89,7 +86,7 @@ const BODY = ({location,history}) => {
         axios(accessRoomConfig)
             .then(function (response) {
                 console.log("roomId and RoomPassword check : ", response.data);
-                if (response.data.success && response.data.correct) {
+                if (response.data.success && response.data.correct && response.data.vacancy) {
                     historyPush(room)
                 } else {
                     alert('error')
