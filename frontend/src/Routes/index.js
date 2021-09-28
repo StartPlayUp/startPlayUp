@@ -17,7 +17,11 @@ import { LoginApp } from "Component/WebComponent/WebPage";
 import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 import WebMain from "../Component/WebComponent/WebPage/WebFrame/webBody";
 import WaitingRoom from "../Component/WebComponent/WebPage/WebFrame/waitingRoom";
-import { Modal } from "react-modal";
+import {mappingTable} from "../Constants/peerDataTypes";
+export const Yutnori = 'Yutnori'
+export const AVALON = 'AVALON'
+export const YachtDice = 'YachtDice'
+export const MINE_SEARCH = 'MINE_SEARCH'
 
 import { CookiesProvider } from "react-cookie";
 
@@ -36,15 +40,7 @@ const StyleDiv = styled.div`
   width: 100%;
   min-height: 100vh;
 `;
-const AVALON_STYLE = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  flex-direction: row;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  background-color: inherit;
-`;
+
 const AVALON_Global = createGlobalStyle`
   body {
     margin: 0;
@@ -61,27 +57,6 @@ const AVALON_Global = createGlobalStyle`
     color: black;
   }
 `;
-const AVALON_GAME = styled.div`
-  display: flex;
-  width: 70%;
-  height: 90%;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
-const AVALON_CHAT = styled.div`
-  display: flex;
-  width: 30%;
-  height: 100%;
-  justify-content: flex-end;
-`;
-
-const CHAT_STYLE = styled.div`
-  display: flex;
-  flex-basis: 30%;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
-
 export const CHAT_SHOW_BUTTON_STYLE = styled.button`
   width: 40px;
   height: 40px;
@@ -102,26 +77,6 @@ export const CHAT_SHOW_DIV_STYLE = styled.div`
   width: 32px;
   height: 32px;
 `;
-
-const FLEX_DIV = styled.div`
-  display: flex;
-  justify-content: space-around;
-`;
-
-const TemporaryMain = () => {
-  const history = useHistory();
-  return (
-    <div>
-      <button onClick={() => history.push("/RockPaperScissors")}>
-        RockPaperScissors
-      </button>
-      <button onClick={() => history.push("/MineSearch")}>MineSearch</button>
-      <button onClick={() => history.push("/Yut")}>Yut</button>
-      <button onClick={() => history.push("/Yacht")}>Yacht</button>
-      <button onClick={() => history.push("/AVALON")}>AVALON</button>
-    </div>
-  );
-};
 
 const app = () => {
   const { checkAuth } = useContext(AuthStore);
@@ -174,7 +129,7 @@ const app = () => {
                   />
                   <Route
                     exact
-                    path="/MineSearch"
+                    path= {mappingTable.MINE_SEARCH.path}
                     render={() => (
                       <GamePage>
                         <ChatComponent
@@ -189,7 +144,7 @@ const app = () => {
                   />
                   <Route
                     exact
-                    path="/Yut"
+                    path={mappingTable.YUT.path}
                     render={() => (
                       <GamePage>
                         <Yut />
@@ -209,7 +164,7 @@ const app = () => {
                   />
                   <Route
                     exact
-                    path="/Yacht"
+                    path={mappingTable.YACHT.path}
                     render={() => (
                       <GamePage>
                         <StyleDiv>
@@ -229,7 +184,7 @@ const app = () => {
                   />
                   <Route
                     exact
-                    path="/AVALON"
+                    path={mappingTable.AVALON.path}
                     render={() => (
                       <GamePage>
                         <StyleDiv>
@@ -254,106 +209,6 @@ const app = () => {
             )}
           </PeerStore>
         </>
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/RockPaperScissors"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <RockPaperScissors />
-                  <ChatComponent />
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )} */}
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/MineSearch"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <MineSearch />
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )} */}
-        {/* {checkAuth && (
-          <Route
-            exact
-            path="/Yut"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <Yut />
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                      width={500}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )}
-        {checkAuth && (
-          <Route
-            exact
-            path="/Yacht"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <StyleDiv>
-                    <Yacht />
-                  </StyleDiv>
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )}
-        {checkAuth && (
-          <Route
-            exact
-            path="/AVALON"
-            render={() => (
-              <GamePage>
-                <PeerStore>
-                  <StyleDiv>
-                    <AVALON_Global />
-                    <AVALON_BETA />
-                  </StyleDiv>
-                  {chatShow && (
-                    <ChatComponent
-                      chatList={chatList}
-                      setChatList={setChatList}
-                      width={320}
-                    />
-                  )}
-                  <CHAT_SHOW_DIV_STYLE>
-                    <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
-                  </CHAT_SHOW_DIV_STYLE>
-                </PeerStore>
-              </GamePage>
-            )}
-          />
-        )} */}
       </BrowserRouter>
     </>
   );
