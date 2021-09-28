@@ -17,14 +17,14 @@ const PlayerData=React.createContext();
 const TimerData = React.createContext();
 const PlayerNickName = React.createContext();
 
-const nickname=localStorage.getItem('nickname');
+
 const initialState={
     dice: [0, 0, 0, 0, 0],
     count: [0, 0, 0, 0, 0, 0],
     hold: [false, false, false, false, false],
     rollCount: 3,
-    playerData: [{
-        nickname,
+    playerData: [ {
+        nickname:"",
         selectPoint: {
             highRanking:{
                 ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -70,7 +70,7 @@ const initialState={
         },
             result: 0,
             bonus: [0, false]
-        }]
+        } ]
 }
 const reducer=(state,action)=>{
     switch (action.type) {
@@ -131,7 +131,10 @@ function Count(diceArray) {
     console.assert(!(counter === [0, 0, 0, 0, 0, 0]), "count 계산 되지 않음");
     return counter;
 }
-const YachuProvider=({children})=>{
+const YachuProvider = ({ children }) => {
+    const nicknameString = localStorage.getItem('nickname');
+    let nicknameArray = nicknameString.split(" ")
+    const nickname = nicknameArray[0]
     const {peers} = useContext(PeersContext);
     const {peerData}=useContext(PeerDataContext);
     const [state,dispatch]=useReducer(reducer,initialState);
@@ -238,6 +241,7 @@ const YachuProvider=({children})=>{
             setTurnName(player[0].nickname)
             const verification = SELECT;
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 0, nowTurnNickname: nowTurnNickname, halt: true } })
+            //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 0, halt: true } })
             dispatch({ type: SELECT, player})
         }
         else{
@@ -246,6 +250,7 @@ const YachuProvider=({children})=>{
             setTurnName(player[1].nickname)
             const verification = SELECT;
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, nowTurnNickname: nowTurnNickname, halt: true  } })
+            //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, halt: true  } })
             dispatch({ type: SELECT, player })
         }
     }
@@ -268,12 +273,14 @@ const YachuProvider=({children})=>{
         }
     }
     function StartGame() {
-        //const peers = action.peers
-        const nickname = localStorage.getItem('nickname');
         let playerData = [...state.playerData];
         console.log(peers)
-        playerData[1]=({
-            nickname: peers[0].nickname,
+        const peersNicknameString = peers[0].nickname;
+        let peersNicknameArray = peersNicknameString.split(" ")
+        const peersNickname = peersNicknameArray[0]
+        console.log(nickname)
+        playerData= [{
+            nickname:nickname,
             selectPoint: {
                 highRanking:{
                     ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -295,11 +302,37 @@ const YachuProvider=({children})=>{
             },
             result: 0,
             bonus: [0, false]
-        });
+            },
+            {
+                nickname: peersNickname,
+                selectPoint: {
+                    highRanking:{
+                        ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
+                        two: [0, false],
+                        three: [0, false],
+                        four: [0, false],
+                        five: [0, false],
+                        six: [0, false]
+                    },
+                    lowerRanking: {
+                        threeOfaKind: [0, false],
+                        fourOfaKind: [0, false],
+                        fullHouse: [0, false],
+                        smallStraight: [0, false],
+                        largeStraight: [0, false],
+                        choice: [0, false],
+                        yahtzee: [0, false]
+                    }
+            },
+                result: 0,
+                bonus: [0, false]
+            } ]
         const nowTurnNickname = playerData[0].nickname;
         const result = { ...initialState, nowTurnNickname, playerData };
+        //const result = { ...initialState,playerData };
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
         dispatch({ type: STARTGAME, playerData, nowTurnNickname })
+        //dispatch({ type: STARTGAME, playerData})
         setHalt(true)
         //dispatch({ type: StartGame, peers })
     }

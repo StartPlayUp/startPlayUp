@@ -40,7 +40,7 @@ const Table = styled.table`
 `
 const Button = styled.button`
     background-color: #e2f8a7;
-    font-size: 1.4vw;
+    font-size: 0.8vw;
     height:100%;
     border:none;
     width:100%;

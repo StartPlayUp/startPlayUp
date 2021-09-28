@@ -1,6 +1,7 @@
 import React, {useRef, Fragment, useState, useEffect,useContext } from "react";
 import {DiceStore} from 'Container/GameContainer/Yacht/YatchStore';
-import styled,{ keyframes, css } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import dice1 from "./diceImage/dice1.png"
 import dice2 from "./diceImage/dice2.png"
 import dice3 from "./diceImage/dice3.png"
@@ -88,7 +89,9 @@ const RollButton=styled.button`
         color:#FFFFFF;
     }
 `
-const Dice=()=>{
+const Dice = () => {
+    const location = useLocation();
+    const hostname = location.state.hostname;
     const diceState=useContext(DiceStore);
     const [diceImage, setImage] = useState([dice1, dice1, dice1, dice1, dice1]);
     const box = useRef(null);
@@ -175,6 +178,9 @@ const Dice=()=>{
         console.log("y", y);
         console.log("홀드 박스 높이-주사위 높이", height);
         setPlaceY(bottom);
+        if (hostname === localStorage.getItem('nickname')) {
+            startGame();
+        }
     }, [])
     
     return (
@@ -183,7 +189,7 @@ const Dice=()=>{
                 <Fragment>
                     <ParentDiv>
                             <RollButton disabled={rollCount? "":rollCount>=0} onClick={RollDice}>Roll Dice !</RollButton>
-                        <button onClick={startGame}>게임 시작</button>
+                        {/* <button onClick={startGame}>게임 시작</button> */}
                         <ButtonTable ref={fromPosition}>
                             {lst.map((i) => (
                                 <>

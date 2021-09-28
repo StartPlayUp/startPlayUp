@@ -55,7 +55,12 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                 });
                 break;
             case YACHT:
-                history.push('/Yacht');
+                history.push({
+                    pathname: '/Yacht',
+                    state: {
+                        hostname
+                    }
+            });
                 break;
             case AVALON:
                 history.push('/AVALON');
