@@ -115,7 +115,7 @@ const CreateRoom = ({ isOpen, close }) => {
                   <Option>
                     <div>
                       option : &nbsp;
-                      <Select value={game} onChange={onGameChange}>
+                      <Select  value={game} onChange={onGameChange}>
                         <Games value={"Yut"}>윷놀이</Games>
                         <Games value={"YachtDice"}>요트 다이스</Games>
                         <Games value={"AVALON"}>아발론</Games>
@@ -126,7 +126,11 @@ const CreateRoom = ({ isOpen, close }) => {
                       players : &nbsp;
                       <Select value={roomLimit} onChange={onRoomLimitChange}>
                         {roomLimits.map((index) => (
-                          <Games value={index}>{index}</Games>
+                          <Games
+                            key={index}
+                            value={index}>
+                              {index}
+                          </Games>
                         ))}
                       </Select>
                     </div>
