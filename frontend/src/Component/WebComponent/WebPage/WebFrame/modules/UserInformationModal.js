@@ -36,7 +36,7 @@ const UserInformationModal = ({ setOpen }) => {
     console.log('information : ' + information)
     return (
         <Modal
-            isOpen={open}
+            isOpen={true}
             style={{
                 overlay: {
                     position: 'flex',
