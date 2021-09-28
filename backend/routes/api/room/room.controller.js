@@ -48,8 +48,8 @@ exports.accessRoom = async (req, res, next) => {
         const roomId = req.body['roomId'];
         const password = req.body['password'];
         console.log(roomId, password)
-        const { correct, success } = await fireBaseRoom.accessRoom({ roomId, password });
-        const accessResult = JSON.stringify({ correct, success });
+        const { correct, success, vacancy } = await fireBaseRoom.accessRoom({ roomId, password });
+        const accessResult = JSON.stringify({ correct, success, vacancy });
         res.send(accessResult)
     } catch (error) {
         next(error)
