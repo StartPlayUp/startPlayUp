@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import CreateButton from "./CreateButton";
 
 import {
@@ -22,21 +22,21 @@ import {
     Title
 } from "../Style/CreateRoomStyle";
 import HEADER from "./webHeader";
-import { RoomIdContext } from "../../../../Routes/peerStore";
+import {RoomIdContext} from "../../../../Routes/peerStore";
 
-const BODY = ({ location, history }) => {
+const BODY = ({location, history}) => {
     const [gameList, setGameList] = useState([])
     const [isSecret, setIsSecret] = useState(false)
     const [password, setPassword] = useState("")
     const [room, setRoom] = useState()
-    const { roomID, setRoomID } = useContext(RoomIdContext)
+    const {roomID, setRoomID} = useContext(RoomIdContext)
     const nickname = (fullNickname) => {
         return fullNickname.substring(0, fullNickname.indexOf(' '))
     }
     const historyPush = (room) => {
         console.log('history.push rooms : ')
         console.log(room)
-        setRoomID({ id: room.roomId, state: true })
+        setRoomID({id: room.roomId, state: true})
         history.push({
             pathname: "/waitingRoom",
             state: {
@@ -55,10 +55,12 @@ const BODY = ({ location, history }) => {
         } else {
             console.log('onClick rooms')
             // =======================
-            const { success } = await getRoom(room.roomId);
+            const {vacancy} = await getRoom(room.roomId);
             // ==================
-            if (success) {
+            if (vacancy) {
                 historyPush(room);
+            }else{
+                alert('인원 초과!!')
             }
         }
     };
@@ -111,14 +113,13 @@ const BODY = ({ location, history }) => {
             }
         }
         try {
-            const roomObject = await axios(getRoomConfig);
+            const roomObject = await axios(getRoomConfig)
             console.log('getRoom')
             console.log(roomObject.data)
-            return roomObject.data;
-        }
-        catch (error) {
+            return {vacancy: roomObject.data.vacancy}
+        } catch (error) {
             console.error(error)
-            return {}
+            return {vacancy:false}
         }
     }
     //메인 페이지 방들
@@ -127,7 +128,7 @@ const BODY = ({ location, history }) => {
             .post('http://localhost:4000/api/room/getRooms')
             .then(function (result) {
                 console.log("getRooms post useEffect");
-                const { roomList, success } = result.data;
+                const {roomList, success} = result.data;
                 success && setGameList(roomList);
             })
             .catch(function (error) {
@@ -141,7 +142,7 @@ const BODY = ({ location, history }) => {
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
-                        <CreateButton type={"submit"} />
+                        <CreateButton type={"submit"}/>
                     </ButtonArea>
                     <RoomFrame>
                         <UserList background={"white"}>
@@ -167,7 +168,7 @@ const BODY = ({ location, history }) => {
                                     </Users>
                                     <Users width={"15vw"}>{rooms.gameType}</Users>
                                     <Users width={"30vw"}>{`${rooms.roomTitle}  ${rooms.secret ? "🔐" : ""
-                                        }`}</Users>
+                                    }`}</Users>
                                     <Users width={"15vw"}>{nickname(rooms.hostname)}</Users>
                                     <Users width={"5vw"} align={"center"}>
                                         {`${rooms.guestList.length} / ${rooms.roomLimit}`}

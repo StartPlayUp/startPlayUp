@@ -79,6 +79,9 @@ exports.getObjectOfRoom = async ({ roomId }) => {
         if (!result.empty) {
             success = true;
         }
+        console.log('getRoom-----------')
+        console.log(roomWithoutPassword.roomLimit)
+        console.log(roomWithoutPassword.guestList.length)
         vacancy = roomWithoutPassword.roomLimit > roomWithoutPassword.guestList.length
     }
     else {
@@ -86,8 +89,6 @@ exports.getObjectOfRoom = async ({ roomId }) => {
     }
     return { roomObject: room, success, vacancy };
 }
-
-
 
 exports.joinRoom = async ({ roomId, nickname }) => {
     try {
