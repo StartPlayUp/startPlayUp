@@ -82,7 +82,7 @@ const UserInformationModal = ({ setOpen }) => {
                             <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
                         </S.ColumnFrame>
                         <S.ColumnFrame>
-                            <p>{`const: ${information.report.count}`}</p>
+                            <p>{`count: ${information.report.count}`}</p>
                             <p>{`time : ${Date(information.report.time.second)}`}</p>
                         </S.ColumnFrame>
                     </S.RowFrame>}
