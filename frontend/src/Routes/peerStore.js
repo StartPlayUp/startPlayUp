@@ -74,6 +74,7 @@ export const PeerStore = ({ children }) => {
     let voicePeersRef = useRef([]);
 
     const peersDestory = (socketRef, peers, voicePeers) => {
+        console.log("peersDestory !!!!!!!")
         if (socketRef.current) {
             socketRef.current.disconnect();
             socketRef.current = undefined;
@@ -92,6 +93,7 @@ export const PeerStore = ({ children }) => {
 
     useEffect(() => {
         if (roomID.id !== "" && roomID.state) {
+            console.log(peers)
             socketRef.current = io.connect("/");
             if (Peer.WEBRTC_SUPPORT) {
                 connectDataPeer({ socketRef, roomID: roomID.id, peersRef, setPeers, myNickname, setPeerData });//데이터 피어 생성

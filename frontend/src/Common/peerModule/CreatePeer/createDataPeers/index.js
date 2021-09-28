@@ -8,44 +8,63 @@ export const connectDataPeer = ({ socketRef, roomID, peersRef, setPeers, myNickn
         return false;
     })
     socketRef.current.on("all users", users => {
-        const peers = [];
-        users.forEach(userID => {
-            const peer = createPeer(userID, socketRef.current.id);
-            peersRef.current.push({
-                peerID: userID,
-                peer,
-                nickname: "",
+        try {
+            const peers = [];
+            users.forEach(userID => {
+                const peer = createPeer(userID, socketRef.current.id);
+                peersRef.current.push({
+                    peerID: userID,
+                    peer,
+                    nickname: "",
+                });
+                peers.push({ peer, nickname: "연결중" });
             });
-            peers.push({ peer, nickname: "연결중" });
-        });
-        setPeers(peers);
+            setPeers(peers);
+        }
+        catch (error) {
+            console.log(error)
+        }
     });
 
     socketRef.current.on("user joined", ({ signal, callerID, peerNickname }) => {
-        const peer = addPeer(signal, callerID);
-        peersRef.current.push({
-            peerID: callerID,
-            peer,
-            nickname: peerNickname,
-        })
-        console.log("[debug : addPeer : ", peersRef.current);
-        setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+        try {
+            const peer = addPeer(signal, callerID);
+            peersRef.current.push({
+                peerID: callerID,
+                peer,
+                nickname: peerNickname,
+            })
+            console.log("[debug : addPeer : ", peersRef.current);
+            setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+        }
+        catch (error) {
+            console.log(error)
+        }
     });
 
     socketRef.current.on("receiving returned signal", ({ id, signal, peerNickname }) => {
-        const item = peersRef.current.find(p => p.peerID === id);
-        item.peer.signal(signal);
-        item.nickname = peerNickname;
-        setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
-        console.log("receiving returned signal", peerNickname);
+        try {
+            const item = peersRef.current.find(p => p.peerID === id);
+            item.peer.signal(signal);
+            item.nickname = peerNickname;
+            setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+            console.log("receiving returned signal", peerNickname);
+        } catch (error) {
+            console.log(error);
+        }
     });
 
     socketRef.current.on("disconnect user", (socketID) => {
-        console.log(socketID);
-        console.log("disconnect user : ", peersRef.current);
-        peersRef.current = peersRef.current.filter((i) => i.peerID !== socketID)
-        console.log("disconnect user : ", peersRef.current);
-        setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+        try {
+            console.log(socketID);
+            console.log("disconnect user : ", peersRef.current);
+            peersRef.current = peersRef.current.filter((i) => i.peerID !== socketID)
+            console.log("disconnect user : ", peersRef.current);
+            setPeers(peersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+        }
+        catch (error) {
+            console.log(error)
+        }
     });
     function createPeer(userToSignal, callerID) {
         //처음 webrtc를 연결할 때 이미 방에 연결되어있는 피어 추가
