@@ -81,8 +81,8 @@ const CreateRoom = ({ isOpen, close }) => {
       history.push({
         pathname: "/waitingRoom",
         state: {
-          input: input,
-          game: game,
+          roomTitle: input,
+          gameType: game,
           roomLimit: roomLimit,
           hostname: localStorage.getItem("nickname"),
         },
