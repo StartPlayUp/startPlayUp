@@ -19,7 +19,6 @@ export const HeadLeft = styled.div`
     display: flex;
     justify-content: flex-start;
     color : white;
-    font-weight: lighter;
     font-size : ${(props) => props.fontSize};
 `;
 

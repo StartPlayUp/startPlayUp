@@ -32,6 +32,8 @@ const HEADER = () => {
     const {checkAuth, logout} = useContext(AuthStore)
     const [redirect, setRedirect] = useState(false);
     const [open, setOpen] = useState(false)
+    const nickname = localStorage.getItem('nickname')
+
     const logoutHandler = () => {
         axios.get(`http://localhost:4000/api/auth/logout`, {withCredentials: true})
             .then(function (response) {
@@ -43,6 +45,9 @@ const HEADER = () => {
             });
         setOpen(false)
     }
+    const onClick = () => {
+        nickname === null ? setOpen(false) : setOpen(true)
+    }
     return (
         <>
             <HeadColor>
@@ -53,17 +58,16 @@ const HEADER = () => {
                         </Link>
                     </HeadLeft>
                     <HeadRight>
+
                         <img
                             src={menu}
                             alt="menu"
-                            onClick={() => setOpen(true)}
+                            onClick={onClick}
                         />
                         {open && <NavigationBar
                             open={open}
                             setOpen={setOpen}
                             logout={logoutHandler}
-                            transition={'all 0.5s'}
-                            // onRequestClose={() => setOpen(false)}
                         />}
                     </HeadRight>
                 </HeadStyle>

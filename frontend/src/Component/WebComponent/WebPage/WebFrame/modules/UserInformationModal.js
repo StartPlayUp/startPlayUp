@@ -1,42 +1,44 @@
 import Modal from 'react-modal'
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Button } from "../../Style/WaitingRoomStyle";
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
+import {Button} from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
+import {useCookies} from "react-cookie";
 
-const UserInformationModal = ({ setOpen }) => {
+const UserInformationModal = ({open, setOpen}) => {
     const history = useHistory()
+    const cookies = useCookies()
     const [information, setInformation] = useState(undefined)
+    const fullNickname = localStorage.getItem('nickname')
+    const nickname = (fullNickname) => {
+        return fullNickname.substring(0, fullNickname.indexOf(' '))
+    }
     const onClick = () => {
         setOpen(false)
         history.push({
             pathname: '/main'
         })
     }
-
     useEffect(() => {
-        const getUserConfig = {
+        const getUserFromNicknameConfig = {
             method: 'get',
-            url: `http://localhost:4000/api/user/getUser`,
+            url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname(fullNickname)}`,
         }
-        axios(getUserConfig)
+        axios(getUserFromNicknameConfig)
             .then(function (response) {
-                console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : `, response.data);
-                const userInfo = response.data.user;
-                setInformation(userInfo);
+                console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname(fullNickname)} : `, response.data);
+                setInformation(response.data.user)
             })
             .catch(function (error) {
                 console.log(error);
-            });
+            })
     }, [])
 
     //cookie 기준으로 가져오기
-
-    console.log('information : ' + information)
     return (
         <Modal
-            isOpen={open}
+            isOpen={true}
             style={{
                 overlay: {
                     position: 'flex',
@@ -74,18 +76,18 @@ const UserInformationModal = ({ setOpen }) => {
             <S.ModalColumn>
                 <S.ModalTitle>사용자 정보</S.ModalTitle>
                 {information !== undefined &&
-                    <S.RowFrame>
-                        <S.ColumnFrame>
-                            <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
-                            <p>{`win : ${information.numberOfGames.win}`}</p>
-                            <p>{`lose : ${information.numberOfGames.lose}`}</p>
-                            <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
-                        </S.ColumnFrame>
-                        <S.ColumnFrame>
-                            <p>{`const: ${information.report.count}`}</p>
-                            <p>{`time : ${Date(information.report.time.second)}`}</p>
-                        </S.ColumnFrame>
-                    </S.RowFrame>}
+                <S.RowFrame>
+                    <S.ColumnFrame>
+                        <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
+                        <p>{`win : ${information.numberOfGames.win}`}</p>
+                        <p>{`lose : ${information.numberOfGames.lose}`}</p>
+                        <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
+                    </S.ColumnFrame>
+                    <S.ColumnFrame>
+                        <p>{`count : ${information.report.count}`}</p>
+                        {/*<p>{`time : ${Date(information.report.time.second)}`}</p>*/}
+                    </S.ColumnFrame>
+                </S.RowFrame>}
             </S.ModalColumn>
             <Button onClick={onClick}>
                 닫기
@@ -95,3 +97,17 @@ const UserInformationModal = ({ setOpen }) => {
 }
 UserInformationModal.propTypes = {};
 export default UserInformationModal
+// const getInformation = () => {
+//     const getUserFromNicknameConfig = {
+//         method: 'get',
+//         url: `http://localhost:4000/api/user/getUserFromNickname?nickname=${nickname(fullNickname)}`,
+//     }
+//     axios(getUserFromNicknameConfig)
+//         .then(function (response) {
+//             console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname(fullNickname)} : `, response.data);
+//             setInformation(response.data.user)
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+// }
