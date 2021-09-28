@@ -17,7 +17,7 @@ const TextField = styled.div`
   padding:10px;
   border: rgb(0, 0, 0);
   flex-direction: column;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
   height:${props => props.width || 600}px;
   width:inherit;
   border-right:3px solid #ececec;
