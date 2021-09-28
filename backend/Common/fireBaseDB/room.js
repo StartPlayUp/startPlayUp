@@ -131,23 +131,25 @@ exports.disconnectRoom = async ({ roomId, nickname }) => {
 exports.accessRoom = async ({ roomId, password }) => {
     let correct = false;
     let success = false;
+    let vacancy = false;
     if (isString(roomId) &&
         isString(password)) {
         const encrypted = crypto.createHmac('sha1', config.secret)
             .update(password)
             .digest('base64')
         const result = await db.collection('rooms').doc(roomId).get();
-        const { password: roomPassword } = result.data();
+        const { password: roomPassword, roomLimit, guestList } = result.data();
         if (!result.empty) {
             success = true;
             if (encrypted === roomPassword) {
                 correct = true;
             }
+            vacancy = roomLimit >= guestList.length
         }
         // console.log("get Object Of Room : ", result)
     }
     else {
         console.error("getObjectOfRoom error");
     }
-    return { correct, success };
+    return { correct, success, vacancy };
 }
