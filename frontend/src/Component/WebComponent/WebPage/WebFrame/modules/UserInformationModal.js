@@ -1,11 +1,11 @@
 import Modal from 'react-modal'
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Button } from "../../Style/WaitingRoomStyle";
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
+import {Button} from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
 
-const UserInformationModal = ({ setOpen }) => {
+const UserInformationModal = ({setOpen}) => {
     const history = useHistory()
     const [information, setInformation] = useState(undefined)
     const onClick = () => {
@@ -31,7 +31,9 @@ const UserInformationModal = ({ setOpen }) => {
             });
     }, [])
 
-    //cookie 기준으로 가져오기
+    const onDeletePlayer = () => {
+
+    }
 
     console.log('information : ' + information)
     return (
@@ -62,8 +64,9 @@ const UserInformationModal = ({ setOpen }) => {
                     WebkitOverflowScrolling: 'touch',
                     borderRadius: '15px',
                     outline: 'none',
-                    padding: '20px',
+                    padding: '15px',
                     fontSize: '14sp',
+                    justifyContent: 'center',
                     alignItems: 'left',
                     flexDirection: 'column',
                     color: 'black',
@@ -74,22 +77,28 @@ const UserInformationModal = ({ setOpen }) => {
             <S.ModalColumn>
                 <S.ModalTitle>사용자 정보</S.ModalTitle>
                 {information !== undefined &&
-                    <S.RowFrame>
-                        <S.ColumnFrame>
-                            <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
-                            <p>{`win : ${information.numberOfGames.win}`}</p>
-                            <p>{`lose : ${information.numberOfGames.lose}`}</p>
-                            <p>{`rate : ${ information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose)}`}</p>
-                        </S.ColumnFrame>
-                        <S.ColumnFrame>
-                            <p>{`count: ${information.report.count}`}</p>
-                            <p>{`time : ${Date(information.report.time.second)}`}</p>
-                        </S.ColumnFrame>
-                    </S.RowFrame>}
+                <S.RowFrame>
+                    <S.ColumnFrame>
+                        <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
+                        <p>{`win : ${information.numberOfGames.win}`}</p>
+                        <p>{`lose : ${information.numberOfGames.lose}`}</p>
+                        <p>{`rate : ${information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose)}`}</p>
+                    </S.ColumnFrame>
+                    <S.ColumnFrame>
+                        <p>{`count: ${information.report.count}`}</p>
+                        <p>{`time : ${Date(information.report.time.second)}`}</p>
+                    </S.ColumnFrame>
+
+                </S.RowFrame>
+                }
+                <Button onClick={onDeletePlayer}>
+                    회원 탈퇴
+                </Button>
+                <Button onClick={onClick}>
+                    닫기
+                </Button>
             </S.ModalColumn>
-            <Button onClick={onClick}>
-                닫기
-            </Button>
+
         </Modal>
     )
 }

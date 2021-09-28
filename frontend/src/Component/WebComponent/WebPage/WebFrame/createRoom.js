@@ -45,6 +45,10 @@ const CreateRoom = ({ isOpen, close }) => {
     setRoomLimit(e.target.value);
   };
   const onCLick = async () => {
+    if(input.replaceAll(' ','').length===0){
+      alert('제목을 입력하세요')
+      return
+    }
     const createRoomConfig = {
       method: "post",
       url: "http://localhost:4000/api/room/createRoom",

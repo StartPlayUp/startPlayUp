@@ -25,15 +25,14 @@ import HEADER from "./webHeader";
 import {RoomIdContext} from "../../../../Routes/peerStore";
 
 const BODY = ({location, history}) => {
-    console.log(location);
-    console.log(history);
-
-    const [gameList, setGameList] = useState([]);
-    const [isSecret, setIsSecret] = useState(false);
-    const [password, setPassword] = useState("");
-    const [room, setRoom] = useState();
-
+    const [gameList, setGameList] = useState([])
+    const [isSecret, setIsSecret] = useState(false)
+    const [password, setPassword] = useState("")
+    const [room, setRoom] = useState()
     const {roomID, setRoomID} = useContext(RoomIdContext)
+    const nickname = (fullNickname)=>{
+        return fullNickname.substring(0,fullNickname.indexOf(' '))
+    }
     const historyPush = (room) => {
         console.log('history.push rooms : ')
         console.log(room)
@@ -144,9 +143,10 @@ const BODY = ({location, history}) => {
                                     <Users width={"15vw"}>{rooms.gameType}</Users>
                                     <Users width={"30vw"}>{`${rooms.roomTitle}  ${rooms.secret ? "🔐" : ""
                                     }`}</Users>
-                                    <Users width={"15vw"}>{rooms.hostname}</Users>
+                                    <Users width={"15vw"}>{nickname(rooms.hostname)}</Users>
                                     <Users width={"5vw"} align={"center"}>
-                                        {rooms.roomLimit}
+                                        {`${rooms.guestList.length} / ${rooms.roomLimit}`}
+
                                     </Users>
                                 </UserList>
                             );
