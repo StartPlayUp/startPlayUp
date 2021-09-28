@@ -2,8 +2,6 @@ import React, {useEffect, useState, useContext} from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
 import {useLocation} from 'react-router-dom';
-//import ChatComponent from '../../ChatFrame/frontend/src/Component/ChatComponent'
-//import {Store} from '../../ChatFrame/frontend/src/store'
 import {
     BodyFrame,
     Button,
@@ -26,6 +24,7 @@ import PlayerList from "./PlayerList";
 import {sendDataToPeers} from "Common/peerModule/sendToPeers"
 import {GAME_START_SIGN} from 'Constants/peerDataTypes';
 
+
 const Yutnori = 'Yutnori'
 const AVALON = 'AVALON'
 const YACHT = 'YATCH'
@@ -36,12 +35,15 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     const gameType = location.state.gameType
     const roomTitle = location.state.roomTitle
     const hostname = location.state.hostname
-    const guestList = location.state.guestList
+    const fullNickname = localStorage.getItem('nickname')
     const [players, setPlayers] = useState([])
     const {roomID, setRoomID} = useContext(RoomIdContext);
     const {peers} = useContext(PeersContext);
     const {peerData} = useContext(PeerDataContext);
     const history = useHistory()
+    const nickname = (fullNickname)=>{
+        return fullNickname.substring(0,fullNickname.indexOf(' '))
+    }
     const gameTypeChecker = () => {
         switch (gameType) {
             case Yutnori:
@@ -83,28 +85,6 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         console.log("waiting room hostname : ", hostname)
         gameTypeChecker()
     }
-    useEffect(async (roomID) => {
-        const getRoomConfig = {
-            method: 'post',
-            url: 'http://localhost:4000/api/room/getRoom',
-            data: {
-                roomID,
-            }
-        }
-        try {
-            const roomObject = await axios(getRoomConfig);
-            console.log('roomObject')
-            console.log(roomObject.data)
-            setPlayers(roomObject.data)
-            return roomObject.data;
-        } catch (error) {
-            console.error(error)
-            return {}
-        }
-    }, [])
-
-    //peer 통신으로 연결된 사람들 확인하기
-
     //게임 시작 버튼
     useEffect(() => {
         if (peerData.type === GAME_START_SIGN) {
@@ -112,11 +92,12 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
             gameTypeChecker()
         }
     }, [peerData])
-    console.log(guestList)
 
-    useEffect(() => {
-        console.log(guestList)
-    }, guestList)
+    //peer 통신으로 연결된 사람들 확인하기
+    useEffect(()=>{
+        console.log('peers')
+        console.log(peers[0])
+    },[peers])
 
     return (
         <BodyFrame>
@@ -146,6 +127,16 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                         {/*        <Users>{user}</Users>*/}
                         {/*    </UserList>*/}
                         {/*))}*/}
+                        <UserList>
+                            <Users>{nickname(fullNickname)}</Users>
+                        </UserList>
+                        {
+                            peers.map((player,index)=>(
+                                <UserList key={index}>
+                                    <Users>{nickname(player.nickname)}</Users>
+                                </UserList>
+                            ))
+                        }
                     </WaitingUsers>
                     <ChattingList>
                         <ChatComponent
