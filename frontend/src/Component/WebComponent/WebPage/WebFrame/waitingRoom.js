@@ -27,7 +27,7 @@ import {GAME_START_SIGN} from 'Constants/peerDataTypes';
 
 const Yutnori = 'Yutnori'
 const AVALON = 'AVALON'
-const YACHT = 'YATCH'
+const YACHT = 'YatchDice'
 const MINE_SEARCH = 'MINE_SEARCH'
 
 const WaitingRoom = ({chatList, chatShow, setChatList}) => {
