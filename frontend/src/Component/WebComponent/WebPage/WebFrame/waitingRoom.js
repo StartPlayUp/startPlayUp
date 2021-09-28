@@ -27,7 +27,7 @@ import {GAME_START_SIGN} from 'Constants/peerDataTypes';
 
 const Yutnori = 'Yutnori'
 const AVALON = 'AVALON'
-const YACHT = 'YatchDice'
+const YachtDice = 'YachtDice'
 const MINE_SEARCH = 'MINE_SEARCH'
 
 const WaitingRoom = ({chatList, chatShow, setChatList}) => {
@@ -45,22 +45,29 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
         return fullNickname.substring(0,fullNickname.indexOf(' '))
     }
     const gameTypeChecker = () => {
+        const state = {
+            roomTitle: roomTitle,
+            gameType: gameType,
+            hostname,
+        }
         switch (gameType) {
             case Yutnori:
                 history.push({
                     pathname: "/YUT",
-                    state: {
-                        roomTitle: roomTitle,
-                        gameType: gameType,
-                        hostname,
-                    },
+                    state,
                 });
                 break;
-            case YACHT:
-                history.push('/Yacht');
+            case YachtDice:
+                history.push({
+                    pathname:'/YachtDice',
+                    state,
+                })
                 break;
             case AVALON:
-                history.push('/AVALON');
+                history.push({
+                    pathname:'/AVALON',
+                    state,
+                })
                 break;
             case MINE_SEARCH:
                 history.push('/MineSearch');
