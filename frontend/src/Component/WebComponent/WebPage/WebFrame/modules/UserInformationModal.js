@@ -79,7 +79,7 @@ const UserInformationModal = ({ setOpen }) => {
                             <p>{`nickname : ${information.nickname.split(' ')[0]}`}</p>
                             <p>{`win : ${information.numberOfGames.win}`}</p>
                             <p>{`lose : ${information.numberOfGames.lose}`}</p>
-                            <p>{`rate : ${(information.numberOfGames.win + information.numberOfGames.lose) / information.numberOfGames.lose}`}</p>
+                            <p>{`rate : ${ information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose)}`}</p>
                         </S.ColumnFrame>
                         <S.ColumnFrame>
                             <p>{`count: ${information.report.count}`}</p>
