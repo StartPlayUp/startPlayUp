@@ -114,7 +114,6 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                 <ButtonArea>
                     <LeftButtonsArea>
                         <Button onClick={gameStart}>시작</Button>
-                        <Button>준비</Button>
                     </LeftButtonsArea>
                     <RightButtonsArea>
                         <Button margin={'0'} onClick={() => {

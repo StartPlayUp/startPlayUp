@@ -12,11 +12,7 @@ export default {
         name: "",
         route: "/user/:id"
     },
-    setting: {
-        name: "Setting",
-        route: "/main",
-        bottom: true
-    },
+
     signout: {
         name: "Signout",
         route: "/signout",

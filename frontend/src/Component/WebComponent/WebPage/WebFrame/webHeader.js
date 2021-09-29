@@ -62,7 +62,6 @@ const HEADER = () => {
                         </Link>
                     </HeadLeft>
                     <HeadRight>
-
                         <img
                             src={menu}
                             alt="menu"

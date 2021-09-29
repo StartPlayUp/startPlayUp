@@ -16,9 +16,6 @@ function NavigationBar({open,setOpen,logout}) {
                 <Dashboard isOpen={open} isSetOpen={setOpen} routes={routes}>
                     <Switch>
                         <Route exact path={routes.main.route}/>
-                        <Route path={routes.setting.route}>
-                            <Setting />
-                        </Route>
                         <Route path={routes.users.route}>
                             <User open={false} setOpen={setOpen}/>
                         </Route>
