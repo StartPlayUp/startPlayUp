@@ -52,8 +52,6 @@ export const Button = styled.button`
   border: 0;
   padding: 5px 15px 5px 15px;
   text-decoration: none;
-  margin-right: 30px;
-  margin-right: ${props => props.margin};
 `;
 
 export const MainList = styled.div`

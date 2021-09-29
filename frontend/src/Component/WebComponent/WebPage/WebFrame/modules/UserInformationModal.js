@@ -5,14 +5,15 @@ import {Button} from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
 import {Route} from "react-router";
-import { LoginApp } from "Component/WebComponent/WebPage";
+import {LoginApp} from "Component/WebComponent/WebPage";
 import {useCookies} from "react-cookie";
+import {Close} from "../../Style/CreateRoomStyle";
 
 const UserInformationModal = ({setOpen}) => {
     const history = useHistory()
     const [information, setInformation] = useState(undefined)
     const fullNickname = localStorage.getItem('nickname')
-    const [cookies,removeCookies] = useCookies()
+    const [cookies, removeCookies] = useCookies()
     const nickname = fullNickname.substring(0, fullNickname.indexOf(' '))
     const onClick = () => {
         setOpen(false)
@@ -80,8 +81,8 @@ const UserInformationModal = ({setOpen}) => {
                     position: 'absolute',
                     top: '15%',
                     left: '60%',
-                    width: '20%',
-                    height: '25%',
+                    width: '12%',
+                    height: '28%',
                     border: '2px solid purple',
                     background: '#FFFFF3',
                     overflow: 'auto',
@@ -99,29 +100,30 @@ const UserInformationModal = ({setOpen}) => {
             }}
         >
             <S.ModalColumn>
-                <S.ModalTitle>사용자 정보</S.ModalTitle>
-                {information !== undefined &&
-                <S.RowFrame>
-                    <S.ColumnFrame>
-                        <p>{`nickname : ${nickname}`}</p>
-                        <p>{`win : ${information.numberOfGames.win}`}</p>
-                        <p>{`lose : ${information.numberOfGames.lose}`}</p>
-                        <p>{`rate : ${information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose)}`}</p>
-                    </S.ColumnFrame>
-                    <S.ColumnFrame>
-                        <p>{`count: ${information.report.count}`}</p>
-                        <p>{`time : ${Date(information.report.time.second)}`}</p>
-                    </S.ColumnFrame>
-
-                </S.RowFrame>
-                }
-                <Button onClick={deleteUserFromNickname}>
-                    회원 탈퇴
-                </Button>
-                <Button onClick={onClick}>
-                    닫기
-                </Button>
+                <Close onClick={onClick}>&times;</Close>
+                <S.ColumnFrame>
+                    <S.ModalTitle>사용자 정보</S.ModalTitle>
+                    {information !== undefined &&
+                    <S.RowFrame>
+                        <S.ColumnFrame>
+                            &nbsp;
+                            <div>{`nickname : ${nickname}`}</div>
+                            &nbsp;
+                            <div>{`win : ${information.numberOfGames.win}`}</div>
+                            &nbsp;
+                            <div>{`lose : ${information.numberOfGames.lose}`}</div>
+                            &nbsp;
+                            <div>{`rate : ${Math.floor(information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose) * 100)}%`}</div>
+                            &nbsp;
+                            <div>{`reported: ${information.report.count}`}</div>
+                        </S.ColumnFrame>
+                    </S.RowFrame>
+                    }
+                </S.ColumnFrame>
             </S.ModalColumn>
+            <Button onClick={deleteUserFromNickname}>
+                회원 탈퇴
+            </Button>
         </Modal>
     )
 }

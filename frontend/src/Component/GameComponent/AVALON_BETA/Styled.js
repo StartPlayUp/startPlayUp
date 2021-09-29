@@ -365,9 +365,9 @@ const stroll = keyframes`
 export const ModalTitle = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  //justify-content: center;
   font-size: 24px;
-  margin: 10px;
+  margin: 5px;
 `
 export const ModalColumn = styled.div`
   flex-wrap: wrap;
@@ -377,6 +377,9 @@ export const ModalColumn = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+export const ModalRow = styled.div`
+    
 `
 export const WalkContainer = styled.div`
   display: inline-block;

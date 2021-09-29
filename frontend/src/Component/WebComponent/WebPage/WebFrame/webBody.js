@@ -59,7 +59,7 @@ const BODY = ({location, history}) => {
             // ==================
             if (vacancy) {
                 historyPush(room);
-            }else{
+            } else {
                 alert('인원 초과!!')
             }
         }
@@ -95,6 +95,8 @@ const BODY = ({location, history}) => {
                 console.log("roomId and RoomPassword check : ", response.data);
                 if (response.data.success && response.data.correct && response.data.vacancy) {
                     historyPush(room)
+                } else if (response.data.success && response.data.correct !== response.data.vacancy) {
+                    alert('인원 초과 !!')
                 } else {
                     alert('error')
                 }
@@ -119,7 +121,7 @@ const BODY = ({location, history}) => {
             return {vacancy: roomObject.data.vacancy}
         } catch (error) {
             console.error(error)
-            return {vacancy:false}
+            return {vacancy: false}
         }
     }
     //메인 페이지 방들
