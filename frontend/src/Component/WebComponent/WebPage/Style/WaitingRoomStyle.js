@@ -32,8 +32,8 @@ export const ButtonArea = styled.div`
 export const WaitingUsers = styled.div`
   display: flex;
   flex-direction: column;
-  width: 500px;
-  height: 550px;
+  flex-basis: 50%;
+  height: 650px;
   background: #FFFFF3;
 `
 export const LeftButtonsArea = styled.div`
@@ -71,7 +71,7 @@ export const UserList = styled.div`
 `
 
 export const ChattingList = styled.div`
-  flex-basis: 50%;
+  flex-basis: 45%;
   flex-direction: column;
   background-color: white;
   border: 3px solid lightgray;
