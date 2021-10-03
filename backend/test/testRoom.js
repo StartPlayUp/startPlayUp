@@ -67,7 +67,8 @@ const accessRoom = () => {
         data: {
             roomId: 'mzi1ffZclHG8puYOiQbI',
             password: 'asdfqwer'
-        }
+        },
+        withCredentials: true
     }
     axios(accessRoomConfig)
         .then(function (response) {

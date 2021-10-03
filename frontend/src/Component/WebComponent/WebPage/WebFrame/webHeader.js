@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import {
     HeadColor,
     HeadStyle,
@@ -6,13 +6,13 @@ import {
     HeadLeft
 } from "../Style/WebFrameStyle";
 import menu from 'images/white-menu.png';
-import {Link, useHistory, Redirect} from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 import styled from "styled-components";
-import {AuthStore} from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
+import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 import Modal from 'react-modal'
 import NavigationBar from "./index";
 import SlideBar from "./layout/SlideBar";
-import {useCookies} from "react-cookie";
+import { useCookies } from "react-cookie";
 
 const axios = require('axios');
 
@@ -29,16 +29,17 @@ const StyledMenuAttribute = styled.button`
 `;
 
 const HEADER = () => {
+    axios.defaults.withCredentials = true;
     const history = useHistory();
-    const {checkAuth, logout} = useContext(AuthStore)
+    const { checkAuth, logout } = useContext(AuthStore)
     const [redirect, setRedirect] = useState(false);
     const [open, setOpen] = useState(false)
     const nickname = localStorage.getItem('nickname')
-    const [cookies,removeCookies] = useCookies()
+    const [cookies, removeCookies] = useCookies()
 
     console.log(nickname)
     const logoutHandler = () => {
-        axios.get(`http://localhost:4000/api/auth/logout`, {withCredentials: true})
+        axios.get(`http://localhost:4000/api/auth/logout`, { withCredentials: true })
             .then(function (response) {
                 logout(history)
                 // setRedirect(true);
@@ -57,7 +58,7 @@ const HEADER = () => {
             <HeadColor>
                 <HeadStyle>
                     <HeadLeft fontSize={"32px"}>
-                        <Link to="/" style={{textDecoration: 'none'}}>
+                        <Link to="/" style={{ textDecoration: 'none' }}>
                             <StyledMainLogo>StartPlayUp</StyledMainLogo>
                         </Link>
                     </HeadLeft>

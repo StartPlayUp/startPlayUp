@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import * as S from '../Style/WebFrameStyle'
 import axios from "axios";
-import {useLocation} from "react-router";
+import { useLocation } from "react-router";
 
-const PlayerList = ({roomId}) => {
-    const [users,setUsers] = useState([])
+const PlayerList = ({ roomId }) => {
+    axios.defaults.withCredentials = true;
+    const [users, setUsers] = useState([])
     const nickname = localStorage.getItem('nickname')
-    useEffect(async ({roomId}) => {
+    useEffect(async ({ roomId }) => {
         const getRoomConfig = {
             method: 'post',
             url: 'http://localhost:4000/api/room/getRoom',
@@ -21,7 +22,7 @@ const PlayerList = ({roomId}) => {
             console.error(error)
             return {}
         }
-    },[])
+    }, [])
     return (
         users.map((user, index) => (
             <S.UserList>

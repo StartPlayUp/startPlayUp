@@ -21,6 +21,7 @@ import {
 import axios from "axios";
 
 const CreateRoom = ({ isOpen, close }) => {
+  axios.defaults.withCredentials = true;
   const history = useHistory();
   const [input, setInput] = useState("");
   const [game, setGame] = useState("Yutnori");
@@ -45,7 +46,7 @@ const CreateRoom = ({ isOpen, close }) => {
     setRoomLimit(e.target.value);
   };
   const onCLick = async () => {
-    if(input.replaceAll(' ','').length===0){
+    if (input.replaceAll(' ', '').length === 0) {
       alert('제목을 입력하세요')
       return
     }
@@ -119,7 +120,7 @@ const CreateRoom = ({ isOpen, close }) => {
                   <Option>
                     <div>
                       option : &nbsp;
-                      <Select  value={game} onChange={onGameChange}>
+                      <Select value={game} onChange={onGameChange}>
                         <Games value={"Yut"}>윷놀이</Games>
                         <Games value={"YachtDice"}>요트 다이스</Games>
                         <Games value={"AVALON"}>아발론</Games>
@@ -133,7 +134,7 @@ const CreateRoom = ({ isOpen, close }) => {
                           <Games
                             key={index}
                             value={index}>
-                              {index}
+                            {index}
                           </Games>
                         ))}
                       </Select>

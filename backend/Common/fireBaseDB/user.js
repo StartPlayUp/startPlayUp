@@ -402,14 +402,14 @@ exports.checkLocalLogin = async ({ email, password }) => {
     let user = {}
     let docId = undefined;
     try {
-        console.log("checkLocalLogin function");
+        // console.log("checkLocalLogin function");
         if (isString(email) &&
             isString(password)) {
             const snapshot = await db.collection('users')
                 .where("email", "==", email)
                 .where('password', '==', password)
                 .get();
-            console.log("snapshot.empty && snapshot._size", snapshot.empty, snapshot._size)
+            // console.log("snapshot.empty && snapshot._size", snapshot.empty, snapshot._size)
             if (!snapshot.empty && snapshot._size === 1) {
                 snapshot.forEach(async doc => {
                     success = true;

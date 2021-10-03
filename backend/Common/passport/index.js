@@ -9,19 +9,19 @@ const { getSnsInUser, getUserFromNickname, checkLocalLogin, getUserFromEmail, cr
 
 module.exports = (passport) => {
     passport.serializeUser(function (user, done) {
-        console.log('passport session save: ', user.email);
+        console.log('passport session save email: ', user.email);
         done(null, user.email);
     });
 
     passport.deserializeUser(async (email, done) => {
-        console.log("deserializeUser : ", email);
+        console.log("passport logged Email : ", email);
         // if (nickname !== undefined) {
         //     const returnValueFromDb = await getUserFromNickname({ nickname });
         //     done(null, returnValueFromDb.user)
         // }
         // const returnValueFromDb = await getUserFromNickname({ nickname });
         const returnValueFromDb = await getUserFromEmail({ email });
-        console.log("returnValueFromDb", returnValueFromDb)
+        // console.log("returnValueFromDb", returnValueFromDb)
         done(null, returnValueFromDb.user)
     });
 
@@ -36,7 +36,6 @@ module.exports = (passport) => {
             async (req, accessToken, refreshToken, profile, done) => {
                 console.log("profile : ", profile);
                 console.log("req.isAuthenticated() : ", req.isAuthenticated())
-                // console.log('req : ', req)
                 console.log(req.protocol + '://' + req.get('host') + "||||" + req.originalUrl)
                 var _profile = profile._json;
                 const { provider } = profile;
@@ -49,6 +48,7 @@ module.exports = (passport) => {
                     const { duplicate } = await isDuplicateEmail({ email })
                     if (success) {
                         // sns로 가입된 계정이 있을 때
+                        console.log("SUCCESS LOGIN sns로 가입된 계정이 있을 때");
                         done(null, { nickname: user.nickname, email: user.email, docId });
                     }
                     else {
@@ -64,21 +64,25 @@ module.exports = (passport) => {
                             })
                             if (success) {
                                 // 회원가입 성공이면
+                                console.log("SUCCESS LOGIN 회원가입 성공이면");
                                 done(null, { nickname, email, docId })
                             }
                             else {
                                 // 회원가입 실패이면
-                                done("네이버 간편 회원가입 실패");
+                                console.log("FAIL LOGIN");
+                                done("네이버 간편 회원가입 실패", false, { message: "네이버 간편 회원가입 실패" });
                             }
                         }
                         else {
                             // 이메일이 중복되었다면 로그인 실패 및 가입불가 안내
-                            done("로그인 실패 : 해당 이메일로 가입된 계정이 있습니다.");
+                            console.log("FAIL LOGIN");
+                            done("로그인 실패 : 해당 이메일로 가입된 계정이 있습니다.", false, { message: "로그인 실패 : 해당 이메일로 가입된 계정이 있습니다." });
                         }
                     }
                 }
                 else {
-                    done("로그인 실패 : 이메일을 받아와야 합니다.");
+                    console.log("FAIL LOGIN");
+                    done("로그인 실패 : 이메일을 받아와야 합니다.", false, { message: "로그인 실패 : 이메일을 받아와야 합니다." });
                 }
 
             }
@@ -170,7 +174,8 @@ module.exports = (passport) => {
                 passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
             },
             async (req, email, password, done) => {
-                console.log("asdf", email, password)
+                console.log("login Email : ", email)
+                console.log("login Password : ", password)
                 const { user, success, docId } = await checkLocalLogin({ email, password });
                 if (success) {
                     console.log("로컬 로그인 성공");

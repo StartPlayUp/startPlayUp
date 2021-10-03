@@ -1,15 +1,16 @@
 import Modal from 'react-modal'
-import React, {useEffect, useState} from "react";
-import {Link, useHistory} from "react-router-dom";
-import {Button} from "../../Style/WaitingRoomStyle";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { Button } from "../../Style/WaitingRoomStyle";
 import * as S from '../../../../GameComponent/AVALON_BETA/Styled'
 import axios from "axios";
-import {Route} from "react-router";
-import {LoginApp} from "Component/WebComponent/WebPage";
-import {useCookies} from "react-cookie";
-import {Close} from "../../Style/CreateRoomStyle";
+import { Route } from "react-router";
+import { LoginApp } from "Component/WebComponent/WebPage";
+import { useCookies } from "react-cookie";
+import { Close } from "../../Style/CreateRoomStyle";
 
-const UserInformationModal = ({setOpen}) => {
+const UserInformationModal = ({ setOpen }) => {
+    axios.defaults.withCredentials = true;
     const history = useHistory()
     const [information, setInformation] = useState(undefined)
     const fullNickname = localStorage.getItem('nickname')
@@ -104,20 +105,20 @@ const UserInformationModal = ({setOpen}) => {
                 <S.ColumnFrame>
                     <S.ModalTitle>사용자 정보</S.ModalTitle>
                     {information !== undefined &&
-                    <S.RowFrame>
-                        <S.ColumnFrame>
-                            &nbsp;
-                            <div>{`nickname : ${nickname}`}</div>
-                            &nbsp;
-                            <div>{`win : ${information.numberOfGames.win}`}</div>
-                            &nbsp;
-                            <div>{`lose : ${information.numberOfGames.lose}`}</div>
-                            &nbsp;
-                            <div>{`rate : ${Math.floor(information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose) * 100)}%`}</div>
-                            &nbsp;
-                            <div>{`reported: ${information.report.count}`}</div>
-                        </S.ColumnFrame>
-                    </S.RowFrame>
+                        <S.RowFrame>
+                            <S.ColumnFrame>
+                                &nbsp;
+                                <div>{`nickname : ${nickname}`}</div>
+                                &nbsp;
+                                <div>{`win : ${information.numberOfGames.win}`}</div>
+                                &nbsp;
+                                <div>{`lose : ${information.numberOfGames.lose}`}</div>
+                                &nbsp;
+                                <div>{`rate : ${Math.floor(information.numberOfGames.win / (information.numberOfGames.win + information.numberOfGames.lose) * 100)}%`}</div>
+                                &nbsp;
+                                <div>{`reported: ${information.report.count}`}</div>
+                            </S.ColumnFrame>
+                        </S.RowFrame>
                     }
                 </S.ColumnFrame>
             </S.ModalColumn>
