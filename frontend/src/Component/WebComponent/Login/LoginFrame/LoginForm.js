@@ -45,7 +45,24 @@ const Button = styled.button`
     text-align: center;
     justify-content: center;
 `
+const SignUpButtonArea = styled.button`
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #a593e0;
+    border-radius: 2px;
+    border: none;
+    padding: 10px;
+    text-decoration: none;
+    transition: all 0.5s;
 
+    :hover {
+     background-color: green;
+    }
+    :active{
+        background-color: red;
+    }
+     
+`
 const Input = styled.input`
     display:flex;
     margin : 0 auto 12px auto;
@@ -146,7 +163,7 @@ function LoginForm() {
                                     <Image onClick={KakaoLoginButton}  src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
                                 </LoginConnectArea>
                             </>}
-                        <button onClick={ onClick}>{signUpButton ? <div>로그인 하기</div>:<div>회원가입 하기</div> }</button>
+                        <SignUpButtonArea onClick={ onClick}>{signUpButton ? <div>로그인 하기</div>:<div>회원가입 하기</div> }</SignUpButtonArea>
                     </Frame>
                 )
             )

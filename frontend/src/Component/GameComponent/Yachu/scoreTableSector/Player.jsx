@@ -80,7 +80,7 @@ const Player = () => {
     }
     return (
         <PlayerData.Consumer>
-            {({ playerData, nowTurn, endGame, halt, selectData, rollCount }) => (
+            {({ playerData, nowTurn, endGame, halt, selectData, rollCount, gameResultUpload }) => (
                 <Fragment>
                     <Div>
                         <Modal
@@ -101,7 +101,7 @@ const Player = () => {
                                 }
                             }}
                         />
-                        <GameOverScreen playerData={playerData} endGame={endGame} />
+                        <GameOverScreen playerData={playerData} endGame={endGame} gameResultUpload={gameResultUpload} />
                         {lowerState && <LowerWord>{wordState}</LowerWord>}
                         <ScoreTable playerData={playerData} nowTurn={nowTurn} lowerState={lowerState} halt={halt} selectData={selectData} rollCount={rollCount} />
                     </Div>

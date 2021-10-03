@@ -178,9 +178,19 @@ const Dice = () => {
         console.log("y", y);
         console.log("홀드 박스 높이-주사위 높이", height);
         setPlaceY(bottom);
-        if (hostname === localStorage.getItem('nickname')) {
+        console.log(hostname)
+        if (hostname.includes('undefined')) {
+            const notUndefindedhostname = hostname.replace('undifined', "")
+            console.log("수상한 언디파인 제거",notUndefindedhostname)
+            if (notUndefindedhostname === localStorage.getItem('nickname')) {
+                startGame();
+            }
+        } else {
+           if (hostname === localStorage.getItem('nickname')) {
             startGame();
+        } 
         }
+        
     }, [])
     
     return (

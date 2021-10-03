@@ -45,10 +45,12 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
                     history.push(response.data.redirectPath);
                 }
                 else {
+                    console.log("asdasdasdzxczxczxczxczcxzcxzc")
                     alert("가입된 아이디가 없습니다.")
                 }
             })
             .catch(function (error) {
+                alert("가입된 아이디가 없습니다.")
                 console.log("에러메세지:", error);
             });
     };
@@ -69,7 +71,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
             .then(function (response) {
                 if (response.data.success) {
                     console.log("createUser check : ", response.data);
-                    alert("회원가입에 성공하였습니다. 다시 로그인 해")
+                    alert("회원가입에 성공하였습니다.")
                     setTimeout(function () {
                         location.reload();
                     }, 3000);

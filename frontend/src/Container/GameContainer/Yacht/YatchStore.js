@@ -4,6 +4,8 @@ import { sendDataToPeers } from 'Common/peerModule/sendToPeers/index.js';
 import { PeerDataContext, PeersContext, UserContext } from 'Routes/peerStore';
 import { GAME, YACHT } from 'Constants/peerDataTypes.js';
 import { map } from "lodash";
+import axios from "axios";
+
 
 const ROLLDICE = "RollDice";
 const SELECT = "SELECT";
@@ -24,7 +26,8 @@ const initialState={
     hold: [false, false, false, false, false],
     rollCount: 3,
     playerData: [ {
-        nickname:"",
+        nickname: "",
+        fullNickname:"",
         selectPoint: {
             highRanking:{
                 ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -49,6 +52,7 @@ const initialState={
         },
         {
             nickname: "",
+            fullNickname:"",
             selectPoint: {
                 highRanking:{
                     ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -142,7 +146,9 @@ const YachuProvider = ({ children }) => {
     const [halt,setHalt]=useState(false);
     const [nowTurnNickname, setTurnName] = useState(nickname); // 누구의 턴인지 저장하는 state
     const [endGame,setGame]=useState(false);
-    
+    const [resultScore, setResultScore] = useState({
+        
+    })
     function RollDice() {
         let diceArray = [0, 0, 0, 0, 0];
         let counter = [...state.count]
@@ -187,6 +193,7 @@ const YachuProvider = ({ children }) => {
         holding[value] = !holding[value];
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { hold:holding} });
         dispatch({ type: DICEHOLD, holding })
+        console.log(state.playerData[0].fullNickname)
     }
     function selectData(name,value) {
         const player = [...state.playerData]
@@ -266,10 +273,73 @@ const YachuProvider = ({ children }) => {
         //만약 2P가 먹지 못한 점수가 있는지 확인
         let completeTestHighRanking = !completeHighRanking.includes(false);
         let completeTestLowerRanking = !completeLowerRanking.includes(false);
-        if (completeTestHighRanking&&completeTestLowerRanking) {
+        if (completeTestHighRanking && completeTestLowerRanking) {
             setGame(true);
             const verification="ENDGAME"
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification,endGame:true } })
+        }
+    }
+    function gameResultUpload(history) {
+        const player = [...state.playerData]
+        if (player[0].result > player[1].result && player[0].fullNickname===nicknameString) {
+                const winnerLoserList=[{
+                    "nickname": player[0].fullNickname,
+                    "winner":true
+                }, {
+                    "nickname": player[1].fullNickname,
+                    "winner":false
+                }]
+            const resultUpload = {
+                method: 'post',
+                url: 'http://localhost:4000/api/user/updateGameResult',
+                data:{
+                    userList: winnerLoserList
+                }
+            }
+            console.log(resultUpload)
+                axios(resultUpload)
+                    .then(function (response) {
+                        console.log(response)
+                        if (response.data.success) {
+                            console.log("데이터 업로드 성공")
+                            history.push('/main')
+                        } else {
+                            alert("데이터 업로드에 실패했습니다. 대기방으로 돌아갑니다.")
+                            setTimeout(function () {
+                                history.push('/main')
+                            }, 2000);
+                        }
+                    })
+            } else if(player[0].result < player[1].result && player[1].fullNickname===nicknameString) {
+                const winnerLoserList=[{
+                    "nickname": player[1].fullNickname,
+                    "winner":true
+                }, {
+                    "nickname": player[0].fullNickname,
+                    "winner":false
+                }]
+                const resultUpload = {
+                    method: 'post',
+                    url: 'http://localhost:4000/api/user/updateGameResult',
+                    data:{
+                    userList: winnerLoserList
+                }
+                }
+                axios(resultUpload)
+                    .then(function (response) {
+                        if (response.data.success) {
+                            console.log("데이터 업로드 성공")
+                            history.push('/main')
+                        } else {
+                            alert("데이터 업로드에 실패했습니다. 대기방으로 돌아갑니다.")
+                            setTimeout(function () {
+                                history.push('/main')
+                            }, 2000);
+                        }
+                })
+        }
+        else {
+            history.push('/main')
         }
     }
     function StartGame() {
@@ -280,7 +350,8 @@ const YachuProvider = ({ children }) => {
         const peersNickname = peersNicknameArray[0]
         console.log(nickname)
         playerData= [{
-            nickname:nickname,
+            nickname: nickname,
+            fullNickname:nicknameString,
             selectPoint: {
                 highRanking:{
                     ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -305,6 +376,7 @@ const YachuProvider = ({ children }) => {
             },
             {
                 nickname: peersNickname,
+                fullNickname:peersNicknameString,
                 selectPoint: {
                     highRanking:{
                         ace: [0, false], //true 획득한 점수 , false 아직 획득 하지 않은 점수
@@ -443,7 +515,7 @@ const YachuProvider = ({ children }) => {
         <DiceStore.Provider value={{
                 dice:state.dice,hold:state.hold,rollCount:state.rollCount,halt:halt,StartGame,RollDice,diceHold}}>
             <PlayerData.Provider value={//게임 데이터를 표시
-                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,endGame:endGame,rollCount:state.rollCount,selectData }}>
+                {playerData:state.playerData,halt:halt,nowTurn:nowTurn,endGame:endGame,rollCount:state.rollCount,selectData,gameResultUpload }}>
                 <PlayerNickName.Provider value={{playerOne:state.playerData[0].nickname,playerTwo:state.playerData[1].nickname,nowTurn:nowTurn}}>
                     <TimerData.Provider value={{
                         nowTurn:nowTurn,timeOver}}>

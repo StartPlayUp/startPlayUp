@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext, useReducer, memo } from "react";
 import Modal from 'react-modal';
 import styled, { keyframes } from 'styled-components';
+import { useHistory } from 'react-router-dom';
 const Table = styled.table`
     position:absolute;
     background-color: white;
@@ -40,8 +41,9 @@ const Button = styled.button`
         color:white;
     }
 `
-function GameOverScreen({ playerData, endGame }) {
+function GameOverScreen({ playerData, endGame, gameResultUpload }) {
     const [winnerNickName, setWinner] = useState('');
+    let history = useHistory();
     function gameOverResult() {
         if (playerData[0].result > playerData[1].result) {
             setWinner(playerData[0].nickname + '님의 승리!');
@@ -52,6 +54,9 @@ function GameOverScreen({ playerData, endGame }) {
         else {
             setWinner('Draw!')
         }
+    }
+    function onClick() {
+        gameResultUpload(history);
     }
     useEffect(() => {
         gameOverResult();
@@ -108,7 +113,7 @@ function GameOverScreen({ playerData, endGame }) {
                     </tr>
                 </tbody>
             </Table>
-            <Button>대기방으로 돌아가기</Button>
+            <Button onClick={onClick}>대기방으로 돌아가기</Button>
         </Modal>
     );
 }

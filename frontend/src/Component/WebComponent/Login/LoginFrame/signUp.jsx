@@ -48,6 +48,9 @@ const SingUpButton = styled.button`
     .active{
         background:#b10202;
     }
+    .hover{
+        background: green;
+    }
 `
 const StyleCheckDiv = styled.div`
     color: ${props => props.check === false && 'red'};
