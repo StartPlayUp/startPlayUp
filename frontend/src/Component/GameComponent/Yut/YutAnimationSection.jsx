@@ -8,11 +8,9 @@ const Background = styled.div`
 	background: #A6634D;
 	border-radius: 30px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-    flex-grow: 4.5;
+    flex-grow: 0.5;
     justify-content: center;
 	align-items: center;
-
 	height:570px;
 `;
 

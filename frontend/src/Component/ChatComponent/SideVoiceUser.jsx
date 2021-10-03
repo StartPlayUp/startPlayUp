@@ -44,7 +44,9 @@ const App = ({ peers }) => {
 
     return (
         <ConnectUsers>
-            <Button><PeersList>{localStorage.getItem('nickname').split(' ')[0] + '(나)'}</PeersList></Button>
+            <Button>
+                <PeersList>{localStorage.getItem('nickname').split(' ')[0] + '(나)'}</PeersList>
+            </Button>
             {peers.map((i) => <Button onClick={() => onClickSendReport(i.nickname)}>
                 <PeersList key={i.peer}>{i.nickname.split(' ')[0]}</PeersList>
             </Button>)

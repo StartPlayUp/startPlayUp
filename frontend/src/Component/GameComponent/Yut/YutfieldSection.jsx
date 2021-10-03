@@ -85,13 +85,17 @@ const PlaceButton = styled.button`
 `;
 
 const YutDiv = styled.div`
+    display:flex;
+    justify-content: center;
+    /* align-items: center; */
     margin: 10px 10px 40px 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius:30px;
-    width:550px;
+    width:580px;
     height:500px;
     padding:20px 40px 50px 40px;
     background:white;
+    flex-grow: 0.5;
 `;
 
 const StyleImg = styled.img`
@@ -127,11 +131,10 @@ const YutFiledSection = () => {
         endPosition: { x: 0, y: 0 }
     })
 
-    // const [forceUpdateCount, forceUpdate] = useReducer((prev) => prev + 1, 0)
 
     const [forceUpdate, setForceUpdate] = useState(Array(35).fill(0));
 
-    const forUpdateHandler = (index) => {
+    const forceUpdateHandler = (index) => {
         setForceUpdate(prev => {
             prev[index] += 1;
             return prev
@@ -167,7 +170,7 @@ const YutFiledSection = () => {
                 if (catchEnemyHorse) {
                     setTextModalHandler("꺼-억");
                 }
-                forUpdateHandler(index);
+                forceUpdateHandler(index);
                 dispatch({ type: MOVE_HORSE_ON_PLAYER_SECTION, state: newState });
                 sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: newState, reducerActionType: MOVE_HORSE_ON_PLAYER_SECTION } });
             }
@@ -196,22 +199,41 @@ const YutFiledSection = () => {
                 // const testState = test(newState);
                 // dispatch({ type: MOVE_HORSE_ON_FIELD_SECTION, state: testState });
                 // sendDataToPeers(GAME, { nickname, peers, game: YUT, data: { state: testState, reducerActionType: MOVE_HORSE_ON_FIELD_SECTION } });
-                forUpdateHandler(index);
+                forceUpdateHandler(index);
                 console.log("x y 좌표 ", state.selectHorse, index)
                 const boxPos = boxPosition.current.getBoundingClientRect();
                 const start = fieldPlacePositions.current[state.selectHorse].getBoundingClientRect();
                 const end = fieldPlacePositions.current[index].getBoundingClientRect()
+                // console.log(boxPos)
+                // console.log(start)
+                // console.log(end)
+                // console.log("start x", start.left, (start.width / 2), boxPos.left, start.left + (start.width / 2) - boxPos.left)
+                // console.log("start y", start.top, (start.height / 2), boxPos.top, start.top + (start.height / 2) - boxPos.top)
+                // console.log("end x", end.left, (end.width / 2), boxPos.left, end.left + (end.width / 2) - boxPos.left)
+                // console.log("end y", end.top, (end.height / 2), boxPos.top, end.top + (end.height / 2) - boxPos.top)
+
+
                 const startCenter = {
                     x: start.left + (start.width / 2) - boxPos.left,
                     y: start.top + (start.height / 2) - boxPos.top
+                    // x: start.left + (start.width / 2),
+                    // y: start.top + (start.height / 2)
                 }
 
                 const endCenter = {
                     x: end.left + (end.width / 2) - boxPos.left,
                     y: end.top + (end.height / 2) - boxPos.top
+                    // x: end.left + (end.width / 2),
+                    // y: end.top + (end.height / 2)
                 }
                 console.log("x y 좌표 중앙 ", startCenter, endCenter)
                 console.log(playerData, horsePosition, horsePosition[state.selectHorse]['player'])
+                console.log({
+                    color: playerData[horsePosition[state.selectHorse]['player']].color,
+                    numberOfHorse: horsePosition[state.selectHorse]['horses'],
+                    startPosition: startCenter,
+                    endPosition: endCenter
+                })
                 setPositionOfHorseAnimation({
                     color: playerData[horsePosition[state.selectHorse]['player']].color,
                     numberOfHorse: horsePosition[state.selectHorse]['horses'],
@@ -273,7 +295,7 @@ const YutFiledSection = () => {
 
 
     return (
-        <YutDiv ref={boxPosition}>
+        <YutDiv className="box" ref={boxPosition}>
             <MoveHorseAnimation position={positionOfHorseAnimation}></MoveHorseAnimation>
             <GridContainer onContextMenu={(e) => OnContextMenu(e)} className="container">
                 {

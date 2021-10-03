@@ -61,7 +61,6 @@ const Player = styled.div`
     justify-content: center;
     align-items: center;
     padding:10px;
-    /* background-color:${props => props.player.color !== undefined ? props.player.color : '#C4C4C4'}; */
     background-color:white;
     background:${props => props.player !== undefined ? props.player.color + '80' : '#C4C4C4'};
     border:solid 2px ${props => props.player.color !== undefined ? props.player.color : '#C4C4C4'};

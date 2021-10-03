@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext, useRef, useReducer } from 'react';
 import styled, { keyframes } from 'styled-components';
+import axios from 'axios';
 
 import crown from 'image/crown.png'
 
@@ -204,6 +205,28 @@ const winnerModal = () => {
         setPlayerPosition([left, top]);
     }
 
+    useEffect(async () => {
+        if (playerData.length === winner.length && winner.length !== 0) {
+            const userList = []
+            winner.forEach((i, index) => {
+                if (index === 0) {
+                    userList.push({ nickname: i, winner: true })
+                }
+                else {
+                    userList.push({ nickname: i, winner: false })
+                }
+            })
+            const config = {
+                method: "post",
+                url: "http://localhost:4000/api/user/updateGameResult",
+                data: { userList },
+                withCredentials: true
+            }
+            const { data } = await axios(config);
+            alert(data.success);
+        }
+    }, [winner])
+
     return (
         <>
             {
@@ -219,7 +242,7 @@ const winnerModal = () => {
                                 {
                                     winner.map((i, index) => <div key={index} ref={el => playerRef.current[index] = el}>
                                         <div>{index + 1} 등</div>
-                                        <Winner>{i}</Winner>
+                                        <Winner>{i.split(' ')[0]}</Winner>
                                     </div>)
                                 }
                             </WinnerSection>

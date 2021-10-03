@@ -6,8 +6,8 @@ const insertNicknameAtCookies = (req, res) => {
 
 exports.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
-        console.log("is Authenticated");
-        insertNicknameAtCookies(req, res);
+        console.log("is Authenticated : ", req.user.nickname);
+        // insertNicknameAtCookies(req, res);
         next();
     }
     else {
@@ -17,11 +17,11 @@ exports.isLoggedIn = function (req, res, next) {
     }
 };
 
-exports.haveNickname = function (req, res, next) {
-    console.log("req.user.docId : ", req.user)
-    insertNicknameAtCookies(req, res);
-    next();
-};
+// exports.haveNickname = function (req, res, next) {
+//     console.log("req.user.docId : ", req.user)
+//     // insertNicknameAtCookies(req, res);
+//     next();
+// };
 
 
 exports.insertNicknameWithRedirectForSns = function (req, res, next) {
