@@ -338,14 +338,12 @@ exports.updateGameResult = async ({ userList }) => {
         return isString(user.nickname) !== undefined && isBoolean(user.winner) !== undefined
     }
     try {
-        console.log(userList)
-        const newUserList = JSON.parse(userList)
-        if (isObject(newUserList) &&
-            newUserList.length > 0 &&
-            newUserList.some(checkUserList)) {
+        if (isObject(userList) &&
+            userList.length > 0 &&
+            userList.some(checkUserList)) {
             const batch = db.batch();
             const userRef = db.collection('users')
-            newUserList.forEach(async ({ nickname, winner }) => {
+            userList.forEach(async ({ nickname, winner }) => {
                 batch.update(userRef.doc(nickname.split(' ')[1]), {
                     [`numberOfGames.${winner === true ? "win" : "lose"}`]: FieldValue.increment(1),
                 });
