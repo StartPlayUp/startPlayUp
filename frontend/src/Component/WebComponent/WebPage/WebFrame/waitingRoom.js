@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import WebHeader from './webHeader';
 import FOOTER from "./webFooter";
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
     BodyFrame,
     Button,
@@ -16,29 +16,29 @@ import {
     RightButtonsArea, WaitingUsers
 } from "../Style/WaitingRoomStyle";
 import ChatComponent from "../../../ChatComponent";
-import {PeersContext, PeerDataContext, RoomIdContext} from "../../../../Routes/peerStore";
-import {useHistory} from "react-router";
+import { PeersContext, PeerDataContext, RoomIdContext } from "../../../../Routes/peerStore";
+import { useHistory } from "react-router";
 import axios from "axios";
-import {Background, Users} from "../Style/WebFrameStyle";
+import { Background, Users } from "../Style/WebFrameStyle";
 import PlayerList from "./PlayerList";
-import {sendDataToPeers} from "Common/peerModule/sendToPeers"
-import {GAME_START_SIGN, mappingTable} from 'Constants/peerDataTypes';
+import { sendDataToPeers } from "Common/peerModule/sendToPeers"
+import { GAME_START_SIGN, mappingTable } from 'Constants/peerDataTypes';
 
 
 
-const WaitingRoom = ({chatList, chatShow, setChatList}) => {
+const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
     const gameType = location.state.gameType
     const roomTitle = location.state.roomTitle
     const hostname = location.state.hostname
     const fullNickname = localStorage.getItem('nickname')
     const [players, setPlayers] = useState([])
-    const {roomID, setRoomID} = useContext(RoomIdContext);
-    const {peers} = useContext(PeersContext);
-    const {peerData} = useContext(PeerDataContext);
+    const { roomID, setRoomID } = useContext(RoomIdContext);
+    const { peers } = useContext(PeersContext);
+    const { peerData } = useContext(PeerDataContext);
     const history = useHistory()
-    const nickname = (fullNickname)=>{
-        return fullNickname.substring(0,fullNickname.indexOf(' '))
+    const nickname = (fullNickname) => {
+        return fullNickname.substring(0, fullNickname.indexOf(' '))
     }
 
     const gameTypeChecker = () => {
@@ -57,7 +57,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                 break;
             case mappingTable.YACHT.game:
                 history.push({
-                    pathname:mappingTable.YACHT.path,
+                    pathname: mappingTable.YACHT.path,
                     state,
                 })
                 break;
@@ -97,29 +97,38 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
     }, [peerData])
 
     //peer 통신으로 연결된 사람들 확인하기
-    useEffect(()=>{
+    useEffect(() => {
         console.log('peers')
         console.log(peers[0])
-    },[peers])
+        console.log("changeReady : ", peers.every((p) => {
+            p.nickname.split(' ').length === 2;
+        }))
+    }, [peers])
+
 
     return (
         <BodyFrame>
-            <Background/>
+            <Background />
             <Room>
                 <Title>
                     <TitleSpan fontSize={"18px"} color={"red"}>{gameType}</TitleSpan>
                     <TitleSpan fontSize={"22px"} color={"black"}>{roomTitle}</TitleSpan>
                 </Title>
-                <hr/>
+                <hr />
                 <ButtonArea>
                     <LeftButtonsArea>
                         <Button onClick={gameStart}>시작</Button>
                     </LeftButtonsArea>
                     <RightButtonsArea>
-                        <Button margin={'0'} onClick={() => {
-                            setRoomID({...roomID, id: "", state: false});
-                            history.push('/main')
-                        }}>나가기</Button>
+                        {
+                            peers.every((p) => {
+                                return p.nickname.split(' ').length === 2;
+                            }) &&
+                            <Button test={true} margin={'0'} onClick={() => {
+                                setRoomID({ ...roomID, id: "", state: false });
+                                history.push('/main')
+                            }}>나가기</Button>
+                        }
                     </RightButtonsArea>
                 </ButtonArea>
                 <MainList>
@@ -133,7 +142,7 @@ const WaitingRoom = ({chatList, chatShow, setChatList}) => {
                             <Users>{nickname(fullNickname)}</Users>
                         </UserList>
                         {
-                            peers.map((player,index)=>(
+                            peers.map((player, index) => (
                                 <UserList key={index}>
                                     <Users>{nickname(player.nickname)}</Users>
                                 </UserList>
