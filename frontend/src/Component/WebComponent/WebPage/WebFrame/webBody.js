@@ -23,6 +23,7 @@ import {
 } from "../Style/CreateRoomStyle";
 import HEADER from "./webHeader";
 import { RoomIdContext } from "../../../../Routes/peerStore";
+import {ButtonAnimation} from "../../../GameComponent/AVALON_BETA/Styled";
 
 const BODY = ({ location, history }) => {
     const [gameList, setGameList] = useState([])
@@ -141,7 +142,6 @@ const BODY = ({ location, history }) => {
 
     return (
         <>
-            {/*<HEADER/>*/}
             <BodyFrame>
                 <BodyCenter>
                     <ButtonArea>
@@ -199,7 +199,9 @@ const BODY = ({ location, history }) => {
                                         </label>
                                     </ModalContents>
                                     <Footer>
-                                        <ResultButton onClick={passwordChecker}>
+                                        <ResultButton
+                                            background={'green'}
+                                            onClick={passwordChecker}>
                                             확인
                                         </ResultButton>
                                     </Footer>

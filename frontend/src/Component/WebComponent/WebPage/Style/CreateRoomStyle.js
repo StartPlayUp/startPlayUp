@@ -99,7 +99,7 @@ export const ResultButton = styled.button`
   width: 100%;
   font-size: 14px;
   padding: 5px;
-  background-color: ${props => props.color};
+  background: #A593E0;
   color: white;
 `
 export const Option = styled.label`
