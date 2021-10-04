@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -19,7 +19,8 @@ import {
   Option,
 } from "../Style/CreateRoomStyle";
 import axios from "axios";
-import {RoomIdContext} from "../../../../Routes/peerStore";
+import { RoomIdContext } from "../../../../Routes/peerStore";
+import { isFunction } from "Container/GameContainer/Yut/YutFunctionModule";
 
 const CreateRoom = ({ isOpen, close }) => {
   axios.defaults.withCredentials = true;
@@ -69,16 +70,21 @@ const CreateRoom = ({ isOpen, close }) => {
     try {
       const response = await axios(createRoomConfig);
       console.log("생성 id: ", response.data);
-      setRoomID({ id: response.data.roomID, state: true })
-      history.push({
-        pathname: "/waitingRoom",
-        state: {
-          roomTitle: input,
-          gameType: game,
-          roomLimit: roomLimit,
-          hostname: localStorage.getItem("nickname"),
-        },
-      });
+      if (response.data.success) {
+        setRoomID({ id: response.data.roomId, state: true })
+        history.push({
+          pathname: "/waitingRoom",
+          state: {
+            roomTitle: input,
+            gameType: game,
+            roomLimit: roomLimit,
+            hostname: localStorage.getItem("nickname"),
+          },
+        });
+      }
+      else {
+        alert("방 만들기 실패 로그인 끊김")
+      }
     } catch (error) {
       console.error(error);
     }
