@@ -27,6 +27,7 @@ const nodemailer = require("nodemailer");
 const mailConfig = require('./config').mailConfig;
 
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.secret));
 app.use(flash());

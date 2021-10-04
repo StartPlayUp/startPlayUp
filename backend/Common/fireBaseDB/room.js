@@ -60,7 +60,7 @@ exports.deleteRoom = async ({ roomId }) => {
 }
 
 exports.getListOfRooms = async () => {
-    const result = await db.collection('rooms').get()
+    const result = await db.collection('rooms').orderBy("timestamp", "desc").get()
     const roomList = result.docs.map(doc => {
         const { password, ...room } = doc.data();
         return { ...room, roomId: doc.id }

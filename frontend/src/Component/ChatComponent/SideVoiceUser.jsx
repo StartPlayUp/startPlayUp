@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Button } from '../WebComponent/WebPage/Style/WaitingRoomStyle'
 
 const ConnectUsers = styled.div`
     display:flex;
@@ -25,8 +26,10 @@ const PeersList = styled.div`
 
 `;
 
-const Button = styled.button`
-    margin-bottom:1px;
+const StyleButton = styled(Button)`
+     &:hover {
+       background-color: green;
+     }
 `;
 
 const App = ({ peers }) => {
@@ -44,12 +47,12 @@ const App = ({ peers }) => {
 
     return (
         <ConnectUsers>
-            <Button>
+            <StyleButton>
                 <PeersList>{localStorage.getItem('nickname').split(' ')[0] + '(나)'}</PeersList>
-            </Button>
-            {peers.map((i) => <Button onClick={() => onClickSendReport(i.nickname)}>
+            </StyleButton>
+            {peers.map((i) => <StyleButton onClick={() => onClickSendReport(i.nickname)}>
                 <PeersList key={i.peer}>{i.nickname.split(' ')[0]}</PeersList>
-            </Button>)
+            </StyleButton>)
             }
         </ConnectUsers >
     )
