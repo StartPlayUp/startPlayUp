@@ -12,7 +12,7 @@ const Box = styled.div`
 `;
 function END_GAME_FRAME() {
   const { gameState } = useContext(GameContext);
-
+ //해당 부분 추가 승패 결과 firebase에 추가할 수 있도록 하기
   return (
     <S.ColumnFrame>
       <S.NicknameTag>{gameState.winner}</S.NicknameTag>

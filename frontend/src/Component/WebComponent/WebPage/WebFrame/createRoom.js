@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -19,6 +19,7 @@ import {
   Option,
 } from "../Style/CreateRoomStyle";
 import axios from "axios";
+import {RoomIdContext} from "../../../../Routes/peerStore";
 
 const CreateRoom = ({ isOpen, close }) => {
   axios.defaults.withCredentials = true;
@@ -28,6 +29,7 @@ const CreateRoom = ({ isOpen, close }) => {
   const [checked, setChecked] = useState(false);
   const [password, setPassword] = useState("");
   const [roomLimit, setRoomLimit] = useState(2);
+  const { roomID, setRoomID } = useContext(RoomIdContext)
   const roomLimits = [2, 3, 4, 5, 6, 7, 8, 9, 10];
   const onChange = (e) => {
     setInput(e.target.value);
@@ -67,6 +69,7 @@ const CreateRoom = ({ isOpen, close }) => {
     try {
       const roomId = await axios(createRoomConfig);
       console.log("생성 id: ", roomId.data);
+      setRoomID({ id: roomId.data.roomID, state: true })
       history.push({
         pathname: "/waitingRoom",
         state: {
