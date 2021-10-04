@@ -101,6 +101,10 @@ export const ResultButton = styled.button`
   padding: 5px;
   background: #A593E0;
   color: white;
+  transition: all 0.5s;
+  &:hover {
+    background-color: green;
+  }
 `
 export const Option = styled.label`
   flex-direction: row;

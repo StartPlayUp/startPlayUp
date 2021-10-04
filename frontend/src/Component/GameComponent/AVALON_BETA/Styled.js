@@ -203,6 +203,10 @@ export const Button = styled.button`
   font-size: 18px;
   background-color: dimgray;
   color: white;
+  transition: all 0.5s;
+  &:hover {
+    background-color: green;
+  }
 `;
 export const SelectPlayer = styled.div`
   flex: 1 1 auto;

@@ -3,13 +3,18 @@ import CreateRoom from "./createRoom";
 import styled from 'styled-components';
 
 const Button = styled.button`
-    font-size: 14px;
-    color: #FFFFFF;
-    background-color: #A593E0;
-    border-radius: 2px;
-    border: 0;
-    padding: 10px;
-    text-decoration : none;
+  font-size: 14px;
+  color: #FFFFFF;
+  background-color: #A593E0;
+  border-radius: 2px;
+  border: 0;
+  padding: 10px;
+  text-decoration: none;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: green;
+  }
 `;
 
 function CreateButton() {
