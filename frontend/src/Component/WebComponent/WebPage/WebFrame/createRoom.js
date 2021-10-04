@@ -67,9 +67,9 @@ const CreateRoom = ({ isOpen, close }) => {
       },
     };
     try {
-      const roomId = await axios(createRoomConfig);
-      console.log("생성 id: ", roomId.data);
-      setRoomID({ id: roomId.data.roomID, state: true })
+      const response = await axios(createRoomConfig);
+      console.log("생성 id: ", response.data);
+      setRoomID({ id: response.data.roomID, state: true })
       history.push({
         pathname: "/waitingRoom",
         state: {
