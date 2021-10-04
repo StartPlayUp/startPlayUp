@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -19,7 +19,8 @@ import {
   Option,
 } from "../Style/CreateRoomStyle";
 import axios from "axios";
-import {RoomIdContext} from "../../../../Routes/peerStore";
+import { RoomIdContext } from "../../../../Routes/peerStore";
+import { isFunction } from "Container/GameContainer/Yut/YutFunctionModule";
 
 const CreateRoom = ({ isOpen, close }) => {
   axios.defaults.withCredentials = true;
@@ -29,7 +30,7 @@ const CreateRoom = ({ isOpen, close }) => {
   const [checked, setChecked] = useState(false);
   const [password, setPassword] = useState("");
   const [roomLimit, setRoomLimit] = useState(2);
-  const { roomID, setRoomID } = useContext(RoomIdContext)
+  const { roomID, setRoomID } = useContext(RoomIdContext);
   const roomLimits = [2, 3, 4, 5, 6, 7, 8, 9, 10];
   const onChange = (e) => {
     setInput(e.target.value);
@@ -48,9 +49,9 @@ const CreateRoom = ({ isOpen, close }) => {
     setRoomLimit(e.target.value);
   };
   const onCLick = async () => {
-    if (input.replaceAll(' ', '').length === 0) {
-      alert('제목을 입력하세요')
-      return
+    if (input.replaceAll(" ", "").length === 0) {
+      alert("제목을 입력하세요");
+      return;
     }
     const createRoomConfig = {
       method: "post",
@@ -69,16 +70,20 @@ const CreateRoom = ({ isOpen, close }) => {
     try {
       const response = await axios(createRoomConfig);
       console.log("생성 id: ", response.data);
-      setRoomID({ id: response.data, state: true })
-      history.push({
-        pathname: "/waitingRoom",
-        state: {
-          roomTitle: input,
-          gameType: game,
-          roomLimit: roomLimit,
-          hostname: localStorage.getItem("nickname"),
-        },
-      });
+      if (response.data.success) {
+        setRoomID({ id: response.data.roomId, state: true });
+        history.push({
+          pathname: "/waitingRoom",
+          state: {
+            roomTitle: input,
+            gameType: game,
+            roomLimit: roomLimit,
+            hostname: localStorage.getItem("nickname"),
+          },
+        });
+      } else {
+        alert("방 만들기 실패 로그인 끊김");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +97,7 @@ const CreateRoom = ({ isOpen, close }) => {
             <LoginModal>
               <Close onClick={close}>&times;</Close>
               <ModalContents onClick={isOpen}>
-                <Title size={'28px'}>StartPlayUp</Title>
+                <Title size={"28px"}>StartPlayUp</Title>
                 <RoomTitle>
                   <span>제목 : &nbsp; </span>
                   <Input
@@ -134,9 +139,7 @@ const CreateRoom = ({ isOpen, close }) => {
                       players : &nbsp;
                       <Select value={roomLimit} onChange={onRoomLimitChange}>
                         {roomLimits.map((index) => (
-                          <Games
-                            key={index}
-                            value={index}>
+                          <Games key={index} value={index}>
                             {index}
                           </Games>
                         ))}

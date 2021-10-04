@@ -36,13 +36,13 @@ export const connectVoicePeer = ({ socketRef, roomID, voicePeersRef, setVoicePee
             console.log("receiving returned voice signal", peerNickname);
         });
 
-        // socketRef.current.on("disconnect voice user", (socketID) => {
-        //     console.log(socketID);
-        //     console.log("disconnect voice user : ", voicePeersRef.current);
-        //     voicePeersRef.current = voicePeersRef.current.filter((i) => i.peerID !== socketID)
-        //     console.log("disconnect voice user : ", voicePeersRef.current);
-        //     setVoicePeers(voicePeersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
-        // });
+        socketRef.current.on("disconnect voice user", (socketID) => {
+            console.log(socketID);
+            console.log("disconnect voice user : ", voicePeersRef.current);
+            voicePeersRef.current = voicePeersRef.current.filter((i) => i.peerID !== socketID)
+            console.log("disconnect voice user : ", voicePeersRef.current);
+            setVoicePeers(voicePeersRef.current.map((i) => ({ peer: i.peer, nickname: i.nickname })));
+        });
 
     }).catch((e) => console.log(e));
 

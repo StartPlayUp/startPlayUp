@@ -32,10 +32,10 @@ exports.createRoom = async (req, res, next) => {
         console.log("check create Room")
         const { roomId, success } = await fireBaseRoom.createRoom({ room: roomConfig });
         if (success) {
-            res.send(roomId)
+            res.send({ roomId, success })
         }
         else {
-            res.send("")
+            res.send({ roomId, success })
         }
     } catch (error) {
         next(error)
