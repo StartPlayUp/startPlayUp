@@ -3,6 +3,8 @@ const { isString, isObject, isBoolean, isArray } = require('./Constant/checkType
 const admin = require('firebase-admin');
 const FieldValue = admin.firestore.FieldValue;
 const db = admin.firestore();
+const crypto = require('crypto')
+const config = require('../../config');
 
 exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
     let duplicate = false;
@@ -79,6 +81,7 @@ exports.isDuplicateEmail = async ({ email }) => {
 }
 
 exports.createUser = async ({ user }) => {
+
     try {
         // console.log(user)
         const usingSns = false;
@@ -103,11 +106,14 @@ exports.createUser = async ({ user }) => {
             // if (!(await this.isDuplicateNicknameAndEmail({ nickname, email })).duplicate) { // 둘다 체크할 때
             if (!(await this.isDuplicateEmail({ email })).duplicate) {
                 // const res = db.collection("users").doc(nickname);
+                const encrypted = crypto.createHmac('sha512', config.secret)
+                    .update(password)
+                    .digest('base64')
                 const res = db.collection("users");
                 const setReturn = await res.add({
                     nickname,
                     email,
-                    password,
+                    password: encrypted,
                     usingSns,
                     sns,
                     numberOfGames,
@@ -403,9 +409,12 @@ exports.checkLocalLogin = async ({ email, password }) => {
         // console.log("checkLocalLogin function");
         if (isString(email) &&
             isString(password)) {
+            const encrypted = crypto.createHmac('sha512', config.secret)
+                .update(password)
+                .digest('base64')
             const snapshot = await db.collection('users')
                 .where("email", "==", email)
-                .where('password', '==', password)
+                .where('password', '==', encrypted)
                 .get();
             // console.log("snapshot.empty && snapshot._size", snapshot.empty, snapshot._size)
             if (!snapshot.empty && snapshot._size === 1) {

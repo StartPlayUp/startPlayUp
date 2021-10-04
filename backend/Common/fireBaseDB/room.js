@@ -23,7 +23,7 @@ exports.createRoom = async ({ room }) => {
                 roomLimit,
             } = room;
             const res = db.collection("rooms");
-            const encrypted = crypto.createHmac('sha1', config.secret)
+            const encrypted = crypto.createHmac('sha512', config.secret)
                 .update(password)
                 .digest('base64')
             const addReturn = await res.add({
@@ -136,7 +136,7 @@ exports.accessRoom = async ({ roomId, password }) => {
     let vacancy = false;
     if (isString(roomId) &&
         isString(password)) {
-        const encrypted = crypto.createHmac('sha1', config.secret)
+        const encrypted = crypto.createHmac('sha512', config.secret)
             .update(password)
             .digest('base64')
         const result = await db.collection('rooms').doc(roomId).get();
