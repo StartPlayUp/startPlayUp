@@ -24,7 +24,8 @@ const FrontInformation = animated(S.ColumnFrame);
 const BackInformation = animated(S.Info);
 
 function MAIN_FRAME() {
-  const { gameState, dispatch, timeOver } = useContext(GameContext);
+  const { gameState, dispatch, timeOver, gameNickname } =
+    useContext(GameContext);
   const { peers } = useContext(PeersContext);
   const [click, setClick] = useState(false);
   const [role, setRole] = useState("");
@@ -104,7 +105,8 @@ function MAIN_FRAME() {
               <br />
               {gameState.usingPlayers.map((user, index) => (
                 <ul key={index}>
-                  <li>{`${user.nickname}`}</li>
+                  {/* <li>{`${user.nickname}`}</li> */}
+                  <li>{gameNickname(user.nickname)}</li>
                 </ul>
               ))}
             </S.User>
@@ -122,14 +124,16 @@ function MAIN_FRAME() {
           </FrontInformation>
         ) : (
           <BackInformation style={{ opacity, transform }}>
-            <PlayerRoles nickname={nickname} role={role} />
+            <PlayerRoles nickname={gameNickname(nickname)} role={role} />
             <S.ColumnFrame>
               {role === "Merlin" && <MerlinPlayer />}
               {role === "Percival" && <PercivalPlayer />}
               {evils.includes(role) &&
                 gameState.usingPlayers.map((user, index) => (
                   <div key={index}>
-                    {evils.includes(user.role) && <b>{user.nickname}</b>}
+                    {evils.includes(user.role) && (
+                      <b>{gameNickname(user.nickname)}</b>
+                    )}
                   </div>
                 ))}
             </S.ColumnFrame>

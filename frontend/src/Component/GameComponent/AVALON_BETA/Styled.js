@@ -110,7 +110,7 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     background-color: #FFFFF3;
-    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png');
+    /* background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png'); */
   }
 
   div {
@@ -372,7 +372,7 @@ export const ModalTitle = styled.div`
   //justify-content: center;
   font-size: 24px;
   margin: 5px;
-`
+`;
 export const ModalColumn = styled.div`
   flex-wrap: wrap;
   width: 100%;
@@ -381,10 +381,8 @@ export const ModalColumn = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
-export const ModalRow = styled.div`
-    
-`
+`;
+export const ModalRow = styled.div``;
 export const WalkContainer = styled.div`
   display: inline-block;
   position: relative;

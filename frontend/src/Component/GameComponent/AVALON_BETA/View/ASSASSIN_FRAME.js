@@ -10,7 +10,8 @@ import * as S from "../Styled";
 import WaitingView from "../animation/WaitingView";
 
 function ASSASSIN_FRAME() {
-  const { dispatch, gameState, buttonAnimation } = useContext(GameContext);
+  const { dispatch, gameState, buttonAnimation, gameNickname } =
+    useContext(GameContext);
   const gameData = { ...gameState };
   const { peers } = useContext(PeersContext);
   const [killedPlayer, setKilledPlayer] = useState("");
@@ -40,7 +41,7 @@ function ASSASSIN_FRAME() {
           (user, index) =>
             angels.includes(user.role) && (
               <label key={index}>
-                <S.MainVoteLabel>{user.nickname}</S.MainVoteLabel>
+                <S.MainVoteLabel>{gameNickname(user.nickname)}</S.MainVoteLabel>
                 <S.MainVoteCheckbox
                   type="radio"
                   name={"vote"}

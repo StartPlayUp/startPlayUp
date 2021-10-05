@@ -70,15 +70,16 @@ const Store = ({ children }) => {
   const { peers } = useContext(PeersContext);
   const [gameState, dispatch] = useReducer(reducer, initialData);
   const nickname = localStorage.getItem("nickname");
-  const gameNickname = nickname.substring(0,nickname.indexOf(" "));
   const selectedPlayers = () => {
     const temp = [];
     gameState.usingPlayers.map((user) => {
-      user.selected && temp.push(user.nickname);
+      user.selected && temp.push(gameNickname(user.nickname));
     });
     return temp;
   };
-
+  const gameNickname = (nickname) => {
+    return nickname.substring(0, nickname.indexOf(" "));
+  };
   const buttonAnimation = (e) => {
     let time;
     const { classList } = e.target;
@@ -189,6 +190,7 @@ const Store = ({ children }) => {
         selectedPlayers,
         buttonAnimation,
         timeOver,
+        gameNickname,
       }}
     >
       {children}

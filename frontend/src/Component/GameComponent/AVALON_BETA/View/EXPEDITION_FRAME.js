@@ -23,7 +23,6 @@ function EXPEDITION_FRAME() {
   };
 
   useEffect(() => {
-    // console.log(`expeditionPeers : ${peers}`);
     console.log(peers);
   }, [peers]);
 
@@ -43,27 +42,6 @@ function EXPEDITION_FRAME() {
       ) : (
         <WaitingView />
       )}
-      {/* {gameState.usingPlayers.map((user, index) =>
-          user.nickname === nickname && user.selected ? (
-            <ul key={index}>
-              {user.nickname === nickname && user.selected && (
-                <div>
-                  <li>{user.nickname}</li>
-                  {angels.includes(user.role) ? (
-                    <AngelsVote value={index} />
-                  ) : (
-                    <EvilsVote value={index} />
-                  )}
-                </div>
-              )}
-            </ul>
-          ) : (
-            <WaitingView />
-          )
-        )} */}
-      {/* <button onClick={() => dispatch({ type: EXPEDITION_CLICK, peers })}>
-        결과
-      </button> */}
     </S.RowFrame>
   );
 }
