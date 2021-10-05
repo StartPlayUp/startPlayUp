@@ -49,7 +49,7 @@ const HEADER = () => {
             });
         setOpen(false)
         removeCookies(cookies)
-        alert('회원 탈퇴되었습니다.')
+        alert('로그 아웃되었습니다.')
     }
     const onClick = () => {
         nickname === null ? setOpen(false) : setOpen(true)

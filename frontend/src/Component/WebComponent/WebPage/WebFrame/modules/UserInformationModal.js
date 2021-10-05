@@ -39,6 +39,7 @@ const UserInformationModal = ({ setOpen }) => {
                 localStorage.removeItem('nickname')
                 setOpen(false)
                 window.location.replace('/')
+                alert("회원 탈퇴되었습니다.")
             })
             .catch(function (error) {
                 console.log(error);

@@ -116,7 +116,7 @@ const START_GAME = (peers) => {
     const nickname = localStorage.getItem('nickname');
 
     // 나의 데이터 추가
-    const playerData = [{ nickname, color: YUT_PLAYER_COLOR[0], horses: 2, goal: 2 }];
+    const playerData = [{ nickname, color: YUT_PLAYER_COLOR[0], horses: 4, goal: 0 }];
     const playerHorsePosition = [{}];
 
     peers.slice(0, 3).forEach((i, index) => {

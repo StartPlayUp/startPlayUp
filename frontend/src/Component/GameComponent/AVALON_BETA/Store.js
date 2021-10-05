@@ -50,13 +50,7 @@ export const expandRoles = [
 ];
 
 export const initialData = {
-  usingPlayers: [
-    // { nickname: "user1", role: "", vote: "", toGo: "", selected: false },
-    // { nickname: "user2", role: "", vote: "", toGo: "", selected: false },
-    // { nickname: "user3", role: "", vote: "", toGo: "", selected: false },
-    // { nickname: "user4", role: "", vote: "", toGo: "", selected: false },
-    // {nickname: 'user5', role: '', vote: '', toGo: '', selected: false},
-  ],
+  usingPlayers: [],
   voteStage: 0, //5-voteStage 재투표 가능횟수
   expeditionStage: 0, //게임 expedition 진행 상황
   represent: 0, //원정 인원 정하는 대표자 index
@@ -76,6 +70,7 @@ const Store = ({ children }) => {
   const { peers } = useContext(PeersContext);
   const [gameState, dispatch] = useReducer(reducer, initialData);
   const nickname = localStorage.getItem("nickname");
+  const gameNickname = nickname.substring(0,nickname.indexOf(" "));
   const selectedPlayers = () => {
     const temp = [];
     gameState.usingPlayers.map((user) => {
