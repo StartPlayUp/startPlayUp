@@ -12,6 +12,7 @@ import MerlinPlayer from "../Ability/MerlinPlayer";
 import PercivalPlayer from "../Ability/PercivalPlayer";
 import {
   SET_COMPONENT,
+  START_FRAME,
   VOTE_CHECK,
   WAITING_FRAME,
 } from "../MVC/AVALON_Reducer";

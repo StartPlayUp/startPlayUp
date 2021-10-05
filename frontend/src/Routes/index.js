@@ -17,11 +17,11 @@ import { LoginApp } from "Component/WebComponent/WebPage";
 import { AuthStore } from "Component/WebComponent/Login/LoginFrame/Auth/AuthContext";
 import WebMain from "../Component/WebComponent/WebPage/WebFrame/webBody";
 import WaitingRoom from "../Component/WebComponent/WebPage/WebFrame/waitingRoom";
-import {mappingTable} from "../Constants/peerDataTypes";
-export const Yutnori = 'Yutnori'
-export const AVALON = 'AVALON'
-export const YachtDice = 'YachtDice'
-export const MINE_SEARCH = 'MINE_SEARCH'
+import { mappingTable } from "../Constants/peerDataTypes";
+export const Yutnori = "Yutnori";
+export const AVALON = "AVALON";
+export const YachtDice = "YachtDice";
+export const MINE_SEARCH = "MINE_SEARCH";
 
 import { CookiesProvider } from "react-cookie";
 
@@ -48,7 +48,6 @@ const AVALON_Global = createGlobalStyle`
     width: 100%;
     height: 100%;
     background-color: #e0e3da;
-    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png');
   }
 
   div {
@@ -65,8 +64,6 @@ export const CHAT_SHOW_BUTTON_STYLE = styled.button`
   background-image: url(${messageButtonImage});
   border-radius: 100%;
 `;
-
-
 
 export const CHAT_SHOW_DIV_STYLE = styled.div`
   position: absolute;
@@ -122,14 +119,14 @@ const app = () => {
                           setChatList={setChatList}
                           width={500}
                           chatShow={chatShow}
-                          position={'absolute'}
+                          position={"absolute"}
                         />
                       </GamePage>
                     )}
                   />
                   <Route
                     exact
-                    path= {mappingTable.MINE_SEARCH.path}
+                    path={mappingTable.MINE_SEARCH.path}
                     render={() => (
                       <GamePage>
                         <ChatComponent
@@ -137,7 +134,7 @@ const app = () => {
                           setChatList={setChatList}
                           width={500}
                           chatShow={chatShow}
-                          position={'absolute'}
+                          position={"absolute"}
                         />
                       </GamePage>
                     )}
@@ -153,11 +150,13 @@ const app = () => {
                           setChatList={setChatList}
                           width={450}
                           chatShow={chatShow}
-                          position={'absolute'}
+                          position={"absolute"}
                           style={{ border: "3px solid gray" }}
                         />
                         <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                          <CHAT_SHOW_BUTTON_STYLE
+                            onClick={chatOnClickHandler}
+                          />
                         </CHAT_SHOW_DIV_STYLE>
                       </GamePage>
                     )}
@@ -175,11 +174,13 @@ const app = () => {
                           setChatList={setChatList}
                           width={450}
                           chatShow={chatShow}
-                          position={'absolute'}
+                          position={"absolute"}
                           style={{ border: "3px solid gray" }}
                         />
                         <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                          <CHAT_SHOW_BUTTON_STYLE
+                            onClick={chatOnClickHandler}
+                          />
                         </CHAT_SHOW_DIV_STYLE>
                       </GamePage>
                     )}
@@ -201,7 +202,9 @@ const app = () => {
                           />
                         )}
                         <CHAT_SHOW_DIV_STYLE>
-                          <CHAT_SHOW_BUTTON_STYLE onClick={chatOnClickHandler} />
+                          <CHAT_SHOW_BUTTON_STYLE
+                            onClick={chatOnClickHandler}
+                          />
                         </CHAT_SHOW_DIV_STYLE>
                       </GamePage>
                     )}

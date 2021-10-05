@@ -154,11 +154,12 @@ export const OpposeVotePlayers = styled.div`
   justify-content: center;
 `;
 export const Timer = styled.div`
-  display: flex;
+  display: absolute;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  justify-content: flex-start;
-  font-size: 32px;
+  /* justify-content: flex-start; */
+  font-size: 42px;
+  color: blueviolet;
 `;
 export const PlayerVoteResult = styled.div`
   display: flex;
