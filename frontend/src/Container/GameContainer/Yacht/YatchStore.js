@@ -283,11 +283,11 @@ const YachuProvider = ({ children }) => {
         const player = [...state.playerData]
         if (player[0].result > player[1].result && player[0].fullNickname===nicknameString) {
                 const winnerLoserList=[{
-                    "nickname": player[0].fullNickname,
-                    "winner":true
+                    nickname: player[0].fullNickname,
+                    winner:true
                 }, {
-                    "nickname": player[1].fullNickname,
-                    "winner":false
+                    nickname: player[1].fullNickname,
+                    winner:false
                 }]
             const resultUpload = {
                 method: 'post',
@@ -312,11 +312,11 @@ const YachuProvider = ({ children }) => {
                     })
             } else if(player[0].result < player[1].result && player[1].fullNickname===nicknameString) {
                 const winnerLoserList=[{
-                    "nickname": player[1].fullNickname,
-                    "winner":true
+                    nickname: player[1].fullNickname,
+                    winner:true
                 }, {
-                    "nickname": player[0].fullNickname,
-                    "winner":false
+                    nickname: player[0].fullNickname,
+                    winner:false
                 }]
                 const resultUpload = {
                     method: 'post',
