@@ -9,6 +9,10 @@ module.exports = {
             'clientID': 'd3319729403e4545bc47b2b7ae249210'
         }
     },
+    'Ip': {
+        'developmentIp': 'http://localhost:3000',
+        'productionIp': '/'
+    },
     "mailConfig": {
         host: 'smtp.gmail.com',
         port: 587,
