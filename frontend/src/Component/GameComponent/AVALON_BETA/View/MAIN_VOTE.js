@@ -6,7 +6,7 @@ import { PeersContext } from "Routes/peerStore";
 import AVALON_TIMER from "./Timer";
 
 function MAIN_VOTE() {
-  const { dispatch, gameState, buttonAnimation, timeOver } =
+  const { dispatch, gameState, buttonAnimation, timeOver, gameNickname } =
     useContext(GameContext);
   const { peers } = useContext(PeersContext);
   const [playerCount, setPlayerCount] = useState(0);
@@ -44,7 +44,7 @@ function MAIN_VOTE() {
       <S.SelectPlayer>
         {gameState.usingPlayers.map((user, index) => (
           <div>
-            <S.MainVoteLabel>{user.nickname}</S.MainVoteLabel>
+            <S.MainVoteLabel>{gameNickname(user.nickname)}</S.MainVoteLabel>
             <S.MainVoteCheckbox
               onChange={onChange}
               type="checkbox"

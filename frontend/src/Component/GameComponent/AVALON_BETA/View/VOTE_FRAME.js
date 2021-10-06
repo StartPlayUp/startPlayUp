@@ -14,22 +14,25 @@ function VOTE_FRAME() {
   const [vote, setVote] = useState("agree");
   const [click, setClick] = useState(false);
   console.log("vote");
+
   const onChange = (e) => {
     setVote(e.target.value);
   };
+
   const onClick = () => {
     setClick(true);
     gameData.usingPlayers[gameData.voteTurn].toGo = vote;
     gameData.voteTurn += 1;
     dispatch({ type: GAME_CHECK, gameData, peers });
   };
+
   return (
     <S.PublicColumn>
       {gameData.voteTurn !== gameData.usingPlayers.length &&
       gameData.usingPlayers[gameData.voteTurn].nickname === nickname ? (
         <S.ColumnFrame>
-          <AVALON_TIMER minutes={0} seconds={15} callDispatch={onClick} />
           <S.MAIN_VOTE_HEADER>{`대표자 : ${selectedPlayers()}`}</S.MAIN_VOTE_HEADER>
+          <AVALON_TIMER minutes={0} seconds={15} callDispatch={onClick} />
           <S.VoteImage>
             <img src={"/img/vote_img.png"} alt={"img"} width={"300px"} />
           </S.VoteImage>

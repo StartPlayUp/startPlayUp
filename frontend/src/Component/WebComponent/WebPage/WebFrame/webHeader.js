@@ -13,6 +13,7 @@ import Modal from 'react-modal'
 import NavigationBar from "./index";
 import SlideBar from "./layout/SlideBar";
 import { useCookies } from "react-cookie";
+import { getEnvIp } from "Common/envModule"
 
 const axios = require('axios');
 
@@ -39,7 +40,7 @@ const HEADER = () => {
 
     console.log(nickname)
     const logoutHandler = () => {
-        axios.get(`http://localhost:4000/api/auth/logout`, { withCredentials: true })
+        axios.get(getEnvIp().SERVER_IP + `/api/auth/logout`, { withCredentials: true })
             .then(function (response) {
                 logout(history)
                 // setRedirect(true);
@@ -49,6 +50,7 @@ const HEADER = () => {
             });
         setOpen(false)
         removeCookies(cookies)
+        alert('로그 아웃되었습니다.')
     }
     const onClick = () => {
         nickname === null ? setOpen(false) : setOpen(true)

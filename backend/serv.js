@@ -25,7 +25,7 @@ const routerApp = require('./routes/app');
 const path = require('path');
 const nodemailer = require("nodemailer");
 const mailConfig = require('./config').mailConfig;
-
+// require('dotenv').config()
 
 
 app.use(express.urlencoded({ extended: true }));

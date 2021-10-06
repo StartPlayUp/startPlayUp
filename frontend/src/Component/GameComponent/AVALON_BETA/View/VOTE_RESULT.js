@@ -6,13 +6,13 @@ import * as S from "../Styled";
 import Timer_test from "./Timer";
 
 function VOTE_RESULT() {
-  const { gameState, dispatch, selectedPlayers, timeOver } =
+  const { gameState, dispatch, selectedPlayers, timeOver, gameNickname } =
     useContext(GameContext);
   const { peers } = useContext(PeersContext);
   const agreeVotedPlayers = () => {
     const players = [];
     gameState.usingPlayers.map((user) => {
-      user.toGo === "agree" && players.push(user.nickname);
+      user.toGo === "agree" && players.push(gameNickname(user.nickname));
     });
     return players;
   };
@@ -20,7 +20,7 @@ function VOTE_RESULT() {
   const opposeVotedPlayers = () => {
     const players = [];
     gameState.usingPlayers.map((user) => {
-      user.toGo === "oppose" && players.push(user.nickname);
+      user.toGo === "oppose" && players.push(gameNickname(user.nickname));
     });
     return players;
   };

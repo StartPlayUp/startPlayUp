@@ -11,8 +11,8 @@ const Box = styled.div`
   margin: 200px 30px 30px 100px;
 `;
 function END_GAME_FRAME() {
-  const { gameState } = useContext(GameContext);
- //해당 부분 추가 승패 결과 firebase에 추가할 수 있도록 하기
+  const { gameState, gameNickname } = useContext(GameContext);
+  //해당 부분 추가 승패 결과 firebase에 추가할 수 있도록 하기
   return (
     <S.ColumnFrame>
       <S.NicknameTag>{gameState.winner}</S.NicknameTag>
@@ -21,7 +21,10 @@ function END_GAME_FRAME() {
           <div key={index}>
             <br />
             <div>
-              <CardFlip nickname={player.nickname} role={player.role} />
+              <CardFlip
+                nickname={gameNickname(player.nickname)}
+                role={player.role}
+              />
             </div>
           </div>
         ))}

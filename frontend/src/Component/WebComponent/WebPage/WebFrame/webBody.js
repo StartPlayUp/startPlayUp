@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import CreateButton from "./CreateButton";
+import { getEnvIp } from "Common/envModule"
 
 import {
     BodyFrame,
@@ -23,7 +24,7 @@ import {
 } from "../Style/CreateRoomStyle";
 import HEADER from "./webHeader";
 import { RoomIdContext } from "../../../../Routes/peerStore";
-import {ButtonAnimation} from "../../../GameComponent/AVALON_BETA/Styled";
+import { Button } from "../../../GameComponent/AVALON_BETA/Styled";
 
 const BODY = ({ location, history }) => {
     const [gameList, setGameList] = useState([])
@@ -86,7 +87,7 @@ const BODY = ({ location, history }) => {
         console.log(rooms.roomId, password)
         const accessRoomConfig = {
             method: 'post',
-            url: 'http://localhost:4000/api/room/accessRoom',
+            url: getEnvIp().SERVER_IP + '/api/room/accessRoom',
             data: {
                 roomId: rooms.roomId,
                 password: password,
@@ -111,7 +112,7 @@ const BODY = ({ location, history }) => {
     const getRoom = async (roomId) => {
         const getRoomConfig = {
             method: 'post',
-            url: 'http://localhost:4000/api/room/getRoom',
+            url: getEnvIp().SERVER_IP + '/api/room/getRoom',
             data: {
                 roomId
             },
@@ -129,7 +130,7 @@ const BODY = ({ location, history }) => {
     //메인 페이지 방들
     useEffect(() => {
         axios
-            .post('http://localhost:4000/api/room/getRooms')
+            .post(getEnvIp().SERVER_IP + '/api/room/getRooms')
             .then(function (result) {
                 console.log("getRooms post useEffect");
                 const { roomList, success } = result.data;
