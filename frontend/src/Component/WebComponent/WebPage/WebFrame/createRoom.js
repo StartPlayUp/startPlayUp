@@ -21,6 +21,7 @@ import {
 import axios from "axios";
 import { RoomIdContext } from "../../../../Routes/peerStore";
 import { isFunction } from "Container/GameContainer/Yut/YutFunctionModule";
+import { getEnvIp } from "Common/envModule"
 
 const CreateRoom = ({ isOpen, close }) => {
   axios.defaults.withCredentials = true;
@@ -55,7 +56,7 @@ const CreateRoom = ({ isOpen, close }) => {
     }
     const createRoomConfig = {
       method: "post",
-      url: "http://localhost:4000/api/room/createRoom",
+      url: getEnvIp().SERVER_IP + "/api/room/createRoom",
       data: {
         hostname: localStorage.getItem("nickname"),
         guestList: [localStorage.getItem("nickname")], // 게임 만들때 자기 자신도 들어가야 하나? 일단 추가함. 테스트후 삭제 요망

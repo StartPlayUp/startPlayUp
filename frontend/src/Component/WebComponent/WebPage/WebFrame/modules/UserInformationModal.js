@@ -8,6 +8,7 @@ import { Route } from "react-router";
 import { LoginApp } from "Component/WebComponent/WebPage";
 import { useCookies } from "react-cookie";
 import { Close } from "../../Style/CreateRoomStyle";
+import { getEnvIp } from "Common/envModule"
 
 const UserInformationModal = ({ setOpen }) => {
     axios.defaults.withCredentials = true;
@@ -26,7 +27,7 @@ const UserInformationModal = ({ setOpen }) => {
     const deleteUserFromNickname = () => {
         const deleteUserFromNicknameConfig = {
             method: 'post',
-            url: 'http://localhost:4000/api/user/deleteUser',
+            url: getEnvIp().SERVER_IP + '/api/user/deleteUser',
             data: {
                 nickname,
             }
@@ -49,7 +50,7 @@ const UserInformationModal = ({ setOpen }) => {
     useEffect(() => {
         const getUserConfig = {
             method: 'get',
-            url: `http://localhost:4000/api/user/getUser`,
+            url: getEnvIp().SERVER_IP + `/api/user/getUser`,
         }
         axios(getUserConfig)
             .then(function (response) {

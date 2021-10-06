@@ -23,8 +23,7 @@ import { Background, Users } from "../Style/WebFrameStyle";
 import PlayerList from "./PlayerList";
 import { sendDataToPeers } from "Common/peerModule/sendToPeers"
 import { GAME_START_SIGN, mappingTable } from 'Constants/peerDataTypes';
-
-
+import { getEnvIp } from "Common/envModule"
 
 const WaitingRoom = ({ chatList, chatShow, setChatList }) => {
     const location = useLocation();
@@ -165,7 +164,7 @@ export default WaitingRoom;
 // useEffect(async (roomID) => {
 //     const getRoomConfig = {
 //         method: 'post',
-//         url: 'http://localhost:4000/api/room/getRoom',
+//         url: getEnvIp().SERVER_IP + '/api/room/getRoom',
 //         data: {
 //             roomID,
 //         }
