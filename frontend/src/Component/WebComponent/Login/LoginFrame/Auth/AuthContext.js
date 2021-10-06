@@ -5,6 +5,8 @@ import { testDB } from 'Common/TestDB/index2';
 import axios from "axios";
 import { useCookies } from 'react-cookie';
 import Cookies, { CookiesGetOptions } from 'universal-cookie';
+import { getEnvIp } from "Common/envModule"
+
 const AuthStore = React.createContext(); //context 객체 생성
 
 const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
@@ -21,7 +23,7 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
         axios.defaults.withCredentials = true;
         const userLogin = {
             method: 'post',
-            url: 'http://localhost:4000/api/auth/login/local',
+            url: getEnvIp().SERVER_IP + '/api/auth/login/local',
             data: {
                 email: model.email,
                 password: model.password
@@ -55,16 +57,16 @@ const AuthProvider = (props) => { //AuthProvider 컴포넌트를 생성
             });
     };
     const onNaverLogin = () => {
-        window.location.href = 'http://localhost:4000/api/auth/login/naver'
+        window.location.href = getEnvIp().SERVER_IP + '/api/auth/login/naver'
 
     }
     const onKakaoLogin = () => {  //카카오 로그인 할 때 전달 받은 res 객체 중 id 요소를 파악하도록 합니다.
-        window.location.href = "http://localhost:4000/api/auth/login/kakao"
+        window.location.href = getEnvIp().SERVER_IP + "/api/auth/login/kakao"
     }
     const createUser = (user) => {
         const createUserConfig = {
             method: 'post',
-            url: 'http://localhost:4000/api/user/createUser',
+            url: getEnvIp().SERVER_IP + '/api/user/createUser',
             data: user
         }
         axios(createUserConfig)

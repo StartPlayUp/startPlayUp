@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef, useReducer } from 'react';
 import styled, { keyframes } from 'styled-components';
 import axios from 'axios';
-
+import { getEnvIp } from "Common/envModule"
 import crown from 'image/crown.png'
 
 import {
@@ -218,7 +218,7 @@ const winnerModal = () => {
             })
             const config = {
                 method: "post",
-                url: "http://localhost:4000/api/user/updateGameResult",
+                url: getEnvIp().SERVER_IP + "/api/user/updateGameResult",
                 data: { userList },
                 withCredentials: true
             }

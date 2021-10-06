@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as S from '../Style/WebFrameStyle'
 import axios from "axios";
 import { useLocation } from "react-router";
+import { getEnvIp } from "Common/envModule"
 
 const PlayerList = ({ roomId }) => {
     axios.defaults.withCredentials = true;
@@ -10,7 +11,7 @@ const PlayerList = ({ roomId }) => {
     useEffect(async ({ roomId }) => {
         const getRoomConfig = {
             method: 'post',
-            url: 'http://localhost:4000/api/room/getRoom',
+            url: getEnvIp().SERVER_IP + '/api/room/getRoom',
             data: {
                 roomId,
             }
