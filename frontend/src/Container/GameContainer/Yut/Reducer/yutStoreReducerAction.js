@@ -246,7 +246,7 @@ const MOVE_HORSE_ON_FIELD_SECTION = (state, index) => {
     if (checkEmptySelectHorse(state.selectHorse) ||
         checkHavePlaceToMove(state.placeToMove, index) ||
         !checkMyTurn(state.nowTurn.nickname)) {
-        return [{}, false];
+        return [{}, false, false];
     }
     else {
         // 사용할 윷 데이터가 들어오면 해당 윷 데이터를 삭제

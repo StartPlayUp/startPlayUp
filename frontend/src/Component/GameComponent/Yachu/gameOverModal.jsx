@@ -113,7 +113,7 @@ function GameOverScreen({ playerData, endGame, gameResultUpload }) {
                     </tr>
                 </tbody>
             </Table>
-            <Button onClick={onClick}>대기방으로 돌아가기</Button>
+            <Button onClick={onClick}>메인화면으로 돌아가기</Button>
         </Modal>
     );
 }

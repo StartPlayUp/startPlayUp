@@ -58,8 +58,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start2":"set `REACT_APP_WEBSITE_NAME=START_PLAY_UP` && yarn start",
-    "build": "set `REACT_APP_WEBSITE_NAME=START_PLAY_UP && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

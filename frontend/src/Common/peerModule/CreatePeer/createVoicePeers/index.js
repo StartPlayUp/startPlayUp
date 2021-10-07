@@ -1,4 +1,7 @@
 import Peer from "simple-peer";
+import dotenv from "dotenv";
+dotenv.config();
+
 export const connectVoicePeer = ({ socketRef, roomID, voicePeersRef, setVoicePeers, myNickname }) => {
     navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(stream => {
         socketRef.current.emit("join voice room", { roomID, myNickname });
@@ -52,16 +55,18 @@ export const connectVoicePeer = ({ socketRef, roomID, voicePeersRef, setVoicePee
             initiator: true,
             trickle: false,
             stream,
-            iceServers: [
-                {
-                    urls: process.env.STUN_DOMAIN,
-                },
-                {
-                    urls: process.env.TURN_DOMAIN,
-                    username: process.env.TURN_ID,
-                    credential: process.env.PASSWORD
-                }
-            ],
+            config: {
+                iceServers: [
+                    {
+                        urls: process.env.REACT_APP_STUN_DOMAIN,
+                    },
+                    {
+                        urls: process.env.REACT_APP_TURN_DOMAIN,
+                        username: process.env.REACT_APP_TURN_ID,
+                        credential: process.env.REACT_APP_PASSWORD
+                    }
+                ],
+            }
         });
 
         peer.on("signal", signal => {
@@ -77,16 +82,18 @@ export const connectVoicePeer = ({ socketRef, roomID, voicePeersRef, setVoicePee
             initiator: false,
             trickle: false,
             stream,
-            iceServers: [
-                {
-                    urls: process.env.STUN_DOMAIN,
-                },
-                {
-                    urls: process.env.TURN_DOMAIN,
-                    username: process.env.TURN_ID,
-                    credential: process.env.PASSWORD
-                }
-            ],
+            config: {
+                iceServers: [
+                    {
+                        urls: process.env.REACT_APP_STUN_DOMAIN,
+                    },
+                    {
+                        urls: process.env.REACT_APP_TURN_DOMAIN,
+                        username: process.env.REACT_APP_TURN_ID,
+                        credential: process.env.REACT_APP_PASSWORD
+                    }
+                ],
+            }
         });
 
         peer.on("signal", signal => {

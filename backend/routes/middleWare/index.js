@@ -1,4 +1,6 @@
 
+const configValue = require('../../config')
+
 const insertNicknameAtCookies = (req, res) => {
     res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
 }
@@ -29,7 +31,13 @@ exports.insertNicknameWithRedirectForSns = function (req, res, next) {
         console.log("req.user.docId : ", req.user)
         insertNicknameAtCookies(req, res);
     }
-    res.redirect("http://localhost:3000/");
+    // if (configValue.clientIp !== undefined) {
+    //     res.redirect(configValue.clientIp);
+    // }
+    // else {
+    //     res.redirect('/');
+    // }
+    res.redirect('http://localhost:3000');
 };
 
 exports.isNotLoggedIn = function (req, res, next) {

@@ -127,7 +127,7 @@ const Dice = () => {
         }
     }
 
-    const startGame=()=>{
+    const startGame = () => {
         diceState.StartGame()
     }
 
@@ -171,27 +171,22 @@ const Dice = () => {
     const lst = [0, 1, 2, 3, 4];
 
     useEffect(() => {
-        const { y } = box.current.getBoundingClientRect();
-        const { top,bottom } = fromPosition.current.getBoundingClientRect();
-        var height = y - bottom;
-        setBoxY(height);
-        console.log("y", y);
-        console.log("홀드 박스 높이-주사위 높이", height);
-        setPlaceY(bottom);
-        console.log(hostname)
-        if (hostname.includes('undefined')) {
-            const notUndefindedhostname = hostname.replace('undifined', "")
-            console.log("수상한 언디파인 제거",notUndefindedhostname)
-            if (notUndefindedhostname === localStorage.getItem('nickname')) {
+        console.log("게임 스타트",diceState.gameStart)
+        if (!diceState.gameStart) {
+            const { y } = box.current.getBoundingClientRect();
+            const { top, bottom } = fromPosition.current.getBoundingClientRect();
+            var height = y - bottom;
+            setBoxY(height);
+            console.log("y", y);
+            console.log("홀드 박스 높이-주사위 높이", height);
+            setPlaceY(bottom);
+            console.log(hostname)
+            
+            if (hostname === localStorage.getItem('nickname')) {
                 startGame();
             }
-        } else {
-           if (hostname === localStorage.getItem('nickname')) {
-            startGame();
-        } 
-        }
-        
-    }, [])
+        }      
+    }, [diceState.gameStart])
     
     return (
         <DiceStore.Consumer>

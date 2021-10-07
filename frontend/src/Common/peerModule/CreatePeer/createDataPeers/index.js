@@ -1,8 +1,12 @@
 import Peer from "simple-peer";
 import { getDataFromPeer } from "../../receiveFromPeers"
-require("dotenv").config()
+import dotenv from "dotenv";
+dotenv.config();
 
 export const connectDataPeer = ({ socketRef, roomID, peersRef, setPeers, myNickname, setPeerData }) => {
+
+
+
     socketRef.current.emit("join room", { roomID, myNickname });
     socketRef.current.on("Duplicate ID", users => {
         return false;
@@ -68,19 +72,22 @@ export const connectDataPeer = ({ socketRef, roomID, peersRef, setPeers, myNickn
     });
     function createPeer(userToSignal, callerID) {
         //처음 webrtc를 연결할 때 이미 방에 연결되어있는 피어 추가
+        console.log(" process.env.REACT_APP_STUN_DOMAIN : ", process.env.REACT_APP_STUN_DOMAIN);
         const peer = new Peer({
             initiator: true,
             trickle: false,
-            iceServers: [
-                {
-                    urls: process.env.STUN_DOMAIN,
-                },
-                {
-                    urls: process.env.TURN_DOMAIN,
-                    username: process.env.TURN_ID,
-                    credential: process.env.PASSWORD
-                }
-            ],
+            config: {
+                iceServers: [
+                    {
+                        urls: process.env.REACT_APP_STUN_DOMAIN,
+                    },
+                    {
+                        urls: process.env.REACT_APP_TURN_DOMAIN,
+                        username: process.env.REACT_APP_TURN_ID,
+                        credential: process.env.REACT_APP_PASSWORD
+                    }
+                ]
+            },
         });
 
         peer.on("signal", signal => {
@@ -93,19 +100,22 @@ export const connectDataPeer = ({ socketRef, roomID, peersRef, setPeers, myNickn
 
     function addPeer(incomingSignal, callerID) {
         // webrtc연결 후 추가적인 인원이 들어올때 피어 추가
+        console.log(" process.env.REACT_APP_STUN_DOMAIN : ", process.env.REACT_APP_STUN_DOMAIN);
         const peer = new Peer({
             initiator: false,
             trickle: false,
-            iceServers: [
-                {
-                    urls: process.env.STUN_DOMAIN,
-                },
-                {
-                    urls: process.env.TURN_DOMAIN,
-                    username: process.env.TURN_ID,
-                    credential: process.env.PASSWORD
-                }
-            ],
+            config: {
+                iceServers: [
+                    {
+                        urls: process.env.REACT_APP_STUN_DOMAIN,
+                    },
+                    {
+                        urls: process.env.REACT_APP_TURN_DOMAIN,
+                        username: process.env.REACT_APP_TURN_ID,
+                        credential: process.env.REACT_APP_PASSWORD
+                    }
+                ],
+            }
         });
 
         peer.on("signal", signal => {
