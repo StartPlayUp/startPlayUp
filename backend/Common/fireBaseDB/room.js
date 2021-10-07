@@ -50,12 +50,18 @@ exports.createRoom = async ({ room }) => {
 }
 
 exports.deleteRoom = async ({ roomId }) => {
-    if (isString(roomId)) {
-        const result = await db.collection('rooms').doc(roomId).delete();
-        console.log(result)
+    try {
+        if (isString(roomId)) {
+            const result = await db.collection('rooms').doc(roomId).delete();
+            console.log(result)
+        }
+        else {
+            console.error("deleteRoom error");
+        }
     }
-    else {
-        console.error("deleteRoom error");
+    catch (error) {
+        console.error("deleteRoom catch error");
+        console.log(error);
     }
 }
 

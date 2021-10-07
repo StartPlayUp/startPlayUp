@@ -19,14 +19,14 @@ module.exports = ({ io }) => {
             console.log("disconnect emit voiceRoomID");
             if (roomMatchingUsers[socket.roomID] !== undefined) {
                 roomMatchingUsers[socket.roomID] = roomMatchingUsers[socket.roomID].filter((i) => i !== socket.nickname);
-                if (roomMatchingUsers[socket.roomID].length === 0) {
+                if (roomMatchingUsers[socket.roomID] !== undefined && roomMatchingUsers[socket.roomID].length === 0) {
                     fireBaseRoom.deleteRoom({ roomId: socket.roomID });
                     delete roomMatchingUsers[socket.roomID]
                 }
             }
             if (voiceRoomMatchingUsers[socket.voiceRoomID] !== undefined) {
                 voiceRoomMatchingUsers[socket.voiceRoomID] = voiceRoomMatchingUsers[socket.voiceRoomID].filter((i) => i !== socket.nickname)
-                if (voiceRoomMatchingUsers[socket.roomID].length === 0) {
+                if (voiceRoomMatchingUsers[socket.roomID] !== undefined && voiceRoomMatchingUsers[socket.roomID].length === 0) {
                     delete voiceRoomMatchingUsers[socket.roomID]
                 }
             }
