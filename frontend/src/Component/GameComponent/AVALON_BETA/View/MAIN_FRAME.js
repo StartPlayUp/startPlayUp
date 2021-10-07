@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { animated, useSpring, config } from "react-spring";
 import {
+  angels,
   evils,
   FRAME_MAIN,
   GameContext,
@@ -20,7 +21,7 @@ import CoinFlip from "../animation/Coin_Flip";
 import PlayerRoles from "../animation/PlayerRoles";
 import AVALON_TIMER from "./Timer";
 import { PeersContext } from "../../../../Routes/peerStore";
-
+import { element } from "prop-types";
 const FrontInformation = animated(S.ColumnFrame);
 const BackInformation = animated(S.Info);
 
@@ -59,6 +60,7 @@ function MAIN_FRAME() {
     });
     setIsFlipped((prevState) => !prevState);
     setClick(!click);
+    console.log(gameState.usingPlayers.filter(element === element.role));
   };
 
   return (

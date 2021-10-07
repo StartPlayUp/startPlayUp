@@ -23,7 +23,7 @@ function ASSASSIN_FRAME() {
       buttonAnimation(e);
     } else {
       gameData.component = END_GAME_FRAME;
-      gameData.winner = killedPlayer === "Merlin" ? "악의 승리" : "선의 승리";
+      gameData.winner = killedPlayer === "Merlin" ? "EVILS_WIN" : "ANGELS_WIN";
 
       dispatch({
         type: GAME_CHECK,

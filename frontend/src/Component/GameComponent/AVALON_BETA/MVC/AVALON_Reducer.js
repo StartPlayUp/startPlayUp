@@ -62,6 +62,7 @@ const reducer = (state, { type, ...action }) => {
         vote: "",
         toGo: "",
         selected: false,
+        result: false,
       }); //나 추가하기
       action.peers.forEach((i) => {
         console.log(`peers.forEach`);
@@ -71,6 +72,7 @@ const reducer = (state, { type, ...action }) => {
           vote: "",
           toGo: "",
           selected: false,
+          result: false,
         });
       }); // 나를 제외한 모두 추가하기
 
