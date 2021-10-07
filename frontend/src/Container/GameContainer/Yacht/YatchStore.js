@@ -25,6 +25,7 @@ const initialState = {
     dice: [0, 0, 0, 0, 0],
     count: [0, 0, 0, 0, 0, 0],
     hold: [false, false, false, false, false],
+    gameStart:false,
     rollCount: 3,
     playerData: [{
         nickname: "",
@@ -86,7 +87,7 @@ const reducer = (state, action) => {
             return { ...state, ...action.data }
         }
         case STARTGAME: {
-            return { ...state, playerData: action.playerData };
+            return { ...state, playerData: action.playerData,gameStart:action.gameStart };
         }
         case ROLLDICE: {
             return { ...state, dice: action.diceArray, count: action.counter, playerData: action.player, rollCount: state.rollCount - 1 }
@@ -147,20 +148,16 @@ const YachuProvider = ({ children }) => {
     const [halt, setHalt] = useState(false);
     const [nowTurnNickname, setTurnName] = useState(nickname); // 누구의 턴인지 저장하는 state
     const [endGame, setGame] = useState(false);
-    const [resultScore, setResultScore] = useState({
-
-    })
+    
     function RollDice() {
         let diceArray = [0, 0, 0, 0, 0];
         let counter = [...state.count]
-        //let pointCalculate = []
         diceArray = Roll(state);
         let test = diceArray.filter((i) => { if (typeof (i) === "number" && (i > 0 && i < 7)) { return i } })//주사위 검사 1~6까지의 숫자만 있는지 확인
         if (test.length === 5 && diceArray.length === 5) {//5개를 굴리므로 5길이가 5인지 검사함
             counter = Count(diceArray);
             let test = counter.map((j) => { if (typeof (j) === "number" && (j >= 0 && j < 6)) { return j } })//주사위 개수의 검사 0개부터 5개까지만 있는지 검사
             if (test.length === 6 && counter.length === 6) {//1~6까지이므로 길이가 6인지 검사함
-                //pointCalculate = Calculate(diceArray, counter);
                 const { upperPoint, lowerPoint } = Calculate(diceArray, counter);
                 console.log(upperPoint, lowerPoint);
                 const player = [...state.playerData]
@@ -228,15 +225,6 @@ const YachuProvider = ({ children }) => {
             var bonusTest = bonusTemp.reduce((total, num) => {
                 return parseInt(total, 10) + parseInt(num, 10);
             });
-            /*
-            if (bonusTest < 63) {
-                let complete = Object.keys(player[nowTurn].selectPoint.highRanking).map((i) => {
-                    return player[nowTurn].selectPoint.highRanking[i][1];
-                });
-                let completeTest = !complete.includes(false);
-                console.log("completeTest", completeTest);
-                player[nowTurn].bonus = [bonusTest, completeTest];
-            }*/
             if (bonusTest >= 63) {
                 player[nowTurn].bonus = [bonusTest, true];
                 player[nowTurn].result += 35;
@@ -249,7 +237,6 @@ const YachuProvider = ({ children }) => {
             setTurnName(player[0].nickname)
             const verification = SELECT;
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 0, nowTurnNickname: nowTurnNickname, halt: true } })
-            //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 0, halt: true } })
             dispatch({ type: SELECT, player })
         }
         else {
@@ -258,7 +245,6 @@ const YachuProvider = ({ children }) => {
             setTurnName(player[1].nickname)
             const verification = SELECT;
             sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, nowTurnNickname: nowTurnNickname, halt: true } })
-            //sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: { verification, playerData: player, nowTurn: 1, halt: true  } })
             dispatch({ type: SELECT, player })
         }
     }
@@ -401,13 +387,10 @@ const YachuProvider = ({ children }) => {
             bonus: [0, false]
         }]
         const nowTurnNickname = playerData[0].nickname;
-        const result = { ...initialState, nowTurnNickname, playerData };
-        //const result = { ...initialState,playerData };
+        const result = { ...initialState, nowTurnNickname, playerData,gameStart:true };
         sendDataToPeers(GAME, { game: YACHT, nickname, peers, data: result });
-        dispatch({ type: STARTGAME, playerData, nowTurnNickname })
-        //dispatch({ type: STARTGAME, playerData})
+        dispatch({ type: STARTGAME, playerData, nowTurnNickname,gameStart:true })
         setHalt(true)
-        //dispatch({ type: StartGame, peers })
     }
     function timeOver() {
         if (halt === true) {
@@ -514,7 +497,7 @@ const YachuProvider = ({ children }) => {
 
     return (
         <DiceStore.Provider value={{
-            dice: state.dice, hold: state.hold, rollCount: state.rollCount, halt: halt, StartGame, RollDice, diceHold
+            dice: state.dice, hold: state.hold, rollCount: state.rollCount,gameStart:state.gameStart, halt: halt, StartGame, RollDice, diceHold
         }}>
             <PlayerData.Provider value={//게임 데이터를 표시
                 { playerData: state.playerData, halt: halt, nowTurn: nowTurn, endGame: endGame, rollCount: state.rollCount, selectData, gameResultUpload }}>
