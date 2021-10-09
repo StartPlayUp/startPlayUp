@@ -1,2 +1,2 @@
 # startPlayUp
-Web game platform project
+Web game project

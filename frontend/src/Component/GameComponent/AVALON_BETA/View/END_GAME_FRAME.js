@@ -13,7 +13,12 @@ const Box = styled.div`
 `;
 function END_GAME_FRAME() {
   const { gameState, gameNickname } = useContext(GameContext);
-  const gameResult = () => {};
+  const gameResult = () => {
+    if ((gameState.winner = "EVILS_WIN")) {
+      evils.includes(gameState.usingPlayers.filter((element) => element.role));
+    } else {
+    }
+  };
 
   //해당 부분 추가 승패 결과 firebase에 추가할 수 있도록 하기
   return (
