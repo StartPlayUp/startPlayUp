@@ -37,7 +37,7 @@ exports.insertNicknameWithRedirectForSns = function (req, res, next) {
     // else {
     //     res.redirect('/');
     // }
-    res.redirect('http://localhost:3000');
+    res.redirect('/');
 };
 
 exports.isNotLoggedIn = function (req, res, next) {

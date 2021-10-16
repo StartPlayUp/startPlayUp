@@ -1,3 +1,27 @@
+// test for pm2
+// let isDisableKeepAlive = false
+// app.use(function (req, res, next) {
+//     if (isDisableKeepAlive) {
+//         res.set('Connection', 'close')
+//     }
+//     next()
+// })
+//
+// default server port 4000
+// test for pm2
+// process.on('SIGINT', function () {
+//     isDisableKeepAlive = true
+//     app.close(function () {
+//         console.log('server closed')
+//         process.exit(0)
+//     })
+// })
+// server.listen(process.env.PORT || 4000, () => {
+//     process.send('ready');
+//     console.log('server is running on port 4000')
+// });
+// //
+
 const admin = require('firebase-admin');
 const serviceAccount = require('./key.json');
 admin.initializeApp({
@@ -26,6 +50,15 @@ const path = require('path');
 const nodemailer = require("nodemailer");
 const mailConfig = require('./config').mailConfig;
 // require('dotenv').config()
+const redis = require('redis');
+const redisAdapter = require('socket.io-redis');
+const REDIS_PORT = 6379;
+const REDIS_HOST = "localhost";
+const client = redis.createClient({ host: REDIS_HOST, port: REDIS_PORT })
+const pubClient = redis.createClient({ host: REDIS_HOST, port: REDIS_PORT })
+const subClient = pubClient.duplicate();
+const connectredis = require("connect-redis");
+const RedisStore = connectredis(expressSession)
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -40,9 +73,12 @@ app.use(
             httpOnly: false, // javascript로 cookie에 접근하지 못하게 하는 옵션
             secure: false, // https 프로토콜만 허락하는 지 여부
         },
+        store: new RedisStore({
+            client,
+            ttl: 6000,
+        }),
     }),
 );
-
 
 
 app.use(passport.initialize());
@@ -62,6 +98,8 @@ app.use(cors({
 app.use(jsonParser)
 
 // use socket IO
+
+io.adapter(redisAdapter({ host: REDIS_HOST, port: REDIS_PORT }));
 socketModule({ io });
 
 // const transporter = nodemailer.createTransport(mailConfig);
@@ -74,6 +112,8 @@ socketModule({ io });
 //     html: "<b>Hello world?</b>", // html body
 // })
 
+
+
 //  react에서 빌드한 기본 파일 추가
 app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
 app.use(express.static("public"));
@@ -85,5 +125,11 @@ routerApp(app);
 app.use('/api', require('./routes/api'))
 
 // default server port 4000
-server.listen(process.env.PORT || 4000, () => console.log('server is running on port 4000'));
+// test for pm2
 
+server.listen(process.env.PORT || 4000, () => {
+    console.log('server is running on port 4000')
+});
+//
+
+// server.listen(process.env.PORT || 4000, () => console.log('server is running on port 4000'));

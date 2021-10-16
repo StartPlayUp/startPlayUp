@@ -8,10 +8,10 @@ module.exports = ({ io }) => {
         require("./Room/room")({ io, socket, roomMatchingUsers });
         require("./Room/voiceRoom")({ io, socket, voiceRoomMatchingUsers });
         // require("./chat/chat")({ io, socket });
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
 
             //  firestore에서 room 안에 있던 사용자 제거
-            fireBaseRoom.disconnectRoom({ roomId: socket.roomID, nickname: socket.nickname });
+            await fireBaseRoom.disconnectRoom({ roomId: socket.roomID, nickname: socket.nickname });
             console.log("disconnect");
             socket.broadcast.to(socket.roomID).emit("disconnect user", socket.id, socket.nickname);
             console.log("disconnect emit roomID");
@@ -20,7 +20,7 @@ module.exports = ({ io }) => {
             if (roomMatchingUsers[socket.roomID] !== undefined) {
                 roomMatchingUsers[socket.roomID] = roomMatchingUsers[socket.roomID].filter((i) => i !== socket.nickname);
                 if (roomMatchingUsers[socket.roomID] !== undefined && roomMatchingUsers[socket.roomID].length === 0) {
-                    fireBaseRoom.deleteRoom({ roomId: socket.roomID });
+                    await fireBaseRoom.deleteRoom({ roomId: socket.roomID });
                     delete roomMatchingUsers[socket.roomID];
                 }
             }

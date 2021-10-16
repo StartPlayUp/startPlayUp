@@ -58,6 +58,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start2": "cross-env NODE_ENV=development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -82,6 +83,7 @@
     "@types/styled-components": "^5.1.9",
     "animated": "^0.2.2",
     "clsx": "^1.1.1",
+    "cross-env": "^7.0.3",
     "eslint-config-prettier": "^8.3.0",
     "prop-types": "^15.7.2"
   }
