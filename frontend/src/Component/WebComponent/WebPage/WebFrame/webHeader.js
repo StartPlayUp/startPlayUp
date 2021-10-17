@@ -36,8 +36,6 @@ const HEADER = () => {
     const [redirect, setRedirect] = useState(false);
     const [open, setOpen] = useState(false)
     const nickname = localStorage.getItem('nickname')
-    const [cookies, removeCookies] = useCookies()
-
     console.log(nickname)
     const logoutHandler = () => {
         axios.get(getEnvIp().SERVER_IP + `/api/auth/logout`, { withCredentials: true })
@@ -49,7 +47,6 @@ const HEADER = () => {
                 console.log(error);
             });
         setOpen(false)
-        removeCookies(cookies)
         alert('로그 아웃되었습니다.')
     }
     const onClick = () => {

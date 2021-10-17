@@ -15,7 +15,6 @@ const UserInformationModal = ({ setOpen }) => {
     const history = useHistory()
     const [information, setInformation] = useState(undefined)
     const fullNickname = localStorage.getItem('nickname')
-    const [cookies, removeCookies] = useCookies()
     const nickname = fullNickname.substring(0, fullNickname.indexOf(' '))
     const onClick = () => {
         setOpen(false)
@@ -36,7 +35,6 @@ const UserInformationModal = ({ setOpen }) => {
         axios(deleteUserFromNicknameConfig)
             .then(function (response) {
                 console.log("해당 닉네임으로 가입한 계정 삭제 : ", response.data);
-                removeCookies(cookies)
                 localStorage.removeItem('nickname')
                 setOpen(false)
                 window.location.replace('/')

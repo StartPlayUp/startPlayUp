@@ -3,6 +3,7 @@ const configValue = require('../../config')
 
 const insertNicknameAtCookies = (req, res) => {
     res.cookie('nickname', req.user.nickname + " " + req.user.docId, { maxAge: 900000, httpOnly: false })
+    res.cookie('isLoggedIn', true, { maxAge: 900000, httpOnly: false })
 }
 
 
