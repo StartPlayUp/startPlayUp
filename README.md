@@ -69,13 +69,15 @@ Web game project
 - 19 . react hook 설계 총 정리
 
    - 1. https://www.robinwieruch.de/react-hooks-fetch-data
+
+
    - 2. https://overreacted.io/a-complete-guide-to-useeffect/
 
 
-- 20. [함수형 컴포넌트와 클래스의 차이점](https://overreacted.io/ko/how-are-function-components-different-from-classes/)
+- 20 . [함수형 컴포넌트와 클래스의 차이점](https://overreacted.io/ko/how-are-function-components-different-from-classes/)
 
 
-- 21. [react에서 state 사용시 불변성을 지켜야 하는 이유](https://medium.com/vingle-tech-blog/react-%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-f255d6569849)
+- 21 . [react에서 state 사용시 불변성을 지켜야 하는 이유](https://medium.com/vingle-tech-blog/react-%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-f255d6569849)
 
 
 - 22 . [React Context API (16.3 Version) 초보자편](https://www.youtube.com/watch?v=hP0qWUvr2SM)
