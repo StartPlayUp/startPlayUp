@@ -7,8 +7,9 @@ Web game project
 
 [최종 보고서](https://docs.google.com/document/d/1V29OulvHIMVNjHfPzkv5VEbA0CSfa8HKtCk9jzUPRbo/edit?usp=sharing)
 
-[일일업무일지-장석찬](https://docs.google.com/document/d/1yQwQWnWBVhQuluORDRWhwRS60nVQplT2aW47L0I4tRo/edit?usp=sharing)
+[프레젠테이션](https://docs.google.com/presentation/d/1pvsjhqp_S7vTkdRfU4aJtf3-MRTm6RR0OF03eu4CDSI/edit?usp=sharing)
 
+[일일업무일지-장석찬](https://docs.google.com/document/d/1yQwQWnWBVhQuluORDRWhwRS60nVQplT2aW47L0I4tRo/edit?usp=sharing)
 
 |인력|역할|비고|
 |------|---|---|
